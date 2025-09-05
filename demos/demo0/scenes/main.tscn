@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://doqb2qmliupm2"]
+
+[ext_resource type="Texture2D" uid="uid://d0efl2m3jem1c" path="res://assets/house.png" id="1_o5qli"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="GDExample" type="GDExample" parent="."]
+position = Vector2(1.25281, 0.00087695)
+texture = ExtResource("1_o5qli")
+
+[node name="Camera2D" type="Camera2D" parent="."]
