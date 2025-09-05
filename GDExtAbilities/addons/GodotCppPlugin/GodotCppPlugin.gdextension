@@ -1,0 +1,16 @@
+[configuration]
+
+entry_symbol = "godot_cpp_plugin_entry"
+compatibility_minimum = 4.2
+reloadable = true
+
+[libraries]
+
+macos.debug = "res://addons/GodotCppPlugin/libGodotCppPlugin.macos.template_debug.framework"
+macos.release = "res://addons/GodotCppPlugin/libGodotCppPlugin.macos.template_release.framework"
+linux.debug.x86_64 = "res://addons/GodotCppPlugin/libGodotCppPlugin.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/GodotCppPlugin/libGodotCppPlugin.linux.template_release.x86_64.so"
+windows.debug.x86_32 = "res://addons/GodotCppPlugin/libGodotCppPlugin.windows.template_debug.x86_32.dll"
+windows.release.x86_32 = "res://addons/GodotCppPlugin/libGodotCppPlugin.windows.template_release.x86_32.dll"
+windows.debug.x86_64 = "res://addons/GodotCppPlugin/libGodotCppPlugin.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/GodotCppPlugin/libGodotCppPlugin.windows.template_release.x86_64.dll"
