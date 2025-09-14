@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4e22aq37wggi"]
+
+[ext_resource type="Texture2D" uid="uid://3so3rvsveeyx" path="res://assets/background/tilesets/TilesetField.png" id="1_bkp1e"]
+
+[node name="Background" type="Node"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_bkp1e")
+region_enabled = true
+region_rect = Rect2(0.308796, 48.275, 47.4192, 46.1126)

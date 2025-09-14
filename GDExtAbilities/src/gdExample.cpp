@@ -1,10 +1,7 @@
-#include "gdexample.hpp"
+#include "gdexample.h"
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
-
-void GDExample::_bind_methods()
-{}
 
 GDExample::GDExample()
 {
@@ -16,6 +13,9 @@ GDExample::~GDExample()
 {
 	// Add your cleanup here.
 }
+
+void GDExample::_bind_methods()
+{}
 
 void GDExample::_process(double delta)
 {

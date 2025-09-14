@@ -1,11 +1,12 @@
-#include "register_types.hpp"
+#include "register_types.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
-#include "gdExample.hpp"
+#include "gdExample.h"
+#include "include/TagManager.h"
 
 using namespace godot;
 
@@ -17,6 +18,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     }
 
     ClassDB::register_class<GDExample>();
+    ClassDB::register_class<sm::TagManager>();
 }
 
 void uninitialize_gdextabilities_plugin(ModuleInitializationLevel p_level)

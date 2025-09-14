@@ -1,11 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://doqb2qmliupm2"]
+[gd_scene load_steps=3 format=3 uid="uid://dv4yfdrrbbig0"]
 
-[ext_resource type="Texture2D" uid="uid://d0efl2m3jem1c" path="res://assets/house.png" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://c4e22aq37wggi" path="res://scenes/background.tscn" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://doqb2qmliupm2" path="res://scenes/character.tscn" id="1_o5qli"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Main" type="Node2D"]
 
-[node name="GDExample" type="GDExample" parent="."]
-position = Vector2(1.25281, 0.00087695)
-texture = ExtResource("1_o5qli")
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_o5qli")]
+z_index = 1
+metadata/speed = 150.0
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Background" parent="." instance=ExtResource("1_0wfyh")]
