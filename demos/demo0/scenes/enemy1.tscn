@@ -1,10 +1,12 @@
-[gd_scene load_steps=30 format=3 uid="uid://doqb2qmliupm2"]
+[gd_scene load_steps=31 format=3 uid="uid://q6m7shdb3sbo"]
 
-[ext_resource type="Script" uid="uid://dx73ichqrwsov" path="res://scripts/Player.gd" id="1_o5qli"]
-[ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="2_rkhd4"]
+[ext_resource type="Script" uid="uid://brrvtxqenf1fl" path="res://scripts/Enemy.gd" id="1_nb0t0"]
+[ext_resource type="Resource" uid="uid://b10m26s2gunnv" path="res://resources/ChaseTarget.tres" id="2_n665k"]
+[ext_resource type="Texture2D" uid="uid://k1ehcrgwoj6f" path="res://assets/enemies/owl/SpriteSheet.png" id="2_nb0t0"]
+[ext_resource type="Script" uid="uid://cfqal1tej470c" path="res://scripts/ChaseTarget.gd" id="3_lowyn"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
-radius = 17.0294
+[sub_resource type="CircleShape2D" id="CircleShape2D_n665k"]
+radius = 15.0
 
 [sub_resource type="Animation" id="Animation_2cgup"]
 resource_name = "Idle_Down"
@@ -20,7 +22,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [4]
+"values": [1]
 }
 
 [sub_resource type="Animation" id="Animation_a5ia6"]
@@ -37,7 +39,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [5]
+"values": [2]
 }
 
 [sub_resource type="Animation" id="Animation_0dpix"]
@@ -54,7 +56,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [5]
+"values": [2]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -83,7 +85,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_lrhn5"]
@@ -152,7 +154,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1998, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [4, 1, 4, 1]
+"values": [1, 4, 1, 4]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -181,7 +183,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [5, 2, 5, 16]
+"values": [2, 5, 2, 5]
 }
 
 [sub_resource type="Animation" id="Animation_dp8ca"]
@@ -198,7 +200,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1998, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [5, 2, 5, 16]
+"values": [2, 5, 2, 5]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -227,7 +229,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1998, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [3, 0, 3, 0]
+"values": [0, 3, 0, 3]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -256,7 +258,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [12]
+"values": [0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -342,8 +344,6 @@ blend_point_3/node = SubResource("AnimationNodeAnimation_a5ia6")
 blend_point_3/pos = Vector2(0, 1)
 blend_mode = 1
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_rkhd4"]
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2hyy3"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_irmqu"]
@@ -358,26 +358,26 @@ states/Idle/position = Vector2(347, 45)
 states/Start/position = Vector2(207, 100)
 states/Walk/node = SubResource("AnimationNodeBlendSpace2D_0dpix")
 states/Walk/position = Vector2(544, 100)
-states/Wobble/node = SubResource("AnimationNodeBlendTree_rkhd4")
-states/Wobble/position = Vector2(413.244, 197)
 transitions = ["Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_2hyy3"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_irmqu"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_rkhd4")]
 graph_offset = Vector2(4.24449, 0)
 
-[node name="Player" type="CharacterBody2D"]
-script = ExtResource("1_o5qli")
+[node name="Enemy1" type="CharacterBody2D"]
+script = ExtResource("1_nb0t0")
+movement = ExtResource("2_n665k")
+
+[node name="Behaviour" type="Node" parent="."]
+
+[node name="Movement" type="Node" parent="Behaviour"]
+script = ExtResource("3_lowyn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_rkhd4")
+shape = SubResource("CircleShape2D_n665k")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1
-texture = ExtResource("2_rkhd4")
+texture = ExtResource("2_nb0t0")
 hframes = 3
-vframes = 6
-
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
-position_smoothing_enabled = true
+vframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -387,5 +387,5 @@ libraries = {
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = SubResource("AnimationNodeStateMachine_irmqu")
 anim_player = NodePath("../AnimationPlayer")
-parameters/Idle/blend_position = Vector2(0.00106955, 0.0044843)
+parameters/Idle/blend_position = Vector2(0, 0)
 parameters/Walk/blend_position = 0.0266577

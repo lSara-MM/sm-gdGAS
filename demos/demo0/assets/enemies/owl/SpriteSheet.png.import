@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://o1ms0wndw788"
-path="res://.godot/imported/SpriteSheetBig.png-dbdd7e4e79ccacaaa678863046052b88.ctex"
+uid="uid://k1ehcrgwoj6f"
+path="res://.godot/imported/SpriteSheet.png-c4230832a01528cc6ba634fbcd547297.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/sorcerer-F/SpriteSheetBig.png"
-dest_files=["res://.godot/imported/SpriteSheetBig.png-dbdd7e4e79ccacaaa678863046052b88.ctex"]
+source_file="res://assets/enemies/owl/SpriteSheet.png"
+dest_files=["res://.godot/imported/SpriteSheet.png-c4230832a01528cc6ba634fbcd547297.ctex"]
 
 [params]
 
