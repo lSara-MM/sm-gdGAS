@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://3so3rvsveeyx" path="res://assets/background/tilesets/TilesetField.png" id="1_bkp1e"]
 
-[node name="Background" type="Node"]
+[node name="Background" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(2, 2)

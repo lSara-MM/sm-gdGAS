@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="ChaseTarget" load_steps=2 format=3 uid="uid://b10m26s2gunnv"]
-
-[ext_resource type="Script" uid="uid://cfqal1tej470c" path="res://scripts/ChaseTarget.gd" id="1_q0wkn"]
-
-[resource]
-script = ExtResource("1_q0wkn")
-m_TargetPath = NodePath("../Player")

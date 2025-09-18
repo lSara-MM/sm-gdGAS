@@ -1,10 +1,12 @@
-[gd_scene load_steps=30 format=3 uid="uid://doqb2qmliupm2"]
+[gd_scene load_steps=31 format=3 uid="uid://doqb2qmliupm2"]
 
 [ext_resource type="Script" uid="uid://dx73ichqrwsov" path="res://scripts/Player.gd" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="2_rkhd4"]
+[ext_resource type="Script" uid="uid://cgnqw24a5eb4w" path="res://scripts/AnimationTreeHandler.gd" id="3_lrhn5"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_rkhd4"]
-radius = 17.0294
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrhn5"]
+radius = 13.0
+height = 26.0
 
 [sub_resource type="Animation" id="Animation_2cgup"]
 resource_name = "Idle_Down"
@@ -364,10 +366,15 @@ transitions = ["Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_
 graph_offset = Vector2(4.24449, 0)
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 11
+collision_mask = 10
+floor_block_on_wall = false
+platform_floor_layers = 4294967232
 script = ExtResource("1_o5qli")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_rkhd4")
+position = Vector2(0, 3)
+shape = SubResource("CapsuleShape2D_lrhn5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1
@@ -389,3 +396,4 @@ tree_root = SubResource("AnimationNodeStateMachine_irmqu")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = Vector2(0.00106955, 0.0044843)
 parameters/Walk/blend_position = 0.0266577
+script = ExtResource("3_lrhn5")

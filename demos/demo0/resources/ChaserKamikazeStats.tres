@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ChaserKamikazeStats" load_steps=2 format=3 uid="uid://cdi4dwq7dbdw7"]
+
+[ext_resource type="Script" uid="uid://bc4ua8seyvo20" path="res://scripts/resources/ChaserKamikazeStats.gd" id="1_i4al4"]
+
+[resource]
+script = ExtResource("1_i4al4")
+m_MaxHealth = 100.0
+m_MoveSpeed = 100.0

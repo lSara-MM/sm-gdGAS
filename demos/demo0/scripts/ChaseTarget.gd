@@ -1,14 +1,23 @@
-extends Resource
+extends EnemyBehaviourCore
 class_name ChaseTarget
 
-@export var m_TargetPath: NodePath
-var m_Target
+@onready var m_gd_AnimationTree : AnimationTree = get_node("../../AnimationTree")
 
-func InitResource(target: CharacterBody2D) -> void:
-	m_Target = target.get_node_or_null(m_TargetPath)
+var m_Target : CharacterBody2D
 
-func GetVelocity(owner: CharacterBody2D, speed: float = 100) -> Vector2:
+func InitSpecs(parent: Node2D) -> void:
+	m_Target = parent.m_Player
+
+func _physics_process(_delta):
+	m_Parent.velocity = GetVelocity(m_Parent, m_Stats.m_MoveSpeed)
+	
+	if	m_gd_AnimationTree:
+		m_gd_AnimationTree.SetAnim(m_Parent.velocity.normalized())
+		
+	m_Parent.move_and_slide()
+
+func GetVelocity(this: CharacterBody2D, speed: float = 100) -> Vector2:
 	if	m_Target:
-		return (m_Target.global_position - owner.global_position).normalized() * speed
+		return (m_Target.global_position - this.global_position).normalized() * speed
 	
 	return Vector2.ZERO
