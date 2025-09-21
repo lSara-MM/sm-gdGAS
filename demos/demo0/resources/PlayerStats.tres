@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="RStats" load_steps=2 format=3 uid="uid://boc12e1ivl4yg"]
+
+[ext_resource type="Script" uid="uid://c1qvia21ole23" path="res://scripts/resources/RStats.gd" id="1_bpwev"]
+
+[resource]
+script = ExtResource("1_bpwev")
+m_MaxHealth = 100.0
+m_MovementSpeed = 200.0
+m_EffectSpeed = 2.0
+m_CurrentLvl = 0
+m_MinLvl = 0
+m_MaxLvl = 0
+metadata/_custom_type_script = "uid://c1qvia21ole23"

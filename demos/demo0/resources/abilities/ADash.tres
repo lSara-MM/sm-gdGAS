@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="MADash" load_steps=2 format=3 uid="uid://cpnnpq3nlcyjc"]
+
+[sub_resource type="GDScript" id="GDScript_m3yx4"]
+script/source = "extends RAbility
+class_name MADash
+
+@export var m_Force : float = 1000
+
+func Activate(_owner) -> void:
+		_owner.m_EffectSpeed += m_Force
+
+func Desactivate(_owner) -> void:
+	_owner.m_EffectSpeed = 0.0
+"
+
+[resource]
+script = SubResource("GDScript_m3yx4")
+m_Force = 1000.0
+m_Cooldown = 0.0
+m_LastTimeUsed = 0.0
+m_Duration = 0.0
+m_Instances = 0
+m_Radius = 0.0
+metadata/_custom_type_script = "uid://b04yltb6kpkvr"

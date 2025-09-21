@@ -5,16 +5,16 @@ class_name ChaseTarget
 
 var m_Target : CharacterBody2D
 
-func InitSpecs(parent: Node2D) -> void:
-	m_Target = parent.m_Player
+func InitSpecs(own: Node2D) -> void:
+	m_Target = own.m_Player
 
 func _physics_process(_delta):
-	m_Parent.velocity = GetVelocity(m_Parent, m_Stats.m_MoveSpeed)
+	m_Owner.velocity = GetVelocity(m_Owner, m_Stats.m_MovementSpeed)
 	
 	if	m_gd_AnimationTree:
-		m_gd_AnimationTree.SetAnim(m_Parent.velocity.normalized())
+		m_gd_AnimationTree.SetAnim(m_Owner.velocity.normalized())
 		
-	m_Parent.move_and_slide()
+	m_Owner.move_and_slide()
 
 func GetVelocity(this: CharacterBody2D, speed: float = 100) -> Vector2:
 	if	m_Target:

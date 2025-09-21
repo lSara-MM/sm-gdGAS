@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="REnemyStats" load_steps=2 format=3 uid="uid://cwr2yer3hwu6b"]
+
+[ext_resource type="Script" uid="uid://57jjeeow3ck0" path="res://scripts/resources/REnemyStats.gd" id="1_amq3u"]
+
+[resource]
+script = ExtResource("1_amq3u")
+m_ExpDropped = 1.0
+m_MaxHealth = 100.0
+m_MovementSpeed = 100.0
+m_CurrentLvl = 0
+m_MinLvl = 0
+m_MaxLvl = 0
+metadata/_custom_type_script = "uid://57jjeeow3ck0"

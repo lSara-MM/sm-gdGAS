@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://daey3n83qqsc1"]
+
+[ext_resource type="Script" uid="uid://bsrvj4ejfvrxa" path="res://scripts/Spawner.gd" id="1_lox8h"]
+[ext_resource type="PackedScene" uid="uid://q6m7shdb3sbo" path="res://scenes/prefabs/enemy.tscn" id="2_tq322"]
+
+[node name="EnemySpawner" type="Node2D"]
+script = ExtResource("1_lox8h")
+m_Objects = Array[PackedScene]([ExtResource("2_tq322")])
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true

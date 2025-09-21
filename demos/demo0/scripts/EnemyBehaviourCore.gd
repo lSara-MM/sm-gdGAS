@@ -1,18 +1,17 @@
 extends Node2D
-
 class_name EnemyBehaviourCore
 
-var m_Parent: CharacterBody2D
+var m_Owner: CharacterBody2D
 var m_Player : CharacterBody2D
-var m_Stats : Resource
+var m_Stats : RStats
 
-func Init(parent: Node2D) -> void:
-	m_Parent = parent
-	m_Player = parent.m_Player
-	m_Stats = parent.m_Stats
+func Init(own: Node2D) -> void:
+	m_Owner = own
+	m_Player = own.m_Player
+	m_Stats = own.m_Stats
 	
-	InitSpecs(parent)
+	InitSpecs(own)
 
 # Override Init Specs if necessary
-func InitSpecs(parent: Node2D) -> void:
+func InitSpecs(_own: Node2D) -> void:
 	pass
