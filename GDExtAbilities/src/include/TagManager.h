@@ -11,6 +11,7 @@ namespace sm
 {
 	class TagManager
 	{
+
 	public:
 
 		TagManager();

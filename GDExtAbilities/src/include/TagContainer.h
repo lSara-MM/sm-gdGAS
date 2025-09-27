@@ -19,6 +19,6 @@ namespace sm
 		std::vector<TagID> m_CancelAbiltyTags;
 		std::vector<TagID> m_BlockAbiltyTags;
 		std::vector<TagID> m_ActivationRequirementTags;
-		std::vector<TagID> m_ActivationRequirementTags;
+		std::vector<TagID> m_DeactivationRequirementTags;
 	};
 }

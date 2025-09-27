@@ -7,6 +7,10 @@
 
 #include "gdExample.h"
 #include "include/TagManager.h"
+#include "include/Ability.h"
+#include "include/Attribute.h"
+#include "include/AttributeSet.h"
+#include "include/CooldownAttribute.h"
 
 using namespace godot;
 
@@ -18,7 +22,11 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     }
 
     ClassDB::register_class<GDExample>();
-    ClassDB::register_class<sm::TagManager>();
+    ClassDB::register_class<sm::Ability>();
+    ClassDB::register_class<sm::Attribute>();
+    ClassDB::register_class<sm::AttributeSet>();
+    ClassDB::register_class<sm::AttributeSetPreset>();
+    ClassDB::register_class<sm::CooldownAttribute>();
 }
 
 void uninitialize_gdextabilities_plugin(ModuleInitializationLevel p_level)

@@ -1,0 +1,6 @@
+[gd_resource type="Ability" load_steps=2 format=3 uid="uid://mnikl3gwkyei"]
+
+[ext_resource type="AttributeSet" uid="uid://prokkbff5irf" path="res://resources/abilities/new_attribute_set.tres" id="1_71oou"]
+
+[resource]
+attributes = ExtResource("1_71oou")
