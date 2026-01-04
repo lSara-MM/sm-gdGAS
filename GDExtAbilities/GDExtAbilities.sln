@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GDExtAbilities", "GDExtAbilities\GDExtAbilities.vcxproj", "{32BAAE67-E91E-4B18-91C3-9C9225755C13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		EditorDebug_Godot|x64 = EditorDebug_Godot|x64
+		EditorDebug_Godot|x86 = EditorDebug_Godot|x86
+		EditorRelease_Godot|x64 = EditorRelease_Godot|x64
+		EditorRelease_Godot|x86 = EditorRelease_Godot|x86
+		GameDebug_Godot|x64 = GameDebug_Godot|x64
+		GameDebug_Godot|x86 = GameDebug_Godot|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x64.ActiveCfg = EditorDebug_Godot|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x64.Build.0 = EditorDebug_Godot|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x86.ActiveCfg = EditorDebug_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x86.Build.0 = EditorDebug_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x64.ActiveCfg = EditorRelease_Godot|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x64.Build.0 = EditorRelease_Godot|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x86.ActiveCfg = EditorRelease_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x86.Build.0 = EditorRelease_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x64.ActiveCfg = GameDebug_Godot|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x64.Build.0 = GameDebug_Godot|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x86.ActiveCfg = GameDebug_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x86.Build.0 = GameDebug_Godot|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A53DEAAF-F4D8-4B48-8DDE-7AF753B793AA}
+	EndGlobalSection
+EndGlobal

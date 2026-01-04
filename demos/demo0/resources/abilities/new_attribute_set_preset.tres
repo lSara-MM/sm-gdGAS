@@ -1,3 +1,6 @@
-[gd_resource type="AttributeSetPreset" format=3 uid="uid://b1h6pderjafu0"]
+[gd_resource type="AttributeSetPreset" load_steps=2 format=3 uid="uid://gsl7c6ccse0t"]
+
+[ext_resource type="FloatAttribute" uid="uid://unvnyuphr41b" path="res://resources/abilities/new_float_attribute.tres" id="1_xxbiq"]
 
 [resource]
+Properties = Array[Attribute]([ExtResource("1_xxbiq")])

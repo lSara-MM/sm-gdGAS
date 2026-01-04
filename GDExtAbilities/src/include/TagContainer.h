@@ -1,24 +1,32 @@
 #pragma once
-#include "utils.h"
-#include <godot_cpp/classes/node.hpp>
+#include "Types.h"
+#include "GameplayTag.h"
 
-using namespace godot;
+#include <godot_cpp/classes/node.hpp>
 
 namespace sm
 {
-	class TagContainer final : public Node
+	class TagContainer final : public godot::Node
 	{
+		GDCLASS(TagContainer, Node)
+
 	public:
 		TagContainer();
 		~TagContainer();
 
+		void _ready();
+		void Test(godot::StringName name);
+
+	protected:
+		static void _bind_methods();
+
 	private:
 
 		// Activation Rules
-		std::vector<TagID> m_AbiltyTags;
-		std::vector<TagID> m_CancelAbiltyTags;
-		std::vector<TagID> m_BlockAbiltyTags;
-		std::vector<TagID> m_ActivationRequirementTags;
-		std::vector<TagID> m_DeactivationRequirementTags;
+		std::vector<GameplayTag> m_AbiltyTags;
+		std::vector<GameplayTag> m_CancelAbiltyTags;
+		std::vector<GameplayTag> m_BlockAbiltyTags;
+		std::vector<GameplayTag> m_ActivationRequirementTags;
+		std::vector<GameplayTag> m_DeactivationRequirementTags;
 	};
 }

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxvoh0h0g5o1n"]
+
+[ext_resource type="Script" uid="uid://sinqoekac5sb" path="res://test/tag_container.gd" id="1_errlg"]
+
+[node name="Test" type="Node2D"]
+
+[node name="TagContainer" type="TagContainer" parent="."]
+script = ExtResource("1_errlg")

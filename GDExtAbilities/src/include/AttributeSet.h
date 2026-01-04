@@ -1,5 +1,6 @@
 #pragma once
 #include "Attribute.h"
+
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
@@ -19,7 +20,7 @@ namespace sm
 		~AttributeSet();
 	};
 
-	class AttributeSetPreset : public AttributeSet
+	/*class AttributeSetPreset : public AttributeSet
 	{
 		GDCLASS(AttributeSetPreset, AttributeSet)
 		
@@ -38,5 +39,5 @@ namespace sm
 	public:
 		godot::TypedArray<sm::Attribute> m_AbilityPropertiesEd;
 		std::unordered_map<std::type_index, godot::Ref<sm::Attribute>> m_AbilityProperties;
-	};
+	};*/
 }
