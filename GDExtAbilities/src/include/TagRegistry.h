@@ -12,24 +12,31 @@ namespace sm
 	public:
 		static TagRegistry& GetInstance();
 
-		GameplayTag* GetTag(uint32 id);
-		GameplayTag* GetTag(godot::StringName name);
+		godot::StringName GetTag(uint32 id);
+		godot::StringName GetTag(godot::StringName name);
 		godot::StringName GetTagName(uint32 id);
+
+		godot::StringName GetParent(uint32 id);
+		godot::StringName GetParent(godot::StringName name);
+		godot::TypedArray<godot::StringName> GetChildren(uint32 id);
+		godot::TypedArray<godot::StringName> GetChildren(godot::StringName name);
+		//godot::TypedArray<godot::StringName> GetDescendants(uint32 id);
+		//godot::TypedArray<godot::StringName> GetDescendants(godot::StringName name);
 
 		void RegisterTag(godot::StringName tagKey);
 		void UnregisterTag(uint32 tagID);
 		void UnregisterTag(godot::StringName tagKey);
 
 		/// Returns true if `tagID` is a direct child of `childID`.
-		bool HasChild(uint32 tagID, uint32 childID);
+		bool HasChild(uint32 tagID, uint32 childID) const;
 
 		/// Returns true if `tagID` is a direct or indirect child of `childID`.
-		bool HasDescendant(uint32 tagID, uint32 childID);
+		bool HasDescendant(uint32 tagID, uint32 childID) const;
 
 		/// Returns true if `tagID` directly contains `childID` as a child.
-		bool IsParentOf(uint32 tagID, uint32 childID);
-		bool IsChildOf(uint32 tagID, uint32 parentID);
-		bool IsNameValid(godot::StringName name);
+		bool IsParentOf(uint32 tagID, uint32 childID) const;
+		bool IsChildOf(uint32 tagID, uint32 parentID) const;
+		bool IsNameValid(godot::StringName name) const;
 
 		void RenameTag(uint32 id, godot::StringName newName);
 
@@ -43,10 +50,11 @@ namespace sm
 		uint32 _GenerateUID() { return m_NextUID++; }
 
 		GameplayTag* _GetTag(uint32 id);
+		const GameplayTag* _GetTag(uint32 id) const;
 		GameplayTag* _GetTag(godot::StringName name);
 		GameplayTag& _GetTagRef(uint32 id);
 
-		godot::StringName _NormalizeName(godot::StringName name);
+		godot::StringName _NormalizeName(godot::StringName name) const;
 		godot::StringName _GetFullName(godot::StringName name) const;
 
 		sm::GameplayTag& _AddEntry(godot::StringName name, uint32 idParent = 0);
