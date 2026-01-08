@@ -4,18 +4,21 @@
 
 #include <unordered_map>
 #include <vector>
+#include <godot_cpp/classes/object.hpp>
 
 namespace sm
 {
-	class TagRegistry
+	class TagRegistry final : public godot::Object
 	{
+		GDCLASS(TagRegistry, godot::Object)
+
+	protected:
+		static void _bind_methods();
+
 	public:
 		static TagRegistry& GetInstance();
 
-		godot::StringName GetTag(uint32 id);
 		godot::StringName GetTag(godot::StringName name);
-		godot::StringName GetTagName(uint32 id);
-
 		godot::StringName GetParent(uint32 id);
 		godot::StringName GetParent(godot::StringName name);
 		godot::TypedArray<godot::StringName> GetChildren(uint32 id);
@@ -40,21 +43,22 @@ namespace sm
 
 		void RenameTag(uint32 id, godot::StringName newName);
 
-	//private:
+		//private:
 
 		TagRegistry();
 		~TagRegistry() = default;
 		TagRegistry(const TagRegistry& obj) = delete;
-		void operator =(const TagRegistry& obj) = delete;
 
 		uint32 _GenerateUID() { return m_NextUID++; }
 
 		GameplayTag* _GetTag(uint32 id);
 		const GameplayTag* _GetTag(uint32 id) const;
 		GameplayTag* _GetTag(godot::StringName name);
+		const GameplayTag* _GetTag(godot::StringName name) const;
 		GameplayTag& _GetTagRef(uint32 id);
 
 		godot::StringName _NormalizeName(godot::StringName name) const;
+		godot::StringName _AddRoot(godot::StringName name) const;
 		godot::StringName _GetFullName(godot::StringName name) const;
 
 		sm::GameplayTag& _AddEntry(godot::StringName name, uint32 idParent = 0);
@@ -68,5 +72,10 @@ namespace sm
 		std::vector<GameplayTag> m_Tags;
 		std::unordered_map<uint32, size_t> m_IDtoIndex;
 		std::unordered_map<godot::StringName, uint32> m_NameToID;
+		std::unordered_map<godot::StringName, godot::StringName> m_SuffixToFullPaths;
+
+#ifdef TOOLS_DEBUG
+		std::unordered_map<std::string, std::string> m_StdSuffixToFullPaths;
+#endif //  TOOLS_DEBUG
 	};
 }
