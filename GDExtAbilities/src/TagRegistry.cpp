@@ -33,10 +33,43 @@ godot::StringName sm::TagRegistry::GetParent(godot::StringName tagName)
 {
 	GameplayTag* tag = _GetTag(tagName);
 	ERR_FAIL_COND_V_MSG(!tag, godot::StringName(), godot::vformat("Tag not found: %s", tagName));
-	
+
 	GameplayTag* tagParent = _GetTag(tag->parentID);
 
 	return godot::StringName(tagParent->name.substr(ROOT.length() + 1));
+}
+
+godot::TypedArray<godot::StringName> sm::TagRegistry::GetAscendants(godot::StringName tagName)
+{
+	godot::TypedArray<godot::StringName> ascendants;
+	auto itrTagID = m_NameToID.find(_GetFullName(tagName));
+	ERR_FAIL_COND_V_MSG(itrTagID == m_NameToID.end(), godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagName));
+
+	std::vector<uint32> stack;
+	stack.push_back(itrTagID->second);
+
+	while (!stack.empty())
+	{
+		uint32 id = stack.back();
+		stack.pop_back();
+
+		const GameplayTag* tag = _GetTag(id);
+
+		if (!tag)
+		{
+			continue;
+		}
+
+		stack.push_back(tag->parentID);
+
+		if (const GameplayTag* parentTag = _GetTag(tag->parentID);
+			parentTag && parentTag->GetUID() != 0)
+		{
+			ascendants.push_back(godot::StringName(parentTag->name.substr(ROOT.length() + 1)));
+		}
+	}
+
+	return ascendants;
 }
 
 godot::TypedArray<godot::StringName> sm::TagRegistry::GetChildren(godot::StringName tagName)
@@ -71,9 +104,12 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetDescendants(godot::Stri
 		for (uint32 child : tag->children)
 		{
 			stack.push_back(child);
-		}
 
-		descendants.push_back(godot::StringName(tag->name.substr(ROOT.length() + 1)));
+			if (const GameplayTag* childTag = _GetTag(child))
+			{
+				descendants.push_back(godot::StringName(childTag->name.substr(ROOT.length() + 1)));
+			}
+		}
 	}
 
 	return descendants;
@@ -416,7 +452,7 @@ sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, uint32 idPar
 
 	GameplayTag& newTag = m_Tags.emplace_back(_GenerateUID(), fullName);
 	m_NameToID.try_emplace(fullName, newTag.GetUID());
-	
+
 #ifdef TOOLS_DEBUG
 	m_StdNameToID.try_emplace(ToStdString(fullName), newTag.GetUID());
 #endif //  TOOLS_DEBUG

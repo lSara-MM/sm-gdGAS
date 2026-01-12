@@ -18,14 +18,15 @@ namespace sm
 	public:
 		static TagRegistry& GetInstance();
 
-		godot::StringName GetTag(godot::StringName name);
-		godot::StringName GetParent(godot::StringName name);
-		godot::TypedArray<godot::StringName> GetChildren(godot::StringName name);
-		godot::TypedArray<godot::StringName> GetDescendants(godot::StringName name);
+		godot::StringName GetTag(godot::StringName tagName);
+		godot::StringName GetParent(godot::StringName tagName);
+		godot::TypedArray<godot::StringName> GetAscendants(godot::StringName tagName);
+		godot::TypedArray<godot::StringName> GetChildren(godot::StringName tagName);
+		godot::TypedArray<godot::StringName> GetDescendants(godot::StringName tagName);
 
-		void RegisterTag(godot::StringName tagKey);
+		void RegisterTag(godot::StringName tagName);
 		void UnregisterTag(uint32 tagID);
-		void UnregisterTag(godot::StringName tagKey);
+		void UnregisterTag(godot::StringName tagName);
 
 		/// Returns true if `tagID` is a direct child of `childID`.
 		bool HasChild(uint32 tagID, uint32 childID) const;
@@ -50,8 +51,8 @@ namespace sm
 
 		GameplayTag* _GetTag(uint32 id);
 		const GameplayTag* _GetTag(uint32 id) const;
-		GameplayTag* _GetTag(godot::StringName name);
-		const GameplayTag* _GetTag(godot::StringName name) const;
+		GameplayTag* _GetTag(godot::StringName tagName);
+		const GameplayTag* _GetTag(godot::StringName tagName) const;
 		GameplayTag& _GetTagRef(uint32 id);
 
 		godot::StringName _GetParent(uint32 id);
@@ -60,7 +61,7 @@ namespace sm
 		void _ExtractSubTags(godot::StringName& fullName);
 		godot::StringName _NormalizeName(godot::StringName name) const;
 		godot::StringName _AddRoot(godot::StringName name) const;
-		godot::StringName _GetFullName(godot::StringName name) const;
+		godot::StringName _GetFullName(godot::StringName tagName) const;
 
 		sm::GameplayTag& _AddEntry(godot::StringName name, uint32 idParent = 0);
 		void _AddChild(GameplayTag& tag, uint32 idChild);
