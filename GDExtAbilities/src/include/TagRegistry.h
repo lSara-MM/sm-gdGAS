@@ -19,12 +19,9 @@ namespace sm
 		static TagRegistry& GetInstance();
 
 		godot::StringName GetTag(godot::StringName name);
-		godot::StringName GetParent(uint32 id);
 		godot::StringName GetParent(godot::StringName name);
-		godot::TypedArray<godot::StringName> GetChildren(uint32 id);
 		godot::TypedArray<godot::StringName> GetChildren(godot::StringName name);
-		//godot::TypedArray<godot::StringName> GetDescendants(uint32 id);
-		//godot::TypedArray<godot::StringName> GetDescendants(godot::StringName name);
+		godot::TypedArray<godot::StringName> GetDescendants(godot::StringName name);
 
 		void RegisterTag(godot::StringName tagKey);
 		void UnregisterTag(uint32 tagID);
@@ -57,6 +54,10 @@ namespace sm
 		const GameplayTag* _GetTag(godot::StringName name) const;
 		GameplayTag& _GetTagRef(uint32 id);
 
+		godot::StringName _GetParent(uint32 id);
+		godot::TypedArray<godot::StringName> _GetChildren(uint32 id);
+
+		void _ExtractSubTags(godot::StringName& fullName);
 		godot::StringName _NormalizeName(godot::StringName name) const;
 		godot::StringName _AddRoot(godot::StringName name) const;
 		godot::StringName _GetFullName(godot::StringName name) const;
@@ -75,6 +76,7 @@ namespace sm
 		std::unordered_map<godot::StringName, godot::StringName> m_SuffixToFullPaths;
 
 #ifdef TOOLS_DEBUG
+		std::unordered_map<std::string, uint32> m_StdNameToID;
 		std::unordered_map<std::string, std::string> m_StdSuffixToFullPaths;
 #endif //  TOOLS_DEBUG
 	};
