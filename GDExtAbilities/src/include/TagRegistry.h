@@ -18,6 +18,7 @@ namespace sm
 	public:
 		static TagRegistry& GetInstance();
 
+#ifdef DEBUG_MODE
 		godot::StringName GetTag(godot::StringName tagName);
 		godot::StringName GetParent(godot::StringName tagName);
 		godot::TypedArray<godot::StringName> GetAscendants(godot::StringName tagName);
@@ -28,6 +29,10 @@ namespace sm
 		void UnregisterTag(uint32 tagID);
 		void UnregisterTag(godot::StringName tagName);
 
+		void RenameTag(uint32 tagID, godot::StringName newName);
+		bool IsNameValid(godot::StringName name) const;
+#endif // DEBUG_MODE
+
 		/// Returns true if `tagID` is a direct child of `childID`.
 		bool HasChild(uint32 tagID, uint32 childID) const;
 
@@ -37,9 +42,6 @@ namespace sm
 		/// Returns true if `tagID` directly contains `childID` as a child.
 		bool IsParentOf(uint32 tagID, uint32 childID) const;
 		bool IsChildOf(uint32 tagID, uint32 parentID) const;
-		bool IsNameValid(godot::StringName name) const;
-
-		void RenameTag(uint32 id, godot::StringName newName);
 
 		//private:
 
@@ -57,6 +59,9 @@ namespace sm
 
 		godot::StringName _GetParent(uint32 id);
 		godot::TypedArray<godot::StringName> _GetChildren(uint32 id);
+
+		void _GetAscendantsTree(uint32 itrTagID, godot::TypedArray<godot::StringName>& ascendants);
+		void _GetDescendantsTree(uint32 itrTagID, godot::TypedArray<godot::StringName>& descendants);
 
 		void _ExtractSubTags(godot::StringName& fullName);
 		godot::StringName _NormalizeName(godot::StringName name) const;
@@ -76,9 +81,12 @@ namespace sm
 		std::unordered_map<godot::StringName, uint32> m_NameToID;
 		std::unordered_map<godot::StringName, godot::StringName> m_SuffixToFullPaths;
 
-#ifdef TOOLS_DEBUG
+		std::unordered_map<uint32, godot::TypedArray<godot::StringName>> m_AscendantsCache;
+		std::unordered_map<uint32, godot::TypedArray<godot::StringName>> m_DescendantsCache;
+
+#ifdef TOOLS_DEBUG_VS
 		std::unordered_map<std::string, uint32> m_StdNameToID;
 		std::unordered_map<std::string, std::string> m_StdSuffixToFullPaths;
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
 	};
 }

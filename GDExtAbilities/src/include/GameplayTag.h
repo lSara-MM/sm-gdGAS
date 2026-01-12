@@ -10,17 +10,17 @@ namespace sm
 		GameplayTag() : UID(-1), parentID(-1) {};
 		GameplayTag(uint32 id, godot::StringName n) : UID(id), parentID(-1), name(n)
 		{
-#ifdef TOOLS_DEBUG
+#ifdef TOOLS_DEBUG_VS
 			stdName = ToStdString(n);
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
 		};
 
 		GameplayTag(uint32 id, const godot::String& n) : UID(id), parentID(-1), name(godot::StringName(n))
 		{
 
-#ifdef TOOLS_DEBUG
+#ifdef TOOLS_DEBUG_VS
 			stdName = ToStdString(n);
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
 		}
 
 		uint32 GetUID() { return UID; };
@@ -33,9 +33,9 @@ namespace sm
 
 		uint32 parentID;
 
-#ifdef TOOLS_DEBUG
+#ifdef TOOLS_DEBUG_VS
 		std::string stdName;
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
 
 		godot::StringName name;
 		std::vector<uint32> children;

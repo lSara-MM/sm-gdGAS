@@ -10,9 +10,38 @@ sm::TagRegistry::TagRegistry() : ROOT("<")
 	m_NameToID.try_emplace(ROOT, newTag.GetUID());
 	m_IDtoIndex[newTag.GetUID()] = m_Tags.size() - 1;
 
-#ifdef TOOLS_DEBUG
+#ifdef TOOLS_DEBUG_VS
 	m_StdNameToID.try_emplace(ToStdString(ROOT), newTag.GetUID());
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
+}
+
+void sm::TagRegistry::_bind_methods()
+{
+#ifdef DEBUG_MODE
+	godot::ClassDB::bind_method(godot::D_METHOD("get_tag", "tag_name"), &GetTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_parent", "tag_name"), &GetParent);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_ascendants", "tag_name"), &GetAscendants);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_children", "tag_name"), &GetChildren);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_descendants", "tag_name"), &GetDescendants);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("register_tag", "tag_name"), &RegisterTag);
+	// Due to overloading, Godot does not deduce which one it refers to so it needs casting
+	godot::ClassDB::bind_method(godot::D_METHOD("unregister_tag", "tag_name"),
+		static_cast<void (TagRegistry::*)(godot::StringName)>(&UnregisterTag));
+
+	godot::ClassDB::bind_method(godot::D_METHOD("rename_tag", "tagId", "newName"), &RenameTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_name_valid", "tag_name"), &IsNameValid);
+#endif // DEBUG_MODE
+
+	godot::ClassDB::bind_method(godot::D_METHOD("has_child", "tag_name", "child_name"), &HasChild);
+	godot::ClassDB::bind_method(godot::D_METHOD("has_descendant", "tag_name", "child_name"), &HasDescendant);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_parent_of", "tag_name", "child_name"), &IsParentOf);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_child_of", "tag_name", "parent_name"), &IsChildOf);
+
+
+	ADD_SIGNAL(godot::MethodInfo("tag_renamed",
+		godot::PropertyInfo(godot::Variant::INT, "tag_id"),
+		godot::PropertyInfo(godot::Variant::STRING_NAME, "new_name")));
 }
 
 sm::TagRegistry& sm::TagRegistry::GetInstance()
@@ -21,6 +50,7 @@ sm::TagRegistry& sm::TagRegistry::GetInstance()
 	return instance;
 }
 
+#ifdef DEBUG_MODE
 godot::StringName sm::TagRegistry::GetTag(godot::StringName tagName)
 {
 	GameplayTag* tag = _GetTag(tagName);
@@ -45,8 +75,21 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetAscendants(godot::Strin
 	auto itrTagID = m_NameToID.find(_GetFullName(tagName));
 	ERR_FAIL_COND_V_MSG(itrTagID == m_NameToID.end(), godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagName));
 
+	if (auto itr = m_AscendantsCache.find(itrTagID->second); itr != m_AscendantsCache.end())
+	{
+		return itr->second;
+	}
+
+	// If result not cached, find ascendants
+	_GetAscendantsTree(itrTagID->second, ascendants);
+
+	return ascendants;
+}
+
+void sm::TagRegistry::_GetAscendantsTree(uint32 itrTagID, godot::TypedArray<godot::StringName>& ascendants)
+{
 	std::vector<uint32> stack;
-	stack.push_back(itrTagID->second);
+	stack.push_back(itrTagID);
 
 	while (!stack.empty())
 	{
@@ -68,8 +111,7 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetAscendants(godot::Strin
 			ascendants.push_back(godot::StringName(parentTag->name.substr(ROOT.length() + 1)));
 		}
 	}
-
-	return ascendants;
+	m_AscendantsCache.try_emplace(itrTagID, ascendants);
 }
 
 godot::TypedArray<godot::StringName> sm::TagRegistry::GetChildren(godot::StringName tagName)
@@ -86,8 +128,20 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetDescendants(godot::Stri
 	auto itrTagID = m_NameToID.find(_GetFullName(tagName));
 	ERR_FAIL_COND_V_MSG(itrTagID == m_NameToID.end(), godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagName));
 
+	if (auto itr = m_DescendantsCache.find(itrTagID->second); itr != m_DescendantsCache.end())
+	{
+		return itr->second;
+	}
+
+	_GetDescendantsTree(itrTagID->second, descendants);
+
+	return descendants;
+}
+
+void sm::TagRegistry::_GetDescendantsTree(uint32 itrTagID, godot::TypedArray<godot::StringName>& descendants)
+{
 	std::vector<uint32> stack;
-	stack.push_back(itrTagID->second);
+	stack.push_back(itrTagID);
 
 	while (!stack.empty())
 	{
@@ -112,7 +166,7 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetDescendants(godot::Stri
 		}
 	}
 
-	return descendants;
+	m_DescendantsCache.try_emplace(itrTagID, descendants);
 }
 
 void sm::TagRegistry::RegisterTag(godot::StringName tagName)
@@ -211,6 +265,29 @@ void sm::TagRegistry::UnregisterTag(godot::StringName tagName)
 	UnregisterTag(tagID->second);
 }
 
+void sm::TagRegistry::RenameTag(uint32 tagID, godot::StringName newName)
+{
+	ERR_FAIL_COND_MSG(_GetTag(newName), godot::vformat("Tag with this name already exists: %s", ToStdString(newName).c_str()));
+
+	GameplayTag* tag = _GetTag(tagID);
+	ERR_FAIL_COND_MSG(!tag, godot::vformat("Tag to rename not found: %d", tagID));
+
+	godot::StringName prevName = tag->name;
+	m_NameToID.erase(prevName);
+
+	m_NameToID.try_emplace(newName, tag->GetUID());
+
+	emit_signal("tag_renamed", tagID, newName);
+}
+
+bool sm::TagRegistry::IsNameValid(godot::StringName name) const
+{
+	//Tags must follow this structure: <root>.tagParent.tagChild.other
+	std::regex rgx(R"(^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$)");
+	return std::regex_match(ToStdString(name), rgx);
+}
+#endif // DEBUG_MODE
+
 bool sm::TagRegistry::HasChild(uint32 tagID, uint32 childID) const
 {
 	const GameplayTag* tag = _GetTag(tagID);
@@ -223,6 +300,12 @@ bool sm::TagRegistry::HasChild(uint32 tagID, uint32 childID) const
 
 bool sm::TagRegistry::HasDescendant(uint32 tagID, uint32 childID) const
 {
+	if (auto itr = m_DescendantsCache.find(tagID); itr != m_DescendantsCache.end())
+	{
+		const GameplayTag* childTag = _GetTag(childID);
+		return itr->second.has(childTag->name);
+	}
+
 	std::vector<uint32> stack;
 	stack.push_back(tagID);
 
@@ -265,26 +348,6 @@ bool sm::TagRegistry::IsChildOf(uint32 tagID, uint32 parentID) const
 	ERR_FAIL_COND_V_MSG(!tag || !tagParent, false, godot::vformat("Tag not found: %d", tag ? tag->GetUID() : tagParent->GetUID()));
 
 	return tag->parentID == tagParent->parentID;
-}
-
-bool sm::TagRegistry::IsNameValid(godot::StringName name) const
-{
-	//Tags must follow this structure: <root>.tagParent.tagChild.other
-	std::regex rgx(R"(^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$)");
-	return std::regex_match(ToStdString(name), rgx);
-}
-
-void sm::TagRegistry::RenameTag(uint32 id, godot::StringName newName)
-{
-	ERR_FAIL_COND_MSG(_GetTag(newName), godot::vformat("Tag with this name already exists: %s", ToStdString(newName).c_str()));
-
-	GameplayTag* tag = _GetTag(id);
-	ERR_FAIL_COND_MSG(!tag, godot::vformat("Tag to rename not found: %d", id));
-
-	godot::StringName prevName = tag->name;
-	m_NameToID.erase(prevName);
-
-	m_NameToID.try_emplace(newName, tag->GetUID());
 }
 
 #pragma region Internal methods
@@ -393,9 +456,9 @@ void sm::TagRegistry::_ExtractSubTags(godot::StringName& fullName)
 			break;
 		}
 
-#ifdef TOOLS_DEBUG
+#ifdef TOOLS_DEBUG_VS
 		m_StdSuffixToFullPaths.try_emplace(ToStdString(prevRTag), ToStdString(fullName));
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
 
 		prevRTag = "." + prevRTag;
 	}
@@ -430,9 +493,9 @@ godot::StringName sm::TagRegistry::_GetFullName(godot::StringName tagName) const
 {
 	godot::StringName full = tagName;
 
-#ifdef TOOLS_DEBUG
+#ifdef TOOLS_DEBUG_VS
 	auto a = ToStdString(tagName);
-#endif //  TOOLS_DEBUG
+#endif //  TOOLS_DEBUG_VS
 
 	if (auto itr = m_NameToID.find(tagName);
 		itr == m_NameToID.end() && !tagName.begins_with(ROOT))
@@ -453,9 +516,9 @@ sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, uint32 idPar
 	GameplayTag& newTag = m_Tags.emplace_back(_GenerateUID(), fullName);
 	m_NameToID.try_emplace(fullName, newTag.GetUID());
 
-#ifdef TOOLS_DEBUG
+#ifdef DEBUG_MODE
 	m_StdNameToID.try_emplace(ToStdString(fullName), newTag.GetUID());
-#endif //  TOOLS_DEBUG
+#endif //  DEBUG_MODE
 
 	m_IDtoIndex[newTag.GetUID()] = m_Tags.size() - 1;
 
