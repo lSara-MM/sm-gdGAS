@@ -1,13 +1,20 @@
 #pragma once
-#include "Attribute.h"
+#include "GameplayAttribute.h"
 
-#include <godot_cpp/classes/ref.hpp>
-#include <godot_cpp/classes/resource.hpp>
-#include <godot_cpp/variant/typed_array.hpp>
-#include <typeindex>
+#include <vector>
 
 namespace sm
 {
+	class GameplayAttributeSet
+	{
+	public:
+		GameplayAttributeSet();
+		~GameplayAttributeSet();
+
+	private:
+		std::vector<GameplayAttribute> m_Attributes;
+	};
+
 	class AttributeSet : public godot::Resource
 	{
 		GDCLASS(AttributeSet, godot::Resource)
@@ -16,28 +23,15 @@ namespace sm
 		static void _bind_methods();
 
 	public:
-		AttributeSet();
-		~AttributeSet();
+
+		godot::TypedArray<sm::Attribute> GetAttributesSet();
+		void SetAttributesSet(const godot::TypedArray<sm::Attribute>& attr);
+
+	private:
+		AttributeSet() = default;
+		~AttributeSet() = default;
+
+	private:
+		godot::TypedArray<sm::Attribute> m_gdAttributes;
 	};
-
-	/*class AttributeSetPreset : public AttributeSet
-	{
-		GDCLASS(AttributeSetPreset, AttributeSet)
-		
-	protected:
-		static void _bind_methods();
-
-	public:
-		AttributeSetPreset();
-		~AttributeSetPreset();
-
-		godot::TypedArray<sm::Attribute> GetAbilityPropertiesEd() { return m_AbilityPropertiesEd; }
-		void SetAbilityPropertiesEd(const godot::TypedArray<sm::Attribute> arr);
-
-		godot::Ref<sm::Attribute> AddProperty(godot::Ref<sm::Attribute> property);
-
-	public:
-		godot::TypedArray<sm::Attribute> m_AbilityPropertiesEd;
-		std::unordered_map<std::type_index, godot::Ref<sm::Attribute>> m_AbilityProperties;
-	};*/
 }

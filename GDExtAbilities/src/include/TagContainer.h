@@ -1,14 +1,13 @@
 #pragma once
 #include "Types.h"
 #include "GameplayTag.h"
-
-#include <godot_cpp/classes/node.hpp>
+#include "GameplayAbilitySystemNode.h"
 
 namespace sm
 {
-	class TagContainer final : public godot::Node
+	class TagContainer final : public sm::GameplayAbilitySystem
 	{
-		GDCLASS(TagContainer, Node)
+		GDCLASS(TagContainer, sm::GameplayAbilitySystem)
 
 	public:
 		TagContainer();
@@ -23,10 +22,10 @@ namespace sm
 	private:
 
 		// Activation Rules
-		std::vector<GameplayTag> m_AbiltyTags;
-		std::vector<GameplayTag> m_CancelAbiltyTags;
-		std::vector<GameplayTag> m_BlockAbiltyTags;
-		std::vector<GameplayTag> m_ActivationRequirementTags;
-		std::vector<GameplayTag> m_DeactivationRequirementTags;
+		//std::vector<GameplayTag> m_AbiltyTags;
+		//std::vector<GameplayTag> m_CancelAbiltyTags;
+		//std::vector<GameplayTag> m_BlockAbiltyTags;
+		//std::vector<GameplayTag> m_ActivationRequirementTags;
+		//std::vector<GameplayTag> m_DeactivationRequirementTags;
 	};
 }

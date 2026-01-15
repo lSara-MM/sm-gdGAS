@@ -8,13 +8,8 @@
 
 namespace sm
 {
-	class TagRegistry final : public godot::Object
+	class TagRegistry final
 	{
-		GDCLASS(TagRegistry, godot::Object)
-
-	protected:
-		static void _bind_methods();
-
 	public:
 		static TagRegistry& GetInstance();
 
@@ -43,7 +38,7 @@ namespace sm
 		bool IsParentOf(uint32 tagID, uint32 childID) const;
 		bool IsChildOf(uint32 tagID, uint32 parentID) const;
 
-		//private:
+		private:
 
 		TagRegistry();
 		~TagRegistry() = default;

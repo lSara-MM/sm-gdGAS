@@ -1,8 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://dxvoh0h0g5o1n"]
+[gd_scene load_steps=4 format=3 uid="uid://dxvoh0h0g5o1n"]
 
 [ext_resource type="Script" uid="uid://sinqoekac5sb" path="res://test/tag_container.gd" id="1_errlg"]
+
+[sub_resource type="Attribute" id="Attribute_syuel"]
+base_value = 1.25016e-19
+
+[sub_resource type="AttributeSet" id="AttributeSet_8a8pi"]
+attribute_set = Array[Attribute]([SubResource("Attribute_syuel")])
 
 [node name="Test" type="Node2D"]
 
 [node name="TagContainer" type="TagContainer" parent="."]
 script = ExtResource("1_errlg")
+
+[node name="AttributeContainer" type="AttributeContainer" parent="."]
+attribute_set = SubResource("AttributeSet_8a8pi")

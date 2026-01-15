@@ -15,34 +15,33 @@ sm::TagRegistry::TagRegistry() : ROOT("<")
 #endif //  TOOLS_DEBUG_VS
 }
 
-void sm::TagRegistry::_bind_methods()
-{
-#ifdef DEBUG_MODE
-	godot::ClassDB::bind_method(godot::D_METHOD("get_tag", "tag_name"), &GetTag);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_parent", "tag_name"), &GetParent);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_ascendants", "tag_name"), &GetAscendants);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_children", "tag_name"), &GetChildren);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_descendants", "tag_name"), &GetDescendants);
-
-	godot::ClassDB::bind_method(godot::D_METHOD("register_tag", "tag_name"), &RegisterTag);
-	// Due to overloading, Godot does not deduce which one it refers to so it needs casting
-	godot::ClassDB::bind_method(godot::D_METHOD("unregister_tag", "tag_name"),
-		static_cast<void (TagRegistry::*)(godot::StringName)>(&UnregisterTag));
-
-	godot::ClassDB::bind_method(godot::D_METHOD("rename_tag", "tagId", "newName"), &RenameTag);
-	godot::ClassDB::bind_method(godot::D_METHOD("is_name_valid", "tag_name"), &IsNameValid);
-#endif // DEBUG_MODE
-
-	godot::ClassDB::bind_method(godot::D_METHOD("has_child", "tag_name", "child_name"), &HasChild);
-	godot::ClassDB::bind_method(godot::D_METHOD("has_descendant", "tag_name", "child_name"), &HasDescendant);
-	godot::ClassDB::bind_method(godot::D_METHOD("is_parent_of", "tag_name", "child_name"), &IsParentOf);
-	godot::ClassDB::bind_method(godot::D_METHOD("is_child_of", "tag_name", "parent_name"), &IsChildOf);
-
-
-	ADD_SIGNAL(godot::MethodInfo("tag_renamed",
-		godot::PropertyInfo(godot::Variant::INT, "tag_id"),
-		godot::PropertyInfo(godot::Variant::STRING_NAME, "new_name")));
-}
+//void sm::TagRegistry::_bind_methods()
+//{
+//#ifdef DEBUG_MODE
+//	godot::ClassDB::bind_method(godot::D_METHOD("get_tag", "tag_name"), &GetTag);
+//	godot::ClassDB::bind_method(godot::D_METHOD("get_parent", "tag_name"), &GetParent);
+//	godot::ClassDB::bind_method(godot::D_METHOD("get_ascendants", "tag_name"), &GetAscendants);
+//	godot::ClassDB::bind_method(godot::D_METHOD("get_children", "tag_name"), &GetChildren);
+//	godot::ClassDB::bind_method(godot::D_METHOD("get_descendants", "tag_name"), &GetDescendants);
+//
+//	godot::ClassDB::bind_method(godot::D_METHOD("register_tag", "tag_name"), &RegisterTag);
+//	// Due to overloading, Godot does not deduce which one it refers to so it needs casting
+//	godot::ClassDB::bind_method(godot::D_METHOD("unregister_tag", "tag_name"),
+//		static_cast<void (TagRegistry::*)(godot::StringName)>(&UnregisterTag));
+//
+//	godot::ClassDB::bind_method(godot::D_METHOD("rename_tag", "tagId", "newName"), &RenameTag);
+//	godot::ClassDB::bind_method(godot::D_METHOD("is_name_valid", "tag_name"), &IsNameValid);
+//#endif // DEBUG_MODE
+//
+//	godot::ClassDB::bind_method(godot::D_METHOD("has_child", "tag_name", "child_name"), &HasChild);
+//	godot::ClassDB::bind_method(godot::D_METHOD("has_descendant", "tag_name", "child_name"), &HasDescendant);
+//	godot::ClassDB::bind_method(godot::D_METHOD("is_parent_of", "tag_name", "child_name"), &IsParentOf);
+//	godot::ClassDB::bind_method(godot::D_METHOD("is_child_of", "tag_name", "parent_name"), &IsChildOf);
+//
+//	ADD_SIGNAL(godot::MethodInfo("tag_renamed",
+//		godot::PropertyInfo(godot::Variant::INT, "tag_id"),
+//		godot::PropertyInfo(godot::Variant::STRING_NAME, "new_name")));
+//}
 
 sm::TagRegistry& sm::TagRegistry::GetInstance()
 {
@@ -277,7 +276,7 @@ void sm::TagRegistry::RenameTag(uint32 tagID, godot::StringName newName)
 
 	m_NameToID.try_emplace(newName, tag->GetUID());
 
-	emit_signal("tag_renamed", tagID, newName);
+	//emit_signal("tag_renamed", tagID, newName);
 }
 
 bool sm::TagRegistry::IsNameValid(godot::StringName name) const

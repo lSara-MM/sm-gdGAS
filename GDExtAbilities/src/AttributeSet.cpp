@@ -1,72 +1,31 @@
 #include "AttributeSet.h"
 
-sm::AttributeSet::AttributeSet()
+sm::GameplayAttributeSet::GameplayAttributeSet()
 {}
 
-sm::AttributeSet::~AttributeSet()
+sm::GameplayAttributeSet::~GameplayAttributeSet()
 {}
 
 void sm::AttributeSet::_bind_methods()
 {
+	godot::ClassDB::bind_method(godot::D_METHOD("get_attributes_set"), &GetAttributesSet);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_attributes_set", "arr"), &SetAttributesSet);
 
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::ARRAY,
+		"attribute_set",
+		godot::PROPERTY_HINT_TYPE_STRING,
+		godot::String::num(godot::Variant::OBJECT) + "/" + godot::String::num(godot::PROPERTY_HINT_RESOURCE_TYPE) + ":Attribute"),
+		"set_attributes_set", "get_attributes_set"
+	);
 }
 
-//void sm::AttributeSetPreset::_bind_methods()
-//{
-//	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_properties"), &GetAbilityPropertiesEd);
-//	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_properties", "arr"), &SetAbilityPropertiesEd);
-//
-//	ADD_PROPERTY(godot::PropertyInfo(
-//		godot::Variant::ARRAY,
-//		"Properties",
-//		godot::PROPERTY_HINT_TYPE_STRING,
-//		godot::String::num(godot::Variant::OBJECT) + "/" + godot::String::num(godot::PROPERTY_HINT_RESOURCE_TYPE) + ":Attribute"),
-//		"set_ability_properties", "get_ability_properties"
-//	);
-//
-//	godot::ClassDB::bind_method(godot::D_METHOD("add_property", "property"), &AddProperty);
-//}
-//
-//sm::AttributeSetPreset::AttributeSetPreset()
-//{}
-//
-//sm::AttributeSetPreset::~AttributeSetPreset()
-//{}
-//
-//void sm::AttributeSetPreset::SetAbilityPropertiesEd(const godot::TypedArray<sm::Attribute> arr)
-//{
-//	m_AbilityProperties.clear();
-//	m_AbilityPropertiesEd.clear();
-//
-//	for (int i = 0; i < arr.size(); i++)
-//	{
-//		godot::Ref<Attribute> property = arr[i];
-//		if (property.is_valid())
-//		{
-//			godot::Ref<Attribute> added = AddProperty(property);
-//			if (added.is_valid())
-//			{
-//				m_AbilityPropertiesEd.append(added);
-//			}
-//		}
-//		else
-//		{
-//			m_AbilityPropertiesEd.append(property);
-//		}
-//	}
-//}
-//
-//godot::Ref<sm::Attribute> sm::AttributeSetPreset::AddProperty(godot::Ref<sm::Attribute> property)
-//{
-//	using TAbilitiesMap = std::unordered_map<std::type_index, godot::Ref<Attribute>>;
-//
-//	std::pair<TAbilitiesMap::iterator, bool> result = m_AbilityProperties.emplace(std::type_index(typeid(*property.ptr())), property);
-//
-//	if (!result.second)
-//	{
-//		WARN_PRINT_ED("sm: Property already existing");
-//		return nullptr;
-//	}
-//
-//	return result.first->second;
-//}
+godot::TypedArray<sm::Attribute> sm::AttributeSet::GetAttributesSet()
+{
+	return m_gdAttributes;
+}
+
+void sm::AttributeSet::SetAttributesSet(const godot::TypedArray<sm::Attribute>& attr)
+{
+	m_gdAttributes = attr;
+}

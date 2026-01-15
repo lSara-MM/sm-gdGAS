@@ -344,27 +344,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h" />
-    <ClInclude Include="..\src\include\Ability.h" />
-    <ClInclude Include="..\src\include\Attribute.h" />
+    <ClInclude Include="..\src\include\AttributeContainer.h" />
     <ClInclude Include="..\src\include\AttributeSet.h" />
-    <ClInclude Include="..\src\include\CooldownAttribute.h" />
+    <ClInclude Include="..\src\include\GameplayAttribute.h" />
     <ClInclude Include="..\src\include\GameplayTag.h" />
     <ClInclude Include="..\src\include\TagContainer.h" />
     <ClInclude Include="..\src\include\TagRegistry.h" />
-    <ClInclude Include="..\src\private\BitSet.h" />
-    <ClInclude Include="..\src\private\smBitSet.h" />
     <ClInclude Include="..\src\private\Types.h" />
     <ClInclude Include="..\src\register_types.h" />
     <ClInclude Include="UID.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Ability.cpp" />
-    <ClCompile Include="..\src\Attribute.cpp" />
+    <ClCompile Include="..\src\AttributeContainer.cpp" />
     <ClCompile Include="..\src\AttributeSet.cpp" />
-    <ClCompile Include="..\src\BitSet.cpp" />
-    <ClCompile Include="..\src\CooldownAttribute.cpp" />
+    <ClCompile Include="..\src\GameplayAttribute.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
-    <ClCompile Include="..\src\private\smBitSet.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
     <ClCompile Include="..\src\TagContainer.cpp" />
     <ClCompile Include="..\src\TagRegistry.cpp" />

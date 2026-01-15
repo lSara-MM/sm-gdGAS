@@ -6,10 +6,9 @@
 #include <godot_cpp/godot.hpp>
 
 #include "gdExample.h"
-#include "include/Ability.h"
-#include "include/Attribute.h"
+#include "include/AttributeContainer.h"
 #include "include/AttributeSet.h"
-#include "include/CooldownAttribute.h"
+#include "include/GameplayAttribute.h"
 #include "include/TagContainer.h"
 
 using namespace godot;
@@ -22,13 +21,12 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     }
 
     ClassDB::register_class<GDExample>();
-    ClassDB::register_class<sm::Ability>();
+    ClassDB::register_abstract_class<sm::GameplayAbilitySystem>();
     ClassDB::register_class<sm::Attribute>();
-    //ClassDB::register_class<sm::FloatAttribute>();
+    ClassDB::register_class<sm::AttributeContainer>();
     ClassDB::register_class<sm::AttributeSet>();
-    //ClassDB::register_class<sm::AttributeSetPreset>();
-    //ClassDB::register_class<sm::CooldownAttribute>();
     ClassDB::register_class<sm::TagContainer>();
+
 }
 
 void uninitialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
