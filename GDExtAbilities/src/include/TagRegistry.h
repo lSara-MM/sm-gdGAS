@@ -25,8 +25,9 @@ namespace sm
 		void UnregisterTag(godot::StringName tagName);
 
 		void RenameTag(uint32 tagID, godot::StringName newName);
-		bool IsNameValid(godot::StringName name) const;
 #endif // DEBUG_MODE
+
+		bool IsNameValid(godot::StringName name) const;
 
 		/// Returns true if `tagID` is a direct child of `childID`.
 		bool HasChild(uint32 tagID, uint32 childID) const;

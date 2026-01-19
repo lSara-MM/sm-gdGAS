@@ -109,6 +109,10 @@ void sm::TagRegistry::_GetAscendantsTree(uint32 itrTagID, godot::TypedArray<godo
 		{
 			ascendants.push_back(godot::StringName(parentTag->name.substr(ROOT.length() + 1)));
 		}
+		else
+		{
+			break;
+		}
 	}
 	m_AscendantsCache.try_emplace(itrTagID, ascendants);
 }
@@ -278,6 +282,7 @@ void sm::TagRegistry::RenameTag(uint32 tagID, godot::StringName newName)
 
 	//emit_signal("tag_renamed", tagID, newName);
 }
+#endif // DEBUG_MODE
 
 bool sm::TagRegistry::IsNameValid(godot::StringName name) const
 {
@@ -285,7 +290,6 @@ bool sm::TagRegistry::IsNameValid(godot::StringName name) const
 	std::regex rgx(R"(^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$)");
 	return std::regex_match(ToStdString(name), rgx);
 }
-#endif // DEBUG_MODE
 
 bool sm::TagRegistry::HasChild(uint32 tagID, uint32 childID) const
 {
@@ -538,4 +542,4 @@ void sm::TagRegistry::_AddChild(GameplayTag& tag, uint32 idChild)
 	}
 }
 
-#pragma endregion
+#pragma endregion Internal methods

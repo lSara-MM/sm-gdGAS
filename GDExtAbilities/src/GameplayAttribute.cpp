@@ -1,7 +1,10 @@
 #include "GameplayAttribute.h"
 
+#include <godot_cpp/classes/engine.hpp>
+
 void sm::Attribute::_bind_methods()
 {
+	godot::ClassDB::bind_static_method("Attribute", godot::D_METHOD("create", "base_value", "name"), &Create);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_name"), &GetName);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_name", "name"), &SetName);
 
@@ -19,22 +22,38 @@ void sm::Attribute::_bind_methods()
 	);
 }
 
-float sm::Attribute::GetBaseValue()
+godot::Ref<sm::Attribute> sm::Attribute::Create(float base, godot::StringName n)
 {
-	return baseValue;
-}
+	godot::Ref<sm::Attribute> attr;
+	attr.instantiate();
+	attr->SetBaseValue(base);
+	attr->SetName(n);
 
-void sm::Attribute::SetBaseValue(float value)
-{
-	baseValue = value;
-}
-
-godot::StringName sm::Attribute::GetName()
-{
-	return name;
+	return attr;
 }
 
 void sm::Attribute::SetName(godot::StringName n)
 {
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		if (n != name)
+		{
+			_NotifySetNameListeners(n);
+		}
+	}
+
 	name = n;
+}
+
+void sm::Attribute::SubscribeSetNameEvent(std::function<void(godot::StringName)> callback)
+{
+	m_SetNameListeners.push_back(callback);
+}
+
+void sm::Attribute::_NotifySetNameListeners(godot::StringName newName) const
+{
+	for (auto& cb : m_SetNameListeners)
+	{
+		cb(newName);
+	}
 }
