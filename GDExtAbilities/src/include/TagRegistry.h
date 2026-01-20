@@ -1,10 +1,10 @@
 #pragma once
-#include "Types.h"
 #include "GameplayTag.h"
+#include "Types.h"
 
+#include <godot_cpp/classes/object.hpp>
 #include <unordered_map>
 #include <vector>
-#include <godot_cpp/classes/object.hpp>
 
 namespace sm
 {

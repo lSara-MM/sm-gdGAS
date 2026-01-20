@@ -1,6 +1,7 @@
 #pragma once
 #include "GameplayAbilitySystemNode.h"
 #include "GameplayAttribute.h"
+#include "gdAttribute.h"
 
 #include <godot_cpp/classes/ref.hpp>
 #include <memory>
@@ -30,8 +31,8 @@ namespace sm
 		godot::Ref<sm::AttributeSet> GetAttributeSet();
 		void SetAttributeSet(const godot::Ref<sm::AttributeSet>& attr);
 
-		void AddAttribute(godot::StringName name, float baseValue);
-		void AddAttribute(const godot::Ref<sm::Attribute>& attr);
+		/*void AddAttribute(godot::StringName name, float m_BaseValue);
+		void AddAttribute(const godot::Ref<sm::Attribute>& attr);*/
 
 		float GetAttributeID(godot::StringName name);
 

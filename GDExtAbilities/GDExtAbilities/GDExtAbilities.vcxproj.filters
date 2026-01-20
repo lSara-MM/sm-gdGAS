@@ -13,60 +13,84 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\private">
+      <UniqueIdentifier>{e895ee1e-051f-41cd-beb8-67f07ebb25aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\public">
+      <UniqueIdentifier>{4d711508-b97a-4141-bd79-c38cc8ffef1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\private">
+      <UniqueIdentifier>{8bf9c609-35c6-4069-8891-927789d3fb01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\public">
+      <UniqueIdentifier>{3e2fa553-0b84-4070-ac4a-738c7e9924d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gdExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\register_types.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TagContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TagRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\AttributeContainer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\public</Filter>
     </ClCompile>
     <ClCompile Include="..\src\GameplayAttribute.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\public</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AttributeSet.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\register_types.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TagContainer.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TagRegistry.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameplayAttributeSet.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAttribute.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAttributeSet.cpp">
+      <Filter>Source Files\public</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\gdExample.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\include\AttributeContainer.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayAttribute.h">
+      <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\GameplayTag.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\TagContainer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\TagRegistry.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\public</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\private\Types.h">
+    <ClInclude Include="..\src\gdExample.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\register_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UID.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\private\Types.h">
+      <Filter>Header Files\private</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayAttribute.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\private\Event.h">
+      <Filter>Header Files\private</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\AttributeContainer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\include\gdAttribute.h">
+      <Filter>Header Files\public</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\AttributeSet.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\include\gdAttributeSet.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayAttributeSet.h">
+      <Filter>Header Files\public</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

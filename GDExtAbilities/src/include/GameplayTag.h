@@ -1,7 +1,7 @@
 #pragma once
 #include "Types.h"
 
-#include <godot_cpp/variant/string_name.hpp>
+#include <vector>
 
 namespace sm
 {

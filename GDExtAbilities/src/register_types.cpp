@@ -7,8 +7,8 @@
 
 #include "gdExample.h"
 #include "include/AttributeContainer.h"
-#include "include/AttributeSet.h"
-#include "include/GameplayAttribute.h"
+#include "include/gdAttribute.h"
+#include "include/gdAttributeSet.h"
 #include "include/TagContainer.h"
 
 using namespace godot;

@@ -1,19 +1,8 @@
-#include "AttributeSet.h"
+#include "gdAttributeSet.h"
 
 #include <algorithm>
 #include <unordered_set>
 #include <variant/utility_functions.hpp>
-
-sm::GameplayAttributeSet::GameplayAttributeSet()
-{}
-
-sm::GameplayAttributeSet::~GameplayAttributeSet()
-{}
-
-void sm::GameplayAttributeSet::AddAttribute(uint32 id, float base, float min, float max)
-{
-	m_Attributes.emplace_back(id, base, min, max);
-}
 
 void sm::AttributeSet::_bind_methods()
 {
@@ -59,17 +48,17 @@ void sm::AttributeSet::SetAttributesSet(const godot::TypedArray<sm::Attribute>& 
 			continue;
 		}
 
-//#ifdef DEBUG_MODE
-		attribute-> attribute->SubscribeSetNameEvent([this](const godot::StringName& new_name)
+#ifdef DEBUG_MODE
+		attribute->eventSetName.SubscribeEvent([this](const godot::StringName& new_name)
 			{
 				this->_OnAttributeSetName(new_name);
 			});
 
-		attribute->SubscribeSetNameEvent([this](const godot::StringName& new_name)
+		/*attribute->SubscribeSetNameEvent([this](const godot::StringName& new_name)
 			{
 				this->_OnAttributeSetName(new_name);
-			});
-//#endif // DEBUG_MODE
+			});*/
+#endif // DEBUG_MODE
 	}
 }
 
@@ -91,7 +80,23 @@ void sm::AttributeSet::AddAttribute(const godot::Ref<sm::Attribute>& attr)
 	emit_changed();
 }
 
-godot::Ref<sm::Attribute> sm::AttributeSet::GetAttribute(godot::StringName name)
+uint32 sm::AttributeSet::GetAttributeID(godot::StringName name) const
+{
+	godot::Ref<sm::Attribute> ref;
+
+	for (size_t i = 0; i < m_gdAttributes.size(); i++)
+	{
+		ref = m_gdAttributes[i];
+		if (ref->GetName() == name)
+		{
+			return ref->GetID();
+		}
+	}
+
+	return 0;
+}
+
+godot::Ref<sm::Attribute> sm::AttributeSet::GetAttributeResource(godot::StringName name)
 {
 	godot::Ref<sm::Attribute> ref;
 

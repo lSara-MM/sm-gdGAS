@@ -1,5 +1,6 @@
 #pragma once
 #include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/variant/string_name.hpp>
 #include <stdio.h>
 #include <string>
 
