@@ -20,6 +20,13 @@
 
 using uint32 = uint32_t;
 
+using AttributeID = uint32_t;
+using AttributeSetID = uint32_t;
+using EntityID = uint32_t;
+using EffectID = uint32_t;
+using ModifierID = uint32_t;
+using TagID = uint32_t;
+
 inline std::string ToStdString(const godot::StringName& sn)
 {
 	godot::String gstr = sn;                 // Convert to Godot String

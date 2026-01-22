@@ -54,6 +54,12 @@
     <ClCompile Include="..\src\gdAttributeSet.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GameplayModifier.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdModifier.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\AttributeContainer.h">
@@ -90,6 +96,12 @@
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\GameplayAttributeSet.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayModifier.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdModifier.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
   </ItemGroup>

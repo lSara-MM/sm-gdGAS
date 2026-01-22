@@ -1,12 +1,36 @@
 #include "GameplayAttributeSet.h"
 
+#include "GameplayModifier.h"
+
 sm::GameplayAttributeSet::GameplayAttributeSet()
 {}
 
 sm::GameplayAttributeSet::~GameplayAttributeSet()
 {}
 
-void sm::GameplayAttributeSet::AddAttribute(uint32 id, float base, float min, float max)
+sm::GameplayAttribute* sm::GameplayAttributeSet::FindAttribute(AttributeID id)
 {
-	m_Attributes.emplace_back(id, base, min, max);
+	// AttributeSets are small (< 100 attributes), linear search is acceptable
+	for (sm::GameplayAttribute& attr : m_Attributes)
+	{
+		if (attr.GetUID() == id)
+		{
+			return &attr;
+		}
+	}
+
+	return nullptr;
+}
+
+sm::GameplayAttribute& sm::GameplayAttributeSet::AddAttribute(AttributeID id, float base, float min, float max)
+{
+	return m_Attributes.emplace_back(id, base, min, max);
+}
+
+void sm::GameplayAttributeSet::AddModifier(AttributeID id, const sm::Modifier& mod)
+{
+	/*if (sm::GameplayAttribute* attr = FindAttribute(id); attr != nullptr)
+	{
+		attr.
+	}*/
 }

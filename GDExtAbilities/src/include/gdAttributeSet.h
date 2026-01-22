@@ -23,7 +23,7 @@ namespace sm
 		void AddAttribute(float baseValue, godot::StringName name);
 		void AddAttribute(const godot::Ref<sm::Attribute>& attr);
 		
-		uint32 GetAttributeID(godot::StringName name) const;
+		//uint32 GetAttributeID(godot::StringName name) const;
 
 		// TODO: myb useless?
 		godot::Ref<sm::Attribute> GetAttributeResource(godot::StringName name);
@@ -44,7 +44,6 @@ namespace sm
 
 	private:
 		godot::TypedArray<sm::Attribute> m_gdAttributes;
-		std::unordered_map<godot::StringName, uint32> m_NamesToID;
 
 #ifdef TOOLS_DEBUG_VS
 		std::vector<std::string> m_DebugNames;

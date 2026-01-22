@@ -5,16 +5,23 @@
 
 namespace sm
 {
+	struct Modifier;
+}
+
+namespace sm
+{
 	class GameplayAttributeSet
 	{
 	public:
 		GameplayAttributeSet();
 		~GameplayAttributeSet();
 
-		//GameplayAttribute& GetAttribute(uint32 id) const;
-		void AddAttribute(uint32 id, float base, float min = 0.0f, float max = FLT_MAX);
+		GameplayAttribute* FindAttribute(AttributeID id);
+		sm::GameplayAttribute& AddAttribute(AttributeID id, float base, float min = 0.0f, float max = FLT_MAX);
+
+		void AddModifier(AttributeID id, const sm::Modifier& mod);
 
 	private:
-		std::vector<GameplayAttribute> m_Attributes;
+		std::vector<sm::GameplayAttribute> m_Attributes;
 	};
 }

@@ -85,14 +85,14 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetAscendants(godot::Strin
 	return ascendants;
 }
 
-void sm::TagRegistry::_GetAscendantsTree(uint32 itrTagID, godot::TypedArray<godot::StringName>& ascendants)
+void sm::TagRegistry::_GetAscendantsTree(TagID itrTagID, godot::TypedArray<godot::StringName>& ascendants)
 {
-	std::vector<uint32> stack;
+	std::vector<TagID> stack;
 	stack.push_back(itrTagID);
 
 	while (!stack.empty())
 	{
-		uint32 id = stack.back();
+		TagID id = stack.back();
 		stack.pop_back();
 
 		const GameplayTag* tag = _GetTag(id);
@@ -141,14 +141,14 @@ godot::TypedArray<godot::StringName> sm::TagRegistry::GetDescendants(godot::Stri
 	return descendants;
 }
 
-void sm::TagRegistry::_GetDescendantsTree(uint32 itrTagID, godot::TypedArray<godot::StringName>& descendants)
+void sm::TagRegistry::_GetDescendantsTree(TagID itrTagID, godot::TypedArray<godot::StringName>& descendants)
 {
-	std::vector<uint32> stack;
+	std::vector<TagID> stack;
 	stack.push_back(itrTagID);
 
 	while (!stack.empty())
 	{
-		uint32 id = stack.back();
+		TagID id = stack.back();
 		stack.pop_back();
 
 		const GameplayTag* tag = _GetTag(id);
@@ -158,7 +158,7 @@ void sm::TagRegistry::_GetDescendantsTree(uint32 itrTagID, godot::TypedArray<god
 			continue;
 		}
 
-		for (uint32 child : tag->children)
+		for (TagID child : tag->children)
 		{
 			stack.push_back(child);
 
@@ -179,7 +179,7 @@ void sm::TagRegistry::RegisterTag(godot::StringName tagName)
 	std::istringstream iss(ToStdString(tagName));
 	std::string prevTagName = ToStdString(ROOT);
 	std::string token;
-	uint32 prevTag = 0;
+	TagID prevTag = 0;
 
 	while (std::getline(iss, token, '.'))
 	{
@@ -202,14 +202,14 @@ void sm::TagRegistry::RegisterTag(godot::StringName tagName)
 	}
 }
 
-void sm::TagRegistry::UnregisterTag(uint32 tagID)
+void sm::TagRegistry::UnregisterTag(TagID tagID)
 {
-	std::vector<uint32> stack;
+	std::vector<TagID> stack;
 	stack.push_back(tagID);
 
 	while (!stack.empty())
 	{
-		uint32 id = stack.back();
+		TagID id = stack.back();
 		stack.pop_back();
 
 		GameplayTag* tag = _GetTag(id);
@@ -219,7 +219,7 @@ void sm::TagRegistry::UnregisterTag(uint32 tagID)
 			continue;
 		}
 
-		for (uint32 childID : tag->children)
+		for (TagID childID : tag->children)
 		{
 			stack.push_back(childID);
 		}
@@ -239,13 +239,13 @@ void sm::TagRegistry::UnregisterTag(uint32 tagID)
 
 		m_NameToID.erase(tag->name);
 
-		uint32 indexToErase = m_IDtoIndex[id];
-		uint32 lastIndex = m_Tags.size() - 1;
+		TagID indexToErase = m_IDtoIndex[id];
+		TagID lastIndex = m_Tags.size() - 1;
 
 		GameplayTag& tagToErase = m_Tags[indexToErase];
 		GameplayTag& lastTag = m_Tags[lastIndex];
 
-		uint32 lastUID = lastTag.GetUID();
+		TagID lastUID = lastTag.GetUID();
 
 		std::swap(tagToErase, lastTag);
 		m_IDtoIndex[lastUID] = indexToErase;
@@ -268,7 +268,7 @@ void sm::TagRegistry::UnregisterTag(godot::StringName tagName)
 	UnregisterTag(tagID->second);
 }
 
-void sm::TagRegistry::RenameTag(uint32 tagID, godot::StringName newName)
+void sm::TagRegistry::RenameTag(TagID tagID, godot::StringName newName)
 {
 	ERR_FAIL_COND_MSG(_GetTag(newName), godot::vformat("Tag with this name already exists: %s", ToStdString(newName).c_str()));
 
@@ -291,7 +291,7 @@ bool sm::TagRegistry::IsNameValid(godot::StringName name) const
 	return std::regex_match(ToStdString(name), rgx);
 }
 
-bool sm::TagRegistry::HasChild(uint32 tagID, uint32 childID) const
+bool sm::TagRegistry::HasChild(TagID tagID, TagID childID) const
 {
 	const GameplayTag* tag = _GetTag(tagID);
 	const GameplayTag* tagChild = _GetTag(tagID);
@@ -301,7 +301,7 @@ bool sm::TagRegistry::HasChild(uint32 tagID, uint32 childID) const
 	return std::find(tag->children.begin(), tag->children.end(), childID) != tag->children.end();
 }
 
-bool sm::TagRegistry::HasDescendant(uint32 tagID, uint32 childID) const
+bool sm::TagRegistry::HasDescendant(TagID tagID, TagID childID) const
 {
 	if (auto itr = m_DescendantsCache.find(tagID); itr != m_DescendantsCache.end())
 	{
@@ -309,12 +309,12 @@ bool sm::TagRegistry::HasDescendant(uint32 tagID, uint32 childID) const
 		return itr->second.has(childTag->name);
 	}
 
-	std::vector<uint32> stack;
+	std::vector<TagID> stack;
 	stack.push_back(tagID);
 
 	while (!stack.empty())
 	{
-		uint32 id = stack.back();
+		TagID id = stack.back();
 		stack.pop_back();
 
 		const GameplayTag* tag = _GetTag(id);
@@ -324,7 +324,7 @@ bool sm::TagRegistry::HasDescendant(uint32 tagID, uint32 childID) const
 			continue;
 		}
 
-		for (uint32 child : tag->children)
+		for (TagID child : tag->children)
 		{
 			if (child == childID)
 			{
@@ -338,12 +338,12 @@ bool sm::TagRegistry::HasDescendant(uint32 tagID, uint32 childID) const
 	return false;
 }
 
-bool sm::TagRegistry::IsParentOf(uint32 tagID, uint32 childID) const
+bool sm::TagRegistry::IsParentOf(TagID tagID, TagID childID) const
 {
 	return HasChild(tagID, childID);
 }
 
-bool sm::TagRegistry::IsChildOf(uint32 tagID, uint32 parentID) const
+bool sm::TagRegistry::IsChildOf(TagID tagID, TagID parentID) const
 {
 	const GameplayTag* tag = _GetTag(tagID);
 	const GameplayTag* tagParent = _GetTag(tagID);
@@ -355,12 +355,12 @@ bool sm::TagRegistry::IsChildOf(uint32 tagID, uint32 parentID) const
 
 #pragma region Internal methods
 
-sm::GameplayTag* sm::TagRegistry::_GetTag(uint32 id)
+sm::GameplayTag* sm::TagRegistry::_GetTag(TagID id)
 {
 	return const_cast<sm::GameplayTag*>(const_cast<const TagRegistry*>(this)->_GetTag(id));
 }
 
-const sm::GameplayTag* sm::TagRegistry::_GetTag(uint32 id) const
+const sm::GameplayTag* sm::TagRegistry::_GetTag(TagID id) const
 {
 	auto index = m_IDtoIndex.find(id);
 
@@ -404,7 +404,7 @@ const sm::GameplayTag* sm::TagRegistry::_GetTag(godot::StringName tagName) const
 	return _GetTag(itr->second);
 }
 
-sm::GameplayTag& sm::TagRegistry::_GetTagRef(uint32 id)
+sm::GameplayTag& sm::TagRegistry::_GetTagRef(TagID id)
 {
 	auto itr = m_IDtoIndex.find(id);
 	if (itr != m_IDtoIndex.end())
@@ -417,7 +417,7 @@ sm::GameplayTag& sm::TagRegistry::_GetTagRef(uint32 id)
 	return m_Tags[0]; // Root
 }
 
-godot::StringName sm::TagRegistry::_GetParent(uint32 id)
+godot::StringName sm::TagRegistry::_GetParent(TagID id)
 {
 	GameplayTag* tag = _GetTag(id);
 	GameplayTag* tagParent = _GetTag(id);
@@ -427,12 +427,12 @@ godot::StringName sm::TagRegistry::_GetParent(uint32 id)
 	return godot::StringName(tagParent->name.substr(ROOT.length() + 1));
 }
 
-godot::TypedArray<godot::StringName> sm::TagRegistry::_GetChildren(uint32 id)
+godot::TypedArray<godot::StringName> sm::TagRegistry::_GetChildren(TagID id)
 {
 	GameplayTag* tag = _GetTag(id);
 
 	godot::TypedArray<godot::StringName> children;
-	for (uint32 child : tag->children)
+	for (TagID child : tag->children)
 	{
 		GameplayTag* tagChild = _GetTag(child);
 		godot::StringName relativeName = godot::StringName(tagChild->name.substr(ROOT.length() + 1));
@@ -512,7 +512,7 @@ godot::StringName sm::TagRegistry::_GetFullName(godot::StringName tagName) const
 	return _AddRoot(full);
 }
 
-sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, uint32 idParent)
+sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, TagID idParent)
 {
 	godot::StringName fullName = _GetFullName(name);
 
@@ -533,7 +533,7 @@ sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, uint32 idPar
 	return newTag;
 }
 
-void sm::TagRegistry::_AddChild(GameplayTag& tag, uint32 idChild)
+void sm::TagRegistry::_AddChild(GameplayTag& tag, TagID idChild)
 {
 	// Search if child already exists and adds it if it doesn't
 	if (std::find(tag.children.begin(), tag.children.end(), idChild) == tag.children.end())

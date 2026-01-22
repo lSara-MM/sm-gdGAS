@@ -80,21 +80,21 @@ void sm::AttributeSet::AddAttribute(const godot::Ref<sm::Attribute>& attr)
 	emit_changed();
 }
 
-uint32 sm::AttributeSet::GetAttributeID(godot::StringName name) const
-{
-	godot::Ref<sm::Attribute> ref;
-
-	for (size_t i = 0; i < m_gdAttributes.size(); i++)
-	{
-		ref = m_gdAttributes[i];
-		if (ref->GetName() == name)
-		{
-			return ref->GetID();
-		}
-	}
-
-	return 0;
-}
+//uint32 sm::AttributeSet::GetAttributeID(godot::StringName name) const
+//{
+//	godot::Ref<sm::Attribute> ref;
+//
+//	for (size_t i = 0; i < m_gdAttributes.size(); i++)
+//	{
+//		ref = m_gdAttributes[i];
+//		if (ref->GetName() == name)
+//		{
+//			return ref->GetID();
+//		}
+//	}
+//
+//	return 0;
+//}
 
 godot::Ref<sm::Attribute> sm::AttributeSet::GetAttributeResource(godot::StringName name)
 {

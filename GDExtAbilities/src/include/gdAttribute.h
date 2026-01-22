@@ -23,8 +23,6 @@ namespace sm{
 		~Attribute() = default;
 
 		static godot::Ref<sm::Attribute> Create(float base, godot::StringName n);
-		uint32 GetID() { return UID; };
-		void SetID(uint32 id) { UID = id; };
 		float GetBaseValue() { return baseValue; };
 		void SetBaseValue(float value) { baseValue = value; };
 		godot::StringName GetName() { return name; };
@@ -34,15 +32,10 @@ namespace sm{
 		sm::Event<godot::StringName> eventSetName;
 
 	private:
-		uint32 UID;
-
 		// Godot
 		float baseValue;
 		float minValue;
 		float maxValue;
 		godot::StringName name;
-
-		// Internal
-		std::vector<std::function<void(godot::StringName)>> m_SetNameListeners;
 	};
 }

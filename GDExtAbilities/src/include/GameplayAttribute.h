@@ -1,4 +1,5 @@
 #pragma once
+#include "GameplayModifier.h"
 #include "Types.h"
 
 namespace sm
@@ -6,11 +7,13 @@ namespace sm
 	class GameplayAttribute
 	{
 	public:
-		GameplayAttribute(uint32 id = 0, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
-			UID(id), m_dirty(true), m_BaseValue(base), m_CurrentValue(base), m_MinValue(min), m_MaxValue(max)
+		GameplayAttribute(AttributeID id = 0, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
+			m_UID(id), m_dirty(true), m_BaseValue(base), m_CurrentValue(base), m_MinValue(min), m_MaxValue(max)
 		{
 
 		}
+
+		AttributeID GetUID() const { return m_UID; }
 
 		float GetBase() const { return m_BaseValue; }
 		float GetCurrent() const { return m_CurrentValue; }
@@ -21,11 +24,14 @@ namespace sm
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
-		void Calculate();
+		void AddModifier(const sm::Modifier& mod);
 		void Reset();
 
 	private:
-		uint32 UID;
+		void Calculate();
+
+	private:
+		AttributeID m_UID;
 
 		float m_BaseValue;
 		float m_CurrentValue;
@@ -34,6 +40,6 @@ namespace sm
 		
 		bool m_dirty;
 
-		std::vector<GameplayAttribute> m_Modifiers;
+		std::unordered_map<ModifierID, std::shared_ptr<sm::Modifier>> m_Modifiers;
 	};
 }

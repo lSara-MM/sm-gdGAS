@@ -1,7 +1,9 @@
 #include "AttributeContainer.h"
 
-#include "gdAttributeSet.h"
+#include "GameplayAttribute.h"
 #include "GameplayAttributeSet.h"
+#include "GameplayModifier.h"
+#include "gdAttributeSet.h"
 
 #include <classes/engine.hpp>
 
@@ -20,14 +22,19 @@ void sm::AttributeContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attributes_set"), &GetAttributeSet);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attributes_set", "attr"), &SetAttributeSet);
 
-	//// Due to overloading, Godot does not deduce which one it refers to so it needs casting
-	//godot::ClassDB::bind_method(godot::D_METHOD("add_attribute", "attr"), static_cast<void (AttributeContainer::*)(const godot::Ref<sm::Attribute>&)>(&AddAttribute));
-
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::OBJECT,
 		"attribute_set", godot::PROPERTY_HINT_RESOURCE_TYPE, "AttributeSet"),
 		"set_attributes_set", "get_attributes_set"
 	);
+
+	// Signals
+	ADD_SIGNAL(godot::MethodInfo("attribute_modified",
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
+		godot::PropertyInfo(godot::Variant::FLOAT, "old_value"),
+		godot::PropertyInfo(godot::Variant::FLOAT, "new_value")
+	));
 }
 
 void sm::AttributeContainer::_notification(int notification)
@@ -42,11 +49,12 @@ void sm::AttributeContainer::_notification(int notification)
 
 		m_gdAttributeSet->ValidateSetData(m_gdAttributeSet->GetAttributesSet());
 
-		std::vector <godot::Ref< sm::Attribute>> attrs = m_gdAttributeSet->SortByName();
+		std::vector <godot::Ref<sm::Attribute>> attrs = m_gdAttributeSet->SortByName();
 
 		for (int i = 0; i < attrs.size(); ++i)
 		{
-			m_AttributeSetPtr->AddAttribute(_GenerateUID(), attrs[i]->GetBaseValue());
+			sm::GameplayAttribute& addedAttr = m_AttributeSetPtr->AddAttribute(_GenerateUID(), attrs[i]->GetBaseValue());
+			//m_AttributesByName.try_emplace(attrs[i]->GetName(), addedAttr);
 		}
 	}
 }
@@ -61,32 +69,21 @@ void sm::AttributeContainer::SetAttributeSet(const godot::Ref<sm::AttributeSet>&
 	m_gdAttributeSet = attrSet;
 }
 
-//void sm::AttributeContainer::AddAttribute(godot::StringName name, float m_BaseValue)
-//{
-//	if (godot::Engine::get_singleton()->is_editor_hint())
-//	{
-//		m_gdAttributeSet->AddAttribute(m_BaseValue, name);
-//	}
-//
-//	m_AttributeSetPtr->AddAttribute(_GenerateUID(), m_BaseValue);
-//}
-//
-//void sm::AttributeContainer::AddAttribute(const godot::Ref<sm::Attribute>& attr)
-//{
-//	if (godot::Engine::get_singleton()->is_editor_hint())
-//	{
-//		m_gdAttributeSet->AddAttribute(attr);
-//	}
-//
-//	m_AttributeSetPtr->AddAttribute(_GenerateUID(), attr->GetBaseValue());
-//}
-
-float sm::AttributeContainer::GetAttributeID(godot::StringName name)
+AttributeID sm::AttributeContainer::GetAttributeID(godot::StringName name)
 {
-	if (godot::Ref<sm::Attribute> ret = m_gdAttributeSet->GetAttributeResource(name); ret != godot::Ref<sm::Attribute>())
-	{
-		return ret->GetBaseValue();
-	}
+	//if (m_AttributesByName.find(name) != m_AttributesByName.end())
+	//{
+	//	return m_AttributesByName[name].GetUID();
+	//}
+	return 0;
+}
 
-	return -1.0f;
+void sm::AttributeContainer::AddModifier(AttributeID id, sm::Modifier mod)
+{
+	m_AttributeSetPtr->AddModifier(id, mod);
+}
+
+void sm::AttributeContainer::_OnAttributeModified(sm::AttributeContainer& attributeContainer, godot::StringName attrName, float oldValue, float newValue)
+{
+
 }

@@ -1,15 +1,18 @@
 #pragma once
 #include "GameplayAbilitySystemNode.h"
-#include "GameplayAttribute.h"
 #include "gdAttribute.h"
+#include "Types.h"
 
 #include <godot_cpp/classes/ref.hpp>
 #include <memory>
+#include <unordered_map>
 
 namespace sm
 {
 	class AttributeSet;
 	class GameplayAttributeSet;
+
+	struct Modifier;
 }
 
 namespace sm
@@ -31,12 +34,17 @@ namespace sm
 		godot::Ref<sm::AttributeSet> GetAttributeSet();
 		void SetAttributeSet(const godot::Ref<sm::AttributeSet>& attr);
 
-		/*void AddAttribute(godot::StringName name, float m_BaseValue);
-		void AddAttribute(const godot::Ref<sm::Attribute>& attr);*/
+		AttributeID GetAttributeID(godot::StringName name);
+		void AddModifier(AttributeID id, sm::Modifier mod);
 
-		float GetAttributeID(godot::StringName name);
+			// Signals
+		void _OnAttributeModified(sm::AttributeContainer& attributeContainer, godot::StringName attrName, float oldValue, float newValue);
+		
+		//void _OnModifierAdded(sm::AttributeContainer attributeContainer, godot::StringName attrName, sm::Modifier mod);
 
 #pragma endregion 
+		
+		//void ModifyAttribute(uint32 id, float newValue);
 
 	private:
 		AttributeContainer();
@@ -48,5 +56,7 @@ namespace sm
 		uint32 m_NextUID = 0;
 		godot::Ref<sm::AttributeSet> m_gdAttributeSet;
 		std::unique_ptr<sm::GameplayAttributeSet> m_AttributeSetPtr;
+
+		//std::unordered_map<godot::StringName, sm::GameplayAttribute> m_AttributesByName;
 	};
 }
