@@ -37,16 +37,20 @@ namespace sm
 		void SetAttributeSet(const godot::Ref<sm::AttributeSet>& attr);
 
 		AttributeID GetAttributeID(godot::StringName name) const;
-		void AddModifier(AttributeID id, sm::Modifier mod);
+		void AddModifier(AttributeID id, godot::Ref<sm::Modifier> mod);
 
-			// Signals
-		void _OnAttributeModified(sm::AttributeContainer& attributeContainer, godot::StringName attrName, float oldValue, float newValue);
-		
-		void _OnModifierAdded(sm::AttributeContainer attributeContainer, godot::StringName attrName, sm::Modifier mod);
+		void RemoveModifier(AttributeID id, godot::Ref<sm::Modifier> mod);
+
+		// Signals
+		void _OnAttributeModified(sm::AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue);
+
+		void _OnModifierAdded(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::Modifier> mod);
+
+		void _OnModifierRemoved(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::Modifier> mod);
 
 #pragma endregion 
-		
-		//void ModifyAttribute(uint32 id, float newValue);
+
+		void ModifyAttribute(uint32 id, float newValue);
 
 	private:
 		AttributeContainer();

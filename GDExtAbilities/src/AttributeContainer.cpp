@@ -35,6 +35,18 @@ void sm::AttributeContainer::_bind_methods()
 		godot::PropertyInfo(godot::Variant::FLOAT, "old_value"),
 		godot::PropertyInfo(godot::Variant::FLOAT, "new_value")
 	));
+
+	ADD_SIGNAL(godot::MethodInfo("modifier_added",
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "modifier")
+	));
+
+	ADD_SIGNAL(godot::MethodInfo("modifier_removed",
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "modifier")
+	));
 }
 
 void sm::AttributeContainer::_notification(int notification)
@@ -73,19 +85,49 @@ AttributeID sm::AttributeContainer::GetAttributeID(godot::StringName name) const
 {
 	auto it = m_AttributesByName.find(name);
 	if (it != m_AttributesByName.end())
+	{
 		return it->second.GetUID();
+	}
 
 	return AttributeID{};
 }
 
-void sm::AttributeContainer::AddModifier(AttributeID id, sm::Modifier mod)
+void sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<sm::Modifier> mod)
 {
 	/*sm::GameplayModifier();
 
 	m_AttributeSetPtr->AddModifier(id, mod);*/
+
+	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	emit_signal("modifier_added", this, id, mod);
 }
 
-void sm::AttributeContainer::_OnAttributeModified(sm::AttributeContainer& attributeContainer, godot::StringName attrName, float oldValue, float newValue)
+void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<sm::Modifier> mod)
+{
+	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	emit_signal("modifier_removed", this, id, mod);
+}
+
+void sm::AttributeContainer::ModifyAttribute(uint32 id, float newValue)
+{
+	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	float oldValue = attr->GetBase();
+	attr->SetBase(newValue);
+
+	emit_signal("attribute_modified", this, id, oldValue, newValue);
+}
+
+void sm::AttributeContainer::_OnAttributeModified(sm::AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue)
+{
+
+}
+
+void sm::AttributeContainer::_OnModifierAdded(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::Modifier> mod)
+{
+
+}
+
+void sm::AttributeContainer::_OnModifierRemoved(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::Modifier> mod)
 {
 
 }

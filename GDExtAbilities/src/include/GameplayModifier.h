@@ -3,16 +3,16 @@
 
 namespace sm
 {
-	enum class OperationType
-	{
-		Add = 0,
-		Multiply,
-		Percent,
-		Override
-	};
-
 	struct GameplayModifier
 	{
+		enum class OperationType
+		{
+			Add = 0,
+			Multiply,
+			Percent,
+			Override
+		};
+
 		GameplayModifier(ModifierID id, OperationType op, uint32 target, uint32 source, float val) : 
 			UID(id), operation(op), targetID(target), sourceID(source), value(val) {};
 

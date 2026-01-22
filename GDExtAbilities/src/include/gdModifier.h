@@ -9,7 +9,6 @@ namespace sm
 	{
 		GDCLASS(Modifier, godot::Resource)
 
-
 	protected:
 		static void _bind_methods();
 
@@ -21,6 +20,11 @@ namespace sm
 			Percent,
 			Override
 		};
+
+		OperationType operation;
+		uint32 targetID;
+		uint32 sourceID;
+		float value;
 	};
 }
 

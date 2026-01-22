@@ -9,4 +9,5 @@ void sm::Modifier::_bind_methods()
 	BIND_ENUM_CONSTANT(Modifier::OperationType::Percent);
 	BIND_ENUM_CONSTANT(Modifier::OperationType::Override);
 
+	//ADD_PROPERTY()
 }

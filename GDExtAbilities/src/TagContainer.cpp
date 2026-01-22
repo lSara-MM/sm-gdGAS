@@ -16,7 +16,7 @@ void sm::TagContainer::_bind_methods()
 
 void sm::TagContainer::_ready()
 {
-	{
+	/*{
 		godot::UtilityFunctions::print("hola");
 		TagRegistry& instance = TagRegistry::GetInstance();
 
@@ -76,7 +76,7 @@ void sm::TagContainer::_ready()
 		{
 			ERR_PRINT(arr3[i]);
 		}
-	}
+	}*/
 }
 
 void sm::TagContainer::Test(godot::StringName name)

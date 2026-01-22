@@ -4,6 +4,11 @@
 
 namespace sm
 {
+	class Modifier;
+}
+
+namespace sm
+{
 	class GameplayAttribute
 	{
 	public:
@@ -16,14 +21,16 @@ namespace sm
 		AttributeID GetUID() const { return m_UID; }
 
 		float GetBase() const { return m_BaseValue; }
+		void SetBase(float newValue);
 		float GetCurrent() const { return m_CurrentValue; }
 
 		float GetMin() const { return m_MinValue; }
 		float GetMax() const { return m_MaxValue; }
-		
+
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
+		sm::GameplayModifier* FindModifier(godot::Ref<sm::Modifier> mod);
 		void AddModifier(const sm::GameplayModifier& mod);
 		void Reset();
 
@@ -37,9 +44,9 @@ namespace sm
 		float m_CurrentValue;
 		float m_MinValue;
 		float m_MaxValue;
-		
+
 		bool m_dirty;
 
-		std::unordered_map<ModifierID, std::shared_ptr<sm::GameplayModifier>> m_Modifiers;
+		std::vector<sm::GameplayModifier> m_Modifiers;
 	};
 }
