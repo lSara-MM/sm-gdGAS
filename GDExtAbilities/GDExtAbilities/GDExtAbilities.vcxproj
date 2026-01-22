@@ -356,6 +356,7 @@
     <ClInclude Include="..\src\include\TagRegistry.h" />
     <ClInclude Include="..\src\private\Event.h" />
     <ClInclude Include="..\src\private\Types.h" />
+    <ClInclude Include="..\src\private\UID.h" />
     <ClInclude Include="..\src\register_types.h" />
   </ItemGroup>
   <ItemGroup>

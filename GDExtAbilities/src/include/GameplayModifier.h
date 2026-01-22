@@ -11,9 +11,9 @@ namespace sm
 		Override
 	};
 
-	struct Modifier
+	struct GameplayModifier
 	{
-		Modifier(ModifierID id, OperationType op, uint32 target, uint32 source, float val) : 
+		GameplayModifier(ModifierID id, OperationType op, uint32 target, uint32 source, float val) : 
 			UID(id), operation(op), targetID(target), sourceID(source), value(val) {};
 
 		const ModifierID UID;

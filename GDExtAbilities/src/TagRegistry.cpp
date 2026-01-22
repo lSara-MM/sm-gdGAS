@@ -6,9 +6,8 @@
 
 sm::TagRegistry::TagRegistry() : ROOT("<")
 {
-	GameplayTag& newTag = m_Tags.emplace_back(_GenerateUID(), ROOT);
-	m_NameToID.try_emplace(ROOT, newTag.GetUID());
-	m_IDtoIndex[newTag.GetUID()] = m_Tags.size() - 1;
+	GameplayTag& newTag = m_Tags.emplace_back(ROOT);
+	m_NameToIndex[newTag.GetUID()] = m_Tags.size() - 1;
 
 #ifdef TOOLS_DEBUG_VS
 	m_StdNameToID.try_emplace(ToStdString(ROOT), newTag.GetUID());
@@ -50,42 +49,46 @@ sm::TagRegistry& sm::TagRegistry::GetInstance()
 }
 
 #ifdef DEBUG_MODE
-godot::StringName sm::TagRegistry::GetTag(godot::StringName tagName)
+TagID sm::TagRegistry::GetTag(TagID tagID)
 {
-	GameplayTag* tag = _GetTag(tagName);
-	ERR_FAIL_COND_V_MSG(!tag, godot::StringName(), godot::vformat("Tag not found: %s", ToStdString(tagName).c_str()));
+	GameplayTag* tag = _GetTag(_GetFullID(tagID));
+	ERR_FAIL_COND_V_MSG(!tag, godot::StringName(), godot::vformat("Tag not found: %s", ToStdString(tagID).c_str()));
 
-	return godot::StringName(tag->name.substr(ROOT.length() + 1));
+	return godot::StringName(tag->GetUID().substr(ROOT.length() + 1));
 }
 
-godot::StringName sm::TagRegistry::GetParent(godot::StringName tagName)
+TagID sm::TagRegistry::GetParent(TagID tagID)
 {
-	GameplayTag* tag = _GetTag(tagName);
-	ERR_FAIL_COND_V_MSG(!tag, godot::StringName(), godot::vformat("Tag not found: %s", tagName));
+	GameplayTag* tag = _GetTag(_GetFullID(tagID));
+	ERR_FAIL_COND_V_MSG(!tag, godot::StringName(), godot::vformat("Tag not found: %s", tagID));
 
 	GameplayTag* tagParent = _GetTag(tag->parentID);
 
-	return godot::StringName(tagParent->name.substr(ROOT.length() + 1));
+	return godot::StringName(tagParent->GetUID().substr(ROOT.length() + 1));
 }
 
-godot::TypedArray<godot::StringName> sm::TagRegistry::GetAscendants(godot::StringName tagName)
+godot::TypedArray<TagID> sm::TagRegistry::GetAscendants(TagID tagID)
 {
 	godot::TypedArray<godot::StringName> ascendants;
-	auto itrTagID = m_NameToID.find(_GetFullName(tagName));
-	ERR_FAIL_COND_V_MSG(itrTagID == m_NameToID.end(), godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagName));
 
-	if (auto itr = m_AscendantsCache.find(itrTagID->second); itr != m_AscendantsCache.end())
+	TagID id = _GetFullID(tagID);
+
+	ERR_FAIL_COND_V_MSG(m_NameToIndex.find(id) == m_NameToIndex.end(),
+		godot::TypedArray<godot::StringName>(),
+		godot::vformat("Tag not found: %s", tagID));
+
+	if (auto itr = m_AscendantsCache.find(id); itr != m_AscendantsCache.end())
 	{
 		return itr->second;
 	}
 
 	// If result not cached, find ascendants
-	_GetAscendantsTree(itrTagID->second, ascendants);
+	_GetAscendantsTree(id, ascendants);
 
 	return ascendants;
 }
 
-void sm::TagRegistry::_GetAscendantsTree(TagID itrTagID, godot::TypedArray<godot::StringName>& ascendants)
+void sm::TagRegistry::_GetAscendantsTree(TagID itrTagID, godot::TypedArray<TagID>& ascendants)
 {
 	std::vector<TagID> stack;
 	stack.push_back(itrTagID);
@@ -105,9 +108,10 @@ void sm::TagRegistry::_GetAscendantsTree(TagID itrTagID, godot::TypedArray<godot
 		stack.push_back(tag->parentID);
 
 		if (const GameplayTag* parentTag = _GetTag(tag->parentID);
-			parentTag && parentTag->GetUID() != 0)
+			parentTag && parentTag->GetUID() != ROOT)
 		{
-			ascendants.push_back(godot::StringName(parentTag->name.substr(ROOT.length() + 1)));
+			TagID ascendantID = godot::StringName(parentTag->GetUID().substr(ROOT.length() + 1));
+			ascendants.push_back(ascendantID);
 		}
 		else
 		{
@@ -117,31 +121,43 @@ void sm::TagRegistry::_GetAscendantsTree(TagID itrTagID, godot::TypedArray<godot
 	m_AscendantsCache.try_emplace(itrTagID, ascendants);
 }
 
-godot::TypedArray<godot::StringName> sm::TagRegistry::GetChildren(godot::StringName tagName)
+godot::TypedArray<TagID> sm::TagRegistry::GetChildren(TagID tagID)
 {
-	auto itrTagID = m_NameToID.find(_GetFullName(tagName));
-	ERR_FAIL_COND_V_MSG(itrTagID == m_NameToID.end(), godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagName));
+	GameplayTag* tag = _GetTag(_GetFullID(tagID));
+	ERR_FAIL_COND_V_MSG(!tag, godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagID));
 
-	return _GetChildren(itrTagID->second);
+	godot::TypedArray<godot::StringName> children;
+	for (TagID child : tag->children)
+	{
+		GameplayTag* tagChild = _GetTag(child);
+		godot::StringName relativeName = godot::StringName(tagChild->GetUID().substr(ROOT.length() + 1));
+
+		children.push_back(relativeName);
+	}
+
+	return children;
 }
 
-godot::TypedArray<godot::StringName> sm::TagRegistry::GetDescendants(godot::StringName tagName)
+godot::TypedArray<TagID> sm::TagRegistry::GetDescendants(TagID tagID)
 {
 	godot::TypedArray<godot::StringName> descendants;
-	auto itrTagID = m_NameToID.find(_GetFullName(tagName));
-	ERR_FAIL_COND_V_MSG(itrTagID == m_NameToID.end(), godot::TypedArray<godot::StringName>(), godot::vformat("Tag not found: %s", tagName));
 
-	if (auto itr = m_DescendantsCache.find(itrTagID->second); itr != m_DescendantsCache.end())
+	TagID id = _GetFullID(tagID);
+	ERR_FAIL_COND_V_MSG(m_NameToIndex.find(id) == m_NameToIndex.end(),
+		godot::TypedArray<godot::StringName>(),
+		godot::vformat("Tag not found: %s", tagID));
+
+	if (auto itr = m_DescendantsCache.find(id); itr != m_DescendantsCache.end())
 	{
 		return itr->second;
 	}
 
-	_GetDescendantsTree(itrTagID->second, descendants);
+	_GetDescendantsTree(id, descendants);
 
 	return descendants;
 }
 
-void sm::TagRegistry::_GetDescendantsTree(TagID itrTagID, godot::TypedArray<godot::StringName>& descendants)
+void sm::TagRegistry::_GetDescendantsTree(TagID itrTagID, godot::TypedArray<TagID>& descendants)
 {
 	std::vector<TagID> stack;
 	stack.push_back(itrTagID);
@@ -162,9 +178,10 @@ void sm::TagRegistry::_GetDescendantsTree(TagID itrTagID, godot::TypedArray<godo
 		{
 			stack.push_back(child);
 
-			if (const GameplayTag* childTag = _GetTag(child))
+			if (const GameplayTag* childTag = _GetTag(child); childTag)
 			{
-				descendants.push_back(godot::StringName(childTag->name.substr(ROOT.length() + 1)));
+				TagID descendantID = godot::StringName(childTag->GetUID().substr(ROOT.length() + 1));
+				descendants.push_back(descendantID);
 			}
 		}
 	}
@@ -172,14 +189,14 @@ void sm::TagRegistry::_GetDescendantsTree(TagID itrTagID, godot::TypedArray<godo
 	m_DescendantsCache.try_emplace(itrTagID, descendants);
 }
 
-void sm::TagRegistry::RegisterTag(godot::StringName tagName)
+void sm::TagRegistry::RegisterTag(TagID tagID)
 {
-	ERR_FAIL_COND_MSG(_GetTag(tagName), godot::vformat("Tag already exists: %s", ToStdString(tagName).c_str()));
+	ERR_FAIL_COND_MSG(_GetTag(_GetFullID(tagID)), godot::vformat("Tag already exists: %s", ToStdString(tagID).c_str()));
 
-	std::istringstream iss(ToStdString(tagName));
+	std::istringstream iss(ToStdString(tagID));
 	std::string prevTagName = ToStdString(ROOT);
 	std::string token;
-	TagID prevTag = 0;
+	TagID prevTag = ROOT;
 
 	while (std::getline(iss, token, '.'))
 	{
@@ -204,6 +221,10 @@ void sm::TagRegistry::RegisterTag(godot::StringName tagName)
 
 void sm::TagRegistry::UnregisterTag(TagID tagID)
 {
+	TagID id = _GetFullID(tagID);
+	ERR_FAIL_COND_MSG(m_NameToIndex.find(id) == m_NameToIndex.end(),
+		godot::vformat("Tag not found: %s", tagID));
+
 	std::vector<TagID> stack;
 	stack.push_back(tagID);
 
@@ -237,10 +258,8 @@ void sm::TagRegistry::UnregisterTag(TagID tagID)
 			}
 		}
 
-		m_NameToID.erase(tag->name);
-
-		TagID indexToErase = m_IDtoIndex[id];
-		TagID lastIndex = m_Tags.size() - 1;
+		size_t indexToErase = m_NameToIndex[id];
+		size_t lastIndex = m_Tags.size() - 1;
 
 		GameplayTag& tagToErase = m_Tags[indexToErase];
 		GameplayTag& lastTag = m_Tags[lastIndex];
@@ -248,39 +267,25 @@ void sm::TagRegistry::UnregisterTag(TagID tagID)
 		TagID lastUID = lastTag.GetUID();
 
 		std::swap(tagToErase, lastTag);
-		m_IDtoIndex[lastUID] = indexToErase;
+		m_NameToIndex[lastUID] = indexToErase;
 
 		m_Tags.pop_back();
-		m_IDtoIndex.erase(id);
+		m_NameToIndex.erase(id);
 		tag = nullptr;
 	}
 }
 
-void sm::TagRegistry::UnregisterTag(godot::StringName tagName)
+void sm::TagRegistry::RenameTag(TagID tagID, TagID newName)
 {
-	auto tagID = m_NameToID.find(_GetFullName(tagName));
+	TagID oldN = _GetFullID(tagID);
+	TagID newN = _GetFullID(newName);
+	
+	ERR_FAIL_COND_MSG(m_NameToIndex.find(newN) == m_NameToIndex.end() ||
+		m_DisplayNamesToID.find(newN) == m_DisplayNamesToID.end(),
+		godot::vformat("Tag with this name already exists: %s", ToStdString(newN).c_str()));
 
-	if (tagID == m_NameToID.end())
-	{
-		return;
-	}
-
-	UnregisterTag(tagID->second);
-}
-
-void sm::TagRegistry::RenameTag(TagID tagID, godot::StringName newName)
-{
-	ERR_FAIL_COND_MSG(_GetTag(newName), godot::vformat("Tag with this name already exists: %s", ToStdString(newName).c_str()));
-
-	GameplayTag* tag = _GetTag(tagID);
-	ERR_FAIL_COND_MSG(!tag, godot::vformat("Tag to rename not found: %d", tagID));
-
-	godot::StringName prevName = tag->name;
-	m_NameToID.erase(prevName);
-
-	m_NameToID.try_emplace(newName, tag->GetUID());
-
-	//emit_signal("tag_renamed", tagID, newName);
+	m_DisplayNamesToID.try_emplace(newN, oldN);
+	//emit_signal("tag_renamed", tagID, newN);
 }
 #endif // DEBUG_MODE
 
@@ -293,8 +298,8 @@ bool sm::TagRegistry::IsNameValid(godot::StringName name) const
 
 bool sm::TagRegistry::HasChild(TagID tagID, TagID childID) const
 {
-	const GameplayTag* tag = _GetTag(tagID);
-	const GameplayTag* tagChild = _GetTag(tagID);
+	const GameplayTag* tag = _GetTag(_GetFullID(tagID));
+	const GameplayTag* tagChild = _GetTag(_GetFullID(childID));
 
 	ERR_FAIL_COND_V_MSG(!tag || !tagChild, false, godot::vformat("Tag not found: %d", tag ? tag->GetUID() : tagChild->GetUID()));
 
@@ -303,14 +308,17 @@ bool sm::TagRegistry::HasChild(TagID tagID, TagID childID) const
 
 bool sm::TagRegistry::HasDescendant(TagID tagID, TagID childID) const
 {
-	if (auto itr = m_DescendantsCache.find(tagID); itr != m_DescendantsCache.end())
+	TagID tagFullID = _GetFullID(tagID);
+	TagID childFullID = _GetFullID(childID);
+
+	if (auto itr = m_DescendantsCache.find(_GetFullID(tagFullID)); itr != m_DescendantsCache.end())
 	{
-		const GameplayTag* childTag = _GetTag(childID);
-		return itr->second.has(childTag->name);
+		const GameplayTag* childTag = _GetTag(childFullID);
+		return itr->second.has(childTag->GetUID());
 	}
 
 	std::vector<TagID> stack;
-	stack.push_back(tagID);
+	stack.push_back(tagFullID);
 
 	while (!stack.empty())
 	{
@@ -326,7 +334,7 @@ bool sm::TagRegistry::HasDescendant(TagID tagID, TagID childID) const
 
 		for (TagID child : tag->children)
 		{
-			if (child == childID)
+			if (child == childFullID)
 			{
 				return true;
 			}
@@ -345,8 +353,8 @@ bool sm::TagRegistry::IsParentOf(TagID tagID, TagID childID) const
 
 bool sm::TagRegistry::IsChildOf(TagID tagID, TagID parentID) const
 {
-	const GameplayTag* tag = _GetTag(tagID);
-	const GameplayTag* tagParent = _GetTag(tagID);
+	const GameplayTag* tag = _GetTag(_GetFullID(tagID));
+	const GameplayTag* tagParent = _GetTag(_GetFullID(tagID));
 
 	ERR_FAIL_COND_V_MSG(!tag || !tagParent, false, godot::vformat("Tag not found: %d", tag ? tag->GetUID() : tagParent->GetUID()));
 
@@ -355,95 +363,34 @@ bool sm::TagRegistry::IsChildOf(TagID tagID, TagID parentID) const
 
 #pragma region Internal methods
 
-sm::GameplayTag* sm::TagRegistry::_GetTag(TagID id)
+sm::GameplayTag* sm::TagRegistry::_GetTag(TagID tagID)
 {
-	return const_cast<sm::GameplayTag*>(const_cast<const TagRegistry*>(this)->_GetTag(id));
+	return const_cast<sm::GameplayTag*>(const_cast<const TagRegistry*>(this)->_GetTag(tagID));
 }
 
-const sm::GameplayTag* sm::TagRegistry::_GetTag(TagID id) const
+const sm::GameplayTag* sm::TagRegistry::_GetTag(TagID tagID) const
 {
-	auto index = m_IDtoIndex.find(id);
+#ifdef TOOLS_DEBUG_VS
+	auto a = ToStdString(tagID);
+#endif TOOLS_DEBUG_VS
 
-	if (index == m_IDtoIndex.end())
+	if (auto itr = m_NameToIndex.find(tagID); itr != m_NameToIndex.end())
 	{
-		return nullptr;
+		return &m_Tags[itr->second];
 	}
 
-	return &m_Tags[index->second];
-}
-
-sm::GameplayTag* sm::TagRegistry::_GetTag(godot::StringName tagName)
-{
-	godot::StringName fullName = _GetFullName(tagName);
-
-	auto it = m_NameToID.find(fullName);
-	if (it == m_NameToID.end())
+	if (auto itr = m_DisplayNamesToID.find(tagID); itr != m_DisplayNamesToID.end())
 	{
-		return nullptr;
+		if (auto indexIt = m_NameToIndex.find(itr->second); indexIt != m_NameToIndex.end())
+		{
+			return &m_Tags[indexIt->second];
+		}
 	}
 
-	auto index = m_IDtoIndex.find(it->second);
-	if (index == m_IDtoIndex.end())
-	{
-		m_NameToID.erase(it);
-		return nullptr;
-	}
-
-	return &m_Tags[index->second];
+	return nullptr;
 }
 
-const sm::GameplayTag* sm::TagRegistry::_GetTag(godot::StringName tagName) const
-{
-	auto itr = m_NameToID.find(tagName);
-
-	if (itr == m_NameToID.end())
-	{
-		return nullptr;
-	}
-
-	return _GetTag(itr->second);
-}
-
-sm::GameplayTag& sm::TagRegistry::_GetTagRef(TagID id)
-{
-	auto itr = m_IDtoIndex.find(id);
-	if (itr != m_IDtoIndex.end())
-	{
-		return m_Tags[itr->second];
-	}
-
-	SM_ASSERT(false, "Parent not found! This should NEVER happen");
-
-	return m_Tags[0]; // Root
-}
-
-godot::StringName sm::TagRegistry::_GetParent(TagID id)
-{
-	GameplayTag* tag = _GetTag(id);
-	GameplayTag* tagParent = _GetTag(id);
-
-	ERR_FAIL_COND_V_MSG(!tag || !tagParent, godot::StringName(), godot::vformat("Tag not found: %d", tag ? tag->GetUID() : tagParent->GetUID()));
-
-	return godot::StringName(tagParent->name.substr(ROOT.length() + 1));
-}
-
-godot::TypedArray<godot::StringName> sm::TagRegistry::_GetChildren(TagID id)
-{
-	GameplayTag* tag = _GetTag(id);
-
-	godot::TypedArray<godot::StringName> children;
-	for (TagID child : tag->children)
-	{
-		GameplayTag* tagChild = _GetTag(child);
-		godot::StringName relativeName = godot::StringName(tagChild->name.substr(ROOT.length() + 1));
-
-		children.push_back(relativeName);
-	}
-
-	return children;
-}
-
-void sm::TagRegistry::_ExtractSubTags(godot::StringName& fullName)
+void sm::TagRegistry::_ExtractSubTags(TagID fullName)
 {
 	godot::String fullTag = fullName;
 	godot::String prevRTag;
@@ -467,7 +414,7 @@ void sm::TagRegistry::_ExtractSubTags(godot::StringName& fullName)
 	}
 }
 
-godot::StringName sm::TagRegistry::_NormalizeName(godot::StringName name) const
+godot::StringName sm::TagRegistry::_NormalizeID(godot::StringName name) const
 {
 	godot::StringName finalName;
 
@@ -478,7 +425,7 @@ godot::StringName sm::TagRegistry::_NormalizeName(godot::StringName name) const
 		return godot::StringName();
 	}
 
-	return _GetFullName(name).to_lower();
+	return _GetFullID(name).to_lower();
 }
 
 godot::StringName sm::TagRegistry::_AddRoot(godot::StringName name) const
@@ -492,18 +439,18 @@ godot::StringName sm::TagRegistry::_AddRoot(godot::StringName name) const
 	return name;
 }
 
-godot::StringName sm::TagRegistry::_GetFullName(godot::StringName tagName) const
+TagID sm::TagRegistry::_GetFullID(TagID tagID) const
 {
-	godot::StringName full = tagName;
+	godot::StringName full = tagID;
 
 #ifdef TOOLS_DEBUG_VS
-	auto a = ToStdString(tagName);
+	auto a = ToStdString(tagID);
 #endif //  TOOLS_DEBUG_VS
 
-	if (auto itr = m_NameToID.find(tagName);
-		itr == m_NameToID.end() && !tagName.begins_with(ROOT))
+	if (auto itr = m_NameToIndex.find(tagID);
+		itr == m_NameToIndex.end() && !tagID.begins_with(ROOT))
 	{
-		if (auto itr2 = m_SuffixToFullPaths.find(tagName); itr2 != m_SuffixToFullPaths.end())
+		if (auto itr2 = m_SuffixToFullPaths.find(tagID); itr2 != m_SuffixToFullPaths.end())
 		{
 			return itr2->second;
 		}
@@ -514,31 +461,29 @@ godot::StringName sm::TagRegistry::_GetFullName(godot::StringName tagName) const
 
 sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, TagID idParent)
 {
-	godot::StringName fullName = _GetFullName(name);
+	godot::StringName fullName = _GetFullID(name);
 
-	GameplayTag& newTag = m_Tags.emplace_back(_GenerateUID(), fullName);
-	m_NameToID.try_emplace(fullName, newTag.GetUID());
+	GameplayTag& newTag = m_Tags.emplace_back(fullName);
+	m_NameToIndex.try_emplace(fullName, m_Tags.size() - 1);
 
 #ifdef DEBUG_MODE
 	m_StdNameToID.try_emplace(ToStdString(fullName), newTag.GetUID());
 #endif //  DEBUG_MODE
 
-	m_IDtoIndex[newTag.GetUID()] = m_Tags.size() - 1;
-
 	newTag.parentID = idParent;
 
-	GameplayTag& parent = _GetTagRef(idParent);
+	GameplayTag* parent = _GetTag(idParent);
 	_AddChild(parent, newTag.GetUID());
 
 	return newTag;
 }
 
-void sm::TagRegistry::_AddChild(GameplayTag& tag, TagID idChild)
+void sm::TagRegistry::_AddChild(GameplayTag* tag, TagID idChild)
 {
 	// Search if child already exists and adds it if it doesn't
-	if (std::find(tag.children.begin(), tag.children.end(), idChild) == tag.children.end())
+	if (std::find(tag->children.begin(), tag->children.end(), idChild) == tag->children.end())
 	{
-		tag.children.push_back(idChild);
+		tag->children.push_back(idChild);
 	}
 }
 

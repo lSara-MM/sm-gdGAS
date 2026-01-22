@@ -104,5 +104,8 @@
     <ClInclude Include="..\src\include\gdModifier.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\private\UID.h">
+      <Filter>Header Files\private</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

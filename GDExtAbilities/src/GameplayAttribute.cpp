@@ -9,13 +9,13 @@ void sm::GameplayAttribute::Calculate()
 		return;
 	}
 
-	//for (const sm::Modifier& mod : m_Modifiers)
+	//for (const sm::GameplayModifier& mod : m_Modifiers)
 	//{
 
 	//}
 }
 
-void sm::GameplayAttribute::AddModifier(const sm::Modifier& mod)
+void sm::GameplayAttribute::AddModifier(const sm::GameplayModifier& mod)
 {
 	//m_Modifiers.emplace_back(mod);
 	m_dirty = true;

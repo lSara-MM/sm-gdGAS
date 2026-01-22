@@ -5,7 +5,7 @@
 
 namespace sm
 {
-	struct Modifier;
+	struct GameplayModifier;
 }
 
 namespace sm
@@ -19,7 +19,7 @@ namespace sm
 		GameplayAttribute* FindAttribute(AttributeID id);
 		sm::GameplayAttribute& AddAttribute(AttributeID id, float base, float min = 0.0f, float max = FLT_MAX);
 
-		void AddModifier(AttributeID id, const sm::Modifier& mod);
+		void AddModifier(AttributeID id, const sm::GameplayModifier& mod);
 
 	private:
 		std::vector<sm::GameplayAttribute> m_Attributes;

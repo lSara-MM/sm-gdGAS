@@ -24,7 +24,7 @@ namespace sm
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
-		void AddModifier(const sm::Modifier& mod);
+		void AddModifier(const sm::GameplayModifier& mod);
 		void Reset();
 
 	private:
@@ -40,6 +40,6 @@ namespace sm
 		
 		bool m_dirty;
 
-		std::unordered_map<ModifierID, std::shared_ptr<sm::Modifier>> m_Modifiers;
+		std::unordered_map<ModifierID, std::shared_ptr<sm::GameplayModifier>> m_Modifiers;
 	};
 }

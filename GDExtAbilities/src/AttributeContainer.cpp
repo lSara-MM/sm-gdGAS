@@ -54,7 +54,7 @@ void sm::AttributeContainer::_notification(int notification)
 		for (int i = 0; i < attrs.size(); ++i)
 		{
 			sm::GameplayAttribute& addedAttr = m_AttributeSetPtr->AddAttribute(_GenerateUID(), attrs[i]->GetBaseValue());
-			//m_AttributesByName.try_emplace(attrs[i]->GetName(), addedAttr);
+			m_AttributesByName.try_emplace(attrs[i]->GetName(), addedAttr);
 		}
 	}
 }
@@ -69,18 +69,20 @@ void sm::AttributeContainer::SetAttributeSet(const godot::Ref<sm::AttributeSet>&
 	m_gdAttributeSet = attrSet;
 }
 
-AttributeID sm::AttributeContainer::GetAttributeID(godot::StringName name)
+AttributeID sm::AttributeContainer::GetAttributeID(godot::StringName name) const
 {
-	//if (m_AttributesByName.find(name) != m_AttributesByName.end())
-	//{
-	//	return m_AttributesByName[name].GetUID();
-	//}
-	return 0;
+	auto it = m_AttributesByName.find(name);
+	if (it != m_AttributesByName.end())
+		return it->second.GetUID();
+
+	return AttributeID{};
 }
 
 void sm::AttributeContainer::AddModifier(AttributeID id, sm::Modifier mod)
 {
-	m_AttributeSetPtr->AddModifier(id, mod);
+	/*sm::GameplayModifier();
+
+	m_AttributeSetPtr->AddModifier(id, mod);*/
 }
 
 void sm::AttributeContainer::_OnAttributeModified(sm::AttributeContainer& attributeContainer, godot::StringName attrName, float oldValue, float newValue)

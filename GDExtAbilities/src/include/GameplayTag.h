@@ -7,37 +7,28 @@ namespace sm
 {
 	struct GameplayTag
 	{
-		GameplayTag() : m_UID(0), parentID(0) {};
-		GameplayTag(uint32 id, godot::StringName n) : m_UID(id), parentID(0), name(n)
+		GameplayTag() : m_UID(godot::StringName("<")), parentID(godot::StringName("<")) {};
+		GameplayTag(godot::StringName id) : m_UID(id), parentID(godot::StringName("<"))
 		{
 #ifdef TOOLS_DEBUG_VS
-			stdName = ToStdString(n);
+			stdName = ToStdString(id);
 #endif //  TOOLS_DEBUG_VS
 		};
 
-		GameplayTag(uint32 id, const godot::String& n) : m_UID(id), parentID(0), name(godot::StringName(n))
-		{
-
-#ifdef TOOLS_DEBUG_VS
-			stdName = ToStdString(n);
-#endif //  TOOLS_DEBUG_VS
-		}
-
-		uint32 GetUID() { return m_UID; };
-		const uint32 GetUID() const { return static_cast<const uint32>(m_UID); };
+		godot::StringName GetUID() { return m_UID; };
+		const godot::StringName GetUID() const { return static_cast<const godot::StringName>(m_UID); };
 
 	private:
-		uint32 m_UID;
+		godot::StringName m_UID;
 
 	public:
 
-		uint32 parentID;
+		godot::StringName parentID;
 
 #ifdef TOOLS_DEBUG_VS
 		std::string stdName;
 #endif //  TOOLS_DEBUG_VS
 
-		godot::StringName name;
-		std::vector<uint32> children;
+		std::vector<godot::StringName> children;
 	};
 }
