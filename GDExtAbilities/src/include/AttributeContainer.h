@@ -37,9 +37,9 @@ namespace sm
 		void SetAttributeSet(const godot::Ref<sm::AttributeSet>& attr);
 
 		AttributeID GetAttributeID(godot::StringName name) const;
-		void AddModifier(AttributeID id, godot::Ref<sm::Modifier> mod);
 
-		void RemoveModifier(AttributeID id, godot::Ref<sm::Modifier> mod);
+		void AddModifier(AttributeID id, const godot::Ref<sm::Modifier> mod);
+		void RemoveModifier(AttributeID id, const godot::Ref<sm::Modifier> mod);
 
 		// Signals
 		void _OnAttributeModified(sm::AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue);

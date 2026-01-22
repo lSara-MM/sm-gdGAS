@@ -92,17 +92,15 @@ AttributeID sm::AttributeContainer::GetAttributeID(godot::StringName name) const
 	return AttributeID{};
 }
 
-void sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<sm::Modifier> mod)
+void sm::AttributeContainer::AddModifier(AttributeID id, const godot::Ref<sm::Modifier> mod)
 {
-	/*sm::GameplayModifier();
-
-	m_AttributeSetPtr->AddModifier(id, mod);*/
-
 	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	attr->AddModifier(mod);
+	
 	emit_signal("modifier_added", this, id, mod);
 }
 
-void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<sm::Modifier> mod)
+void sm::AttributeContainer::RemoveModifier(AttributeID id, const  godot::Ref<sm::Modifier> mod)
 {
 	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	emit_signal("modifier_removed", this, id, mod);

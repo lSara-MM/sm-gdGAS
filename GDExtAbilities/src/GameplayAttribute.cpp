@@ -35,9 +35,17 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(godot::Ref<sm::Modifie
 	return nullptr;
 }
 
-void sm::GameplayAttribute::AddModifier(const sm::GameplayModifier& mod)
+void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::Modifier> mod)
 {
-	//m_Modifiers.emplace_back(mod);
+	sm::GameplayModifier modifier {
+		m_ModifiersUID.GenerateUID(),
+		(GameplayModifier::OperationType)mod->operation,
+		mod->targetID,
+		mod->sourceID,
+		mod->value
+	};
+
+	m_Modifiers.push_back(modifier);
 	m_dirty = true;
 }
 

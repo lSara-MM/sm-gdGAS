@@ -1,6 +1,7 @@
 #pragma once
 #include "GameplayModifier.h"
 #include "Types.h"
+#include "UID.h"
 
 namespace sm
 {
@@ -31,7 +32,7 @@ namespace sm
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
 		sm::GameplayModifier* FindModifier(godot::Ref<sm::Modifier> mod);
-		void AddModifier(const sm::GameplayModifier& mod);
+		void AddModifier(const godot::Ref<sm::Modifier> mod);
 		void Reset();
 
 	private:
@@ -39,6 +40,7 @@ namespace sm
 
 	private:
 		AttributeID m_UID;
+		sm::UID m_ModifiersUID;
 
 		float m_BaseValue;
 		float m_CurrentValue;
