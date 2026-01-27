@@ -26,11 +26,3 @@ sm::GameplayAttribute& sm::GameplayAttributeSet::AddAttribute(AttributeID id, fl
 {
 	return m_Attributes.emplace_back(id, base, min, max);
 }
-
-void sm::GameplayAttributeSet::AddModifier(AttributeID id, const sm::GameplayModifier& mod)
-{
-	/*if (sm::GameplayAttribute* attr = FindAttribute(id); attr != nullptr)
-	{
-		attr.
-	}*/
-}

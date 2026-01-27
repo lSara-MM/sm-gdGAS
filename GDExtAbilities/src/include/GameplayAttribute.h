@@ -3,6 +3,8 @@
 #include "Types.h"
 #include "UID.h"
 
+#include <optional>
+
 namespace sm
 {
 	class Modifier;
@@ -13,11 +15,16 @@ namespace sm
 	class GameplayAttribute
 	{
 	public:
-		GameplayAttribute(AttributeID id = 0, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
+		GameplayAttribute(AttributeID id, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
 			m_UID(id), m_dirty(true), m_BaseValue(base), m_CurrentValue(base), m_MinValue(min), m_MaxValue(max)
 		{
 
 		}
+
+		GameplayAttribute(const GameplayAttribute&) = delete;
+		GameplayAttribute& operator=(const GameplayAttribute&) = delete;
+		GameplayAttribute(GameplayAttribute&&) = default;
+		GameplayAttribute& operator=(GameplayAttribute&&) = default;
 
 		AttributeID GetUID() const { return m_UID; }
 
@@ -31,8 +38,10 @@ namespace sm
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
-		sm::GameplayModifier* FindModifier(godot::Ref<sm::Modifier> mod);
-		void AddModifier(const godot::Ref<sm::Modifier> mod);
+		sm::GameplayModifier* FindModifier(const godot::Ref<sm::Modifier>& mod);
+		std::optional<size_t> FindModifierIndex(const godot::Ref<sm::Modifier>& mod) const;
+		void AddModifier(const godot::Ref<sm::Modifier>& mod);
+		void RemoveModifier(const godot::Ref<sm::Modifier>& mod);
 		void Reset();
 
 	private:
@@ -49,6 +58,6 @@ namespace sm
 
 		bool m_dirty;
 
-		std::vector<sm::GameplayModifier> m_Modifiers;
+		std::array<std::vector<std::unique_ptr<GameplayModifier>>, 4> m_Modifiers;
 	};
 }

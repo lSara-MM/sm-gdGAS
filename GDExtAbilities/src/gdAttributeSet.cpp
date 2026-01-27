@@ -28,7 +28,7 @@ void sm::AttributeSet::SetAttributesSet(const godot::TypedArray<sm::Attribute>& 
 {
 	m_gdAttributes = attr;
 
-	for (int i = 0; i < attr.size(); i++)
+	for (size_t i = 0; i < attr.size(); i++)
 	{
 		const godot::Ref<sm::Attribute> attribute = attr[i];
 
@@ -116,7 +116,7 @@ std::vector<sm::Attribute> sm::AttributeSet::ToAttributeVector()
 {
 	std::vector<sm::Attribute> ret;
 
-	for (int i = 0; i < m_gdAttributes.size(); ++i)
+	for (size_t i = 0; i < m_gdAttributes.size(); ++i)
 	{
 		godot::Ref<sm::Attribute> ref = m_gdAttributes[i];
 		ret.emplace_back(ref->GetBaseValue());
@@ -130,7 +130,7 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::ToRefAttributeVector()
 	std::vector<godot::Ref<sm::Attribute>> ret;
 	ret.reserve(m_gdAttributes.size());
 
-	for (int i = 0; i < m_gdAttributes.size(); ++i)
+	for (size_t i = 0; i < m_gdAttributes.size(); ++i)
 	{
 		ret.emplace_back(m_gdAttributes[i]);
 	}
@@ -146,7 +146,7 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::SortByName()
 	//std::vector<std::string> ret2;
 	//ret2.reserve(ret.size());
 
-	//for (int i = 0; i < ret.size(); ++i)
+	//for (size_t i = 0; i < ret.size(); ++i)
 	//{
 	//	ret2.emplace_back(ToStdString(ret[i]->GetName()));
 	//}
@@ -172,7 +172,7 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::SortByName()
 	//std::vector<std::string> ret3;
 	//ret3.reserve(ret.size());
 
-	//for (int i = 0; i < ret.size(); ++i)
+	//for (size_t i = 0; i < ret.size(); ++i)
 	//{
 	//	ret3.emplace_back(ToStdString(ret[i]->GetName()));
 	////}
@@ -185,7 +185,7 @@ godot::TypedArray<sm::Attribute> sm::AttributeSet::ValidateSetData(const godot::
 	godot::TypedArray<sm::Attribute> validatedSet;
 	std::unordered_set<godot::StringName> seen;
 
-	for (int i = 0; i < attr.size(); i++)
+	for (size_t i = 0; i < attr.size(); i++)
 	{
 		const godot::Ref<sm::Attribute> itemToCompare = attr[i];
 
@@ -213,7 +213,7 @@ godot::TypedArray<sm::Attribute> sm::AttributeSet::ValidateSetData(const godot::
 
 void sm::AttributeSet::_OnAttributeSetName(godot::StringName newName)
 {
-	for (int i = 0; i < m_gdAttributes.size(); i++)
+	for (size_t i = 0; i < m_gdAttributes.size(); i++)
 	{
 		const godot::Ref<sm::Attribute> itemToCompare = m_gdAttributes[i];
 

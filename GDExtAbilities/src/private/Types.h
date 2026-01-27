@@ -20,7 +20,7 @@
 
 using uint32 = uint32_t;
 
-using AttributeID = uint32_t;
+using AttributeID = godot::StringName;
 using AttributeSetID = uint32_t;
 using EntityID = uint32_t;
 using EffectID = uint32_t;
