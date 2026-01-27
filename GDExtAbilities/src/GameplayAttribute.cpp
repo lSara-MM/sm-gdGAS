@@ -24,11 +24,11 @@ void sm::GameplayAttribute::SetBase(float newValue)
 
 sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::Modifier>& mod)
 {
-	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->operation)];
+	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
 	for (auto& modifier : *mods)
 	{
-		if (mod->sourceID == modifier->sourceID)
+		if (mod->GetSourceID() == modifier->sourceID)
 		{
 			return modifier.get();
 		}
@@ -39,11 +39,11 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::M
 
 std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<sm::Modifier>& mod) const
 {
-	const std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->operation)];
+	const std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
 	for (size_t i = 0; i < mods->size(); ++i)
 	{
-		if (mod->sourceID == (*mods)[i]->sourceID)
+		if (mod->GetSourceID() == (*mods)[i]->sourceID)
 		{
 			return i;
 		}
@@ -54,14 +54,14 @@ std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<
 
 void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::Modifier>& mod)
 {
-	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->operation)];
+	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
 	mods->emplace_back(std::make_unique<sm::GameplayModifier>(
 		m_ModifiersUID.GenerateUID(),
-		static_cast<GameplayModifier::OperationType>(mod->operation),
-		mod->targetID,
-		mod->sourceID,
-		mod->value
+		static_cast<GameplayModifier::OperationType>(mod->GetOperationType()),
+		mod->GetTargetID(),
+		mod->GetSourceID(),
+		mod->GetValue()
 	));
 
 	m_dirty = true;
@@ -71,7 +71,7 @@ void sm::GameplayAttribute::RemoveModifier(const godot::Ref<sm::Modifier>& mod)
 {
 	std::optional<size_t> modIndex = FindModifierIndex(mod);
 
-	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->operation)];
+	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
 	if (modIndex.has_value())
 	{

@@ -27,7 +27,6 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     ClassDB::register_class<sm::AttributeSet>();
     ClassDB::register_class<sm::Modifier>();
     ClassDB::register_class<sm::TagContainer>();
-
 }
 
 void uninitialize_gdextabilities_plugin(ModuleInitializationLevel p_level)

@@ -13,7 +13,7 @@ namespace sm
 		static void _bind_methods();
 
 	public:
-		enum OperationType : int
+		enum OperationType : uint8_t
 		{
 			Add = 0,
 			Multiply,
@@ -21,7 +21,6 @@ namespace sm
 			Override
 		};
 
-	private:
 		Modifier::OperationType GetOperationType() { return operation; };
 		void SetOperationType(Modifier::OperationType t) { operation = t; };
 		uint32 GetTargetID() { return targetID; };
@@ -31,7 +30,7 @@ namespace sm
 		float GetValue() { return value; };
 		void SetValue(float v) { value = v; };
 
-	public:
+	private:
 		OperationType operation;
 		uint32 targetID;
 		uint32 sourceID;

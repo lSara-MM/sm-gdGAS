@@ -4,10 +4,10 @@
 
 void sm::Modifier::_bind_methods()
 {
-	BIND_ENUM_CONSTANT(Modifier::OperationType::Add);
-	BIND_ENUM_CONSTANT(Modifier::OperationType::Multiply);
-	BIND_ENUM_CONSTANT(Modifier::OperationType::Percent);
-	BIND_ENUM_CONSTANT(Modifier::OperationType::Override);
+	BIND_ENUM_CONSTANT(Add);
+	BIND_ENUM_CONSTANT(Multiply);
+	BIND_ENUM_CONSTANT(Percent);
+	BIND_ENUM_CONSTANT(Override);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_operation_type"), &GetOperationType);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_operation_type", "type"), &SetOperationType);

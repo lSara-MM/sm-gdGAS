@@ -6,7 +6,7 @@ namespace sm
 {
 	struct GameplayModifier
 	{
-		enum class OperationType : int
+		enum class OperationType : uint8_t
 		{
 			Add = 0,
 			Multiply,
