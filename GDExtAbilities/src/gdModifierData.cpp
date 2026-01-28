@@ -1,8 +1,8 @@
-#include "gdModifier.h"
+#include "gdModifierData.h"
 
 #include "GameplayModifier.h"
 
-void sm::Modifier::_bind_methods()
+void sm::ModifierData::_bind_methods()
 {
 	BIND_ENUM_CONSTANT(Add);
 	BIND_ENUM_CONSTANT(Multiply);

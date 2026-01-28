@@ -1,41 +1,28 @@
 #pragma once
-#include "Event.h"
 #include "Types.h"
+#include "GameplayAttribute.h"
 
-#include <functional>
-#include <godot_cpp/classes/ref.hpp>
-#include <godot_cpp/classes/resource.hpp>
-#include <vector>
+#include <classes/ref_counted.hpp>
 
-namespace sm{
-	class Attribute : public godot::Resource
+namespace sm
+{
+	class Attribute : public godot::RefCounted
 	{
-		GDCLASS(Attribute, godot::Resource)
+		GDCLASS(Attribute, godot::RefCounted)
 
 	protected:
 		static void _bind_methods();
 
 	public:
-		Attribute() : baseValue(0.0f), minValue(0.0f), maxValue(FLT_MAX), name("") {};
-		Attribute(float base, float min = 0.0f, float max = FLT_MAX, godot::StringName n = "") :
-			baseValue(base), minValue(min), maxValue(max), name(n)
-		{};
-		~Attribute() = default;
+		Attribute();
+		~Attribute();
 
-		static godot::Ref<sm::Attribute> Create(float base, godot::StringName n);
-		float GetBaseValue() { return baseValue; };
-		void SetBaseValue(float value) { baseValue = value; };
-		godot::StringName GetName() { return name; };
-		void SetName(godot::StringName n);
-
-	public:
-		sm::Event<godot::StringName> eventSetName;
+		static godot::Ref<sm::Attribute> Create(float base, AttributeID n);
+		float GetBaseValue() { return m_Attribute->GetBase(); }
+		void SetBaseValue(float value) { m_Attribute->SetBase(value); }
+		AttributeID GetUID() { return m_Attribute->GetUID(); }
 
 	private:
-		// Godot
-		float baseValue;
-		float minValue;
-		float maxValue;
-		godot::StringName name;
+		sm::GameplayAttribute* m_Attribute;
 	};
 }

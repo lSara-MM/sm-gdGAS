@@ -1,6 +1,6 @@
 #pragma once
 #include "Types.h"
-#include "gdModifier.h"
+#include "gdModifierData.h"
 
 namespace sm
 {

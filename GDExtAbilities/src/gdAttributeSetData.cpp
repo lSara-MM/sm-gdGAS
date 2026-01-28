@@ -1,10 +1,10 @@
-#include "gdAttributeSet.h"
+#include "gdAttributeSetData.h"
 
 #include <algorithm>
 #include <unordered_set>
 #include <variant/utility_functions.hpp>
 
-void sm::AttributeSet::_bind_methods()
+void sm::AttributeSetData::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attributes_set"), &GetAttributesSet);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attributes_set", "attr"), &SetAttributesSet);
@@ -13,24 +13,24 @@ void sm::AttributeSet::_bind_methods()
 		godot::Variant::ARRAY,
 		"attributes",
 		godot::PROPERTY_HINT_RESOURCE_TYPE,
-		"24/17:Attribute"),
+		"24/17:AttributeData"),
 		"set_attributes_set", "get_attributes_set");
 
 	godot::ClassDB::bind_method(godot::D_METHOD("add_attribute", "attr"), &SetAttributesSet);
 }
 
-godot::TypedArray<sm::Attribute> sm::AttributeSet::GetAttributesSet()
+godot::TypedArray<sm::AttributeData> sm::AttributeSetData::GetAttributesSet()
 {
 	return m_gdAttributes;
 }
 
-void sm::AttributeSet::SetAttributesSet(const godot::TypedArray<sm::Attribute>& attr)
+void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<sm::AttributeData>& attr)
 {
 	m_gdAttributes = attr;
 
 	for (size_t i = 0; i < attr.size(); i++)
 	{
-		const godot::Ref<sm::Attribute> attribute = attr[i];
+		const godot::Ref<sm::AttributeData> attribute = attr[i];
 
 #ifdef TOOLS_DEBUG_VS
 		if (attribute.is_null())
@@ -62,9 +62,9 @@ void sm::AttributeSet::SetAttributesSet(const godot::TypedArray<sm::Attribute>& 
 	}
 }
 
-void sm::AttributeSet::AddAttribute(float baseValue, godot::StringName name)
+void sm::AttributeSetData::AddAttribute(float baseValue, godot::StringName name)
 {
-	godot::Ref<sm::Attribute> attr;
+	godot::Ref<sm::AttributeData> attr;
 	attr.instantiate();
 	attr->SetBaseValue(baseValue);
 	attr->SetName(name);
@@ -73,16 +73,16 @@ void sm::AttributeSet::AddAttribute(float baseValue, godot::StringName name)
 	emit_changed();
 }
 
-void sm::AttributeSet::AddAttribute(const godot::Ref<sm::Attribute>& attr)
+void sm::AttributeSetData::AddAttribute(const godot::Ref<sm::AttributeData>& attr)
 {
 	m_gdAttributes.push_back(attr);
 
 	emit_changed();
 }
 
-//uint32 sm::AttributeSet::GetAttributeID(godot::StringName name) const
+//uint32 sm::AttributeSetData::GetAttributeID(godot::StringName name) const
 //{
-//	godot::Ref<sm::Attribute> ref;
+//	godot::Ref<sm::AttributeData> ref;
 //
 //	for (size_t i = 0; i < m_gdAttributes.size(); i++)
 //	{
@@ -96,9 +96,9 @@ void sm::AttributeSet::AddAttribute(const godot::Ref<sm::Attribute>& attr)
 //	return 0;
 //}
 
-godot::Ref<sm::Attribute> sm::AttributeSet::GetAttributeResource(godot::StringName name)
+godot::Ref<sm::AttributeData> sm::AttributeSetData::GetAttributeResource(godot::StringName name)
 {
-	godot::Ref<sm::Attribute> ref;
+	godot::Ref<sm::AttributeData> ref;
 
 	for (size_t i = 0; i < m_gdAttributes.size(); i++)
 	{
@@ -109,25 +109,25 @@ godot::Ref<sm::Attribute> sm::AttributeSet::GetAttributeResource(godot::StringNa
 		}
 	}
 
-	return godot::Ref<sm::Attribute>();
+	return godot::Ref<sm::AttributeData>();
 }
 
-std::vector<sm::Attribute> sm::AttributeSet::ToAttributeVector()
+std::vector<sm::AttributeData> sm::AttributeSetData::ToAttributeVector()
 {
-	std::vector<sm::Attribute> ret;
+	std::vector<sm::AttributeData> ret;
 
 	for (size_t i = 0; i < m_gdAttributes.size(); ++i)
 	{
-		godot::Ref<sm::Attribute> ref = m_gdAttributes[i];
+		godot::Ref<sm::AttributeData> ref = m_gdAttributes[i];
 		ret.emplace_back(ref->GetBaseValue());
 	}
 
 	return ret;
 }
 
-std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::ToRefAttributeVector()
+std::vector<godot::Ref<sm::AttributeData>> sm::AttributeSetData::ToRefAttributeVector()
 {
-	std::vector<godot::Ref<sm::Attribute>> ret;
+	std::vector<godot::Ref<sm::AttributeData>> ret;
 	ret.reserve(m_gdAttributes.size());
 
 	for (size_t i = 0; i < m_gdAttributes.size(); ++i)
@@ -138,9 +138,9 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::ToRefAttributeVector()
 	return ret;
 }
 
-std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::SortByName()
+std::vector<godot::Ref<sm::AttributeData>> sm::AttributeSetData::SortByName()
 {
-	std::vector<godot::Ref<sm::Attribute>> ret = ToRefAttributeVector();
+	std::vector<godot::Ref<sm::AttributeData>> ret = ToRefAttributeVector();
 
 	//// TODO: delete
 	//std::vector<std::string> ret2;
@@ -154,7 +154,7 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::SortByName()
 
 	ret.erase(
 		std::remove_if(ret.begin(), ret.end(),
-			[](const godot::Ref<sm::Attribute>& attr)
+			[](const godot::Ref<sm::AttributeData>& attr)
 			{
 				return attr.is_null();
 			}),
@@ -163,7 +163,7 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::SortByName()
 
 
 	std::sort(ret.begin(), ret.end(),
-		[](const godot::Ref<sm::Attribute>& a, const godot::Ref<sm::Attribute>& b)
+		[](const godot::Ref<sm::AttributeData>& a, const godot::Ref<sm::AttributeData>& b)
 		{
 			return a->GetName() < b->GetName();
 		});
@@ -180,14 +180,14 @@ std::vector<godot::Ref<sm::Attribute>> sm::AttributeSet::SortByName()
 	return ret;
 }
 
-godot::TypedArray<sm::Attribute> sm::AttributeSet::ValidateSetData(const godot::TypedArray<sm::Attribute>& attr, bool getNull)
+godot::TypedArray<sm::AttributeData> sm::AttributeSetData::ValidateSetData(const godot::TypedArray<sm::AttributeData>& attr, bool getNull)
 {
-	godot::TypedArray<sm::Attribute> validatedSet;
+	godot::TypedArray<sm::AttributeData> validatedSet;
 	std::unordered_set<godot::StringName> seen;
 
 	for (size_t i = 0; i < attr.size(); i++)
 	{
-		const godot::Ref<sm::Attribute> itemToCompare = attr[i];
+		const godot::Ref<sm::AttributeData> itemToCompare = attr[i];
 
 		if (itemToCompare.is_null())
 		{
@@ -211,11 +211,11 @@ godot::TypedArray<sm::Attribute> sm::AttributeSet::ValidateSetData(const godot::
 	return validatedSet;
 }
 
-void sm::AttributeSet::_OnAttributeSetName(godot::StringName newName)
+void sm::AttributeSetData::_OnAttributeSetName(godot::StringName newName)
 {
 	for (size_t i = 0; i < m_gdAttributes.size(); i++)
 	{
-		const godot::Ref<sm::Attribute> itemToCompare = m_gdAttributes[i];
+		const godot::Ref<sm::AttributeData> itemToCompare = m_gdAttributes[i];
 
 		if (itemToCompare.is_null() || itemToCompare->GetName().is_empty() || newName.is_empty())
 		{

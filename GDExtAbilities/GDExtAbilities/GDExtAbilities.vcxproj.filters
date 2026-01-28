@@ -25,16 +25,16 @@
     <Filter Include="Source Files\public">
       <UniqueIdentifier>{3e2fa553-0b84-4070-ac4a-738c7e9924d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\public\Attributes">
+      <UniqueIdentifier>{607d22b1-47ee-410e-9f85-a160b6ccbc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\public\Attributes">
+      <UniqueIdentifier>{addbf361-45aa-4369-b467-c9a763af1d81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gdExample.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\AttributeContainer.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\GameplayAttribute.cpp">
-      <Filter>Source Files\public</Filter>
     </ClCompile>
     <ClCompile Include="..\src\register_types.cpp">
       <Filter>Source Files\public</Filter>
@@ -45,29 +45,32 @@
     <ClCompile Include="..\src\TagRegistry.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GameplayAttributeSet.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdAttribute.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdAttributeSet.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\GameplayModifier.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdModifier.cpp">
+    <ClCompile Include="..\src\gdModifierData.cpp">
       <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAttributeData.cpp">
+      <Filter>Source Files\public\Attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAttributeSetData.cpp">
+      <Filter>Source Files\public\Attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameplayAttributeSet.cpp">
+      <Filter>Source Files\public\Attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameplayAttribute.cpp">
+      <Filter>Source Files\public\Attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAttributeContainer.cpp">
+      <Filter>Source Files\public\Attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAttribute.cpp">
+      <Filter>Source Files\public\Attributes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\AttributeContainer.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\GameplayAttribute.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\GameplayTag.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
@@ -89,23 +92,32 @@
     <ClInclude Include="..\src\private\Event.h">
       <Filter>Header Files\private</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdAttribute.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\gdAttributeSet.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\GameplayAttributeSet.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\GameplayModifier.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdModifier.h">
+    <ClInclude Include="..\src\include\gdModifierData.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\private\UID.h">
       <Filter>Header Files\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdAttributeContainer.h">
+      <Filter>Header Files\public\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayAttribute.h">
+      <Filter>Header Files\public\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdAttributeSetData.h">
+      <Filter>Header Files\public\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdAttributeData.h">
+      <Filter>Header Files\public\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayAttributeSet.h">
+      <Filter>Header Files\public\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdAttribute.h">
+      <Filter>Header Files\public\Attributes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

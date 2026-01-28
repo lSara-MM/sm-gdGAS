@@ -344,14 +344,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h" />
-    <ClInclude Include="..\src\include\AttributeContainer.h" />
+    <ClInclude Include="..\src\include\gdAttribute.h" />
+    <ClInclude Include="..\src\include\gdAttributeContainer.h" />
     <ClInclude Include="..\src\include\GameplayAttribute.h" />
     <ClInclude Include="..\src\include\GameplayAttributeSet.h" />
     <ClInclude Include="..\src\include\GameplayModifier.h" />
     <ClInclude Include="..\src\include\GameplayTag.h" />
-    <ClInclude Include="..\src\include\gdAttribute.h" />
-    <ClInclude Include="..\src\include\gdAttributeSet.h" />
-    <ClInclude Include="..\src\include\gdModifier.h" />
+    <ClInclude Include="..\src\include\gdAttributeData.h" />
+    <ClInclude Include="..\src\include\gdAttributeSetData.h" />
+    <ClInclude Include="..\src\include\gdModifierData.h" />
     <ClInclude Include="..\src\include\TagContainer.h" />
     <ClInclude Include="..\src\include\TagRegistry.h" />
     <ClInclude Include="..\src\private\Event.h" />
@@ -360,14 +361,15 @@
     <ClInclude Include="..\src\register_types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AttributeContainer.cpp" />
+    <ClCompile Include="..\src\gdAttribute.cpp" />
+    <ClCompile Include="..\src\gdAttributeContainer.cpp" />
     <ClCompile Include="..\src\GameplayAttribute.cpp" />
     <ClCompile Include="..\src\GameplayAttributeSet.cpp" />
     <ClCompile Include="..\src\GameplayModifier.cpp" />
-    <ClCompile Include="..\src\gdAttribute.cpp" />
-    <ClCompile Include="..\src\gdAttributeSet.cpp" />
+    <ClCompile Include="..\src\gdAttributeData.cpp" />
+    <ClCompile Include="..\src\gdAttributeSetData.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
-    <ClCompile Include="..\src\gdModifier.cpp" />
+    <ClCompile Include="..\src\gdModifierData.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
     <ClCompile Include="..\src\TagContainer.cpp" />
     <ClCompile Include="..\src\TagRegistry.cpp" />

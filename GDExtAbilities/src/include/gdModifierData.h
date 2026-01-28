@@ -5,9 +5,9 @@
 
 namespace sm
 {
-	class Modifier : public godot::Resource
+	class ModifierData : public godot::Resource
 	{
-		GDCLASS(Modifier, godot::Resource)
+		GDCLASS(ModifierData, godot::Resource)
 
 	protected:
 		static void _bind_methods();
@@ -21,8 +21,8 @@ namespace sm
 			Override
 		};
 
-		Modifier::OperationType GetOperationType() { return operation; };
-		void SetOperationType(Modifier::OperationType t) { operation = t; };
+		ModifierData::OperationType GetOperationType() { return operation; };
+		void SetOperationType(ModifierData::OperationType t) { operation = t; };
 		uint32 GetTargetID() { return targetID; };
 		void SetTargetID(uint32 id) { targetID = id; };
 		uint32 GetSourceID() { return sourceID; };
@@ -38,4 +38,4 @@ namespace sm
 	};
 }
 
-VARIANT_ENUM_CAST(sm::Modifier::OperationType);
+VARIANT_ENUM_CAST(sm::ModifierData::OperationType);

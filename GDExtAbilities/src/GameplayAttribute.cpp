@@ -1,6 +1,6 @@
 #include "GameplayAttribute.h"
 
-#include "gdModifier.h"
+#include "gdModifierData.h"
 
 #include <algorithm>
 
@@ -22,7 +22,7 @@ void sm::GameplayAttribute::SetBase(float newValue)
 	m_BaseValue = std::clamp(newValue, m_MinValue, m_MaxValue);
 }
 
-sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::Modifier>& mod)
+sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::ModifierData>& mod)
 {
 	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
@@ -37,7 +37,7 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::M
 	return nullptr;
 }
 
-std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<sm::Modifier>& mod) const
+std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<sm::ModifierData>& mod) const
 {
 	const std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
@@ -52,7 +52,7 @@ std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<
 	return std::nullopt;
 }
 
-void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::Modifier>& mod)
+void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::ModifierData>& mod)
 {
 	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
@@ -67,7 +67,7 @@ void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::Modifier>& mod)
 	m_dirty = true;
 }
 
-void sm::GameplayAttribute::RemoveModifier(const godot::Ref<sm::Modifier>& mod)
+void sm::GameplayAttribute::RemoveModifier(const godot::Ref<sm::ModifierData>& mod)
 {
 	std::optional<size_t> modIndex = FindModifierIndex(mod);
 

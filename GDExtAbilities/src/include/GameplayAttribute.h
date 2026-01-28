@@ -7,7 +7,7 @@
 
 namespace sm
 {
-	class Modifier;
+	class ModifierData;
 }
 
 namespace sm
@@ -38,10 +38,10 @@ namespace sm
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
-		sm::GameplayModifier* FindModifier(const godot::Ref<sm::Modifier>& mod);
-		std::optional<size_t> FindModifierIndex(const godot::Ref<sm::Modifier>& mod) const;
-		void AddModifier(const godot::Ref<sm::Modifier>& mod);
-		void RemoveModifier(const godot::Ref<sm::Modifier>& mod);
+		sm::GameplayModifier* FindModifier(const godot::Ref<sm::ModifierData>& mod);
+		std::optional<size_t> FindModifierIndex(const godot::Ref<sm::ModifierData>& mod) const;
+		void AddModifier(const godot::Ref<sm::ModifierData>& mod);
+		void RemoveModifier(const godot::Ref<sm::ModifierData>& mod);
 		void Reset();
 
 	private:
