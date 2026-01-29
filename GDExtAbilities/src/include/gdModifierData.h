@@ -15,26 +15,27 @@ namespace sm
 	public:
 		enum OperationType : uint8_t
 		{
-			Add = 0,
-			Multiply,
-			Percent,
-			Override
+			Add = 0,		// Add to CurrentValue
+			Multiply,		// Multiply to CurrentValue
+			PercentAdd,		// Add x% of Base to CurrentValue
+			PercentStack,	// Multiply x% of CurrentValue to CurrentValue
+			Override,		// Ignore all modifiers and substitute CurrentValue
 		};
 
-		ModifierData::OperationType GetOperationType() { return operation; };
-		void SetOperationType(ModifierData::OperationType t) { operation = t; };
-		uint32 GetTargetID() { return targetID; };
-		void SetTargetID(uint32 id) { targetID = id; };
-		uint32 GetSourceID() { return sourceID; };
-		void SetSourceID(uint32 id) { sourceID = id; };
-		float GetValue() { return value; };
-		void SetValue(float v) { value = v; };
+		ModifierData::OperationType GetOperationType() { return m_Operation; };
+		void SetOperationType(ModifierData::OperationType t) { m_Operation = t; };
+		uint32 GetTargetID() { return m_TargetID; };
+		void SetTargetID(uint32 id) { m_TargetID = id; };
+		uint32 GetSourceID() { return m_SourceID; };
+		void SetSourceID(uint32 id) { m_SourceID = id; };
+		float GetValue() { return m_Value; };
+		void SetValue(float v) { m_Value = v; };
 
 	private:
-		OperationType operation;
-		uint32 targetID;
-		uint32 sourceID;
-		float value;
+		OperationType m_Operation;
+		uint32 m_TargetID;
+		uint32 m_SourceID;
+		float m_Value;
 	};
 }
 

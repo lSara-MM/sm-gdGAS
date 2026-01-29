@@ -11,6 +11,7 @@
 
 namespace sm
 {
+	class Attribute;
 	class AttributeSetData;
 	class GameplayAttributeSet;
 
@@ -19,9 +20,9 @@ namespace sm
 
 namespace sm
 {
-	class AttributeContainer : public sm::GameplayAbilitySystem
+	class AttributeContainer : public GameplayAbilitySystem
 	{
-		GDCLASS(AttributeContainer, sm::GameplayAbilitySystem)
+		GDCLASS(AttributeContainer, GameplayAbilitySystem)
 
 	protected:
 		static void _bind_methods();
@@ -33,20 +34,24 @@ namespace sm
 
 #pragma region Godot public 
 
-		godot::Ref<sm::AttributeSetData> GetAttributeSet();
-		void SetAttributeSet(const godot::Ref<sm::AttributeSetData>& attr);
+		godot::Ref<Attribute> GetAttribute(AttributeID id);
 
-		void AddModifier(AttributeID id, const godot::Ref<sm::ModifierData>& mod);
-		void RemoveModifier(AttributeID id, const godot::Ref<sm::ModifierData>& mod);
+		godot::Ref<AttributeSetData> GetAttributeSet();
+		void SetAttributeSet(const godot::Ref<AttributeSetData>& attr);
+
+		void AddModifier(AttributeID id, const godot::Ref<ModifierData>& mod);
+		void RemoveModifier(AttributeID id, const godot::Ref<ModifierData>& mod);
 
 		// Signals
-		void _OnAttributeModified(sm::AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue);
+		void _OnAttributeModified(AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue);
 
-		void _OnModifierAdded(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::ModifierData> mod);
+		void _OnModifierAdded(AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<ModifierData> mod);
 
-		void _OnModifierRemoved(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::ModifierData> mod);
+		void _OnModifierRemoved(AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<ModifierData> mod);
 
 #pragma endregion 
+
+		void AddAttribute(godot::StringName id, float baseValue);
 
 		void ModifyAttribute(AttributeID id, float newValue);
 
@@ -56,9 +61,9 @@ namespace sm
 
 	private:
 
-		godot::Ref<sm::AttributeSetData> m_gdAttributeSet;
-		std::unique_ptr<sm::GameplayAttributeSet> m_AttributeSetPtr;
+		godot::Ref<AttributeSetData> m_gdAttributeSetData;
+		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;
 
-		std::unordered_map<godot::StringName, sm::GameplayAttribute*> m_AttributesByName;
+		std::unordered_map<godot::StringName, GameplayAttribute*> m_AttributesByName;
 	};
 }

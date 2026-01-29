@@ -18,6 +18,26 @@
 // NOTES: ERR_FAIL_COND_MSG(cond, "Error. Return de la funcion actual.");
 // NOTES: UtilityFunctions::push_error("Error. No para ejecucion, no return. Warning en editor");
 
+// Deletes a buffer
+#define RELEASE( x )\
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )\
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }
+
 using uint32 = uint32_t;
 
 using AttributeID = godot::StringName;

@@ -3,6 +3,7 @@
 #include "GameplayAttribute.h"
 #include "GameplayAttributeSet.h"
 #include "GameplayModifier.h"
+#include "gdAttribute.h"
 #include "gdAttributeSetData.h"
 
 #include <classes/engine.hpp>
@@ -30,7 +31,7 @@ void sm::AttributeContainer::_bind_methods()
 
 	// Methods
 	godot::ClassDB::bind_method(godot::D_METHOD("add_modifier", "attribute_id", "modifier"), &AddModifier);
-	godot::ClassDB::bind_method(godot::D_METHOD("remove_modifier", "attribute_id", "modifier"), &AddModifier);
+	godot::ClassDB::bind_method(godot::D_METHOD("remove_modifier", "attribute_id", "modifier"), &RemoveModifier);
 
 	// Signals
 	ADD_SIGNAL(godot::MethodInfo("attribute_modified",
@@ -43,13 +44,13 @@ void sm::AttributeContainer::_bind_methods()
 	ADD_SIGNAL(godot::MethodInfo("modifier_added",
 		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "modifier")
+		godot::PropertyInfo(godot::Variant::OBJECT, "modifier_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("modifier_removed",
 		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "modifier")
+		godot::PropertyInfo(godot::Variant::OBJECT, "modifier_data")
 	));
 }
 
@@ -58,71 +59,82 @@ void sm::AttributeContainer::_notification(int notification)
 	// When node container is loaded, get editor changes and apply them to the C++ AttributeData Set
 	if (notification == NOTIFICATION_READY)
 	{
-		if (m_gdAttributeSet == nullptr)
+		if (m_gdAttributeSetData == nullptr)
 		{
 			return;
 		}
 
-		m_gdAttributeSet->ValidateSetData(m_gdAttributeSet->GetAttributesSet());
+		m_gdAttributeSetData->ValidateSetData(m_gdAttributeSetData->GetAttributesSet());
 
-		std::vector<godot::Ref<sm::AttributeData>> attrs = m_gdAttributeSet->SortByName();
+		std::vector<godot::Ref<sm::AttributeData>> attrs = m_gdAttributeSetData->SortByName();
 
 		for (size_t i = 0; i < attrs.size(); ++i)
 		{
-			sm::GameplayAttribute* addedAttr = &m_AttributeSetPtr->AddAttribute(attrs[i]->GetName(), attrs[i]->GetBaseValue());
-			m_AttributesByName.try_emplace(attrs[i]->GetName(), addedAttr);
+			AddAttribute(attrs[i]->GetName(), attrs[i]->GetBaseValue());
 		}
 	}
 }
 
+godot::Ref<sm::Attribute> sm::AttributeContainer::GetAttribute(AttributeID id)
+{
+	return godot::Ref<Attribute>();
+}
+
 godot::Ref<sm::AttributeSetData> sm::AttributeContainer::GetAttributeSet()
 {
-	return m_gdAttributeSet;
+	return m_gdAttributeSetData;
 }
 
-void sm::AttributeContainer::SetAttributeSet(const godot::Ref<sm::AttributeSetData>& attrSet)
+void sm::AttributeContainer::SetAttributeSet(const godot::Ref<AttributeSetData>& attrSet)
 {
-	m_gdAttributeSet = attrSet;
+	m_gdAttributeSetData = attrSet;
 }
 
-void sm::AttributeContainer::AddModifier(AttributeID id, const godot::Ref<sm::ModifierData>& mod)
+void sm::AttributeContainer::AddModifier(AttributeID id, const godot::Ref<ModifierData>& mod)
 {
-	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-	attr->AddModifier(mod);
+	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	size_t t = attr->AddModifier(mod);
 	ERR_PRINT("added");
+	ERR_PRINT(std::to_string(t).c_str());
 
 	emit_signal("modifier_added", this, id, mod);
 }
 
-void sm::AttributeContainer::RemoveModifier(AttributeID id, const  godot::Ref<sm::ModifierData>& mod)
+void sm::AttributeContainer::RemoveModifier(AttributeID id, const  godot::Ref<ModifierData>& mod)
 {
-	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	attr->RemoveModifier(mod);
 	ERR_PRINT("added");
 
 	emit_signal("modifier_removed", this, id, mod);
 }
 
+void sm::AttributeContainer::AddAttribute(godot::StringName id, float baseValue)
+{
+	GameplayAttribute* addedAttr = &m_AttributeSetPtr->AddAttribute(id, baseValue);
+	m_AttributesByName.try_emplace(id, addedAttr);
+}
+
 void sm::AttributeContainer::ModifyAttribute(AttributeID id, float newValue)
 {
-	sm::GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	float oldValue = attr->GetBase();
 	attr->SetBase(newValue);
 
 	emit_signal("attribute_modified", this, id, oldValue, newValue);
 }
 
-void sm::AttributeContainer::_OnAttributeModified(sm::AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue)
+void sm::AttributeContainer::_OnAttributeModified(AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue)
 {
 
 }
 
-void sm::AttributeContainer::_OnModifierAdded(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::ModifierData> mod)
+void sm::AttributeContainer::_OnModifierAdded(AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<ModifierData> mod)
 {
 
 }
 
-void sm::AttributeContainer::_OnModifierRemoved(sm::AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<sm::ModifierData> mod)
+void sm::AttributeContainer::_OnModifierRemoved(AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<ModifierData> mod)
 {
 
 }

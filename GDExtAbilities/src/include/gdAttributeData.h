@@ -7,7 +7,8 @@
 #include <godot_cpp/classes/resource.hpp>
 #include <vector>
 
-namespace sm{
+namespace sm
+{
 	class AttributeData : public godot::Resource
 	{
 		GDCLASS(AttributeData, godot::Resource)

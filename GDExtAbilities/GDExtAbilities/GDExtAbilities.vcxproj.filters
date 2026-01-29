@@ -31,24 +31,24 @@
     <Filter Include="Source Files\public\Attributes">
       <UniqueIdentifier>{addbf361-45aa-4369-b467-c9a763af1d81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\public\Effects">
+      <UniqueIdentifier>{a0e8e601-6cc2-4ad3-8086-1bbd0c357339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\public\Tags">
+      <UniqueIdentifier>{14327ce7-6413-4543-86b5-ab081d55ca91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\public\Effects">
+      <UniqueIdentifier>{9e7ac768-7c65-4696-9bd8-1df63078db08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\public\Tags">
+      <UniqueIdentifier>{a2c8ae66-1c4e-431f-a57b-1631bd58146a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gdExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\register_types.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TagContainer.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TagRegistry.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\GameplayModifier.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdModifierData.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gdAttributeData.cpp">
@@ -69,17 +69,26 @@
     <ClCompile Include="..\src\gdAttribute.cpp">
       <Filter>Source Files\public\Attributes</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GameplayModifier.cpp">
+      <Filter>Source Files\public\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdModifierData.cpp">
+      <Filter>Source Files\public\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameplayEffect.cpp">
+      <Filter>Source Files\public\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdEffectData.cpp">
+      <Filter>Source Files\public\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TagContainer.cpp">
+      <Filter>Source Files\public\Tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TagRegistry.cpp">
+      <Filter>Source Files\public\Tags</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\GameplayTag.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\TagContainer.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\TagRegistry.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\gdExample.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -91,12 +100,6 @@
     </ClInclude>
     <ClInclude Include="..\src\private\Event.h">
       <Filter>Header Files\private</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\GameplayModifier.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\gdModifierData.h">
-      <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\private\UID.h">
       <Filter>Header Files\private</Filter>
@@ -118,6 +121,27 @@
     </ClInclude>
     <ClInclude Include="..\src\include\gdAttribute.h">
       <Filter>Header Files\public\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayEffect.h">
+      <Filter>Header Files\public\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdEffectData.h">
+      <Filter>Header Files\public\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayModifier.h">
+      <Filter>Header Files\public\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdModifierData.h">
+      <Filter>Header Files\public\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayTag.h">
+      <Filter>Header Files\public\Tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\TagContainer.h">
+      <Filter>Header Files\public\Tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\TagRegistry.h">
+      <Filter>Header Files\public\Tags</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

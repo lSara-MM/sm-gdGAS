@@ -17,9 +17,9 @@ namespace sm
 		~GameplayAttributeSet();
 
 		GameplayAttribute* FindAttribute(AttributeID id);
-		sm::GameplayAttribute& AddAttribute(AttributeID id, float base, float min = 0.0f, float max = FLT_MAX);
+		GameplayAttribute& AddAttribute(AttributeID id, float base, float min = 0.0f, float max = FLT_MAX);
 
 	private:
-		std::vector<sm::GameplayAttribute> m_Attributes;
+		std::vector<GameplayAttribute> m_Attributes;
 	};
 }

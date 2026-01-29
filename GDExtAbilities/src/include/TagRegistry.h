@@ -55,7 +55,7 @@ namespace sm
 		godot::StringName _AddRoot(godot::StringName name) const;
 		TagID _GetFullID(TagID tagID) const;
 
-		sm::GameplayTag& _AddEntry(godot::StringName name, TagID idParent = godot::StringName("<"));
+		GameplayTag& _AddEntry(godot::StringName name, TagID idParent = godot::StringName("<"));
 		void _AddChild(GameplayTag* tag, TagID idChild);
 
 	private:

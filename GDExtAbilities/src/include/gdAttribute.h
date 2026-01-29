@@ -17,7 +17,7 @@ namespace sm
 		Attribute();
 		~Attribute();
 
-		static godot::Ref<sm::Attribute> Create(float base, AttributeID n);
+		//static godot::Ref<sm::Attribute> Create(AttributeID n, float base);
 		float GetBaseValue() { return m_Attribute->GetBase(); }
 		void SetBaseValue(float value) { m_Attribute->SetBase(value); }
 		AttributeID GetUID() { return m_Attribute->GetUID(); }

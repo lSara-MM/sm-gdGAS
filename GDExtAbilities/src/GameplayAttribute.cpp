@@ -11,10 +11,49 @@ void sm::GameplayAttribute::Calculate()
 		return;
 	}
 
-	//for (const sm::GameplayModifier& mod : m_Modifiers)
-	//{
+	// Ignore all modifiers if there is an Override
+	if (!m_Modifiers[static_cast<size_t>(GameplayModifier::OperationType::Override)].empty())
+	{
+		// If there are more than one, apply last
+		auto& modifier = m_Modifiers[static_cast<size_t>(GameplayModifier::OperationType::Override)];
 
-	//}
+		m_CurrentValue = modifier[modifier.size() - 1]->value;
+		m_CurrentValue = std::clamp(m_CurrentValue, m_MinValue, m_MaxValue);
+
+		return;
+	}
+
+	float sum = 0;
+	for (auto& modifier : m_Modifiers[static_cast<size_t>(GameplayModifier::OperationType::Add)])
+	{
+		sum += modifier->value;
+	}
+
+	float mult = 1;
+	for (auto& modifier : m_Modifiers[static_cast<size_t>(GameplayModifier::OperationType::Multiply)])
+	{
+		mult *= modifier->value;
+	}
+
+	float perAdd = 0;
+	for (auto& modifier : m_Modifiers[static_cast<size_t>(GameplayModifier::OperationType::PercentAdd)])
+	{
+		perAdd += modifier->value;
+	}
+
+	float perStack = 1;
+	for (auto& modifier : m_Modifiers[static_cast<size_t>(GameplayModifier::OperationType::PercentStack)])
+	{
+		perStack *= 1.0f + modifier->value * 0.01f;
+	}
+
+	//m_CurrentValue += sum;
+	//m_CurrentValue *= mult;
+	//m_CurrentValue += m_BaseValue * perAdd * 0.01f;
+	//m_CurrentValue *= perStack;
+	m_CurrentValue = ((m_BaseValue + sum) * mult + m_BaseValue * perAdd * 0.01f) * perStack;
+
+	m_CurrentValue = std::clamp(m_CurrentValue, m_MinValue, m_MaxValue);
 }
 
 void sm::GameplayAttribute::SetBase(float newValue)
@@ -24,7 +63,7 @@ void sm::GameplayAttribute::SetBase(float newValue)
 
 sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::ModifierData>& mod)
 {
-	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
+	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<size_t>(mod->GetOperationType())];
 
 	for (auto& modifier : *mods)
 	{
@@ -39,7 +78,7 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::M
 
 std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<sm::ModifierData>& mod) const
 {
-	const std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
+	const std::vector<ModifierPtr>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
 	for (size_t i = 0; i < mods->size(); ++i)
 	{
@@ -52,11 +91,11 @@ std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<
 	return std::nullopt;
 }
 
-void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::ModifierData>& mod)
+size_t sm::GameplayAttribute::AddModifier(const godot::Ref<sm::ModifierData>& mod)
 {
-	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
+	std::vector<ModifierPtr>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
-	mods->emplace_back(std::make_unique<sm::GameplayModifier>(
+	mods->emplace_back(std::make_unique<GameplayModifier>(
 		m_ModifiersUID.GenerateUID(),
 		static_cast<GameplayModifier::OperationType>(mod->GetOperationType()),
 		mod->GetTargetID(),
@@ -65,13 +104,15 @@ void sm::GameplayAttribute::AddModifier(const godot::Ref<sm::ModifierData>& mod)
 	));
 
 	m_dirty = true;
+
+	return mods->size() - 1;
 }
 
 void sm::GameplayAttribute::RemoveModifier(const godot::Ref<sm::ModifierData>& mod)
 {
 	std::optional<size_t> modIndex = FindModifierIndex(mod);
 
-	std::vector<std::unique_ptr<sm::GameplayModifier>>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
+	std::vector<ModifierPtr>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
 	if (modIndex.has_value())
 	{

@@ -4,9 +4,11 @@
 
 void sm::ModifierData::_bind_methods()
 {
+	// OperationType
 	BIND_ENUM_CONSTANT(Add);
 	BIND_ENUM_CONSTANT(Multiply);
-	BIND_ENUM_CONSTANT(Percent);
+	BIND_ENUM_CONSTANT(PercentAdd);
+	BIND_ENUM_CONSTANT(PercentStack);
 	BIND_ENUM_CONSTANT(Override);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_operation_type"), &GetOperationType);
@@ -23,7 +25,7 @@ void sm::ModifierData::_bind_methods()
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "operation_type",
-		godot::PROPERTY_HINT_ENUM, "Add, Multiply, Percent, Override"),
+		godot::PROPERTY_HINT_ENUM, "Add, Multiply, PercentAdd, PercentStack, Override"),
 		"set_operation_type", "get_operation_type"
 	);
 
