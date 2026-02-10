@@ -4,6 +4,7 @@
 #include "UID.h"
 
 #include <optional>
+#include <queue>
 
 namespace sm
 {
@@ -49,14 +50,19 @@ namespace sm
 		std::optional<size_t> FindModifierIndex(const godot::Ref<ModifierData>& mod) const;
 		size_t AddModifier(const godot::Ref<ModifierData>& mod);
 		void RemoveModifier(const godot::Ref<ModifierData>& mod);
+		void ClearModifiers();
 		void Reset();
 
 	private:
+		void CalculateBase();
 		void Calculate();
 
 	private:
+		std::queue<GameplayModifier> m_BaseModifiers;
+		ModifierBuckets m_Modifiers;
+
 		AttributeID m_UID;
-		UID m_ModifiersUID;
+		DumbUID m_ModifiersUID;
 
 		float m_BaseValue;
 		float m_CurrentValue;
@@ -64,7 +70,5 @@ namespace sm
 		float m_MaxValue;
 
 		bool m_dirty;
-
-		ModifierBuckets m_Modifiers;
 	};
 }

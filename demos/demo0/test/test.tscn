@@ -1,17 +1,45 @@
-[gd_scene load_steps=4 format=3 uid="uid://dxvoh0h0g5o1n"]
+[gd_scene load_steps=12 format=3 uid="uid://dxvoh0h0g5o1n"]
 
+[ext_resource type="Script" uid="uid://c2hqcxvefpv18" path="res://test/test.gd" id="1_65205"]
 [ext_resource type="Script" uid="uid://sinqoekac5sb" path="res://test/tag_container.gd" id="1_errlg"]
+[ext_resource type="Script" uid="uid://ht57s38l38xf" path="res://test/attribute_container.gd" id="2_8a8pi"]
 
-[sub_resource type="Attribute" id="Attribute_syuel"]
-base_value = 1.25016e-19
+[sub_resource type="AttributeData" id="AttributeData_65205"]
+name = &"aaaa"
+base_value = 552.0
 
-[sub_resource type="AttributeSet" id="AttributeSet_8a8pi"]
-attribute_set = Array[Attribute]([SubResource("Attribute_syuel")])
+[sub_resource type="AttributeData" id="AttributeData_hrq6i"]
+name = &"6yu"
+base_value = 772.0
+
+[sub_resource type="AttributeData" id="AttributeData_tbfq4"]
+name = &"aaaas"
+base_value = 88.0
+
+[sub_resource type="AttributeSetData" id="AttributeSetData_s3n3v"]
+attributes = Array[AttributeData]([SubResource("AttributeData_65205"), SubResource("AttributeData_hrq6i"), SubResource("AttributeData_tbfq4")])
+
+[sub_resource type="AttributeData" id="AttributeData_s3n3v"]
+name = &"hhh"
+
+[sub_resource type="AttributeData" id="AttributeData_kgdm3"]
+name = &"6yu"
+
+[sub_resource type="AttributeData" id="AttributeData_aeque"]
+name = &"aaaaa"
+
+[sub_resource type="AttributeSetData" id="AttributeSetData_f6u32"]
+attributes = Array[AttributeData]([SubResource("AttributeData_s3n3v"), SubResource("AttributeData_kgdm3"), SubResource("AttributeData_aeque")])
 
 [node name="Test" type="Node2D"]
+script = ExtResource("1_65205")
 
 [node name="TagContainer" type="TagContainer" parent="."]
 script = ExtResource("1_errlg")
 
 [node name="AttributeContainer" type="AttributeContainer" parent="."]
-attribute_set = SubResource("AttributeSet_8a8pi")
+attribute_set = SubResource("AttributeSetData_s3n3v")
+script = ExtResource("2_8a8pi")
+
+[node name="AttributeContainer2" type="AttributeContainer" parent="."]
+attribute_set = SubResource("AttributeSetData_f6u32")

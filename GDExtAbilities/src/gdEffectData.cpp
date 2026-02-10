@@ -10,13 +10,30 @@ void sm::EffectData::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_modifiers"), &GetModifiers);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_modifiers", "modifiers"), &SetModifiers);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("get_name"), &GetName);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_name", "id"), &SetName);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_effect_type"), &GetEffectType);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_effect_type", "type"), &SetEffectType);
-	
+
+	godot::ClassDB::bind_method(godot::D_METHOD("get_duration"), &GetDuration);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_duration", "time"), &SetDuration);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::STRING_NAME, "name"),
+		"set_name", "get_name"
+	);
+
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "effect_type",
 		godot::PROPERTY_HINT_ENUM, "Permanent, Temporary, Persistent"),
-		"set_effect_type", "get_effect_type"
+		"set_effect_type", "get_effect_type",
+		Type::Permanent
+	);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::FLOAT, "duration"),
+		"set_duration", "get_duration"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -25,14 +42,30 @@ void sm::EffectData::_bind_methods()
 		godot::PROPERTY_HINT_RESOURCE_TYPE,
 		"24/17:ModifierData"),
 		"set_modifiers", "get_modifiers");
+}
 
-	/*ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::INT, "source_id"),
-		"set_source_id", "get_source_id"
-	);
+void sm::EffectData::SetEffectType(EffectData::Type lt)
+{
+	m_EffectType = lt;
+	notify_property_list_changed();
+}
 
-	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::FLOAT, "value"),
-		"set_value", "get_value"
-	);*/
+void sm::EffectData::_validate_property(godot::PropertyInfo& property) const
+{
+	if (property.name.match("duration"))
+	{
+		if (m_EffectType != EffectData::Type::Temporary)
+		{
+			property.usage = godot::PROPERTY_USAGE_NO_EDITOR;
+		}
+	}
+
+	/*if (property.name.match("m_Modifiers"))
+	{
+		if (m_EffectType != EffectData::Type::Permanent)
+		{
+
+			property.usage = godot::PROPERTY_USAGE_NO_EDITOR;
+		}
+	}*/
 }

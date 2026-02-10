@@ -15,13 +15,13 @@ namespace sm
 			Max
 		};
 
-		GameplayModifier(ModifierID id, OperationType op, float val, uint32 target, uint32 source) :
-			UID(id), operation(op), value(val), targetID(target), sourceID(source) {};
+		GameplayModifier(ModifierID id, OperationType op, float val, EffectID source) :
+			UID(id), value(val), sourceID(source), operation(op)
+		{};
 
 		const ModifierID UID;
 		OperationType operation;
 		float value;
-		uint32 targetID;
-		uint32 sourceID;
+		EffectID sourceID;
 	};
 }

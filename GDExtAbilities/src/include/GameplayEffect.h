@@ -1,5 +1,7 @@
 #pragma once
 #include "Types.h"
+#include "UID.h"
+#include "GameplayModifier.h"
 
 namespace sm
 {
@@ -14,10 +16,19 @@ namespace sm
 			Max
 		};
 
+		GameplayEffect(EffectID id, GameplayEffect::Type type/*, uint32 target, uint32 source*/);
+
+		EffectID GetUID() const { return m_UID; }
+		void Tick(float dt);
+
 	private:
-		const EffectID UID;
-		Type m_EffectType;
-		uint32 targetID;
-		uint32 sourceID;
+		const EffectID m_UID;
+		std::vector<GameplayModifier> m_Modifiers;
+		uint32 m_TargetID;
+		uint32 m_SourceID;
+		float m_RemainingTime;
+
+		sm::DumbUID m_ModifiersUID;
+		GameplayEffect::Type m_EffectType;
 	};
 }

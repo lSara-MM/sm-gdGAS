@@ -1,14 +1,15 @@
 #pragma once
 #include "GameplayAttribute.h"
 #include "gdAttributeData.h"
+#include "gdGameplayAbilitySystemResource.h"
 
 #include <vector>
 
 namespace sm
 {
-	class AttributeSetData : public godot::Resource
+	class AttributeSetData : public GameplayAbilitySystemResource
 	{
-		GDCLASS(AttributeSetData, godot::Resource)
+		GDCLASS(AttributeSetData, GameplayAbilitySystemResource)
 
 	protected:
 		static void _bind_methods();
@@ -17,7 +18,7 @@ namespace sm
 
 #pragma region Godot public 
 
-		godot::TypedArray<sm::AttributeData> GetAttributesSet();
+		godot::TypedArray<sm::AttributeData> GetAttributesSet() const { return m_gdAttributes; };
 		void SetAttributesSet(const godot::TypedArray<sm::AttributeData>& attr);
 
 		void AddAttribute(float baseValue, godot::StringName name);
@@ -26,7 +27,7 @@ namespace sm
 		//uint32 GetAttributeID(godot::StringName name) const;
 
 		// TODO: myb useless?
-		godot::Ref<sm::AttributeData> GetAttributeResource(godot::StringName name);
+		godot::Ref<sm::AttributeData> GetAttributeResource(godot::StringName name) const;
 
 #pragma endregion Godot public 
 

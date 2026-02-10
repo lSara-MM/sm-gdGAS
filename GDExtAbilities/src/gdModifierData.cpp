@@ -26,7 +26,8 @@ void sm::ModifierData::_bind_methods()
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "operation_type",
 		godot::PROPERTY_HINT_ENUM, "Add, Multiply, PercentAdd, PercentStack, Override"),
-		"set_operation_type", "get_operation_type"
+		"set_operation_type", "get_operation_type",
+		ModifierData::OperationType::Add
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(

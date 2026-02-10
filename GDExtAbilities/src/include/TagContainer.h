@@ -1,7 +1,7 @@
 #pragma once
 #include "Types.h"
 #include "GameplayTag.h"
-#include "GameplayAbilitySystemNode.h"
+#include "gdGameplayAbilitySystemNode.h"
 
 namespace sm
 {

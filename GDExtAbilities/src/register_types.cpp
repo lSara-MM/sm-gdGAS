@@ -10,6 +10,8 @@
 #include "include/gdAttributeData.h"
 #include "include/gdAttributeSetData.h"
 #include "include/gdEffectData.h"
+#include "include/gdGameplayAbilitySystemNode.h"
+#include "include/gdGameplayAbilitySystemResource.h"
 #include "include/TagContainer.h"
 
 using namespace godot;
@@ -23,6 +25,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 
     ClassDB::register_class<GDExample>();
     ClassDB::register_abstract_class<sm::GameplayAbilitySystem>();
+    ClassDB::register_abstract_class<sm::GameplayAbilitySystemResource>();
     ClassDB::register_class<sm::AttributeData>();
     ClassDB::register_class<sm::AttributeContainer>();
     ClassDB::register_class<sm::AttributeSetData>();

@@ -38,13 +38,14 @@
 		 }\
 	 }
 
+using uint16 = uint16_t;
 using uint32 = uint32_t;
 
 using AttributeID = godot::StringName;
-using AttributeSetID = uint32_t;
+using AttributeSetID = uint32;
 using EntityID = uint32_t;
-using EffectID = uint32_t;
-using ModifierID = uint32_t;
+using EffectID = godot::StringName;
+using ModifierID = uint16;
 using TagID = godot::StringName;
 
 inline std::string ToStdString(const godot::StringName& sn)

@@ -1,13 +1,12 @@
 #pragma once
 #include "Types.h"
-
-#include <godot_cpp/classes/resource.hpp>
+#include "gdGameplayAbilitySystemResource.h"
 
 namespace sm
 {
-	class ModifierData : public godot::Resource
+	class ModifierData : public GameplayAbilitySystemResource
 	{
-		GDCLASS(ModifierData, godot::Resource)
+		GDCLASS(ModifierData, GameplayAbilitySystemResource)
 
 	protected:
 		static void _bind_methods();
@@ -22,19 +21,19 @@ namespace sm
 			Override,		// Ignore all modifiers and substitute CurrentValue
 		};
 
-		ModifierData::OperationType GetOperationType() { return m_Operation; };
+		ModifierData::OperationType GetOperationType()  const { return m_Operation; };
 		void SetOperationType(ModifierData::OperationType t) { m_Operation = t; };
-		uint32 GetTargetID() { return m_TargetID; };
-		void SetTargetID(uint32 id) { m_TargetID = id; };
-		uint32 GetSourceID() { return m_SourceID; };
-		void SetSourceID(uint32 id) { m_SourceID = id; };
-		float GetValue() { return m_Value; };
+		AttributeID GetTargetID() const { return m_TargetID; };
+		void SetTargetID(AttributeID id) { m_TargetID = id; };
+		EffectID GetSourceID() const { return m_SourceID; };
+		void SetSourceID(EffectID id) { m_SourceID = id; };
+		float GetValue() const { return m_Value; };
 		void SetValue(float v) { m_Value = v; };
 
 	private:
 		OperationType m_Operation;
-		uint32 m_TargetID;
-		uint32 m_SourceID;
+		AttributeID m_TargetID;
+		EffectID m_SourceID;
 		float m_Value;
 	};
 }

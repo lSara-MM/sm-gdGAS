@@ -1,18 +1,19 @@
 #pragma once
-#include "GameplayAbilitySystemNode.h"
+#include "EffectSystem.h"
 #include "GameplayAttribute.h"
 #include "gdAttributeData.h"
+#include "gdAttributeSetData.h"
+#include "gdEffectData.h"
+#include "gdGameplayAbilitySystemNode.h"
 #include "gdModifierData.h"
 #include "Types.h"
 
 #include <godot_cpp/classes/ref.hpp>
-#include <memory>
 #include <unordered_map>
 
 namespace sm
 {
 	class Attribute;
-	class AttributeSetData;
 	class GameplayAttributeSet;
 
 	struct GameplayModifier;
@@ -34,20 +35,20 @@ namespace sm
 
 #pragma region Godot public 
 
-		godot::Ref<Attribute> GetAttribute(AttributeID id);
+		godot::Ref<Attribute> GetAttribute(AttributeID id) const;
 
-		godot::Ref<AttributeSetData> GetAttributeSet();
+		godot::Ref<AttributeSetData> GetAttributeSet() const;
 		void SetAttributeSet(const godot::Ref<AttributeSetData>& attr);
 
-		void AddModifier(AttributeID id, const godot::Ref<ModifierData>& mod);
-		void RemoveModifier(AttributeID id, const godot::Ref<ModifierData>& mod);
+		// TODO: Change to effect? dont allow add/remove direct modifier
+		void AddModifier(AttributeID id, godot::Ref<ModifierData> mod);
+		void RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod);
 
-		// Signals
-		void _OnAttributeModified(AttributeContainer& attributeContainer, AttributeID attrID, float oldValue, float newValue);
+		void AddEffect(AttributeID id, godot::Ref<EffectData> effect);
+		void RemoveEffect(AttributeID id, godot::Ref<EffectData> effect);
+		void RemoveEffect(AttributeID id, EffectID effectID);
 
-		void _OnModifierAdded(AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<ModifierData> mod);
-
-		void _OnModifierRemoved(AttributeContainer attributeContainer, AttributeID attrID, godot::Ref<ModifierData> mod);
+		// TODO: Allow direct base modification?
 
 #pragma endregion 
 
@@ -61,9 +62,10 @@ namespace sm
 
 	private:
 
-		godot::Ref<AttributeSetData> m_gdAttributeSetData;
 		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;
-
+		std::shared_ptr<EffectSystem> m_EffectSystemPtr;
 		std::unordered_map<godot::StringName, GameplayAttribute*> m_AttributesByName;
+		
+		godot::Ref<AttributeSetData> m_gdAttributeSetData;
 	};
 }

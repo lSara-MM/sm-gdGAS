@@ -1,6 +1,7 @@
 #pragma once
 #include "Event.h"
 #include "Types.h"
+#include "gdGameplayAbilitySystemResource.h"
 
 #include <functional>
 #include <godot_cpp/classes/ref.hpp>
@@ -9,9 +10,9 @@
 
 namespace sm
 {
-	class AttributeData : public godot::Resource
+	class AttributeData : public GameplayAbilitySystemResource
 	{
-		GDCLASS(AttributeData, godot::Resource)
+		GDCLASS(AttributeData, GameplayAbilitySystemResource)
 
 	protected:
 		static void _bind_methods();
@@ -23,9 +24,9 @@ namespace sm
 		{};
 		~AttributeData() = default;
 
-		float GetBaseValue() { return baseValue; };
+		float GetBaseValue() const { return baseValue; };
 		void SetBaseValue(float value) { baseValue = value; };
-		godot::StringName GetName() { return name; };
+		godot::StringName GetName() const { return name; };
 		void SetName(godot::StringName n);
 
 	public:
@@ -36,6 +37,6 @@ namespace sm
 		float baseValue;
 		float minValue;
 		float maxValue;
-		godot::StringName name;
+		AttributeID name;
 	};
 }

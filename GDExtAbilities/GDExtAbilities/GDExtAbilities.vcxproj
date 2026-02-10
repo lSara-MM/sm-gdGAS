@@ -344,6 +344,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h" />
+    <ClInclude Include="..\src\include\EffectSystem.h" />
     <ClInclude Include="..\src\include\GameplayEffect.h" />
     <ClInclude Include="..\src\include\gdAttribute.h" />
     <ClInclude Include="..\src\include\gdAttributeContainer.h" />
@@ -354,6 +355,8 @@
     <ClInclude Include="..\src\include\gdAttributeData.h" />
     <ClInclude Include="..\src\include\gdAttributeSetData.h" />
     <ClInclude Include="..\src\include\gdEffectData.h" />
+    <ClInclude Include="..\src\include\gdGameplayAbilitySystemNode.h" />
+    <ClInclude Include="..\src\include\gdGameplayAbilitySystemResource.h" />
     <ClInclude Include="..\src\include\gdModifierData.h" />
     <ClInclude Include="..\src\include\TagContainer.h" />
     <ClInclude Include="..\src\include\TagRegistry.h" />
@@ -363,6 +366,7 @@
     <ClInclude Include="..\src\register_types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\EffectSystem.cpp" />
     <ClCompile Include="..\src\GameplayEffect.cpp" />
     <ClCompile Include="..\src\gdAttribute.cpp" />
     <ClCompile Include="..\src\gdAttributeContainer.cpp" />

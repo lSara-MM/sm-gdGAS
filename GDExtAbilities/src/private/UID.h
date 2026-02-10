@@ -1,17 +1,18 @@
+#pragma once
 #include "Types.h"
 
 namespace sm
 {
-	class UID
+	class DumbUID
 	{
 	public:
-		uint32 GenerateUID()
+		uint16 GenerateUID()
 		{
-			static std::atomic<uint32> nextID{ 1 };
+			static std::atomic<uint16> nextID{ 1 };
 			return nextID++;
 		}
 
 	public:
-		uint32 nextID = 0;
+		uint16 nextID = 0;
 	};
 }
