@@ -3,25 +3,34 @@
 
 namespace sm
 {
+	enum class ModifierOperationType : uint8_t
+	{
+		Add = 0,		// Add to CurrentValue
+		Multiply,		// Multiply to CurrentValue
+		PercentAdd,		// Add x% of Base to CurrentValue
+		PercentStack,	// Multiply x% of CurrentValue to CurrentValue
+		Override,		// Ignore all modifiers and substitute CurrentValue
+		Max
+	};
+
+	struct ModifierHandle
+	{
+		ModifierID id;
+		ModifierOperationType op;
+		int index;
+	};
+
 	struct GameplayModifier
 	{
-		enum class OperationType : uint8_t
+		GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source, int idx) :
+			UID(id), value(val), sourceID(source), operation(op), handle({ id, op, idx })
 		{
-			Add = 0,		// Add to CurrentValue
-			Multiply,		// Multiply to CurrentValue
-			PercentAdd,		// Add x% of Base to CurrentValue
-			PercentStack,	// Multiply x% of CurrentValue to CurrentValue
-			Override,		// Ignore all modifiers and substitute CurrentValue
-			Max
 		};
 
-		GameplayModifier(ModifierID id, OperationType op, float val, EffectID source) :
-			UID(id), value(val), sourceID(source), operation(op)
-		{};
-
 		const ModifierID UID;
-		OperationType operation;
+		ModifierOperationType operation;
 		float value;
 		EffectID sourceID;
+		ModifierHandle handle;
 	};
 }

@@ -20,11 +20,17 @@ namespace sm
 			Max
 		};
 
-		godot::TypedArray<ModifierData> GetModifiers() const { return m_Modifiers; };
-		void SetModifiers(godot::TypedArray<ModifierData> modifiers) { m_Modifiers = modifiers; };
-
 		godot::StringName GetName() const { return m_Name; };
 		void SetName(godot::StringName id) { m_Name = id; };
+
+		godot::TypedArray<ModifierData> GetModifiers() const { return m_Modifiers; };
+		void SetModifiers(const godot::TypedArray<ModifierData>& modifiers) { m_Modifiers = modifiers; };
+
+		godot::TypedArray<TagID> GetTagsToAdd() const { return m_TagsToAdd; };
+		void SetTagsToAdd(const godot::TypedArray<TagID>& tags) { m_TagsToAdd = tags; };
+
+		godot::TypedArray<TagID> GetTagsToRemove() const { return m_TagsToRemove; };
+		void SetTagsToRemove(const godot::TypedArray<TagID>& tags) { m_TagsToRemove = tags; };
 
 		EffectData::Type GetEffectType() const { return m_EffectType; };
 		void SetEffectType(EffectData::Type lt);
@@ -38,6 +44,8 @@ namespace sm
 	private:
 		EffectID m_Name;
 		godot::TypedArray<ModifierData> m_Modifiers;
+		godot::TypedArray<TagID> m_TagsToAdd;
+		godot::TypedArray<TagID> m_TagsToRemove;
 		Type m_EffectType = Type::Permanent;
 		float m_Duration;
 	};

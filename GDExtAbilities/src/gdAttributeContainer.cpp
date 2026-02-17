@@ -4,13 +4,21 @@
 #include "GameplayAttributeSet.h"
 #include "GameplayModifier.h"
 #include "gdAttribute.h"
+#include "gdGASWorld.h"
 
 #include <godot_cpp/variant/signal.hpp>
+#include <classes/engine.hpp>
 
 sm::AttributeContainer::AttributeContainer()
 {
+	sm::GAS_World* world = sm::GAS_World::GetSingleton();
+
+	if (world)
+	{
+		world;
+	}
+
 	m_AttributeSetPtr = std::make_unique<sm::GameplayAttributeSet>();
-	m_EffectSystemPtr = std::make_unique<sm::EffectSystem>();
 }
 
 sm::AttributeContainer::~AttributeContainer()
@@ -23,8 +31,8 @@ void sm::AttributeContainer::_bind_methods()
 	// Methods
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attributes_set"), &GetAttributeSet);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attributes_set", "attr"), &SetAttributeSet);
-
-	godot::ClassDB::bind_method(godot::D_METHOD("add_modifier", "attribute_id", "modifier"), &AddModifier);
+	
+	godot::ClassDB::bind_method(godot::D_METHOD("add_modifier", "attribute_id", "modifier"), static_cast<ModifierID(AttributeContainer::*)(AttributeID, godot::Ref<ModifierData>)>(&AddModifier));
 	godot::ClassDB::bind_method(godot::D_METHOD("remove_modifier", "attribute_id", "modifier"), &RemoveModifier);
 
 	// Properties
@@ -103,13 +111,35 @@ void sm::AttributeContainer::SetAttributeSet(const godot::Ref<AttributeSetData>&
 	m_gdAttributeSetData = attrSet;
 }
 
-void sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<ModifierData> mod)
+sm::GameplayAttribute* sm::AttributeContainer::FindAttribute(AttributeID id) const
+{
+	return m_AttributeSetPtr->FindAttribute(id);;
+}
+
+ModifierID sm::AttributeContainer::AddModifier(GameplayAttribute* attr, godot::Ref<ModifierData> mod)
+{
+	ModifierID modID = attr->AddModifier(mod).id;
+
+	emit_signal("modifier_added", this, attr->GetUID(), mod);
+
+	return modID;
+}
+
+ModifierID sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-	size_t t = attr->AddModifier(mod);
-	ERR_PRINT("added");
-	ERR_PRINT(std::to_string(t).c_str());
+	ModifierID modID = attr->AddModifier(mod).id;
 
+	emit_signal("modifier_added", this, id, mod);
+
+	return modID;
+}
+
+void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod)
+{
+	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	attr->AddBaseModifier(mod);
+	
 	emit_signal("modifier_added", this, id, mod);
 }
 
@@ -122,40 +152,40 @@ void sm::AttributeContainer::RemoveModifier(AttributeID id,  godot::Ref<Modifier
 	emit_signal("modifier_removed", this, id, mod);
 }
 
-void sm::AttributeContainer::AddEffect(AttributeID id, godot::Ref<EffectData> effect)
-{
-	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-	m_EffectSystemPtr->AddEffect(effect);
-}
-
-void sm::AttributeContainer::RemoveEffect(AttributeID id, godot::Ref<EffectData> effect)
-{
-	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-
-	godot::TypedArray<ModifierData> modifiers = effect->GetModifiers();
-	for (size_t i = 0; i < modifiers.size(); i++)
-	{
-		emit_signal("modifier_removed", this, id, modifiers[i]);
-	}
-
-	m_EffectSystemPtr->RemoveEffect(*attr, effect);
-	emit_signal("effect_removed", this, id, effect);
-}
-
-void sm::AttributeContainer::RemoveEffect(AttributeID id, EffectID effectID)
-{
-	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-	auto effect = m_EffectSystemPtr->FindEffect(effectID);
-
-	// TODO: modifier_removed signal
-	/*godot::TypedArray<ModifierData> modifiers = attr->GetModifiers();
-	for (size_t i = 0; i < modifiers.size(); i++)
-	{
-		emit_signal("modifier_removed", this, id, modifiers[i]);
-	}*/
-
-	m_EffectSystemPtr->RemoveEffect(*attr, effectID);
-}
+//void sm::AttributeContainer::AddEffect(AttributeID id, godot::Ref<EffectData> effect)
+//{
+//	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+//	m_EffectSystemPtr->AddEffect(effect);
+//}
+//
+//void sm::AttributeContainer::RemoveEffect(AttributeID id, godot::Ref<EffectData> effect)
+//{
+//	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+//
+//	godot::TypedArray<ModifierData> modifiers = effect->GetModifiers();
+//	for (size_t i = 0; i < modifiers.size(); i++)
+//	{
+//		emit_signal("modifier_removed", this, id, modifiers[i]);
+//	}
+//
+//	m_EffectSystemPtr->RemoveEffect(*attr, effect);
+//	emit_signal("effect_removed", this, id, effect);
+//}
+//
+//void sm::AttributeContainer::RemoveEffect(AttributeID id, EffectID effectID)
+//{
+//	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+//	auto effect = m_EffectSystemPtr->FindEffect(effectID);
+//
+//	// TODO: modifier_removed signal
+//	/*godot::TypedArray<ModifierData> modifiers = attr->GetModifiers();
+//	for (size_t i = 0; i < modifiers.size(); i++)
+//	{
+//		emit_signal("modifier_removed", this, id, modifiers[i]);
+//	}*/
+//
+//	m_EffectSystemPtr->RemoveEffect(*attr, effectID);
+//}
 
 void sm::AttributeContainer::AddAttribute(godot::StringName id, float baseValue)
 {

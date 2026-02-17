@@ -26,6 +26,9 @@ namespace sm
 		void RenameTag(TagID tagID, TagID newName);
 #endif // DEBUG_MODE
 
+		GameplayTag* GetGameplayTag(TagID id);
+		const GameplayTag* GetGameplayTag(TagID id) const;
+
 		bool IsNameValid(godot::StringName name) const;
 
 		/// Returns true if `tagID` is a direct child of `childID`.
@@ -38,14 +41,11 @@ namespace sm
 		bool IsParentOf(TagID tagID, TagID childID) const;
 		bool IsChildOf(TagID tagID, TagID parentID) const;
 
-		private:
+	private:
 
 		TagRegistry();
 		~TagRegistry() = default;
 		TagRegistry(const TagRegistry& obj) = delete;
-
-		GameplayTag* _GetTag(TagID id);
-		const GameplayTag* _GetTag(TagID id) const;
 
 		void _GetAscendantsTree(TagID itrTagID, godot::TypedArray<TagID>& ascendants);
 		void _GetDescendantsTree(TagID itrTagID, godot::TypedArray<TagID>& descendants);
@@ -62,7 +62,9 @@ namespace sm
 		const godot::StringName ROOT;
 		static TagRegistry* m_InstancePtr;
 
-		std::vector<GameplayTag> m_Tags;
+		using TagPtr = std::unique_ptr<GameplayTag>;
+
+		std::vector<TagPtr> m_Tags;
 		std::unordered_map<TagID, size_t> m_NameToIndex;
 		std::unordered_map<godot::StringName, TagID> m_DisplayNamesToID;
 		std::unordered_map<TagID, godot::StringName> m_SuffixToFullPaths;

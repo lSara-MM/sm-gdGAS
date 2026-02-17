@@ -7,11 +7,17 @@ void sm::EffectData::_bind_methods()
 	BIND_ENUM_CONSTANT(Temporary);
 	BIND_ENUM_CONSTANT(Persistent);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("get_name"), &GetName);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_name", "id"), &SetName);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_modifiers"), &GetModifiers);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_modifiers", "modifiers"), &SetModifiers);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("get_name"), &GetName);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_name", "id"), &SetName);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_tags_to_add"), &GetTagsToAdd);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_tags_to_add", "tags"), &SetTagsToAdd);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("get_tags_to_remove"), &GetTagsToRemove);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_tags_to_remove", "tags"), &SetTagsToRemove);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_effect_type"), &GetEffectType);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_effect_type", "type"), &SetEffectType);
@@ -41,7 +47,24 @@ void sm::EffectData::_bind_methods()
 		"modifiers",
 		godot::PROPERTY_HINT_RESOURCE_TYPE,
 		"24/17:ModifierData"),
-		"set_modifiers", "get_modifiers");
+		"set_modifiers", "get_modifiers"
+	);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::ARRAY,
+		"tags_to_add",
+		godot::PROPERTY_HINT_NONE,
+		"StringName"),
+		"set_tags_to_add", "get_tags_to_add"
+	);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::ARRAY,
+		"tags_to_remove",
+		godot::PROPERTY_HINT_NONE,
+		"StringName"),
+		"set_tags_to_remove", "get_tags_to_remove"
+	);
 }
 
 void sm::EffectData::SetEffectType(EffectData::Type lt)

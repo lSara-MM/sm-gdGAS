@@ -1,4 +1,7 @@
 #include "EffectSystem.h"
+#include "gdAttributeContainer.h"
+#include "gdAttribute.h"
+#include "TagContainer.h"
 
 void sm::EffectSystem::Update(float dt)
 {
@@ -20,42 +23,89 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectID effectID)
 	return (it != m_ActiveEffects.end()) ? it->get() : nullptr;
 }
 
-void sm::EffectSystem::AddEffect(godot::Ref<EffectData> gdEffect)
+void sm::EffectSystem::AddEffect(godot::Ref<EffectData> gdEffect, godot::Node* target)
 {
-	m_ActiveEffects.emplace_back(std::make_unique<GameplayEffect>(
-		gdEffect->GetName(),
-		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType())
-	));
+	TagContainer* tagContainer = GetNodeOfType<TagContainer>(target);
+	ERR_FAIL_COND_MSG(!tagContainer,
+		godot::vformat("AddEffect: Could not add %s The TagContainer was not found.",
+			ToStdString(gdEffect->GetName()).c_str()));
 
+	// TODO: Add/Remove tags
+	godot::TypedArray<TagID> tagsToAdd = gdEffect->GetTagsToAdd();
+	//tagContainer
+
+	godot::TypedArray<TagID> tagsToRemove = gdEffect->GetTagsToRemove();
 
 	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
-	/*for (size_t i = 0; i < modifiers.size(); i++)
+	if (modifiers.is_empty())
 	{
-		attr->AddModifier(modifiers[i]);
-	}*/
+		return;
+	}
+
+	AttributeContainer* attrContainer = GetNodeOfType<AttributeContainer>(target);
+	ERR_FAIL_COND_MSG(!attrContainer,
+		godot::vformat("AddEffect: Could not add %s The AttributeContainer was not found.",
+			ToStdString(gdEffect->GetName()).c_str()));
+
+	EffectData::Type type = gdEffect->GetEffectType();
+	if (type == EffectData::Type::Permanent)
+	{
+		for (size_t i = 0; i < modifiers.size(); i++)
+		{
+			godot::Ref<ModifierData> modifier = modifiers[i];
+			attrContainer->AddBaseModifier(modifier->GetTargetID(), modifier);
+		}
+
+		return;
+	}
+
+	auto effect = std::make_unique<GameplayEffect>(
+		gdEffect->GetName(),
+		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()));
+
+	for (size_t i = 0; i < modifiers.size(); i++)
+	{
+		godot::Ref<ModifierData> modifier = modifiers[i];
+		GameplayAttribute* attr = attrContainer->FindAttribute(modifier->GetTargetID());
+		ModifierID id = attrContainer->AddModifier(attr, modifier);
+		ModifierHandle handle = {
+			id,
+			modifier->GetGameplayOperationType(),
+			attr->GetModifiersCount(modifier->GetGameplayOperationType()) - 1
+		};
+
+		effect->AddModifier(handle);
+	}
+
+	m_ActiveEffects.push_back(std::move(effect));
 }
 
 void sm::EffectSystem::RemoveEffect(GameplayAttribute& attr, godot::Ref<EffectData> gdEffect)
 {
-	GameplayEffect effect = { gdEffect->GetName(),  static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()) };
-
-	m_ActiveEffects.emplace_back(std::make_unique<GameplayEffect>(
-		gdEffect->GetName(),
-		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType())
-	));
+	m_ActiveEffects.erase(std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
+		[&](const std::unique_ptr<sm::GameplayEffect>& effect)
+		{
+			return effect->GetUID() == gdEffect->GetName();
+		}),
+		m_ActiveEffects.end()
+	);
 
 	attr.ClearModifiers();
 }
 
 void sm::EffectSystem::RemoveEffect(GameplayAttribute& attr, EffectID gdEffectID)
 {
-	m_ActiveEffects.erase(std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
+	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
 		[&](const std::unique_ptr<sm::GameplayEffect>& effect)
 		{
 			return effect->GetUID() == gdEffectID;
-		}),
-		m_ActiveEffects.end()
-	);
+		});
 
-	attr.ClearModifiers();
+	for (itr; itr != m_ActiveEffects.end(); ++itr)
+	{
+		attr.RemoveModifiers(itr->get()->GetModifierHandles());
+	}
+
+	//attr.RemoveModifier()
+	m_ActiveEffects.erase(itr, m_ActiveEffects.end());
 }

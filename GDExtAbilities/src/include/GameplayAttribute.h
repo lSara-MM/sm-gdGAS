@@ -18,7 +18,7 @@ namespace sm
 	private:
 
 		using ModifierPtr = std::unique_ptr<GameplayModifier>;
-		static constexpr size_t OperationTypeCount = static_cast<size_t>(sm::GameplayModifier::OperationType::Max);
+		static constexpr size_t OperationTypeCount = static_cast<size_t>(sm::ModifierOperationType::Max);
 
 		using ModifierBuckets = std::array<std::vector<ModifierPtr>, OperationTypeCount>;
 
@@ -46,10 +46,17 @@ namespace sm
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
 		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
 
+		size_t GetModifiersCount(ModifierOperationType op) const;
 		GameplayModifier* FindModifier(const godot::Ref<ModifierData>& mod);
+		GameplayModifier* FindModifier(const ModifierHandle& handle);
 		std::optional<size_t> FindModifierIndex(const godot::Ref<ModifierData>& mod) const;
-		size_t AddModifier(const godot::Ref<ModifierData>& mod);
+		ModifierHandle AddModifier(const godot::Ref<ModifierData>& mod);
 		void RemoveModifier(const godot::Ref<ModifierData>& mod);
+		void RemoveModifier(ModifierHandle handle);
+		void RemoveModifiers(const std::vector<ModifierHandle>& handle);
+
+		void AddBaseModifier(const godot::Ref<sm::ModifierData>& mod);
+
 		void ClearModifiers();
 		void Reset();
 

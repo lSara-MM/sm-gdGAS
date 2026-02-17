@@ -41,16 +41,21 @@ namespace sm
 		void SetAttributeSet(const godot::Ref<AttributeSetData>& attr);
 
 		// TODO: Change to effect? dont allow add/remove direct modifier
-		void AddModifier(AttributeID id, godot::Ref<ModifierData> mod);
+		ModifierID AddModifier(AttributeID id, godot::Ref<ModifierData> mod);
+		void AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod);
 		void RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod);
 
-		void AddEffect(AttributeID id, godot::Ref<EffectData> effect);
+		/*void AddEffect(AttributeID id, godot::Ref<EffectData> effect);
 		void RemoveEffect(AttributeID id, godot::Ref<EffectData> effect);
-		void RemoveEffect(AttributeID id, EffectID effectID);
+		void RemoveEffect(AttributeID id, EffectID effectID);*/
 
 		// TODO: Allow direct base modification?
 
-#pragma endregion 
+#pragma endregion
+
+		GameplayAttribute* FindAttribute(AttributeID id) const;
+
+		ModifierID AddModifier(GameplayAttribute* attr, godot::Ref<ModifierData> mod);
 
 		void AddAttribute(godot::StringName id, float baseValue);
 
@@ -63,7 +68,7 @@ namespace sm
 	private:
 
 		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;
-		std::shared_ptr<EffectSystem> m_EffectSystemPtr;
+		//std::shared_ptr<EffectSystem> m_EffectSystemPtr;
 		std::unordered_map<godot::StringName, GameplayAttribute*> m_AttributesByName;
 		
 		godot::Ref<AttributeSetData> m_gdAttributeSetData;

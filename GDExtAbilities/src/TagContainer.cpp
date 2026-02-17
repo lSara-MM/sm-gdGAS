@@ -59,16 +59,18 @@ void sm::TagContainer::_ready()
 		{
 			ERR_PRINT(arr3[i]);
 		}
-		godot::TypedArray<godot::StringName> arr6 = instance.GetDescendants("hola");
-		for (size_t i = 0; i < arr6.size(); i++)
-		{
-			ERR_PRINT(arr6[i]);
-		}
 
 		instance.UnregisterTag("hola.tag.hh");
 		instance.UnregisterTag("hola.tag.ccc");
 		instance.UnregisterTag("hola.tag.ccc");
 		instance.UnregisterTag("hola.tag");
+
+		ERR_PRINT("DESCENDANTS AFTER UNREGISTER");
+		godot::TypedArray<godot::StringName> arr6 = instance.GetDescendants("hola");
+		for (size_t i = 0; i < arr6.size(); i++)
+		{
+			ERR_PRINT(arr6[i]);
+		}
 
 		ERR_PRINT("CHILDREN");
 		godot::TypedArray<godot::StringName> arr4 = instance.GetChildren("hola");
@@ -84,3 +86,24 @@ void sm::TagContainer::Test(godot::StringName name)
 	TagRegistry& instance = TagRegistry::GetInstance();
 	std::cout << "Ping desde C++" << std::endl;
 }
+
+void sm::TagContainer::AddTag(TagID tag)
+{
+	m_gdTags.push_back(tag);
+
+	TagRegistry& registry = TagRegistry::GetInstance();
+	registry.GetGameplayTag(tag);
+
+	m_GameplayTags.push_back(tag);
+}
+
+void sm::TagContainer::AddTags(const godot::TypedArray<TagID>& tags)
+{
+	//tags.
+}
+
+void sm::TagContainer::RemoveTag(TagID tag)
+{}
+
+void sm::TagContainer::RemoveTags(const godot::TypedArray<TagID>& tags)
+{}

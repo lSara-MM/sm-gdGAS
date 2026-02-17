@@ -9,6 +9,9 @@ namespace sm
 	{
 		GDCLASS(TagContainer, sm::GameplayAbilitySystem)
 
+	protected:
+		static void _bind_methods();
+
 	public:
 		TagContainer();
 		~TagContainer();
@@ -16,10 +19,17 @@ namespace sm
 		void _ready();
 		void Test(godot::StringName name);
 
-	protected:
-		static void _bind_methods();
+		godot::TypedArray<TagID> GetTags() const { return m_gdTags; };
+		void SetTags(const godot::TypedArray<TagID>& tags) { m_gdTags = tags; };
+
+		void AddTag(TagID tag);
+		void AddTags(const godot::TypedArray<TagID>& tags);
+		void RemoveTag(TagID tag);
+		void RemoveTags(const godot::TypedArray<TagID>& tags);
 
 	private:
+		godot::TypedArray<TagID> m_gdTags;
+		std::vector<GameplayTag> m_GameplayTags;
 
 		// Activation Rules
 		//std::vector<GameplayTag> m_AbiltyTags;

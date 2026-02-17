@@ -22,6 +22,8 @@ namespace sm
 		void SetBaseValue(float value) { m_Attribute->SetBase(value); }
 		AttributeID GetUID() { return m_Attribute->GetUID(); }
 
+		sm::GameplayAttribute* GetAttribute() { return m_Attribute; };
+
 	private:
 		sm::GameplayAttribute* m_Attribute;
 	};

@@ -7,28 +7,28 @@ namespace sm
 {
 	struct GameplayTag
 	{
-		GameplayTag() : m_UID(godot::StringName("<")), parentID(godot::StringName("<")) {};
-		GameplayTag(godot::StringName id) : m_UID(id), parentID(godot::StringName("<"))
+		GameplayTag() : m_UID(TagID("<")), parentID(TagID("<")) {};
+		GameplayTag(TagID id) : m_UID(id), parentID(TagID("<"))
 		{
 #ifdef TOOLS_DEBUG_VS
 			stdName = ToStdString(id);
 #endif //  TOOLS_DEBUG_VS
 		};
 
-		godot::StringName GetUID() { return m_UID; };
-		const godot::StringName GetUID() const { return static_cast<const godot::StringName>(m_UID); };
+		TagID GetUID() { return m_UID; };
+		const TagID GetUID() const { return static_cast<const TagID>(m_UID); };
 
 	private:
-		godot::StringName m_UID;
+		TagID m_UID;
 
 	public:
 
-		godot::StringName parentID;
+		TagID parentID;
 
 #ifdef TOOLS_DEBUG_VS
 		std::string stdName;
 #endif //  TOOLS_DEBUG_VS
 
-		std::vector<godot::StringName> children;
+		std::vector<TagID> children;
 	};
 }

@@ -90,6 +90,12 @@
     <ClCompile Include="..\src\EffectSystem.cpp">
       <Filter>Source Files\public\Effects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\gdGASWorld.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameplaySystem.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h">
@@ -153,6 +159,12 @@
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\gdGameplayAbilitySystemResource.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdGASWorld.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplaySystem.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
   </ItemGroup>

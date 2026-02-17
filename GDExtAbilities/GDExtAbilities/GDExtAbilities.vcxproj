@@ -346,6 +346,7 @@
     <ClInclude Include="..\src\gdExample.h" />
     <ClInclude Include="..\src\include\EffectSystem.h" />
     <ClInclude Include="..\src\include\GameplayEffect.h" />
+    <ClInclude Include="..\src\include\GameplaySystem.h" />
     <ClInclude Include="..\src\include\gdAttribute.h" />
     <ClInclude Include="..\src\include\gdAttributeContainer.h" />
     <ClInclude Include="..\src\include\GameplayAttribute.h" />
@@ -357,6 +358,7 @@
     <ClInclude Include="..\src\include\gdEffectData.h" />
     <ClInclude Include="..\src\include\gdGameplayAbilitySystemNode.h" />
     <ClInclude Include="..\src\include\gdGameplayAbilitySystemResource.h" />
+    <ClInclude Include="..\src\include\gdGASWorld.h" />
     <ClInclude Include="..\src\include\gdModifierData.h" />
     <ClInclude Include="..\src\include\TagContainer.h" />
     <ClInclude Include="..\src\include\TagRegistry.h" />
@@ -368,6 +370,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\EffectSystem.cpp" />
     <ClCompile Include="..\src\GameplayEffect.cpp" />
+    <ClCompile Include="..\src\GameplaySystem.cpp" />
     <ClCompile Include="..\src\gdAttribute.cpp" />
     <ClCompile Include="..\src\gdAttributeContainer.cpp" />
     <ClCompile Include="..\src\GameplayAttribute.cpp" />
@@ -377,6 +380,7 @@
     <ClCompile Include="..\src\gdAttributeSetData.cpp" />
     <ClCompile Include="..\src\gdEffectData.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
+    <ClCompile Include="..\src\gdGASWorld.cpp" />
     <ClCompile Include="..\src\gdModifierData.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
     <ClCompile Include="..\src\TagContainer.cpp" />

@@ -1,6 +1,7 @@
 #pragma once
 #include "Types.h"
 #include "gdGameplayAbilitySystemResource.h"
+#include "GameplayModifier.h"
 
 namespace sm
 {
@@ -22,6 +23,7 @@ namespace sm
 		};
 
 		ModifierData::OperationType GetOperationType()  const { return m_Operation; };
+		ModifierOperationType GetGameplayOperationType()  const { return static_cast<ModifierOperationType>(m_Operation); };
 		void SetOperationType(ModifierData::OperationType t) { m_Operation = t; };
 		AttributeID GetTargetID() const { return m_TargetID; };
 		void SetTargetID(AttributeID id) { m_TargetID = id; };
