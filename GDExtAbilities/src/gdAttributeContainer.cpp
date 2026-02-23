@@ -7,17 +7,10 @@
 #include "gdGASWorld.h"
 
 #include <godot_cpp/variant/signal.hpp>
-#include <classes/engine.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 sm::AttributeContainer::AttributeContainer()
 {
-	sm::GAS_World* world = sm::GAS_World::GetSingleton();
-
-	if (world)
-	{
-		world;
-	}
-
 	m_AttributeSetPtr = std::make_unique<sm::GameplayAttributeSet>();
 }
 
@@ -31,9 +24,17 @@ void sm::AttributeContainer::_bind_methods()
 	// Methods
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attributes_set"), &GetAttributeSet);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attributes_set", "attr"), &SetAttributeSet);
-	
+
 	godot::ClassDB::bind_method(godot::D_METHOD("add_modifier", "attribute_id", "modifier"), static_cast<ModifierID(AttributeContainer::*)(AttributeID, godot::Ref<ModifierData>)>(&AddModifier));
 	godot::ClassDB::bind_method(godot::D_METHOD("remove_modifier", "attribute_id", "modifier"), &RemoveModifier);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_base_value", "attribute_id"), &GetAttributeBaseValue);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_current_value", "attribute_id"), &GetAttributeCurrentValue);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("is_attribute_min", "attribute_id"), &IsAttributeMin);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_attribute_max", "attribute_id"), &IsAttributeMax);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_attribute_dirty", "attribute_id"), &IsAttributeDirty);
 
 	// Properties
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -77,22 +78,49 @@ void sm::AttributeContainer::_bind_methods()
 
 void sm::AttributeContainer::_notification(int notification)
 {
-	// When node container is loaded, get editor changes and apply them to the C++ AttributeData Set
-	if (notification == NOTIFICATION_READY)
+	switch (notification)
 	{
-		if (m_gdAttributeSetData == nullptr)
-		{
-			return;
-		}
+	case NOTIFICATION_ENTER_TREE:
+		OnEnterTree();
+		break;
+	case NOTIFICATION_EXIT_TREE:
+		OnExitTree();
+		break;
+	case NOTIFICATION_READY:
+		OnReady();
+	break;
+	}
+}
 
-		m_gdAttributeSetData->ValidateSetData(m_gdAttributeSetData->GetAttributesSet());
+void sm::AttributeContainer::OnEnterTree()
+{
+	sm::GAS_World* world = sm::GAS_World::GetSingleton();
 
-		std::vector<godot::Ref<sm::AttributeData>> attrs = m_gdAttributeSetData->SortByName();
+	if (world)
+	{
+		ERR_PRINT("aaa");
+	}
+}
 
-		for (size_t i = 0; i < attrs.size(); ++i)
-		{
-			AddAttribute(attrs[i]->GetName(), attrs[i]->GetBaseValue());
-		}
+void sm::AttributeContainer::OnExitTree()
+{}
+
+void sm::AttributeContainer::OnReady()
+{
+	ERR_PRINT("c++");
+
+	if (m_gdAttributeSetData == nullptr)
+	{
+		return;
+	}
+
+	m_gdAttributeSetData->ValidateSetData(m_gdAttributeSetData->GetAttributesSet());
+
+	std::vector<godot::Ref<sm::AttributeData>> attrs = m_gdAttributeSetData->SortByName();
+
+	for (size_t i = 0; i < attrs.size(); ++i)
+	{
+		AddAttribute(attrs[i]->GetName(), attrs[i]->GetBaseValue());
 	}
 }
 
@@ -109,6 +137,51 @@ godot::Ref<sm::AttributeSetData> sm::AttributeContainer::GetAttributeSet() const
 void sm::AttributeContainer::SetAttributeSet(const godot::Ref<AttributeSetData>& attrSet)
 {
 	m_gdAttributeSetData = attrSet;
+}
+
+float sm::AttributeContainer::GetAttributeBaseValue(AttributeID id)
+{
+	sm::GameplayAttribute* attr = FindAttribute(id);
+
+	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
+
+	return attr->GetBase();
+}
+
+float sm::AttributeContainer::GetAttributeCurrentValue(AttributeID id)
+{
+	sm::GameplayAttribute* attr = FindAttribute(id);
+	
+	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
+
+	return attr->GetCurrent();
+}
+
+bool sm::AttributeContainer::IsAttributeMin(AttributeID id)
+{
+	sm::GameplayAttribute* attr = FindAttribute(id);
+
+	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
+
+	return attr->IsMin();
+}
+
+bool sm::AttributeContainer::IsAttributeMax(AttributeID id)
+{
+	sm::GameplayAttribute* attr = FindAttribute(id);
+
+	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
+
+	return attr->IsMax();
+}
+
+bool sm::AttributeContainer::IsAttributeDirty(AttributeID id)
+{
+	sm::GameplayAttribute* attr = FindAttribute(id);
+
+	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
+
+	return attr->IsDirty();
 }
 
 sm::GameplayAttribute* sm::AttributeContainer::FindAttribute(AttributeID id) const
@@ -128,6 +201,8 @@ ModifierID sm::AttributeContainer::AddModifier(GameplayAttribute* attr, godot::R
 ModifierID sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
+
 	ModifierID modID = attr->AddModifier(mod).id;
 
 	emit_signal("modifier_added", this, id, mod);
@@ -139,11 +214,11 @@ void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<Modifier
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	attr->AddBaseModifier(mod);
-	
+
 	emit_signal("modifier_added", this, id, mod);
 }
 
-void sm::AttributeContainer::RemoveModifier(AttributeID id,  godot::Ref<ModifierData> mod)
+void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	attr->RemoveModifier(mod);

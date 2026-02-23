@@ -38,22 +38,22 @@ namespace sm
 
 		float GetBase() const { return m_BaseValue; }
 		void SetBase(float newValue);
-		float GetCurrent() const { return m_CurrentValue; }
+		float GetCurrent();
 
 		float GetMin() const { return m_MinValue; }
 		float GetMax() const { return m_MaxValue; }
 
 		bool IsMin() const { return m_CurrentValue <= m_MinValue; }
-		bool IsMaxed() const { return m_CurrentValue >= m_MaxValue; }
+		bool IsMax() const { return m_CurrentValue >= m_MaxValue; }
+		bool IsDirty() const { return m_dirty; }
 
 		size_t GetModifiersCount(ModifierOperationType op) const;
 		GameplayModifier* FindModifier(const godot::Ref<ModifierData>& mod);
 		GameplayModifier* FindModifier(const ModifierHandle& handle);
 		std::optional<size_t> FindModifierIndex(const godot::Ref<ModifierData>& mod) const;
-		ModifierHandle AddModifier(const godot::Ref<ModifierData>& mod);
+		ModifierHandle& AddModifier(const godot::Ref<ModifierData>& mod);
 		void RemoveModifier(const godot::Ref<ModifierData>& mod);
-		void RemoveModifier(ModifierHandle handle);
-		void RemoveModifiers(const std::vector<ModifierHandle>& handle);
+		void RemoveModifier(ModifierHandle& handle);
 
 		void AddBaseModifier(const godot::Ref<sm::ModifierData>& mod);
 
@@ -69,7 +69,7 @@ namespace sm
 		ModifierBuckets m_Modifiers;
 
 		AttributeID m_UID;
-		DumbUID m_ModifiersUID;
+		DumbUID m_ModifiersUIDs;
 
 		float m_BaseValue;
 		float m_CurrentValue;

@@ -7,13 +7,14 @@
 
 #include "gdExample.h"
 #include "include/gdGASWorld.h"
+#include "include/gdGASEntity.h"
 #include "include/gdAttributeContainer.h"
 #include "include/gdAttributeData.h"
 #include "include/gdAttributeSetData.h"
 #include "include/gdEffectData.h"
 #include "include/gdGameplayAbilitySystemNode.h"
 #include "include/gdGameplayAbilitySystemResource.h"
-#include "include/TagContainer.h"
+#include "include/gdTagContainer.h"
 
 using namespace godot;
 
@@ -29,6 +30,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     ClassDB::register_abstract_class<sm::GameplayAbilitySystemResource>();
     
     ClassDB::register_class<sm::GAS_World>();
+    ClassDB::register_class<sm::GAS_Entity>();
     
     ClassDB::register_class<sm::AttributeData>();
     ClassDB::register_class<sm::AttributeSetData>();

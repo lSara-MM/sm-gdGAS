@@ -1,9 +1,9 @@
-#include "TagContainer.h"
+#include "gdTagContainer.h"
 
 #include "TagRegistry.h"
 
-#include <classes/object.hpp>
-#include <variant/utility_functions.hpp>
+#include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 sm::TagContainer::TagContainer()
 {}

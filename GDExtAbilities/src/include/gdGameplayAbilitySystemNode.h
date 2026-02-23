@@ -18,6 +18,6 @@ namespace sm
 		void SetWorld(GAS_World* world) { m_World = world; };
 
 	private:
-		GAS_World* m_World;
+		GAS_World* m_World = nullptr;
 	};
 }

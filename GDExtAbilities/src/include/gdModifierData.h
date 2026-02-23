@@ -33,7 +33,7 @@ namespace sm
 		void SetValue(float v) { m_Value = v; };
 
 	private:
-		OperationType m_Operation;
+		OperationType m_Operation = ModifierData::OperationType::Add;
 		AttributeID m_TargetID;
 		EffectID m_SourceID;
 		float m_Value;

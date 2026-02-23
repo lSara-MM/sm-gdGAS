@@ -33,8 +33,7 @@ void sm::EffectData::_bind_methods()
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "effect_type",
 		godot::PROPERTY_HINT_ENUM, "Permanent, Temporary, Persistent"),
-		"set_effect_type", "get_effect_type",
-		Type::Permanent
+		"set_effect_type", "get_effect_type"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(

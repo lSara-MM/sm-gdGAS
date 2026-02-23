@@ -100,6 +100,16 @@ void sm::GameplayAttribute::SetBase(float newValue)
 	m_BaseValue = std::clamp(newValue, m_MinValue, m_MaxValue);
 }
 
+float sm::GameplayAttribute::GetCurrent()
+{
+	if (m_dirty)
+	{
+		Calculate();
+	}
+
+	return m_CurrentValue;
+}
+
 size_t sm::GameplayAttribute::GetModifiersCount(ModifierOperationType op) const
 {
 	return m_Modifiers[static_cast<size_t>(op)].size();
@@ -107,9 +117,9 @@ size_t sm::GameplayAttribute::GetModifiersCount(ModifierOperationType op) const
 
 sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::ModifierData>& mod)
 {
-	std::vector<ModifierPtr>* mods = &m_Modifiers[static_cast<size_t>(mod->GetOperationType())];
+	const std::vector<ModifierPtr>& mods = m_Modifiers[static_cast<size_t>(mod->GetOperationType())];
 
-	for (auto& modifier : *mods)
+	for (auto& modifier : mods)
 	{
 		if (mod->GetSourceID() == modifier->sourceID)
 		{
@@ -122,9 +132,10 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const godot::Ref<sm::M
 
 sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const ModifierHandle& handle)
 {
-	std::vector<ModifierPtr>* mods = &m_Modifiers[static_cast<size_t>(handle.op)];
+	const std::vector<ModifierPtr>& mods = m_Modifiers[static_cast<size_t>(handle.op)];
+	return mods[handle.index].get();
 
-	for (auto& modifier : *mods)
+	/*for (auto& modifier : *mods)
 	{
 		if (handle.id == modifier->UID)
 		{
@@ -132,7 +143,7 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const ModifierHandle& 
 		}
 	}
 
-	return nullptr;
+	return nullptr;*/
 }
 
 std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<sm::ModifierData>& mod) const
@@ -150,26 +161,26 @@ std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<
 	return std::nullopt;
 }
 
-sm::ModifierHandle sm::GameplayAttribute::AddModifier(const godot::Ref<sm::ModifierData>& mod)
+sm::ModifierHandle& sm::GameplayAttribute::AddModifier(const godot::Ref<sm::ModifierData>& mod)
 {
 	std::vector<ModifierPtr>* mods = &m_Modifiers[static_cast<int>(mod->GetOperationType())];
 
-	ModifierID id = m_ModifiersUID.GenerateUID();
+	ModifierID id = m_ModifiersUIDs.GenerateUID();
 	ModifierOperationType type = static_cast<ModifierOperationType>(mod->GetOperationType());
 
-	ModifierHandle handle { id, type, mods->size() - 1 };
+	ModifierHandle handle { id, m_UID, type, mods->size() - 1 };
 
-	mods->push_back(std::make_unique<GameplayModifier>(
+	auto& modifier = mods->emplace_back(std::make_unique<GameplayModifier>(
 		id,
 		type,
 		mod->GetValue(),
 		mod->GetSourceID(),
-		mods->size() - 1
+		handle
 	));
 
 	m_dirty = true;
 
-	return handle;
+	return modifier->handle;
 }
 
 void sm::GameplayAttribute::RemoveModifier(const godot::Ref<sm::ModifierData>& mod)
@@ -185,16 +196,15 @@ void sm::GameplayAttribute::RemoveModifier(const godot::Ref<sm::ModifierData>& m
 	}
 }
 
-void sm::GameplayAttribute::RemoveModifier(ModifierHandle handle)
+void sm::GameplayAttribute::RemoveModifier(ModifierHandle& handle)
 {
 	auto& vec = m_Modifiers[static_cast<size_t>(handle.op)];
 
 	vec[handle.index] = std::move(vec.back());
-
 	vec[handle.index]->handle.index = handle.index;
 
 	vec.pop_back();
-
+	m_dirty = true;
 	
 	/*std::optional<size_t> modIndex = FindModifierIndex(mod);
 
@@ -205,15 +215,6 @@ void sm::GameplayAttribute::RemoveModifier(ModifierHandle handle)
 		mods->erase(mods->begin() + modIndex.value());
 		m_dirty = true;
 	}*/
-}
-
-void sm::GameplayAttribute::RemoveModifiers(const std::vector<ModifierHandle>& handle)
-{
-	/*std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
-		[&](const std::unique_ptr<sm::GameplayEffect>& effect)
-		{
-			return effect->GetUID() == gdEffectID;
-		});*/
 }
 
 void sm::GameplayAttribute::AddBaseModifier(const godot::Ref<sm::ModifierData>& mod)

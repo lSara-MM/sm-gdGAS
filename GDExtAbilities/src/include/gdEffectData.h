@@ -23,6 +23,10 @@ namespace sm
 		godot::StringName GetName() const { return m_Name; };
 		void SetName(godot::StringName id) { m_Name = id; };
 
+		EntityID GetTargetID() const { return m_TargetID; };
+		void SetTargetID(EntityID id) { m_TargetID = id; };
+		EntityID GetSourceID() const { return m_SourceID; };
+
 		godot::TypedArray<ModifierData> GetModifiers() const { return m_Modifiers; };
 		void SetModifiers(const godot::TypedArray<ModifierData>& modifiers) { m_Modifiers = modifiers; };
 
@@ -43,6 +47,8 @@ namespace sm
 
 	private:
 		EffectID m_Name;
+		EntityID m_TargetID;
+		EntityID m_SourceID;
 		godot::TypedArray<ModifierData> m_Modifiers;
 		godot::TypedArray<TagID> m_TagsToAdd;
 		godot::TypedArray<TagID> m_TagsToRemove;

@@ -2,15 +2,17 @@
 
 env = SConscript("godot-cpp/SConstruct")
 
+VariantDir("build", "src", duplicate=0)
+
 env.Append(CPPPATH=[
     "src/include",
     "src/private",
-    "src"
+    "src",
+	"godot-cpp/gen/include/"
 ])
 
 sources = []
-sources += Glob("src/*.cpp")
-sources += Glob("src/private/*.cpp")
+sources += Glob("build/*.cpp")
 
 folder = "addons/GDExtAbilities/bin"
 

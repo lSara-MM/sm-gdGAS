@@ -34,11 +34,17 @@ namespace sm
 		void _notification(int notification);
 
 #pragma region Godot public 
-
+		// TODO: unused?
 		godot::Ref<Attribute> GetAttribute(AttributeID id) const;
 
 		godot::Ref<AttributeSetData> GetAttributeSet() const;
 		void SetAttributeSet(const godot::Ref<AttributeSetData>& attr);
+
+		float GetAttributeBaseValue(AttributeID id);
+		float GetAttributeCurrentValue(AttributeID id);
+		bool IsAttributeMin(AttributeID id);
+		bool IsAttributeMax(AttributeID id);
+		bool IsAttributeDirty(AttributeID id);
 
 		// TODO: Change to effect? dont allow add/remove direct modifier
 		ModifierID AddModifier(AttributeID id, godot::Ref<ModifierData> mod);
@@ -64,6 +70,12 @@ namespace sm
 	private:
 		AttributeContainer();
 		~AttributeContainer();
+
+		void OnEnterTree();
+		void OnExitTree();
+
+		// When node container is loaded, get editor changes and apply them to the C++ AttributeData Set
+		void OnReady();
 
 	private:
 

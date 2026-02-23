@@ -1,0 +1,5 @@
+[gd_resource type="ModifierData" format=3 uid="uid://cp160eg02sx83"]
+
+[resource]
+operation_type = 0
+value = 20.0

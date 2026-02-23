@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://dxvoh0h0g5o1n"]
+[gd_scene load_steps=13 format=3 uid="uid://dxvoh0h0g5o1n"]
 
 [ext_resource type="Script" uid="uid://c2hqcxvefpv18" path="res://test/test.gd" id="1_65205"]
 [ext_resource type="Script" uid="uid://sinqoekac5sb" path="res://test/tag_container.gd" id="1_errlg"]
 [ext_resource type="Script" uid="uid://ht57s38l38xf" path="res://test/attribute_container.gd" id="2_8a8pi"]
+[ext_resource type="Script" uid="uid://w5jyf1o478g2" path="res://test/testeffects.gd" id="4_hrq6i"]
 
 [sub_resource type="AttributeData" id="AttributeData_65205"]
 name = &"aaaa"
@@ -43,3 +44,6 @@ script = ExtResource("2_8a8pi")
 
 [node name="AttributeContainer2" type="AttributeContainer" parent="."]
 attribute_set = SubResource("AttributeSetData_f6u32")
+script = ExtResource("4_hrq6i")
+
+[connection signal="modifier_added" from="AttributeContainer2" to="AttributeContainer" method="_on_attribute_container_2_modifier_added"]

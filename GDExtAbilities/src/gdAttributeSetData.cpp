@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <unordered_set>
-#include <variant/utility_functions.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 void sm::AttributeSetData::_bind_methods()
 {

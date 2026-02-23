@@ -81,7 +81,7 @@
     <ClCompile Include="..\src\gdEffectData.cpp">
       <Filter>Source Files\public\Effects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TagContainer.cpp">
+    <ClCompile Include="..\src\gdTagContainer.cpp">
       <Filter>Source Files\public\Tags</Filter>
     </ClCompile>
     <ClCompile Include="..\src\TagRegistry.cpp">
@@ -94,6 +94,9 @@
       <Filter>Source Files\public</Filter>
     </ClCompile>
     <ClCompile Include="..\src\GameplaySystem.cpp">
+      <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdGASEntity.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,7 +149,7 @@
     <ClInclude Include="..\src\include\GameplayTag.h">
       <Filter>Header Files\public\Tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\TagContainer.h">
+    <ClInclude Include="..\src\include\gdTagContainer.h">
       <Filter>Header Files\public\Tags</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\TagRegistry.h">
@@ -166,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="..\src\include\GameplaySystem.h">
       <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdGASEntity.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\private\Assert.h">
+      <Filter>Header Files\private</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

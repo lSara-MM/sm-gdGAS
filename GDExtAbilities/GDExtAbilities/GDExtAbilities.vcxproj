@@ -270,7 +270,7 @@
       <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;TOOLS_ENABLED;DEBUG_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gen\include\godot_cpp;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -356,12 +356,14 @@
     <ClInclude Include="..\src\include\gdAttributeData.h" />
     <ClInclude Include="..\src\include\gdAttributeSetData.h" />
     <ClInclude Include="..\src\include\gdEffectData.h" />
+    <ClInclude Include="..\src\include\gdGASEntity.h" />
     <ClInclude Include="..\src\include\gdGameplayAbilitySystemNode.h" />
     <ClInclude Include="..\src\include\gdGameplayAbilitySystemResource.h" />
     <ClInclude Include="..\src\include\gdGASWorld.h" />
     <ClInclude Include="..\src\include\gdModifierData.h" />
-    <ClInclude Include="..\src\include\TagContainer.h" />
+    <ClInclude Include="..\src\include\gdTagContainer.h" />
     <ClInclude Include="..\src\include\TagRegistry.h" />
+    <ClInclude Include="..\src\private\Assert.h" />
     <ClInclude Include="..\src\private\Event.h" />
     <ClInclude Include="..\src\private\Types.h" />
     <ClInclude Include="..\src\private\UID.h" />
@@ -379,11 +381,12 @@
     <ClCompile Include="..\src\gdAttributeData.cpp" />
     <ClCompile Include="..\src\gdAttributeSetData.cpp" />
     <ClCompile Include="..\src\gdEffectData.cpp" />
+    <ClCompile Include="..\src\gdGASEntity.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
     <ClCompile Include="..\src\gdGASWorld.cpp" />
     <ClCompile Include="..\src\gdModifierData.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
-    <ClCompile Include="..\src\TagContainer.cpp" />
+    <ClCompile Include="..\src\gdTagContainer.cpp" />
     <ClCompile Include="..\src\TagRegistry.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

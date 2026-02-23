@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <string>
 
-#define SM_ASSERT(cond, msg) assert((msg, cond))
-
 #if defined(TOOLS_ENABLED) || defined(DEBUG_ENABLED)
 #define DEBUG_MODE
 #endif

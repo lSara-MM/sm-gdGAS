@@ -20,11 +20,16 @@ namespace sm
 
 		GameplayEffect* FindEffect(EffectID effectID);
 
-		void AddEffect(godot::Ref<EffectData> gdEffect, godot::Node* target);
+		void AddEffect(const godot::Ref<EffectData> gdEffect, godot::Node* target);
 
-		void RemoveEffect(GameplayAttribute& attr, godot::Ref<EffectData> gdEffect);
+		void RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect);
 
-		void RemoveEffect(GameplayAttribute& attr, EffectID gdEffectID);
+		void RemoveEffect(EffectID effectID);
+		void RemoveEffect(GameplayEffect* effect);
+
+		void RemoveEffectModifiers(EntityID id, std::vector<sm::EffectSystem::EffectPtr>::iterator& itr);
+
+		void RemoveEffectModifiers(EntityID id, EffectPtr effect);
 
 		template <typename T>
 		T* GetNodeOfType(godot::Node* target)

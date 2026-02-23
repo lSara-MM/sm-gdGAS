@@ -16,14 +16,20 @@ namespace sm
 	struct ModifierHandle
 	{
 		ModifierID id;
+		AttributeID targetID;
 		ModifierOperationType op;
-		int index;
+		size_t index;
 	};
 
 	struct GameplayModifier
 	{
-		GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source, int idx) :
-			UID(id), value(val), sourceID(source), operation(op), handle({ id, op, idx })
+		/*GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source) :
+			UID(id), value(val), sourceID(source), operation(op)
+		{
+		};*/
+
+		GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source, ModifierHandle& hd) :
+			UID(id), value(val), sourceID(source), operation(op), handle(hd)
 		{
 		};
 

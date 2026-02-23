@@ -1,5 +1,6 @@
-#include "include/TagRegistry.h"
+#include "TagRegistry.h"
 
+#include "Assert.h"
 #include <cassert>
 #include <regex>
 #include <sstream>

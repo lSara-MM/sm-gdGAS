@@ -1,5 +1,6 @@
 #pragma once
 #include "gdGameplayAbilitySystemNode.h"
+#include "gdGASEntity.h"
 
 namespace sm
 {
@@ -23,6 +24,15 @@ namespace sm
 		}
 
 		void _notification(int notification);
+		GAS_Entity* GetEntity(EntityID id);
+
+		EntityID RegisterEntity(GAS_Entity* entity);
+
+	private:
+		void OnEnterTree();
+		void OnExitTree();
+		void OnReady();
+		void OnProcess();
 
 	public:
 		bool enableEffects = false;
@@ -30,6 +40,9 @@ namespace sm
 
 	private:
 		static GAS_World* m_Instance;
+		DumbUID m_EntityUIDs;
+
 		std::unique_ptr<EffectSystem> m_EffectsSystem;
+		std::unordered_map<EntityID, GAS_Entity*> m_Entities;
 	};
 }
