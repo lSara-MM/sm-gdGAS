@@ -1,7 +1,6 @@
 #include "TagRegistry.h"
 
 #include "Assert.h"
-#include <cassert>
 #include <regex>
 #include <sstream>
 
@@ -17,7 +16,7 @@ sm::TagRegistry::TagRegistry() : ROOT("<")
 
 //void sm::TagRegistry::_bind_methods()
 //{
-//#ifdef DEBUG_MODE
+//#ifdef EDITOR_MODE
 //	godot::ClassDB::bind_method(godot::D_METHOD("get_tag", "tag_name"), &GetTag);
 //	godot::ClassDB::bind_method(godot::D_METHOD("get_parent", "tag_name"), &GetParent);
 //	godot::ClassDB::bind_method(godot::D_METHOD("get_ascendants", "tag_name"), &GetAscendants);
@@ -31,7 +30,7 @@ sm::TagRegistry::TagRegistry() : ROOT("<")
 //
 //	godot::ClassDB::bind_method(godot::D_METHOD("rename_tag", "tagId", "newName"), &RenameTag);
 //	godot::ClassDB::bind_method(godot::D_METHOD("is_name_valid", "tag_name"), &IsNameValid);
-//#endif // DEBUG_MODE
+//#endif // EDITOR_MODE
 //
 //	godot::ClassDB::bind_method(godot::D_METHOD("has_child", "tag_name", "child_name"), &HasChild);
 //	godot::ClassDB::bind_method(godot::D_METHOD("has_descendant", "tag_name", "child_name"), &HasDescendant);
@@ -49,7 +48,7 @@ sm::TagRegistry& sm::TagRegistry::GetInstance()
 	return instance;
 }
 
-#ifdef DEBUG_MODE
+#ifdef EDITOR_MODE
 TagID sm::TagRegistry::GetTag(TagID tagID)
 {
 	GameplayTag* tag = GetGameplayTag(_GetFullID(tagID));
@@ -291,7 +290,7 @@ void sm::TagRegistry::RenameTag(TagID tagID, TagID newName)
 	m_DisplayNamesToID.try_emplace(newN, oldN);
 	//emit_signal("tag_renamed", tagID, newN);
 }
-#endif // DEBUG_MODE
+#endif // EDITOR_MODE
 
 sm::GameplayTag* sm::TagRegistry::GetGameplayTag(TagID tagID)
 {
@@ -470,9 +469,9 @@ sm::GameplayTag& sm::TagRegistry::_AddEntry(godot::StringName name, TagID idPare
 
 	m_NameToIndex.try_emplace(fullName, m_Tags.size() - 1);
 
-#ifdef DEBUG_MODE
+#ifdef EDITOR_MODE
 	m_StdNameToID.try_emplace(ToStdString(fullName), newTag.GetUID());
-#endif //  DEBUG_MODE
+#endif //  EDITOR_MODE
 
 	newTag.parentID = idParent;
 

@@ -24,6 +24,14 @@ namespace sm
 		}
 
 		void _notification(int notification);
+
+		bool GetEffectsAvailability() const { return enableEffects; };
+		void SetEffectsAvailability(bool value);
+
+		bool GetAbilitiesAvailability() const { return enableAbilities; };
+		void SetAbilitiesAvailability(bool value);
+
+		EffectSystem* GetEffectSystem() const { return m_EffectsSystem.get(); };
 		GAS_Entity* GetEntity(EntityID id);
 
 		EntityID RegisterEntity(GAS_Entity* entity);
@@ -36,7 +44,7 @@ namespace sm
 
 	public:
 		bool enableEffects = false;
-		bool enableAbility = false;
+		bool enableAbilities = false;
 
 	private:
 		static GAS_World* m_Instance;

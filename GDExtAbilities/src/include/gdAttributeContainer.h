@@ -46,14 +46,13 @@ namespace sm
 		bool IsAttributeMax(AttributeID id);
 		bool IsAttributeDirty(AttributeID id);
 
-		// TODO: Change to effect? dont allow add/remove direct modifier
 		ModifierID AddModifier(AttributeID id, godot::Ref<ModifierData> mod);
 		void AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod);
 		void RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod);
 
-		/*void AddEffect(AttributeID id, godot::Ref<EffectData> effect);
-		void RemoveEffect(AttributeID id, godot::Ref<EffectData> effect);
-		void RemoveEffect(AttributeID id, EffectID effectID);*/
+		/*void AddEffect(EntityID id, godot::Ref<EffectData> effect);
+		void RemoveEffect(EntityID id, godot::Ref<EffectData> effect);
+		void RemoveEffect(EntityID id, EffectID effectID);*/
 
 		// TODO: Allow direct base modification?
 

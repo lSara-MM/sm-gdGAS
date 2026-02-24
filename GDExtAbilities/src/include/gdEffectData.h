@@ -28,7 +28,7 @@ namespace sm
 		EntityID GetSourceID() const { return m_SourceID; };
 
 		godot::TypedArray<ModifierData> GetModifiers() const { return m_Modifiers; };
-		void SetModifiers(const godot::TypedArray<ModifierData>& modifiers) { m_Modifiers = modifiers; };
+		void SetModifiers(const godot::TypedArray<ModifierData>& modifiers);
 
 		godot::TypedArray<TagID> GetTagsToAdd() const { return m_TagsToAdd; };
 		void SetTagsToAdd(const godot::TypedArray<TagID>& tags) { m_TagsToAdd = tags; };

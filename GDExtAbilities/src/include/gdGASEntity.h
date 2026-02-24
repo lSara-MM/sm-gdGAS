@@ -20,7 +20,18 @@ namespace sm
 		void _notification(int notification);
 
 		EntityID GetID() const { return m_Id; }
-		AttributeContainer* GetAttributeContainer() const { return attrContainerNode; }
+
+		AttributeContainer* GetAttributeContainer() const { return attrContainer; }
+		void SetAttributeContainer(AttributeContainer* node) { attrContainer = node; };
+		godot::NodePath GetAttributeContainerNodePath() const { return attrContainerNodePath; }
+		void SetAttributeContainerNodePath(godot::NodePath path);
+		
+		TagContainer* GetTagContainer() const { return tagContainer; }
+		void SetTagContainer(TagContainer* node) { tagContainer = node; };
+		godot::NodePath GetTagContainerNodePath() const { return tagContainerNodePath; }
+		void SetTagContainerNodePath(godot::NodePath path);
+
+		void AddEffect(const godot::Ref<EffectData> gdEffect);
 
 	private:
 		void OnEnterTree();
@@ -29,10 +40,14 @@ namespace sm
 		void OnProcess();
 
 	public:
-		AttributeContainer* attrContainerNode = nullptr;
-		TagContainer* tagContainerNode = nullptr;
+		AttributeContainer* attrContainer = nullptr;
+		TagContainer* tagContainer = nullptr;
 
+		godot::NodePath attrContainerNodePath = "";
+		godot::NodePath tagContainerNodePath = "";
+		
 	private:
 		EntityID m_Id;
+		EffectSystem* m_EffectSystem = nullptr;
 	};
 }

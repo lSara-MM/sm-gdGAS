@@ -81,29 +81,46 @@ void sm::TagContainer::_ready()
 	}*/
 }
 
-void sm::TagContainer::Test(godot::StringName name)
-{
-	TagRegistry& instance = TagRegistry::GetInstance();
-	std::cout << "Ping desde C++" << std::endl;
-}
-
 void sm::TagContainer::AddTag(TagID tag)
 {
 	m_gdTags.push_back(tag);
-
-	TagRegistry& registry = TagRegistry::GetInstance();
-	registry.GetGameplayTag(tag);
-
 	m_GameplayTags.push_back(tag);
 }
 
 void sm::TagContainer::AddTags(const godot::TypedArray<TagID>& tags)
 {
-	//tags.
+	size_t size = tags.size();
+	m_GameplayTags.reserve(size);
+
+	for (size_t i = 0; i < size; i++)
+	{
+		m_gdTags.push_back(tags[i]);
+		m_GameplayTags.push_back(tags[i]);
+	}
 }
 
 void sm::TagContainer::RemoveTag(TagID tag)
-{}
+{
+	m_GameplayTags.erase(
+		std::remove_if(m_GameplayTags.begin(), m_GameplayTags.end(),
+			[&](const TagID& id)
+			{
+				return tag == id;
+			}
+		),
+		m_GameplayTags.end()
+	);
+}
 
 void sm::TagContainer::RemoveTags(const godot::TypedArray<TagID>& tags)
-{}
+{
+	m_GameplayTags.erase(
+		std::remove_if(m_GameplayTags.begin(), m_GameplayTags.end(),
+			[&](const TagID& id)
+			{
+				return tags.has(id);
+			}
+		),
+		m_GameplayTags.end()
+	);
+}

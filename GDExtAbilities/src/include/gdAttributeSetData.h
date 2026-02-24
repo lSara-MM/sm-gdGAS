@@ -18,24 +18,24 @@ namespace sm
 
 #pragma region Godot public 
 
-		godot::TypedArray<sm::AttributeData> GetAttributesSet() const { return m_gdAttributes; };
-		void SetAttributesSet(const godot::TypedArray<sm::AttributeData>& attr);
+		godot::TypedArray<AttributeData> GetAttributesSet() const { return m_gdAttributes; };
+		void SetAttributesSet(const godot::TypedArray<AttributeData>& attr);
 
 		void AddAttribute(float baseValue, godot::StringName name);
-		void AddAttribute(const godot::Ref<sm::AttributeData>& attr);
+		void AddAttribute(const godot::Ref<AttributeData>& attr);
 		
 		//uint32 GetAttributeID(godot::StringName name) const;
 
 		// TODO: myb useless?
-		godot::Ref<sm::AttributeData> GetAttributeResource(godot::StringName name) const;
+		godot::Ref<AttributeData> GetAttributeResource(godot::StringName name) const;
 
 #pragma endregion Godot public 
 
-		std::vector<sm::AttributeData> ToAttributeVector(); // TODO: mb delete
-		std::vector<godot::Ref<sm::AttributeData>> ToRefAttributeVector();
-		std::vector<godot::Ref<sm::AttributeData>> SortByName();
+		std::vector<AttributeData> ToAttributeVector(); // TODO: mb delete
+		std::vector<godot::Ref<AttributeData>> ToRefAttributeVector();
+		std::vector<godot::Ref<AttributeData>> SortByName();
 
-		godot::TypedArray<sm::AttributeData> ValidateSetData(const godot::TypedArray<sm::AttributeData>& attr, bool getNull = false);
+		godot::TypedArray<AttributeData> ValidateSetData(const godot::TypedArray<AttributeData>& attr, bool getNull = false);
 
 	private:
 		AttributeSetData() = default;
@@ -44,7 +44,7 @@ namespace sm
 		void _OnAttributeSetName(godot::StringName newName);
 
 	private:
-		godot::TypedArray<sm::AttributeData> m_gdAttributes;
+		godot::TypedArray<AttributeData> m_gdAttributes;
 
 #ifdef TOOLS_DEBUG_VS
 		std::vector<std::string> m_DebugNames;

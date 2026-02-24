@@ -14,7 +14,21 @@ sm::GAS_World::GAS_World()
 
 void sm::GAS_World::_bind_methods()
 {
+	godot::ClassDB::bind_method(godot::D_METHOD("get_effects_availability"), &GetEffectsAvailability);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_effects_availability", "value"), &SetEffectsAvailability);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities_availability", "value"), &SetAbilitiesAvailability);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::BOOL, "enable_effects"),
+		"set_effects_availability", "get_effects_availability"
+	);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::BOOL, "enable_abilities"),
+		"set_abilities_availability", "get_abilities_availability"
+	);
 }
 
 void sm::GAS_World::_notification(int notification)
@@ -65,7 +79,7 @@ void sm::GAS_World::OnReady()
 		m_EffectsSystem = std::make_unique<EffectSystem>();
 	}
 
-	/*if (enableAbility)
+	/*if (enableAbilities)
 	{
 
 		}*/
@@ -76,6 +90,34 @@ void sm::GAS_World::OnProcess()
 	if (enableEffects)
 	{
 		m_EffectsSystem->Update(get_process_delta_time());
+	}
+}
+
+void sm::GAS_World::SetEffectsAvailability(bool value)
+{
+	enableEffects = value;
+
+	if (enableEffects)
+	{
+		m_EffectsSystem = std::make_unique<EffectSystem>();
+	}
+	else
+	{
+		m_EffectsSystem.reset();
+	}
+}
+
+void sm::GAS_World::SetAbilitiesAvailability(bool value)
+{
+	enableAbilities = value;
+
+	if (enableAbilities)
+	{
+		//m_EffectsSystem = std::make_unique<EffectSystem>();
+	}
+	else
+	{
+		//m_EffectsSystem.reset();
 	}
 }
 

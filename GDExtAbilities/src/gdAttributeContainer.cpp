@@ -107,8 +107,6 @@ void sm::AttributeContainer::OnExitTree()
 
 void sm::AttributeContainer::OnReady()
 {
-	ERR_PRINT("c++");
-
 	if (m_gdAttributeSetData == nullptr)
 	{
 		return;
@@ -116,7 +114,7 @@ void sm::AttributeContainer::OnReady()
 
 	m_gdAttributeSetData->ValidateSetData(m_gdAttributeSetData->GetAttributesSet());
 
-	std::vector<godot::Ref<sm::AttributeData>> attrs = m_gdAttributeSetData->SortByName();
+	std::vector<godot::Ref<AttributeData>> attrs = m_gdAttributeSetData->SortByName();
 
 	for (size_t i = 0; i < attrs.size(); ++i)
 	{
@@ -227,12 +225,16 @@ void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierD
 	emit_signal("modifier_removed", this, id, mod);
 }
 
-//void sm::AttributeContainer::AddEffect(AttributeID id, godot::Ref<EffectData> effect)
+//void sm::AttributeContainer::AddEffect(EntityID id, godot::Ref<EffectData> effect)
 //{
-//	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-//	m_EffectSystemPtr->AddEffect(effect);
-//}
+//	//GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+//	GAS_World* world = GAS_World::GetSingleton();
+//	GAS_Entity* entity = world->GetEntity(id);
+//	EffectSystem* effectSystem = world->GetEffectSystem();
 //
+//	effectSystem->AddEffect(effect, entity);
+//}
+
 //void sm::AttributeContainer::RemoveEffect(AttributeID id, godot::Ref<EffectData> effect)
 //{
 //	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);

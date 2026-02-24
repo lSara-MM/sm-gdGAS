@@ -66,6 +66,23 @@ void sm::EffectData::_bind_methods()
 	);
 }
 
+void sm::EffectData::SetModifiers(const godot::TypedArray<ModifierData>& modifiers)
+{
+	for (size_t i = 0; i < modifiers.size(); i++)
+	{
+		godot::Ref<ModifierData> data = modifiers[i];
+		
+		if (data.is_null())
+		{
+			continue;
+		}
+		
+		data->SetSourceID(m_Name);
+	}
+
+	m_Modifiers = modifiers;
+}
+
 void sm::EffectData::SetEffectType(EffectData::Type lt)
 {
 	m_EffectType = lt;

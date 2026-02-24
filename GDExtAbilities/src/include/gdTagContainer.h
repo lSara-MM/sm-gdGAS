@@ -17,7 +17,6 @@ namespace sm
 		~TagContainer();
 
 		void _ready();
-		void Test(godot::StringName name);
 
 		godot::TypedArray<TagID> GetTags() const { return m_gdTags; };
 		void SetTags(const godot::TypedArray<TagID>& tags) { m_gdTags = tags; };
@@ -29,7 +28,7 @@ namespace sm
 
 	private:
 		godot::TypedArray<TagID> m_gdTags;
-		std::vector<GameplayTag> m_GameplayTags;
+		std::vector<TagID> m_GameplayTags;
 
 		// Activation Rules
 		//std::vector<GameplayTag> m_AbiltyTags;

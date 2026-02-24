@@ -30,12 +30,12 @@ void sm::ModifierData::_bind_methods()
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::INT, "target_id"),
+		godot::Variant::STRING_NAME, "target_id"),
 		"set_target_id", "get_target_id"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::INT, "source_id"),
+		godot::Variant::STRING_NAME, "source_id"),
 		"set_source_id", "get_source_id"
 	);
 

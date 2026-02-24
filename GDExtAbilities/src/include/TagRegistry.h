@@ -13,7 +13,7 @@ namespace sm
 	public:
 		static TagRegistry& GetInstance();
 
-#ifdef DEBUG_MODE
+#ifdef EDITOR_MODE
 		TagID GetTag(TagID tagID);
 		TagID GetParent(TagID tagID);
 		godot::TypedArray<TagID> GetAscendants(TagID tagID);
@@ -24,7 +24,7 @@ namespace sm
 		void UnregisterTag(TagID tagID);
 
 		void RenameTag(TagID tagID, TagID newName);
-#endif // DEBUG_MODE
+#endif // EDITOR_MODE
 
 		GameplayTag* GetGameplayTag(TagID id);
 		const GameplayTag* GetGameplayTag(TagID id) const;

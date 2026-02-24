@@ -23,6 +23,7 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 {
 	m_gdAttributes = attr;
 
+#ifdef EDITOR_MODE
 	for (size_t i = 0; i < attr.size(); i++)
 	{
 		const godot::Ref<AttributeData> attribute = attr[i];
@@ -43,18 +44,12 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 			continue;
 		}
 
-#ifdef DEBUG_MODE
 		attribute->eventSetName.SubscribeEvent([this](const godot::StringName& new_name)
 			{
 				this->_OnAttributeSetName(new_name);
 			});
-
-		/*attribute->SubscribeSetNameEvent([this](const godot::StringName& new_name)
-			{
-				this->_OnAttributeSetName(new_name);
-			});*/
-#endif // DEBUG_MODE
 	}
+#endif // EDITOR_MODE
 }
 
 void sm::AttributeSetData::AddAttribute(float baseValue, godot::StringName name)
@@ -74,22 +69,6 @@ void sm::AttributeSetData::AddAttribute(const godot::Ref<AttributeData>& attr)
 
 	emit_changed();
 }
-
-//uint32 sm::AttributeSetData::GetAttributeID(godot::StringName name) const
-//{
-//	godot::Ref<AttributeData> ref;
-//
-//	for (size_t i = 0; i < m_gdAttributes.size(); i++)
-//	{
-//		ref = m_gdAttributes[i];
-//		if (ref->GetName() == name)
-//		{
-//			return ref->GetID();
-//		}
-//	}
-//
-//	return 0;
-//}
 
 godot::Ref<sm::AttributeData> sm::AttributeSetData::GetAttributeResource(godot::StringName name) const
 {

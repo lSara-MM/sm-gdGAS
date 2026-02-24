@@ -1,0 +1,12 @@
+[gd_resource type="EffectData" load_steps=3 format=3 uid="uid://bafwf04i2qdak"]
+
+[sub_resource type="ModifierData" id="ModifierData_ki2fl"]
+value = 2.0
+
+[sub_resource type="ModifierData" id="ModifierData_jbyqi"]
+operation_type = 1
+value = 2.0
+
+[resource]
+effect_type = 1
+modifiers = Array[ModifierData]([SubResource("ModifierData_ki2fl"), SubResource("ModifierData_jbyqi")])

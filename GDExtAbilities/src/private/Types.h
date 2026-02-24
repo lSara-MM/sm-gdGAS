@@ -5,7 +5,7 @@
 #include <string>
 
 #if defined(TOOLS_ENABLED) || defined(DEBUG_ENABLED)
-#define DEBUG_MODE
+#define EDITOR_MODE
 #endif
 
 #if defined(_MSC_VER) && (defined(TOOLS_ENABLED) || defined(DEBUG_ENABLED))

@@ -43,6 +43,12 @@
     <Filter Include="Source Files\public\Tags">
       <UniqueIdentifier>{a2c8ae66-1c4e-431f-a57b-1631bd58146a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\public\Abilities">
+      <UniqueIdentifier>{f16b0bbc-91b0-46d7-bb43-e40419377ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\public\Abilities">
+      <UniqueIdentifier>{63de6b00-1f8e-43c4-8703-67b097e6e0eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gdExample.cpp">
@@ -99,6 +105,15 @@
     <ClCompile Include="..\src\gdGASEntity.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GameplayAbility.cpp">
+      <Filter>Source Files\public\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAbilityContainer.cpp">
+      <Filter>Source Files\public\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gdAbilityData.cpp">
+      <Filter>Source Files\public\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h">
@@ -129,9 +144,6 @@
       <Filter>Header Files\public\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\GameplayAttributeSet.h">
-      <Filter>Header Files\public\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\gdAttribute.h">
       <Filter>Header Files\public\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\GameplayEffect.h">
@@ -175,6 +187,15 @@
     </ClInclude>
     <ClInclude Include="..\src\private\Assert.h">
       <Filter>Header Files\private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\GameplayAbility.h">
+      <Filter>Header Files\public\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdAbilityContainer.h">
+      <Filter>Header Files\public\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\gdAbilityData.h">
+      <Filter>Header Files\public\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

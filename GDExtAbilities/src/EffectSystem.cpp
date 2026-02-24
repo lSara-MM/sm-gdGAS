@@ -2,8 +2,19 @@
 
 #include "gdAttribute.h"
 #include "gdAttributeContainer.h"
+#include "gdGASEntity.h"
 #include "gdGASWorld.h"
 #include "gdTagContainer.h"
+
+sm::EffectSystem::EffectSystem()
+{
+	ERR_PRINT("effect created");
+}
+
+sm::EffectSystem::~EffectSystem()
+{
+	ERR_PRINT("effect deleted");
+}
 
 void sm::EffectSystem::Update(float dt)
 {
@@ -13,7 +24,7 @@ void sm::EffectSystem::Update(float dt)
 
 		if (effect->HasExpired())
 		{
-			RemoveEffect(effect.get());
+			RemoveEffect(effect);
 		}
 	}
 }
@@ -30,65 +41,70 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectID effectID)
 	return (it != m_ActiveEffects.end()) ? it->get() : nullptr;
 }
 
-void sm::EffectSystem::AddEffect(const godot::Ref<EffectData> gdEffect, godot::Node* target)
+//void sm::EffectSystem::AddEffect(const godot::Ref<EffectData> gdEffect, sm::GAS_Entity* target)
+//{
+//	TagContainer* tagContainer = GetChildNodeOfType<TagContainer>(target);
+//	ERR_FAIL_NULL_MSG(tagContainer,
+//		godot::vformat("AddEffect: Could not add %s. The TagContainer was not found.",
+//			ToStdString(gdEffect->GetName()).c_str()));
+//
+//	// TODO: Add/Remove tags
+//	godot::TypedArray<TagID> tagsToAdd = gdEffect->GetTagsToAdd();
+//	//tagContainer
+//
+//	godot::TypedArray<TagID> tagsToRemove = gdEffect->GetTagsToRemove();
+//	//tagContainer
+//
+//	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
+//	if (modifiers.is_empty())
+//	{
+//		return;
+//	}
+//
+//	AttributeContainer* attrContainer = GetChildNodeOfType<AttributeContainer>(target);
+//	ERR_FAIL_NULL_MSG(attrContainer,
+//		godot::vformat("AddEffect: Could not add %s. The AttributeContainer was not found.",
+//			ToStdString(gdEffect->GetName()).c_str()));
+//
+//	EffectData::Type type = gdEffect->GetEffectType();
+//	if (type == EffectData::Type::Permanent)
+//	{
+//		for (size_t i = 0; i < modifiers.size(); i++)
+//		{
+//			godot::Ref<ModifierData> modifier = modifiers[i];
+//			attrContainer->AddBaseModifier(modifier->GetTargetID(), modifier);
+//		}
+//
+//		return;
+//	}
+//
+//	auto effect = std::make_unique<GameplayEffect>(
+//		gdEffect->GetName(),
+//		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()),
+//		gdEffect->GetTargetID(),
+//		gdEffect->GetSourceID()
+//	);
+//
+//	for (size_t i = 0; i < modifiers.size(); i++)
+//	{
+//		godot::Ref<ModifierData> modifier = modifiers[i];
+//		GameplayAttribute* attr = attrContainer->FindAttribute(modifier->GetTargetID());
+//		ModifierID id = attrContainer->AddModifier(attr, modifier);
+//		ModifierHandle handle = {
+//			id,
+//			attr->GetUID(),
+//			modifier->GetGameplayOperationType(),
+//			attr->GetModifiersCount(modifier->GetGameplayOperationType()) - 1
+//		};
+//
+//		effect->AddModifier(handle);
+//	}
+//
+//	AddActiveEffect(effect);
+//}
+
+void sm::EffectSystem::AddActiveEffect(EffectPtr& effect)
 {
-	TagContainer* tagContainer = GetNodeOfType<TagContainer>(target);
-	ERR_FAIL_NULL_MSG(tagContainer,
-		godot::vformat("AddEffect: Could not add %s The TagContainer was not found.",
-			ToStdString(gdEffect->GetName()).c_str()));
-
-	// TODO: Add/Remove tags
-	godot::TypedArray<TagID> tagsToAdd = gdEffect->GetTagsToAdd();
-	//tagContainer
-
-	godot::TypedArray<TagID> tagsToRemove = gdEffect->GetTagsToRemove();
-	//tagContainer
-
-	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
-	if (modifiers.is_empty())
-	{
-		return;
-	}
-
-	AttributeContainer* attrContainer = GetNodeOfType<AttributeContainer>(target);
-	ERR_FAIL_NULL_MSG(attrContainer,
-		godot::vformat("AddEffect: Could not add %s The AttributeContainer was not found.",
-			ToStdString(gdEffect->GetName()).c_str()));
-
-	EffectData::Type type = gdEffect->GetEffectType();
-	if (type == EffectData::Type::Permanent)
-	{
-		for (size_t i = 0; i < modifiers.size(); i++)
-		{
-			godot::Ref<ModifierData> modifier = modifiers[i];
-			attrContainer->AddBaseModifier(modifier->GetTargetID(), modifier);
-		}
-
-		return;
-	}
-
-	auto effect = std::make_unique<GameplayEffect>(
-		gdEffect->GetName(),
-		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()),
-		gdEffect->GetTargetID(),
-		gdEffect->GetSourceID()
-	);
-
-	for (size_t i = 0; i < modifiers.size(); i++)
-	{
-		godot::Ref<ModifierData> modifier = modifiers[i];
-		GameplayAttribute* attr = attrContainer->FindAttribute(modifier->GetTargetID());
-		ModifierID id = attrContainer->AddModifier(attr, modifier);
-		ModifierHandle handle = {
-			id,
-			attr->GetUID(),
-			modifier->GetGameplayOperationType(),
-			attr->GetModifiersCount(modifier->GetGameplayOperationType()) - 1
-		};
-
-		effect->AddModifier(handle);
-	}
-
 	m_ActiveEffects.push_back(std::move(effect));
 }
 
@@ -106,7 +122,7 @@ void sm::EffectSystem::RemoveEffect(EntityID id, const godot::Ref<EffectData> gd
 void sm::EffectSystem::RemoveEffect(EffectID gdEffectID)
 {
 	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
-		[&](const std::unique_ptr<sm::GameplayEffect>& effect)
+		[&](const EffectPtr& effect)
 		{
 			return effect->GetUID() == gdEffectID;
 		});
@@ -114,9 +130,11 @@ void sm::EffectSystem::RemoveEffect(EffectID gdEffectID)
 	RemoveEffectModifiers((*itr)->GetTargetUID(), itr);
 }
 
-void sm::EffectSystem::RemoveEffect(GameplayEffect* effect)
+void sm::EffectSystem::RemoveEffect(EffectPtr& effect)
 {
-
+	GAS_World* world = GAS_World::GetSingleton();
+	GAS_Entity* entity = world->GetEntity(effect->GetTargetUID());
+	RemoveEffectModifiers(entity, effect);
 }
 
 void sm::EffectSystem::RemoveEffectModifiers(EntityID id, std::vector<sm::EffectSystem::EffectPtr>::iterator& itr)
@@ -136,9 +154,8 @@ void sm::EffectSystem::RemoveEffectModifiers(EntityID id, std::vector<sm::Effect
 	m_ActiveEffects.erase(itr, m_ActiveEffects.end());
 }
 
-void sm::EffectSystem::RemoveEffectModifiers(EntityID id, EffectPtr effect)
+void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, EffectPtr& effect)
 {
-	GAS_Entity* entity = sm::GAS_World::GetSingleton()->GetEntity(id);
 	AttributeContainer* attrContainer = entity->GetAttributeContainer();
 
 	for (ModifierHandle& handle : effect->GetModifierHandles())
