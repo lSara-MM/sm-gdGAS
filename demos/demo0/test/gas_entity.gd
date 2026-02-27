@@ -12,3 +12,10 @@ func GetInput() -> void:
 		print("hoalknfkewmnfkemfe")
 		add_effect(preload("res://test/new_effect_data.tres"))
 		add_effect(preload("res://test/effect_temporary.tres"))
+		
+	if Input.is_action_just_pressed("lclick"):
+		var val : float = get_attribute_container().get_attribute_current_value(&"Health")
+		print(val)
+		
+		var val2 : float = get_attribute_container().get_attribute_current_value(&"Def")
+		print(val2)

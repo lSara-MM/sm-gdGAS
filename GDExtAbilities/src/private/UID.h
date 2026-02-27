@@ -6,13 +6,12 @@ namespace sm
 	class DumbUID
 	{
 	public:
-		uint16 GenerateUID()
+		uint32 GenerateUID()
 		{
-			static std::atomic<uint16> nextID{ 1 };
 			return nextID++;
 		}
 
 	public:
-		uint16 nextID = 0;
+		uint32 nextID = 0;
 	};
 }

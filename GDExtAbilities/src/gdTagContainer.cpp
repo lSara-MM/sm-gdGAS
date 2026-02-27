@@ -12,7 +12,18 @@ sm::TagContainer::~TagContainer()
 {}
 
 void sm::TagContainer::_bind_methods()
-{}
+{
+	godot::ClassDB::bind_method(godot::D_METHOD("get_tags"), &GetTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_tags"), &SetTags);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::ARRAY,
+		"tags",
+		godot::PROPERTY_HINT_NONE,
+		"StringName"),
+		"set_tags", "get_tags"
+	);
+}
 
 void sm::TagContainer::_ready()
 {

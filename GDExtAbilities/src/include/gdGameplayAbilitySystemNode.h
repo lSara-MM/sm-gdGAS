@@ -17,6 +17,30 @@ namespace sm
 		GAS_World* GetWorld() { return m_World; };
 		void SetWorld(GAS_World* world) { m_World = world; };
 
+		virtual void _notification(int notification)
+		{
+			switch (notification)
+			{
+			case NOTIFICATION_ENTER_TREE:
+				OnEnterTree();
+				break;
+			case NOTIFICATION_EXIT_TREE:
+				OnExitTree();
+				break;
+			case NOTIFICATION_READY:
+				OnReady();
+				break;
+			case NOTIFICATION_PROCESS:
+				OnProcess();
+				break;
+			}
+		};
+
+		virtual void OnEnterTree() {};
+		virtual void OnExitTree() {};
+		virtual void OnReady() {};
+		virtual void OnProcess() {};
+
 	private:
 		GAS_World* m_World = nullptr;
 	};

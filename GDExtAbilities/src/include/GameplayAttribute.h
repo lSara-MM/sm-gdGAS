@@ -24,7 +24,7 @@ namespace sm
 
 	public:
 		GameplayAttribute(AttributeID id, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
-			m_UID(id), m_dirty(true), m_BaseValue(base), m_CurrentValue(base), m_MinValue(min), m_MaxValue(max)
+			m_ID(id), m_dirty(true), m_BaseValue(base), m_CurrentValue(base), m_MinValue(min), m_MaxValue(max)
 		{
 
 		}
@@ -34,7 +34,7 @@ namespace sm
 		GameplayAttribute(GameplayAttribute&&) = default;
 		GameplayAttribute& operator=(GameplayAttribute&&) = default;
 
-		AttributeID GetUID() const { return m_UID; }
+		AttributeID GetUID() const { return m_ID; }
 
 		float GetBase() const { return m_BaseValue; }
 		void SetBase(float newValue);
@@ -68,7 +68,7 @@ namespace sm
 		std::queue<GameplayModifier> m_BaseModifiers;
 		ModifierBuckets m_Modifiers;
 
-		AttributeID m_UID;
+		AttributeID m_ID;
 		DumbUID m_ModifiersUIDs;
 
 		float m_BaseValue;

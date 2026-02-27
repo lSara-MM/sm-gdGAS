@@ -23,8 +23,6 @@ namespace sm
 			return m_Instance;
 		}
 
-		void _notification(int notification);
-
 		bool GetEffectsAvailability() const { return enableEffects; };
 		void SetEffectsAvailability(bool value);
 
@@ -35,12 +33,13 @@ namespace sm
 		GAS_Entity* GetEntity(EntityID id);
 
 		EntityID RegisterEntity(GAS_Entity* entity);
+		void UnregisterEntity(GAS_Entity* entity);
 
 	private:
-		void OnEnterTree();
-		void OnExitTree();
-		void OnReady();
-		void OnProcess();
+		void OnEnterTree() override;
+		void OnExitTree() override;
+		void OnReady() override;
+		void OnProcess() override;
 
 	public:
 		bool enableEffects = false;

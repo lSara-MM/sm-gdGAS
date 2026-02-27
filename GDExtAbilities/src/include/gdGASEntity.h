@@ -17,8 +17,6 @@ namespace sm
 	public:
 		GAS_Entity();
 
-		void _notification(int notification);
-
 		EntityID GetID() const { return m_Id; }
 
 		AttributeContainer* GetAttributeContainer() const { return attrContainer; }
@@ -34,10 +32,8 @@ namespace sm
 		void AddEffect(const godot::Ref<EffectData> gdEffect);
 
 	private:
-		void OnEnterTree();
-		void OnExitTree();
-		void OnReady();
-		void OnProcess();
+		void OnExitTree() override;
+		void OnReady() override;
 
 	public:
 		AttributeContainer* attrContainer = nullptr;
@@ -48,6 +44,6 @@ namespace sm
 		
 	private:
 		EntityID m_Id;
-		EffectSystem* m_EffectSystem = nullptr;
+		EffectSystem* m_EffectsSystem = nullptr;
 	};
 }

@@ -60,5 +60,8 @@ namespace sm
 		This GameplayAbility cannot be activated if the Target has any of these GameplayTags.
 		The Target GameplayTags are only set if the GameplayAbility is triggered by an event.
 		*/
+
+		AbilityID m_ID;
+		float m_Cooldown = 0.0f;
 	};
 }

@@ -15,14 +15,10 @@ namespace sm
 		static void _bind_methods();
 
 	public:
-
-		// On any notification. (similar to OnCollision from Unity)
-		void _notification(int notification);
+#pragma region Godot public 
 
 		godot::TypedArray<sm::AbilityData> GetAbilities() const { return m_gdAbilities; };
 		void SetAbilities(const godot::TypedArray<sm::AbilityData>& ability);
-
-#pragma region Godot public 
 
 #pragma endregion
 
@@ -30,16 +26,8 @@ namespace sm
 		AbilityContainer();
 		~AbilityContainer() = default;
 
-		void OnEnterTree();
-		void OnExitTree();
-
-		// When node container is loaded, get editor changes and apply them to the C++ AttributeData Set
-		void OnReady();
-
 	private:
 		godot::TypedArray<AbilityData> m_gdAbilities;
 		TagContainer* m_TagContainer;
-
-		//std::unordered_map<AttributeID, GameplayAbility*> m_AttributesByName;
 	};
 }

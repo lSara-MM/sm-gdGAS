@@ -20,7 +20,7 @@ namespace sm
 		//static godot::Ref<sm::Attribute> Create(AttributeID n, float base);
 		float GetBaseValue() { return m_Attribute->GetBase(); }
 		void SetBaseValue(float value) { m_Attribute->SetBase(value); }
-		AttributeID GetUID() { return m_Attribute->GetUID(); }
+		AttributeID GetID() { return m_Attribute->GetUID(); }
 
 		sm::GameplayAttribute* GetAttribute() { return m_Attribute; };
 

@@ -29,10 +29,6 @@ namespace sm
 		static void _bind_methods();
 
 	public:
-
-		// On any notification. (similar to OnCollision from Unity)
-		void _notification(int notification);
-
 #pragma region Godot public 
 		// TODO: unused?
 		godot::Ref<Attribute> GetAttribute(AttributeID id) const;
@@ -70,11 +66,8 @@ namespace sm
 		AttributeContainer();
 		~AttributeContainer();
 
-		void OnEnterTree();
-		void OnExitTree();
-
 		// When node container is loaded, get editor changes and apply them to the C++ AttributeData Set
-		void OnReady();
+		void OnReady() override;
 
 	private:
 

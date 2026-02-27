@@ -105,7 +105,7 @@
     <ClCompile Include="..\src\gdGASEntity.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GameplayAbility.cpp">
+    <ClCompile Include="..\src\gdGameplayAbility.cpp">
       <Filter>Source Files\public\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gdAbilityContainer.cpp">
@@ -188,7 +188,7 @@
     <ClInclude Include="..\src\private\Assert.h">
       <Filter>Header Files\private</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayAbility.h">
+    <ClInclude Include="..\src\include\gdGameplayAbility.h">
       <Filter>Header Files\public\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\gdAbilityContainer.h">

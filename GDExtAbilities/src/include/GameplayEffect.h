@@ -18,8 +18,8 @@ namespace sm
 
 		GameplayEffect(EffectID id, GameplayEffect::Type type, EntityID target, EntityID source, float time = 0);
 
-		EffectID GetUID() const { return m_UID; }
-		EntityID GetTargetUID() const { return m_TargetID; }
+		EffectID GetID() const { return m_ID; }
+		EntityID GetTargetID() const { return m_TargetID; }
 		EntityID GetSourceUID() const { return m_SourceID; }
 		bool HasExpired() const;
 
@@ -29,7 +29,7 @@ namespace sm
 		std::vector<ModifierHandle>& GetModifierHandles() { return m_Modifiers; };
 
 	private:
-		const EffectID m_UID;
+		const EffectID m_ID;
 		std::vector<ModifierHandle> m_Modifiers;
 		EntityID m_TargetID;
 		EntityID m_SourceID;

@@ -35,20 +35,29 @@ void sm::GAS_Entity::_bind_methods()
 	);
 }
 
-void sm::GAS_Entity::_notification(int notification)
+void sm::GAS_Entity::OnExitTree()
 {
-	switch (notification)
+	attrContainer = nullptr;
+	tagContainer = nullptr;
+	m_EffectsSystem = nullptr;
+}
+
+void sm::GAS_Entity::OnReady()
+{
+	sm::GAS_World* world = sm::GAS_World::GetSingleton();
+
+	if (!world)
 	{
-	case NOTIFICATION_ENTER_TREE:
-		OnEnterTree();
-		break;
-	case NOTIFICATION_EXIT_TREE:
-		OnExitTree();
-		break;
-	case NOTIFICATION_READY:
-		OnReady();
-		break;
+		queue_free();
+		ERR_FAIL_MSG("Could not create Entity. GAS_World Node required");
 	}
+
+	m_Id = world->RegisterEntity(this);
+
+	m_EffectsSystem = world->GetEffectSystem();
+	
+	attrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
+	tagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
 }
 
 void sm::GAS_Entity::SetAttributeContainerNodePath(godot::NodePath path)
@@ -104,8 +113,9 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 	auto effect = std::make_unique<GameplayEffect>(
 		gdEffect->GetName(),
 		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()),
-		gdEffect->GetTargetID(),
-		gdEffect->GetSourceID()
+		m_Id,
+		gdEffect->GetSourceID(),
+		gdEffect->GetDuration()
 	);
 
 	for (size_t i = 0; i < modifiers.size(); i++)
@@ -123,37 +133,5 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 		effect->AddModifier(handle);
 	}
 
-	m_EffectSystem->AddActiveEffect(effect);
-}
-
-void sm::GAS_Entity::OnEnterTree()
-{
-	sm::GAS_World* world = sm::GAS_World::GetSingleton();
-	
-	if (!world)
-	{
-		queue_free();
-		ERR_FAIL_MSG("Could not create Entity. GAS_World Node required");
-	}
-
-	m_Id = world->RegisterEntity(this);
-	m_EffectSystem = world->GetEffectSystem();
-}
-
-void sm::GAS_Entity::OnExitTree()
-{
-	attrContainer = nullptr;
-	tagContainer = nullptr; 
-	m_EffectSystem = nullptr;
-}
-
-void sm::GAS_Entity::OnReady()
-{
-	attrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
-	tagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
-}
-
-void sm::GAS_Entity::OnProcess()
-{
-
+	m_EffectsSystem->AddActiveEffect(effect);
 }

@@ -1,10 +1,13 @@
 [gd_resource type="EffectData" load_steps=2 format=3 uid="uid://ck667l834n6tf"]
 
 [sub_resource type="ModifierData" id="ModifierData_ylyop"]
+target_id = &"Def"
+source_id = &"dmg"
 value = -10.0
 
 [resource]
 name = &"dmg"
+effect_type = 2
 duration = 4.59037e-41
 modifiers = Array[ModifierData]([SubResource("ModifierData_ylyop")])
 tags_to_add = Array[StringName]([&"Hola"])

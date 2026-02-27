@@ -424,7 +424,7 @@ godot::StringName sm::TagRegistry::_NormalizeID(godot::StringName name) const
 	if (!IsNameValid(name))
 	{
 		// TODO: probably should happen when Editor window is made
-		SM_ASSERT(false, "Critical error. Invalid Tag name: %s", ToStdString(name).c_str());
+		SM_ASSERT(false, "Critical error: Invalid Tag name: %s", ToStdString(name).c_str());
 		return godot::StringName();
 	}
 

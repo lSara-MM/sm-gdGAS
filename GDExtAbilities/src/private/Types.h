@@ -41,7 +41,8 @@ using uint32 = uint32_t;
 
 using AttributeID = godot::StringName;
 using AttributeSetID = uint32;
-using EntityID = uint32_t;
+using EntityID = uint32;
+using AbilityID = godot::StringName;
 using EffectID = godot::StringName;
 using ModifierID = uint16;
 using TagID = godot::StringName;

@@ -31,25 +31,6 @@ void sm::GAS_World::_bind_methods()
 	);
 }
 
-void sm::GAS_World::_notification(int notification)
-{
-	switch (notification)
-	{
-	case NOTIFICATION_ENTER_TREE:
-		OnEnterTree();
-		break;
-	case NOTIFICATION_EXIT_TREE:
-		OnExitTree();
-		break;
-	case NOTIFICATION_READY:
-		OnReady();
-		break;
-	case NOTIFICATION_PROCESS:
-		OnProcess();
-		break;
-	}
-}
-
 void sm::GAS_World::OnEnterTree()
 {
 	if (GAS_World::GetSingleton())
@@ -63,18 +44,15 @@ void sm::GAS_World::OnEnterTree()
 
 void sm::GAS_World::OnExitTree()
 {
-	if (!m_Entities.empty())
-	{
-		// TODO: Pop up to delete all entities as well
-		ERR_FAIL_MSG("Could not delete GAS_World. Remove");
-	}
-
+	m_Entities.clear();
 	m_Instance = nullptr;
 }
 
 void sm::GAS_World::OnReady()
 {
-	if (enableEffects)
+	set_process(true);
+	
+	if (enableEffects && !m_EffectsSystem)
 	{
 		m_EffectsSystem = std::make_unique<EffectSystem>();
 	}
@@ -82,7 +60,7 @@ void sm::GAS_World::OnReady()
 	/*if (enableAbilities)
 	{
 
-		}*/
+	}*/
 }
 
 void sm::GAS_World::OnProcess()
@@ -113,11 +91,11 @@ void sm::GAS_World::SetAbilitiesAvailability(bool value)
 
 	if (enableAbilities)
 	{
-		//m_EffectsSystem = std::make_unique<EffectSystem>();
+		m_EffectsSystem = std::make_unique<EffectSystem>();
 	}
 	else
 	{
-		//m_EffectsSystem.reset();
+		m_EffectsSystem.reset();
 	}
 }
 
@@ -137,4 +115,9 @@ EntityID sm::GAS_World::RegisterEntity(GAS_Entity* entity)
 	m_Entities.emplace(id, entity);
 
 	return id;
+}
+
+void sm::GAS_World::UnregisterEntity(GAS_Entity* entity)
+{
+	m_Entities.erase(entity->GetID());
 }

@@ -21,7 +21,6 @@ namespace sm
 
 		GameplayEffect* FindEffect(EffectID effectID);
 
-		void AddEffect(const godot::Ref<EffectData> gdEffect, GAS_Entity* target);
 		void AddActiveEffect(EffectPtr& effect);
 		void RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect);
 

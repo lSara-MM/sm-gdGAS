@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbgxiow63nt3w"]
+[gd_scene load_steps=6 format=3 uid="uid://cbgxiow63nt3w"]
 
 [ext_resource type="Script" uid="uid://d0iiegvaep2lr" path="res://test/health.gd" id="1_e66lm"]
 [ext_resource type="Script" uid="uid://bpnqcrhs57f3g" path="res://test/gas_entity.gd" id="1_wto88"]
 
 [sub_resource type="AttributeData" id="AttributeData_eaakf"]
 name = &"Health"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_wto88"]
+name = &"Def"
 
 [sub_resource type="AttributeSetData" id="AttributeSetData_e66lm"]
-attributes = Array[AttributeData]([SubResource("AttributeData_eaakf")])
+attributes = Array[AttributeData]([SubResource("AttributeData_eaakf"), SubResource("AttributeData_wto88")])
 
 [node name="Test2" type="Node2D"]
 
@@ -25,3 +29,4 @@ script = ExtResource("1_e66lm")
 entity = NodePath("..")
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
+tags = Array[StringName]([&"Hola"])

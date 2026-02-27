@@ -24,16 +24,16 @@ namespace sm
 	struct GameplayModifier
 	{
 		/*GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source) :
-			UID(id), value(val), sourceID(source), operation(op)
+			ID(id), value(val), sourceID(source), operation(op)
 		{
 		};*/
 
 		GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source, ModifierHandle& hd) :
-			UID(id), value(val), sourceID(source), operation(op), handle(hd)
+			ID(id), value(val), sourceID(source), operation(op), handle(hd)
 		{
 		};
 
-		const ModifierID UID;
+		const ModifierID ID;
 		ModifierOperationType operation;
 		float value;
 		EffectID sourceID;

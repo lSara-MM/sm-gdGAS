@@ -76,35 +76,6 @@ void sm::AttributeContainer::_bind_methods()
 	));
 }
 
-void sm::AttributeContainer::_notification(int notification)
-{
-	switch (notification)
-	{
-	case NOTIFICATION_ENTER_TREE:
-		OnEnterTree();
-		break;
-	case NOTIFICATION_EXIT_TREE:
-		OnExitTree();
-		break;
-	case NOTIFICATION_READY:
-		OnReady();
-	break;
-	}
-}
-
-void sm::AttributeContainer::OnEnterTree()
-{
-	sm::GAS_World* world = sm::GAS_World::GetSingleton();
-
-	if (world)
-	{
-		ERR_PRINT("aaa");
-	}
-}
-
-void sm::AttributeContainer::OnExitTree()
-{}
-
 void sm::AttributeContainer::OnReady()
 {
 	if (m_gdAttributeSetData == nullptr)
@@ -211,6 +182,7 @@ ModifierID sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<Modifi
 void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	attr->AddBaseModifier(mod);
 
 	emit_signal("modifier_added", this, id, mod);

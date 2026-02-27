@@ -1,5 +1,6 @@
 #include "EffectSystem.h"
 
+#include "Assert.h"
 #include "gdAttribute.h"
 #include "gdAttributeContainer.h"
 #include "gdGASEntity.h"
@@ -34,74 +35,12 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectID effectID)
 	auto it = std::find_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
 		[&](const EffectPtr& e)
 		{
-			return e->GetUID() == effectID;
+			return e->GetID() == effectID;
 		}
 	);
 
 	return (it != m_ActiveEffects.end()) ? it->get() : nullptr;
 }
-
-//void sm::EffectSystem::AddEffect(const godot::Ref<EffectData> gdEffect, sm::GAS_Entity* target)
-//{
-//	TagContainer* tagContainer = GetChildNodeOfType<TagContainer>(target);
-//	ERR_FAIL_NULL_MSG(tagContainer,
-//		godot::vformat("AddEffect: Could not add %s. The TagContainer was not found.",
-//			ToStdString(gdEffect->GetName()).c_str()));
-//
-//	// TODO: Add/Remove tags
-//	godot::TypedArray<TagID> tagsToAdd = gdEffect->GetTagsToAdd();
-//	//tagContainer
-//
-//	godot::TypedArray<TagID> tagsToRemove = gdEffect->GetTagsToRemove();
-//	//tagContainer
-//
-//	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
-//	if (modifiers.is_empty())
-//	{
-//		return;
-//	}
-//
-//	AttributeContainer* attrContainer = GetChildNodeOfType<AttributeContainer>(target);
-//	ERR_FAIL_NULL_MSG(attrContainer,
-//		godot::vformat("AddEffect: Could not add %s. The AttributeContainer was not found.",
-//			ToStdString(gdEffect->GetName()).c_str()));
-//
-//	EffectData::Type type = gdEffect->GetEffectType();
-//	if (type == EffectData::Type::Permanent)
-//	{
-//		for (size_t i = 0; i < modifiers.size(); i++)
-//		{
-//			godot::Ref<ModifierData> modifier = modifiers[i];
-//			attrContainer->AddBaseModifier(modifier->GetTargetID(), modifier);
-//		}
-//
-//		return;
-//	}
-//
-//	auto effect = std::make_unique<GameplayEffect>(
-//		gdEffect->GetName(),
-//		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()),
-//		gdEffect->GetTargetID(),
-//		gdEffect->GetSourceID()
-//	);
-//
-//	for (size_t i = 0; i < modifiers.size(); i++)
-//	{
-//		godot::Ref<ModifierData> modifier = modifiers[i];
-//		GameplayAttribute* attr = attrContainer->FindAttribute(modifier->GetTargetID());
-//		ModifierID id = attrContainer->AddModifier(attr, modifier);
-//		ModifierHandle handle = {
-//			id,
-//			attr->GetUID(),
-//			modifier->GetGameplayOperationType(),
-//			attr->GetModifiersCount(modifier->GetGameplayOperationType()) - 1
-//		};
-//
-//		effect->AddModifier(handle);
-//	}
-//
-//	AddActiveEffect(effect);
-//}
 
 void sm::EffectSystem::AddActiveEffect(EffectPtr& effect)
 {
@@ -113,7 +52,7 @@ void sm::EffectSystem::RemoveEffect(EntityID id, const godot::Ref<EffectData> gd
 	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
 		[&](const std::unique_ptr<sm::GameplayEffect>& effect)
 		{
-			return effect->GetUID() == gdEffect->GetName();
+			return effect->GetID() == gdEffect->GetName();
 		});
 
 	RemoveEffectModifiers(id, itr);
@@ -124,16 +63,18 @@ void sm::EffectSystem::RemoveEffect(EffectID gdEffectID)
 	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
 		[&](const EffectPtr& effect)
 		{
-			return effect->GetUID() == gdEffectID;
+			return effect->GetID() == gdEffectID;
 		});
 
-	RemoveEffectModifiers((*itr)->GetTargetUID(), itr);
+	RemoveEffectModifiers((*itr)->GetTargetID(), itr);
 }
 
 void sm::EffectSystem::RemoveEffect(EffectPtr& effect)
 {
 	GAS_World* world = GAS_World::GetSingleton();
-	GAS_Entity* entity = world->GetEntity(effect->GetTargetUID());
+	GAS_Entity* entity = world->GetEntity(effect->GetTargetID());
+	SM_ASSERT(entity != nullptr, "Critical error: Could not remove effect. Entity %d was not found.", effect->GetTargetID());
+	
 	RemoveEffectModifiers(entity, effect);
 }
 
@@ -157,6 +98,9 @@ void sm::EffectSystem::RemoveEffectModifiers(EntityID id, std::vector<sm::Effect
 void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, EffectPtr& effect)
 {
 	AttributeContainer* attrContainer = entity->GetAttributeContainer();
+	ERR_FAIL_NULL_MSG(attrContainer,
+		godot::vformat("RemoveEffect: Could not remove %s. The AttributeContainer was not found.",
+			ToStdString(effect->GetID()).c_str()));
 
 	for (ModifierHandle& handle : effect->GetModifierHandles())
 	{
