@@ -1,4 +1,5 @@
 #pragma once
+#include "gdEffectData.h"
 #include "gdGameplayAbilitySystemResource.h"
 #include "Types.h"
 
@@ -15,16 +16,26 @@ namespace sm
 
 	public:
 
-#pragma region Godot public 
+#pragma region Godot public
+		AbilityID GetAbilityID() const { return m_ID; };
+		void SetAbilityID(godot::StringName name);
 
+		float GetCooldown() const { return m_Cooldown; };
+		void SetCooldown(float value);
+
+		float GetCost() const { return m_Cost; };
+		void SetCost(float value) { m_Cost = value; };
+
+		AttributeID GetCostAttributeID() const { return m_CostAttributeID; };
+		void SetCostAttributeID(AttributeID value) { m_CostAttributeID = value; };
 
 #pragma endregion Godot public 
 
 	private:
-		AbilityData() = default;
+		AbilityData();
 		~AbilityData() = default;
 
-		void _OnAbilityName(godot::StringName newName);
+		//void _OnAbilityName(godot::StringName newName);
 
 	private:
 		// GameplayTags that the GameplayAbility owns.
@@ -61,7 +72,11 @@ namespace sm
 		The Target GameplayTags are only set if the GameplayAbility is triggered by an event.
 		*/
 
+		EffectData m_CooldownData;
+
 		AbilityID m_ID;
+		AttributeID m_CostAttributeID;
 		float m_Cooldown = 0.0f;
+		float m_Cost = 0.0f;
 	};
 }

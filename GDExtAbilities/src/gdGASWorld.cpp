@@ -33,7 +33,7 @@ void sm::GAS_World::_bind_methods()
 
 void sm::GAS_World::OnEnterTree()
 {
-	if (GAS_World::GetSingleton())
+	if (GAS_World::Instance())
 	{
 		queue_free();
 		ERR_FAIL_MSG("GAS: Only one GAS_World allowed.");
@@ -89,14 +89,14 @@ void sm::GAS_World::SetAbilitiesAvailability(bool value)
 {
 	enableAbilities = value;
 
-	if (enableAbilities)
+	/*if (enableAbilities)
 	{
 		m_EffectsSystem = std::make_unique<EffectSystem>();
 	}
 	else
 	{
 		m_EffectsSystem.reset();
-	}
+	}*/
 }
 
 sm::GAS_Entity* sm::GAS_World::GetEntity(EntityID id)

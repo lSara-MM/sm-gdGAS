@@ -11,7 +11,7 @@ namespace sm
 	class TagRegistry final
 	{
 	public:
-		static TagRegistry& GetInstance();
+		static TagRegistry& Instance();
 
 #ifdef EDITOR_MODE
 		TagID GetTag(TagID tagID);
@@ -20,7 +20,7 @@ namespace sm
 		godot::TypedArray<TagID> GetChildren(TagID tagID);
 		godot::TypedArray<TagID> GetDescendants(TagID tagID);
 
-		void RegisterTag(TagID tagID);
+		bool RegisterTag(TagID tagID);
 		void UnregisterTag(TagID tagID);
 
 		void RenameTag(TagID tagID, TagID newName);

@@ -200,7 +200,7 @@ void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierD
 //void sm::AttributeContainer::AddEffect(EntityID id, godot::Ref<EffectData> effect)
 //{
 //	//GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
-//	GAS_World* world = GAS_World::GetSingleton();
+//	GAS_World* world = GAS_World::Instance();
 //	GAS_Entity* entity = world->GetEntity(id);
 //	EffectSystem* effectSystem = world->GetEffectSystem();
 //

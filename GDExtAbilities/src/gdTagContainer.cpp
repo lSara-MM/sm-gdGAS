@@ -29,7 +29,7 @@ void sm::TagContainer::_ready()
 {
 	/*{
 		godot::UtilityFunctions::print("hola");
-		TagRegistry& instance = TagRegistry::GetInstance();
+		TagRegistry& instance = TagRegistry::Instance();
 
 		instance.RegisterTag("hola.tag");
 		instance.RegisterTag("hola.tag.aaa");

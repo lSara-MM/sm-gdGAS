@@ -29,12 +29,5 @@ namespace sm
 	private:
 		godot::TypedArray<TagID> m_gdTags;
 		std::vector<TagID> m_GameplayTags;
-
-		// Activation Rules
-		//std::vector<GameplayTag> m_AbiltyTags;
-		//std::vector<GameplayTag> m_CancelAbiltyTags;
-		//std::vector<GameplayTag> m_BlockAbiltyTags;
-		//std::vector<GameplayTag> m_ActivationRequirementTags;
-		//std::vector<GameplayTag> m_DeactivationRequirementTags;
 	};
 }

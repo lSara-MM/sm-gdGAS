@@ -42,7 +42,7 @@ sm::TagRegistry::TagRegistry() : ROOT("<")
 //		godot::PropertyInfo(godot::Variant::STRING_NAME, "new_name")));
 //}
 
-sm::TagRegistry& sm::TagRegistry::GetInstance()
+sm::TagRegistry& sm::TagRegistry::Instance()
 {
 	static TagRegistry instance;
 	return instance;
@@ -189,9 +189,9 @@ void sm::TagRegistry::_GetDescendantsTree(TagID itrTagID, godot::TypedArray<TagI
 	m_DescendantsCache.try_emplace(itrTagID, descendants);
 }
 
-void sm::TagRegistry::RegisterTag(TagID tagID)
+bool sm::TagRegistry::RegisterTag(TagID tagID)
 {
-	ERR_FAIL_COND_MSG(GetGameplayTag(_GetFullID(tagID)), godot::vformat("Tag already exists: %s", ToStdString(tagID).c_str()));
+	ERR_FAIL_COND_V_MSG(GetGameplayTag(_GetFullID(tagID)), false, godot::vformat("Tag already exists: %s", ToStdString(tagID).c_str()));
 
 	std::istringstream iss(ToStdString(tagID));
 	std::string prevTagName = ToStdString(ROOT);
@@ -217,6 +217,8 @@ void sm::TagRegistry::RegisterTag(TagID tagID)
 		prevTag = t.GetUID();
 		prevTagName = token;
 	}
+
+	return true;
 }
 
 void sm::TagRegistry::UnregisterTag(TagID tagID)

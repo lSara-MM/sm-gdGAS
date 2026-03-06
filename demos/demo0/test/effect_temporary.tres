@@ -5,7 +5,6 @@ target_id = &"Health"
 value = -20.0
 
 [sub_resource type="ModifierData" id="ModifierData_jbyqi"]
-operation_type = 1
 target_id = &"Health"
 value = 3.0
 

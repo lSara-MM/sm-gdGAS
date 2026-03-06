@@ -36,14 +36,12 @@ namespace sm
 		void OnReady() override;
 
 	public:
-		AttributeContainer* attrContainer = nullptr;
-		TagContainer* tagContainer = nullptr;
-
 		godot::NodePath attrContainerNodePath = "";
 		godot::NodePath tagContainerNodePath = "";
 		
 	private:
 		EntityID m_Id;
-		EffectSystem* m_EffectsSystem = nullptr;
+		AttributeContainer* attrContainer = nullptr;
+		TagContainer* tagContainer = nullptr;
 	};
 }

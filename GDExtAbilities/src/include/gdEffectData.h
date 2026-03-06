@@ -42,6 +42,8 @@ namespace sm
 		float GetDuration() const { return m_Duration; };
 		void SetDuration(float time) { m_Duration = time; };
 
+		bool AddTag(TagID tag);
+
 	private:
 		void _validate_property(godot::PropertyInfo& property) const;
 

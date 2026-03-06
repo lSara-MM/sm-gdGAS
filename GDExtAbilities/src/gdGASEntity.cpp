@@ -39,12 +39,11 @@ void sm::GAS_Entity::OnExitTree()
 {
 	attrContainer = nullptr;
 	tagContainer = nullptr;
-	m_EffectsSystem = nullptr;
 }
 
 void sm::GAS_Entity::OnReady()
 {
-	sm::GAS_World* world = sm::GAS_World::GetSingleton();
+	sm::GAS_World* world = sm::GAS_World::Instance();
 
 	if (!world)
 	{
@@ -53,8 +52,6 @@ void sm::GAS_Entity::OnReady()
 	}
 
 	m_Id = world->RegisterEntity(this);
-
-	m_EffectsSystem = world->GetEffectSystem();
 	
 	attrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
 	tagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
@@ -72,6 +69,12 @@ void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)
 
 void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 {
+	sm::GAS_World* world = sm::GAS_World::Instance();
+	
+	ERR_FAIL_NULL_MSG(world,
+		godot::vformat("AddEffect: Could not add %s. The EffectSystem was not found.",
+			ToStdString(gdEffect->GetName()).c_str()));
+
 	ERR_FAIL_NULL_MSG(tagContainer,
 		godot::vformat("AddEffect: Could not add %s. The TagContainer was not found.",
 			ToStdString(gdEffect->GetName()).c_str()));
@@ -83,7 +86,7 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 	}
 
 	godot::TypedArray<TagID> tagsToRemove = gdEffect->GetTagsToRemove();
-	for (size_t i = 0; i < tagsToAdd.size(); i++)
+	for (size_t i = 0; i < tagsToRemove.size(); i++)
 	{
 		tagContainer->RemoveTag(tagsToAdd[i]);
 	}
@@ -133,5 +136,5 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 		effect->AddModifier(handle);
 	}
 
-	m_EffectsSystem->AddActiveEffect(effect);
+	world->GetEffectSystem()->AddActiveEffect(effect);
 }

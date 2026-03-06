@@ -3,6 +3,6 @@ namespace sm
 	class GameplaySystem
 	{
 	public:
-		virtual void Update(float dt) {};
+		virtual void Update([[maybe_unused]] float dt) {};
 	};
 }

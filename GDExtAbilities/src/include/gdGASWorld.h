@@ -18,7 +18,7 @@ namespace sm
 		GAS_World(const GAS_World&) = delete;
 
 	public:
-		static GAS_World* GetSingleton()
+		static GAS_World* Instance()
 		{
 			return m_Instance;
 		}

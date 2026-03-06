@@ -70,7 +70,6 @@ namespace sm
 		void OnReady() override;
 
 	private:
-
 		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;
 		//std::shared_ptr<EffectSystem> m_EffectSystemPtr;
 		std::unordered_map<godot::StringName, GameplayAttribute*> m_AttributesByName;
