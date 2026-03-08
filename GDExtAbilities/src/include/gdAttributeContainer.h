@@ -1,9 +1,6 @@
 #pragma once
-#include "EffectSystem.h"
 #include "GameplayAttribute.h"
-#include "gdAttributeData.h"
 #include "gdAttributeSetData.h"
-#include "gdEffectData.h"
 #include "gdGameplayAbilitySystemNode.h"
 #include "gdModifierData.h"
 #include "Types.h"
@@ -13,10 +10,7 @@
 
 namespace sm
 {
-	class Attribute;
 	class GameplayAttributeSet;
-
-	struct GameplayModifier;
 }
 
 namespace sm
@@ -31,7 +25,7 @@ namespace sm
 	public:
 #pragma region Godot public 
 		// TODO: unused?
-		godot::Ref<Attribute> GetAttribute(AttributeID id) const;
+		//godot::Ref<Attribute> GetAttribute(AttributeID id) const;
 
 		godot::Ref<AttributeSetData> GetAttributeSet() const;
 		void SetAttributeSet(const godot::Ref<AttributeSetData>& attr);
@@ -46,20 +40,11 @@ namespace sm
 		void AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod);
 		void RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod);
 
-		/*void AddEffect(EntityID id, godot::Ref<EffectData> effect);
-		void RemoveEffect(EntityID id, godot::Ref<EffectData> effect);
-		void RemoveEffect(EntityID id, EffectID effectID);*/
-
-		// TODO: Allow direct base modification?
-
 #pragma endregion
 
 		GameplayAttribute* FindAttribute(AttributeID id) const;
-
 		ModifierID AddModifier(GameplayAttribute* attr, godot::Ref<ModifierData> mod);
-
 		void AddAttribute(godot::StringName id, float baseValue);
-
 		void ModifyAttribute(AttributeID id, float newValue);
 
 	private:
@@ -71,7 +56,6 @@ namespace sm
 
 	private:
 		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;
-		//std::shared_ptr<EffectSystem> m_EffectSystemPtr;
 		std::unordered_map<godot::StringName, GameplayAttribute*> m_AttributesByName;
 		
 		godot::Ref<AttributeSetData> m_gdAttributeSetData;

@@ -26,6 +26,13 @@ namespace sm
 
 		float GetBaseValue() const { return baseValue; };
 		void SetBaseValue(float value) { baseValue = value; };
+
+		float GetMinValue() const { return minValue; };
+		void SetMinValue(float value) { minValue = value; };
+
+		float GetMaxValue() const { return maxValue; };
+		void SetMaxValue(float value) { maxValue = value; };
+
 		godot::StringName GetName() const { return name; };
 		void SetName(godot::StringName n);
 

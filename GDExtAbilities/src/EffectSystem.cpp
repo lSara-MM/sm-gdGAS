@@ -26,8 +26,6 @@ void sm::EffectSystem::Update(float dt)
 		effect->Tick(dt);
 		if (effect->HasExpired())
 		{
-			ERR_PRINT(effect->GetID());
-
 			RemoveEffect(effect);
 			--i;
 		}
@@ -111,8 +109,6 @@ void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, EffectPtr& effe
 		GameplayAttribute* attr = attrContainer->FindAttribute(handle.targetID);
 		attr->RemoveModifier(handle);
 	}
-
-	 
 
 	std::swap(effect, m_ActiveEffects.back());
 	m_ActiveEffects.pop_back();

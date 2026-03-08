@@ -1,9 +1,9 @@
 #pragma once
-#include "gdGameplayAbilitySystemNode.h"
-#include "Types.h"
-
 #include "gdAttributeContainer.h"
+#include "gdEffectData.h"
+#include "gdGameplayAbilitySystemNode.h"
 #include "gdTagContainer.h"
+#include "Types.h"
 
 namespace sm
 {

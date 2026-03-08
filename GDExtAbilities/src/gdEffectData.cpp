@@ -113,6 +113,7 @@ bool sm::EffectData::AddTag(TagID tag)
 {
 	if (!m_TagsToAdd.has(tag))
 	{
+		m_TagsToAdd.clear();
 		m_TagsToAdd.push_back(tag);
 		return true;
 	}

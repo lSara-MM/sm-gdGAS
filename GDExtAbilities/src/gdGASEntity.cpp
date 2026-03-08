@@ -1,6 +1,8 @@
 #include "gdGASEntity.h"
 
 #include "gdGASWorld.h"
+#include "EffectSystem.h"
+#include "GameplayEffect.h"
 
 sm::GAS_Entity::GAS_Entity()
 {

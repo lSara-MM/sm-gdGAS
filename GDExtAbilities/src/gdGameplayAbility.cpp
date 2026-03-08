@@ -4,6 +4,8 @@ void sm::GameplayAbility::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &GetAbilityData);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_data", "data"), &SetAbilityData);
+
+
 }
 
 void sm::GameplayAbility::Grant()

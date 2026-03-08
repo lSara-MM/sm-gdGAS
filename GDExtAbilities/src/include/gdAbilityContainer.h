@@ -23,11 +23,10 @@ namespace sm
 #pragma endregion
 
 	private:
-		AbilityContainer();
+		AbilityContainer() = default;
 		~AbilityContainer() = default;
 
 	private:
 		godot::TypedArray<AbilityData> m_gdAbilities;
-		TagContainer* m_TagContainer;
 	};
 }

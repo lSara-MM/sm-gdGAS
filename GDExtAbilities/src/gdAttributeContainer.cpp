@@ -93,10 +93,10 @@ void sm::AttributeContainer::OnReady()
 	}
 }
 
-godot::Ref<sm::Attribute> sm::AttributeContainer::GetAttribute(AttributeID id) const
-{
-	return godot::Ref<Attribute>();
-}
+//godot::Ref<sm::Attribute> sm::AttributeContainer::GetAttribute(AttributeID id) const
+//{
+//	return godot::Ref<Attribute>();
+//}
 
 godot::Ref<sm::AttributeSetData> sm::AttributeContainer::GetAttributeSet() const
 {

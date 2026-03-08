@@ -6,14 +6,16 @@
 #include <godot_cpp/godot.hpp>
 
 #include "gdExample.h"
-#include "include/gdGASWorld.h"
-#include "include/gdGASEntity.h"
+#include "include/gdAbilityData.h"
+#include "include/gdAbilityContainer.h"
 #include "include/gdAttributeContainer.h"
 #include "include/gdAttributeData.h"
 #include "include/gdAttributeSetData.h"
 #include "include/gdEffectData.h"
 #include "include/gdGameplayAbilitySystemNode.h"
 #include "include/gdGameplayAbilitySystemResource.h"
+#include "include/gdGASEntity.h"
+#include "include/gdGASWorld.h"
 #include "include/gdTagContainer.h"
 
 using namespace godot;
@@ -32,12 +34,14 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     ClassDB::register_class<sm::GAS_World>();
     ClassDB::register_class<sm::GAS_Entity>();
     
+    ClassDB::register_class<sm::AbilityData>();
     ClassDB::register_class<sm::AttributeData>();
     ClassDB::register_class<sm::AttributeSetData>();
     ClassDB::register_class<sm::EffectData>();
     ClassDB::register_class<sm::ModifierData>();
     
     ClassDB::register_class<sm::AttributeContainer>();
+    ClassDB::register_class<sm::AbilityContainer>();
     ClassDB::register_class<sm::TagContainer>();
 }
 
