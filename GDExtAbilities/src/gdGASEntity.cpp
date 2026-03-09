@@ -9,6 +9,13 @@ sm::GAS_Entity::GAS_Entity()
 
 }
 
+void sm::GAS_Entity::SetID(EntityID id)
+{
+	if (m_ID == 0)
+	{
+		m_ID = id;
+	}
+}
 void sm::GAS_Entity::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_container"), &GetAttributeContainer);
@@ -53,7 +60,7 @@ void sm::GAS_Entity::OnReady()
 		ERR_FAIL_MSG("Could not create Entity. GAS_World Node required");
 	}
 
-	m_Id = world->RegisterEntity(this);
+	m_ID = world->RegisterEntity(this);
 	
 	attrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
 	tagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
@@ -115,10 +122,11 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 		return;
 	}
 
-	auto effect = std::make_unique<GameplayEffect>(
+	GameplayEffect effect(
 		gdEffect->GetName(),
-		static_cast<GameplayEffect::Type>(gdEffect->GetEffectType()),
-		m_Id,
+		world->GetEffectSystem()->m_EffectsID.GenerateUID(),
+		static_cast<GameplayEffect::Type>(type),
+		m_ID,
 		gdEffect->GetSourceID(),
 		gdEffect->GetDuration()
 	);
@@ -135,7 +143,7 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 			attr->GetModifiersCount(modifier->GetGameplayOperationType()) - 1
 		};
 
-		effect->AddModifier(handle);
+		effect.AddModifier(handle);
 	}
 
 	world->GetEffectSystem()->AddActiveEffect(effect);

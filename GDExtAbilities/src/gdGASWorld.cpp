@@ -112,6 +112,7 @@ sm::GAS_Entity* sm::GAS_World::GetEntity(EntityID id)
 EntityID sm::GAS_World::RegisterEntity(GAS_Entity* entity)
 {
 	EntityID id = m_EntityUIDs.GenerateUID();
+	entity->SetID(id);
 	m_Entities.emplace(id, entity);
 
 	return id;

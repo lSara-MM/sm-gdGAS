@@ -17,7 +17,8 @@ namespace sm
 	public:
 		GAS_Entity();
 
-		EntityID GetID() const { return m_Id; }
+		EntityID GetID() const { return m_ID; }
+		void SetID(EntityID id);
 
 		AttributeContainer* GetAttributeContainer() const { return attrContainer; }
 		void SetAttributeContainer(AttributeContainer* node) { attrContainer = node; };
@@ -40,7 +41,7 @@ namespace sm
 		godot::NodePath tagContainerNodePath = "";
 		
 	private:
-		EntityID m_Id;
+		EntityID m_ID = 0;
 		AttributeContainer* attrContainer = nullptr;
 		TagContainer* tagContainer = nullptr;
 	};

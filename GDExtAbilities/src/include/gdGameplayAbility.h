@@ -5,13 +5,12 @@
 
 namespace sm
 {
-	enum E_AbilityState
+	enum AbilityState
 	{
 		Idle,
 		Activating,
 		Active,
-		Ending,
-		Cooldown
+		Ending
 	};
 
 	class GameplayAbility : public godot::RefCounted
@@ -28,7 +27,7 @@ namespace sm
 #pragma region GDScript API
 		virtual bool V_CheckAvailability() const {};
 
-		virtual void V_StartAbility() {};
+		virtual void V_TryActivateAbility() {};
 		virtual void V_EndAbility([[maybe_unused]] bool wasCancelled = false) {};
 #pragma endregion
 
@@ -39,22 +38,25 @@ namespace sm
 		bool TryActivate();
 
 		bool CheckCost();
+		bool CheckTags();
 		bool CheckCooldown() const;
 		bool CommitAbility();
-		void ApplyCost();
-		void ApplyCooldown();
+		bool ApplyCost();
+		bool ApplyCooldown();
 
 		bool CanActivate();
 		bool IsActive() const;
 
 	public:
 		godot::Ref<AbilityData> abilityData;
-		E_AbilityState state;
+		AbilityState state;
 
 	private:
 		float m_CurrentCooldownRemaining = 0.0f;
 		bool  m_IsActive;
 		
+
+
 		GAS_Entity* m_Entity;
 	};
 }

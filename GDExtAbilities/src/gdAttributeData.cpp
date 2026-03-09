@@ -21,16 +21,16 @@ void sm::AttributeData::_bind_methods()
 	);
 
 	// TODO: Hacer un tooltip para explicar que es el min y max.
-	godot::ClassDB::bind_method(godot::D_METHOD("get_min_value"), &GetBaseValue);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_min_value", "value"), &SetBaseValue);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_min_value"), &GetMinValue);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_min_value", "value"), &SetMinValue);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::FLOAT, "min_value"),
 		"set_min_value", "get_min_value"
 	);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("get_max_value"), &GetBaseValue);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_max_value", "value"), &SetBaseValue);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_max_value"), &GetMaxValue);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_max_value", "value"), &SetMaxValue);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::FLOAT, "max_value"),

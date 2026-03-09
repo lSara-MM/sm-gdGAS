@@ -1,6 +1,8 @@
 #include "GameplayEffect.h"
 
-sm::GameplayEffect::GameplayEffect(EffectID id, GameplayEffect::Type type, EntityID target, EntityID source, float time) : m_ID(id), m_TargetID(target), m_SourceID(source), m_EffectType(type), m_RemainingTime(time)
+sm::GameplayEffect::GameplayEffect(EffectID name, EffectInstanceID id,
+	GameplayEffect::Type type, EntityID target, EntityID source, float time)
+	: m_Name(name), m_ID(id), m_TargetID(target), m_SourceID(source), m_EffectType(type), m_RemainingTime(time)
 {}
 
 bool sm::GameplayEffect::HasExpired() const

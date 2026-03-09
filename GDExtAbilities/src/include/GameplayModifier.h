@@ -33,7 +33,7 @@ namespace sm
 		{
 		};
 
-		const ModifierID ID;
+		/*const */ModifierID ID;
 		ModifierOperationType operation;
 		float value;
 		EffectID sourceID;

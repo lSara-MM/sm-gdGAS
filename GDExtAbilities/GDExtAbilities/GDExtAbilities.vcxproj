@@ -367,6 +367,7 @@
     <ClInclude Include="..\src\include\TagRegistry.h" />
     <ClInclude Include="..\src\private\Assert.h" />
     <ClInclude Include="..\src\private\Event.h" />
+    <ClInclude Include="..\src\private\GenerationalID.h" />
     <ClInclude Include="..\src\private\Types.h" />
     <ClInclude Include="..\src\private\UID.h" />
     <ClInclude Include="..\src\register_types.h" />
@@ -390,6 +391,7 @@
     <ClCompile Include="..\src\gdExample.cpp" />
     <ClCompile Include="..\src\gdGASWorld.cpp" />
     <ClCompile Include="..\src\gdModifierData.cpp" />
+    <ClCompile Include="..\src\GenerationalIndex.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
     <ClCompile Include="..\src\gdTagContainer.cpp" />
     <ClCompile Include="..\src\TagRegistry.cpp" />

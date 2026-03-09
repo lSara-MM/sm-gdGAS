@@ -114,6 +114,9 @@
     <ClCompile Include="..\src\gdAbilityData.cpp">
       <Filter>Source Files\public\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GenerationalIndex.cpp">
+      <Filter>Source Files\private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h">
@@ -196,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="..\src\include\gdAbilityData.h">
       <Filter>Header Files\public\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\private\GenerationalID.h">
+      <Filter>Header Files\private</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

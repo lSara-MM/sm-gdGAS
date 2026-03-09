@@ -41,9 +41,9 @@ namespace sm
 
 	private:
 		// Godot
-		float baseValue;
-		float minValue;
-		float maxValue;
+		float baseValue = 0.0f;
+		float minValue = 0.0f;
+		float maxValue = FLT_MAX;
 		AttributeID name;
 	};
 }

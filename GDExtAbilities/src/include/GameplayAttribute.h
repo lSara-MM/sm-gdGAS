@@ -17,10 +17,9 @@ namespace sm
 	{
 	private:
 
-		using ModifierPtr = std::unique_ptr<GameplayModifier>;
 		static constexpr size_t OperationTypeCount = static_cast<size_t>(sm::ModifierOperationType::Max);
 
-		using ModifierBuckets = std::array<std::vector<ModifierPtr>, OperationTypeCount>;
+		using ModifierBuckets = std::array<std::vector<GameplayModifier>, OperationTypeCount>;
 
 	public:
 		GameplayAttribute(AttributeID id, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
@@ -61,7 +60,6 @@ namespace sm
 		void Reset();
 
 	private:
-		void CalculateBase();
 		void Calculate();
 
 	private:

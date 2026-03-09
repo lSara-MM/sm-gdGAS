@@ -11,8 +11,6 @@ namespace sm
 
 	class EffectSystem : public GameplaySystem
 	{
-	private:
-		using EffectPtr = std::unique_ptr<GameplayEffect>;
 
 	public:
 		EffectSystem()/* = default*/;
@@ -21,15 +19,15 @@ namespace sm
 
 		GameplayEffect* FindEffect(EffectID effectID);
 
-		void AddActiveEffect(EffectPtr& effect);
+		void AddActiveEffect(GameplayEffect& effect);
 		void RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect);
 
 		void RemoveEffect(EffectID effectID);
-		void RemoveEffect(EffectPtr& effect);
+		void RemoveEffect(GameplayEffect& effect);
 
-		void RemoveEffectModifiers(EntityID id, std::vector<EffectSystem::EffectPtr>::iterator& itr);
+		void RemoveEffectModifiers(EntityID id, std::vector<GameplayEffect>::iterator& itr);
 
-		void RemoveEffectModifiers(GAS_Entity* entity, EffectPtr& effect);
+		void RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect& effect);
 
 		template <typename T>
 		T* GetChildNodeOfType(godot::Node* target)
@@ -49,10 +47,10 @@ namespace sm
 			return nullptr;
 		}
 
+	public:
+		DumbUID m_EffectsID;
+
 	private:
-		//std::vector<EffectPtr> m_PermanentEffects;
-		//std::vector<EffectPtr> m_TemporaryEffects;
-		//std::vector<EffectPtr> m_PersistentEffects;
-		std::vector<EffectPtr> m_ActiveEffects;
+		std::vector<GameplayEffect> m_ActiveEffects;
 	};
 }

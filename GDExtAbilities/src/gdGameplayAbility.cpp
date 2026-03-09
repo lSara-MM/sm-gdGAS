@@ -9,13 +9,16 @@ void sm::GameplayAbility::_bind_methods()
 }
 
 void sm::GameplayAbility::Grant()
-{}
+{
+}
 
 void sm::GameplayAbility::Revoke()
-{}
+{
+}
 
 void sm::GameplayAbility::CleanUp()
-{}
+{
+}
 
 bool sm::GameplayAbility::TryActivate()
 {
@@ -23,13 +26,13 @@ bool sm::GameplayAbility::TryActivate()
 	{
 		return false;
 	}
-	
+
 	if (!CommitAbility())
 	{
 
 	}
 
-	V_StartAbility();
+	V_TryActivateAbility();
 
 	return true;
 }
@@ -37,10 +40,21 @@ bool sm::GameplayAbility::TryActivate()
 bool sm::GameplayAbility::CheckCost()
 {
 	const AttributeContainer* attrContainer = m_Entity->GetAttributeContainer();
-
 	GameplayAttribute* attr = attrContainer->FindAttribute(abilityData->GetCostAttributeID());
 
 	return attr->GetCurrent() <= abilityData->GetCost();
+}
+
+bool sm::GameplayAbility::CheckTags()
+{
+	const TagContainer* tagContainer = m_Entity->GetTagContainer();
+	
+	/*if (tagContainer)
+	{
+		
+	}*/
+
+	return false;
 }
 
 bool sm::GameplayAbility::CheckCooldown() const
@@ -50,25 +64,30 @@ bool sm::GameplayAbility::CheckCooldown() const
 
 bool sm::GameplayAbility::CommitAbility()
 {
+	if (!ApplyCost() || !ApplyCooldown())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool sm::GameplayAbility::ApplyCost()
+{
 	return false;
 }
 
-void sm::GameplayAbility::ApplyCost()
+bool sm::GameplayAbility::ApplyCooldown()
 {
-
-}
-
-void sm::GameplayAbility::ApplyCooldown()
-{
-	//m_Entity.lock()->AddEffect();
-	
 	m_CurrentCooldownRemaining = abilityData->GetCooldown();
+	return false;
 }
 
 bool sm::GameplayAbility::CanActivate()
 {
-	return (state == E_AbilityState::Idle) &&
+	return (state == AbilityState::Idle) &&
 		CheckCost() &&
+		CheckTags() &&
 		V_CheckAvailability();
 }
 

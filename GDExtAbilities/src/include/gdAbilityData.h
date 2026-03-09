@@ -29,6 +29,13 @@ namespace sm
 		AttributeID GetCostAttributeID() const { return m_CostAttributeID; };
 		void SetCostAttributeID(AttributeID value) { m_CostAttributeID = value; };
 
+		// Tags
+		const godot::TypedArray<TagID>& GetAbilityTags() const { return m_AbilityTags; };
+		const godot::TypedArray<TagID>& GetCancelAbilityTags() const { return m_CancelAbilitiesWithTag; };
+		const godot::TypedArray<TagID>& GetBlockAbilityTags() const { return m_BlockAbilitiesWithTag; };
+		const godot::TypedArray<TagID>& GetActivationTags() const { return m_ActivationRequirements; };
+		const godot::TypedArray<TagID>& GetActivationBlockedTags() const { return m_ActivationBlocked; };
+
 #pragma endregion Godot public 
 
 	private:
@@ -41,7 +48,7 @@ namespace sm
 		// GameplayTags that the GameplayAbility owns.
 		// These are just GameplayTags to describe the GameplayAbility.
 		godot::TypedArray<TagID> m_AbilityTags;
-		
+
 		// Other GameplayAbilities that have these GameplayTags in their Ability Tags will be canceled when this GameplayAbility is activated.
 		godot::TypedArray<TagID> m_CancelAbilitiesWithTag;
 
@@ -58,7 +65,7 @@ namespace sm
 		Source Required Tags
 		This GameplayAbility can only be activated if the Source has all of these GameplayTags.
 		The Source GameplayTags are only set if the GameplayAbility is triggered by an event.
-		* 
+		*
 		Source Blocked Tags
 		This GameplayAbility cannot be activated if the Source has any of these GameplayTags.
 		The Source GameplayTags are only set if the GameplayAbility is triggered by an event.
