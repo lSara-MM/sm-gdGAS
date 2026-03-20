@@ -13,109 +13,103 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\private">
-      <UniqueIdentifier>{e895ee1e-051f-41cd-beb8-67f07ebb25aa}</UniqueIdentifier>
+    <Filter Include="Header Files\internal">
+      <UniqueIdentifier>{9e8427b3-38a0-4f7c-8823-eec2d33b1a17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\public">
-      <UniqueIdentifier>{4d711508-b97a-4141-bd79-c38cc8ffef1d}</UniqueIdentifier>
+    <Filter Include="Header Files\attributes">
+      <UniqueIdentifier>{d7f7e9cb-6b22-4d52-bb89-45af405a851d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\private">
-      <UniqueIdentifier>{8bf9c609-35c6-4069-8891-927789d3fb01}</UniqueIdentifier>
+    <Filter Include="Header Files\effects">
+      <UniqueIdentifier>{d871641c-6454-4796-b3f8-06941128b2fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\public">
-      <UniqueIdentifier>{3e2fa553-0b84-4070-ac4a-738c7e9924d2}</UniqueIdentifier>
+    <Filter Include="Header Files\tags">
+      <UniqueIdentifier>{db74eb92-c064-43dc-9022-6e4ea723b7b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\public\Attributes">
-      <UniqueIdentifier>{607d22b1-47ee-410e-9f85-a160b6ccbc35}</UniqueIdentifier>
+    <Filter Include="Header Files\abilities">
+      <UniqueIdentifier>{49c8a38f-878a-427a-b1b1-87e8d5e600a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\public\Attributes">
-      <UniqueIdentifier>{addbf361-45aa-4369-b467-c9a763af1d81}</UniqueIdentifier>
+    <Filter Include="Source Files\internal">
+      <UniqueIdentifier>{9b316f12-437e-475f-89ce-7cf0369292f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\public\Effects">
-      <UniqueIdentifier>{a0e8e601-6cc2-4ad3-8086-1bbd0c357339}</UniqueIdentifier>
+    <Filter Include="Source Files\effects">
+      <UniqueIdentifier>{0b32af61-1480-4737-9369-168cdc7afc10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\public\Tags">
-      <UniqueIdentifier>{14327ce7-6413-4543-86b5-ab081d55ca91}</UniqueIdentifier>
+    <Filter Include="Source Files\abilities">
+      <UniqueIdentifier>{e3eed4d9-14b6-48f8-b257-90d921ff63b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\public\Effects">
-      <UniqueIdentifier>{9e7ac768-7c65-4696-9bd8-1df63078db08}</UniqueIdentifier>
+    <Filter Include="Source Files\tags">
+      <UniqueIdentifier>{785d5929-d570-45f2-abd7-9aabf0f5b186}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\public\Tags">
-      <UniqueIdentifier>{a2c8ae66-1c4e-431f-a57b-1631bd58146a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\public\Abilities">
-      <UniqueIdentifier>{f16b0bbc-91b0-46d7-bb43-e40419377ecd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\public\Abilities">
-      <UniqueIdentifier>{63de6b00-1f8e-43c4-8703-67b097e6e0eb}</UniqueIdentifier>
+    <Filter Include="Source Files\attributes">
+      <UniqueIdentifier>{acf0740e-0c7d-4b76-ae3e-884d8710831a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gdExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\core\GameplayAttribute.cpp">
+      <Filter>Source Files\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\GameplayAttributeSet.cpp">
+      <Filter>Source Files\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\GameplayEffect.cpp">
+      <Filter>Source Files\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\GameplayModifier.cpp">
+      <Filter>Source Files\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\EffectSystem.cpp">
+      <Filter>Source Files\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\TagRegistry.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\register_types.cpp">
-      <Filter>Source Files\public</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdAttributeData.cpp">
-      <Filter>Source Files\public\Attributes</Filter>
+    <ClCompile Include="..\src\godot\gdTagContainer.cpp">
+      <Filter>Source Files\tags</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdAttributeSetData.cpp">
-      <Filter>Source Files\public\Attributes</Filter>
+    <ClCompile Include="..\src\godot\gdTagData.cpp">
+      <Filter>Source Files\tags</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GameplayAttributeSet.cpp">
-      <Filter>Source Files\public\Attributes</Filter>
+    <ClCompile Include="..\src\godot\gdTagRegistry.cpp">
+      <Filter>Source Files\tags</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GameplayAttribute.cpp">
-      <Filter>Source Files\public\Attributes</Filter>
+    <ClCompile Include="..\src\godot\gdAbilityContainer.cpp">
+      <Filter>Source Files\abilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdAttributeContainer.cpp">
-      <Filter>Source Files\public\Attributes</Filter>
+    <ClCompile Include="..\src\godot\gdAbilityData.cpp">
+      <Filter>Source Files\abilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdAttribute.cpp">
-      <Filter>Source Files\public\Attributes</Filter>
+    <ClCompile Include="..\src\godot\gdGameplayAbility.cpp">
+      <Filter>Source Files\abilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GameplayModifier.cpp">
-      <Filter>Source Files\public\Effects</Filter>
+    <ClCompile Include="..\src\godot\gdAttribute.cpp">
+      <Filter>Source Files\attributes</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdModifierData.cpp">
-      <Filter>Source Files\public\Effects</Filter>
+    <ClCompile Include="..\src\godot\gdAttributeContainer.cpp">
+      <Filter>Source Files\attributes</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\GameplayEffect.cpp">
-      <Filter>Source Files\public\Effects</Filter>
+    <ClCompile Include="..\src\godot\gdAttributeData.cpp">
+      <Filter>Source Files\attributes</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdEffectData.cpp">
-      <Filter>Source Files\public\Effects</Filter>
+    <ClCompile Include="..\src\godot\gdAttributeSetData.cpp">
+      <Filter>Source Files\attributes</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdTagContainer.cpp">
-      <Filter>Source Files\public\Tags</Filter>
+    <ClCompile Include="..\src\godot\gdEffectData.cpp">
+      <Filter>Source Files\effects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TagRegistry.cpp">
-      <Filter>Source Files\public\Tags</Filter>
+    <ClCompile Include="..\src\godot\gdModifierData.cpp">
+      <Filter>Source Files\effects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\EffectSystem.cpp">
-      <Filter>Source Files\public\Effects</Filter>
+    <ClCompile Include="..\src\godot\gdGASEntity.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gdGASWorld.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\GameplaySystem.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdGASEntity.cpp">
-      <Filter>Source Files\public</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdGameplayAbility.cpp">
-      <Filter>Source Files\public\Abilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdAbilityContainer.cpp">
-      <Filter>Source Files\public\Abilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gdAbilityData.cpp">
-      <Filter>Source Files\public\Abilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\GenerationalIndex.cpp">
-      <Filter>Source Files\private</Filter>
+    <ClCompile Include="..\src\godot\gdGASWorld.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,83 +119,89 @@
     <ClInclude Include="..\src\register_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\private\Types.h">
-      <Filter>Header Files\private</Filter>
+    <ClInclude Include="..\src\internal\Event.h">
+      <Filter>Header Files\internal</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\private\Event.h">
-      <Filter>Header Files\private</Filter>
+    <ClInclude Include="..\src\internal\smAssert.h">
+      <Filter>Header Files\internal</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\private\UID.h">
-      <Filter>Header Files\private</Filter>
+    <ClInclude Include="..\src\internal\smBitSet.h">
+      <Filter>Header Files\internal</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdAttributeContainer.h">
-      <Filter>Header Files\public\Attributes</Filter>
+    <ClInclude Include="..\src\internal\smUID.h">
+      <Filter>Header Files\internal</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayAttribute.h">
-      <Filter>Header Files\public\Attributes</Filter>
+    <ClInclude Include="..\src\internal\Types.h">
+      <Filter>Header Files\internal</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdAttributeSetData.h">
-      <Filter>Header Files\public\Attributes</Filter>
+    <ClInclude Include="..\src\include\core\GameplayAttribute.h">
+      <Filter>Header Files\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdAttributeData.h">
-      <Filter>Header Files\public\Attributes</Filter>
+    <ClInclude Include="..\src\include\core\GameplayAttributeSet.h">
+      <Filter>Header Files\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayAttributeSet.h">
-      <Filter>Header Files\public\Attributes</Filter>
+    <ClInclude Include="..\src\include\core\EffectSystem.h">
+      <Filter>Header Files\effects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayEffect.h">
-      <Filter>Header Files\public\Effects</Filter>
+    <ClInclude Include="..\src\include\core\GameplayEffect.h">
+      <Filter>Header Files\effects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdEffectData.h">
-      <Filter>Header Files\public\Effects</Filter>
+    <ClInclude Include="..\src\include\core\GameplayModifier.h">
+      <Filter>Header Files\effects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayModifier.h">
-      <Filter>Header Files\public\Effects</Filter>
+    <ClInclude Include="..\src\include\core\GameplayTag.h">
+      <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdModifierData.h">
-      <Filter>Header Files\public\Effects</Filter>
+    <ClInclude Include="..\src\include\core\TagRegistry.h">
+      <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplayTag.h">
-      <Filter>Header Files\public\Tags</Filter>
+    <ClInclude Include="..\src\include\godot\gdAbilityContainer.h">
+      <Filter>Header Files\abilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdTagContainer.h">
-      <Filter>Header Files\public\Tags</Filter>
+    <ClInclude Include="..\src\include\godot\gdAbilityData.h">
+      <Filter>Header Files\abilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\TagRegistry.h">
-      <Filter>Header Files\public\Tags</Filter>
+    <ClInclude Include="..\src\include\godot\gdGameplayAbility.h">
+      <Filter>Header Files\abilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\EffectSystem.h">
-      <Filter>Header Files\public\Effects</Filter>
+    <ClInclude Include="..\src\include\godot\gdAttribute.h">
+      <Filter>Header Files\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdGameplayAbilitySystemNode.h">
-      <Filter>Header Files\public</Filter>
+    <ClInclude Include="..\src\include\godot\gdAttributeContainer.h">
+      <Filter>Header Files\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdGameplayAbilitySystemResource.h">
-      <Filter>Header Files\public</Filter>
+    <ClInclude Include="..\src\include\godot\gdAttributeData.h">
+      <Filter>Header Files\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdGASWorld.h">
-      <Filter>Header Files\public</Filter>
+    <ClInclude Include="..\src\include\godot\gdAttributeSetData.h">
+      <Filter>Header Files\attributes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameplaySystem.h">
-      <Filter>Header Files\public</Filter>
+    <ClInclude Include="..\src\include\godot\gdEffectData.h">
+      <Filter>Header Files\effects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdGASEntity.h">
-      <Filter>Header Files\public</Filter>
+    <ClInclude Include="..\src\include\godot\gdModifierData.h">
+      <Filter>Header Files\effects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\private\Assert.h">
-      <Filter>Header Files\private</Filter>
+    <ClInclude Include="..\src\include\godot\gdTagContainer.h">
+      <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdGameplayAbility.h">
-      <Filter>Header Files\public\Abilities</Filter>
+    <ClInclude Include="..\src\include\godot\gdTagData.h">
+      <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdAbilityContainer.h">
-      <Filter>Header Files\public\Abilities</Filter>
+    <ClInclude Include="..\src\include\godot\gdTagRegistry.h">
+      <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\gdAbilityData.h">
-      <Filter>Header Files\public\Abilities</Filter>
+    <ClInclude Include="..\src\include\godot\gdGameplayAbilitySystemNode.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\private\GenerationalID.h">
-      <Filter>Header Files\private</Filter>
+    <ClInclude Include="..\src\include\godot\gdGameplayAbilitySystemResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\gdGASEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\gdGASWorld.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

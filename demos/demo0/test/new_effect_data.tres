@@ -10,4 +10,3 @@ name = &"dmg"
 effect_type = 2
 duration = 4.59037e-41
 modifiers = Array[ModifierData]([SubResource("ModifierData_ylyop")])
-tags_to_add = Array[StringName]([&"Hola"])

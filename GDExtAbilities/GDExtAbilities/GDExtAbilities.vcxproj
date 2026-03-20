@@ -248,8 +248,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -269,8 +269,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;TOOLS_ENABLED;DEBUG_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -290,8 +290,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gen\include\godot_cpp;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gen\include\godot_cpp;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -313,8 +313,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -331,8 +331,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\src\private;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -344,57 +344,59 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h" />
-    <ClInclude Include="..\src\include\EffectSystem.h" />
-    <ClInclude Include="..\src\include\gdGameplayAbility.h" />
-    <ClInclude Include="..\src\include\GameplayEffect.h" />
-    <ClInclude Include="..\src\include\GameplaySystem.h" />
-    <ClInclude Include="..\src\include\gdAbilityContainer.h" />
-    <ClInclude Include="..\src\include\gdAbilityData.h" />
-    <ClInclude Include="..\src\include\gdAttributeContainer.h" />
-    <ClInclude Include="..\src\include\GameplayAttribute.h" />
-    <ClInclude Include="..\src\include\GameplayAttributeSet.h" />
-    <ClInclude Include="..\src\include\GameplayModifier.h" />
-    <ClInclude Include="..\src\include\GameplayTag.h" />
-    <ClInclude Include="..\src\include\gdAttributeData.h" />
-    <ClInclude Include="..\src\include\gdAttributeSetData.h" />
-    <ClInclude Include="..\src\include\gdEffectData.h" />
-    <ClInclude Include="..\src\include\gdGASEntity.h" />
-    <ClInclude Include="..\src\include\gdGameplayAbilitySystemNode.h" />
-    <ClInclude Include="..\src\include\gdGameplayAbilitySystemResource.h" />
-    <ClInclude Include="..\src\include\gdGASWorld.h" />
-    <ClInclude Include="..\src\include\gdModifierData.h" />
-    <ClInclude Include="..\src\include\gdTagContainer.h" />
-    <ClInclude Include="..\src\include\TagRegistry.h" />
-    <ClInclude Include="..\src\private\Assert.h" />
-    <ClInclude Include="..\src\private\Event.h" />
-    <ClInclude Include="..\src\private\GenerationalID.h" />
-    <ClInclude Include="..\src\private\Types.h" />
-    <ClInclude Include="..\src\private\UID.h" />
+    <ClInclude Include="..\src\include\core\EffectSystem.h" />
+    <ClInclude Include="..\src\include\core\GameplayAttribute.h" />
+    <ClInclude Include="..\src\include\core\GameplayAttributeSet.h" />
+    <ClInclude Include="..\src\include\core\GameplayEffect.h" />
+    <ClInclude Include="..\src\include\core\GameplayModifier.h" />
+    <ClInclude Include="..\src\include\core\GameplayTag.h" />
+    <ClInclude Include="..\src\include\core\TagRegistry.h" />
+    <ClInclude Include="..\src\include\godot\gdAbilityContainer.h" />
+    <ClInclude Include="..\src\include\godot\gdAbilityData.h" />
+    <ClInclude Include="..\src\include\godot\gdAttribute.h" />
+    <ClInclude Include="..\src\include\godot\gdAttributeContainer.h" />
+    <ClInclude Include="..\src\include\godot\gdAttributeData.h" />
+    <ClInclude Include="..\src\include\godot\gdAttributeSetData.h" />
+    <ClInclude Include="..\src\include\godot\gdEffectData.h" />
+    <ClInclude Include="..\src\include\godot\gdGameplayAbility.h" />
+    <ClInclude Include="..\src\include\godot\gdGameplayAbilitySystemNode.h" />
+    <ClInclude Include="..\src\include\godot\gdGameplayAbilitySystemResource.h" />
+    <ClInclude Include="..\src\include\godot\gdGASEntity.h" />
+    <ClInclude Include="..\src\include\godot\gdGASWorld.h" />
+    <ClInclude Include="..\src\include\godot\gdModifierData.h" />
+    <ClInclude Include="..\src\include\godot\gdTagContainer.h" />
+    <ClInclude Include="..\src\include\godot\gdTagData.h" />
+    <ClInclude Include="..\src\include\godot\gdTagRegistry.h" />
+    <ClInclude Include="..\src\internal\Event.h" />
+    <ClInclude Include="..\src\internal\smAssert.h" />
+    <ClInclude Include="..\src\internal\smBitSet.h" />
+    <ClInclude Include="..\src\internal\smUID.h" />
+    <ClInclude Include="..\src\internal\Types.h" />
     <ClInclude Include="..\src\register_types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\EffectSystem.cpp" />
-    <ClCompile Include="..\src\gdGameplayAbility.cpp" />
-    <ClCompile Include="..\src\GameplayEffect.cpp" />
-    <ClCompile Include="..\src\GameplaySystem.cpp" />
-    <ClCompile Include="..\src\gdAbilityContainer.cpp" />
-    <ClCompile Include="..\src\gdAbilityData.cpp" />
-    <ClCompile Include="..\src\gdAttribute.cpp" />
-    <ClCompile Include="..\src\gdAttributeContainer.cpp" />
-    <ClCompile Include="..\src\GameplayAttribute.cpp" />
-    <ClCompile Include="..\src\GameplayAttributeSet.cpp" />
-    <ClCompile Include="..\src\GameplayModifier.cpp" />
-    <ClCompile Include="..\src\gdAttributeData.cpp" />
-    <ClCompile Include="..\src\gdAttributeSetData.cpp" />
-    <ClCompile Include="..\src\gdEffectData.cpp" />
-    <ClCompile Include="..\src\gdGASEntity.cpp" />
+    <ClCompile Include="..\src\core\EffectSystem.cpp" />
+    <ClCompile Include="..\src\core\GameplayAttribute.cpp" />
+    <ClCompile Include="..\src\core\GameplayAttributeSet.cpp" />
+    <ClCompile Include="..\src\core\GameplayEffect.cpp" />
+    <ClCompile Include="..\src\core\GameplayModifier.cpp" />
+    <ClCompile Include="..\src\core\TagRegistry.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
-    <ClCompile Include="..\src\gdGASWorld.cpp" />
-    <ClCompile Include="..\src\gdModifierData.cpp" />
-    <ClCompile Include="..\src\GenerationalIndex.cpp" />
+    <ClCompile Include="..\src\godot\gdAbilityContainer.cpp" />
+    <ClCompile Include="..\src\godot\gdAbilityData.cpp" />
+    <ClCompile Include="..\src\godot\gdAttribute.cpp" />
+    <ClCompile Include="..\src\godot\gdAttributeContainer.cpp" />
+    <ClCompile Include="..\src\godot\gdAttributeData.cpp" />
+    <ClCompile Include="..\src\godot\gdAttributeSetData.cpp" />
+    <ClCompile Include="..\src\godot\gdEffectData.cpp" />
+    <ClCompile Include="..\src\godot\gdGameplayAbility.cpp" />
+    <ClCompile Include="..\src\godot\gdGASEntity.cpp" />
+    <ClCompile Include="..\src\godot\gdGASWorld.cpp" />
+    <ClCompile Include="..\src\godot\gdModifierData.cpp" />
+    <ClCompile Include="..\src\godot\gdTagContainer.cpp" />
+    <ClCompile Include="..\src\godot\gdTagData.cpp" />
+    <ClCompile Include="..\src\godot\gdTagRegistry.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
-    <ClCompile Include="..\src\gdTagContainer.cpp" />
-    <ClCompile Include="..\src\TagRegistry.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

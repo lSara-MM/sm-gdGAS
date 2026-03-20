@@ -6,17 +6,18 @@
 #include <godot_cpp/godot.hpp>
 
 #include "gdExample.h"
-#include "include/gdAbilityData.h"
-#include "include/gdAbilityContainer.h"
-#include "include/gdAttributeContainer.h"
-#include "include/gdAttributeData.h"
-#include "include/gdAttributeSetData.h"
-#include "include/gdEffectData.h"
-#include "include/gdGameplayAbilitySystemNode.h"
-#include "include/gdGameplayAbilitySystemResource.h"
-#include "include/gdGASEntity.h"
-#include "include/gdGASWorld.h"
-#include "include/gdTagContainer.h"
+#include "godot/gdAbilityData.h"
+#include "godot/gdAbilityContainer.h"
+#include "godot/gdAttributeContainer.h"
+#include "godot/gdAttributeData.h"
+#include "godot/gdAttributeSetData.h"
+#include "godot/gdEffectData.h"
+#include "godot/gdGameplayAbilitySystemNode.h"
+#include "godot/gdGameplayAbilitySystemResource.h"
+#include "godot/gdGASEntity.h"
+#include "godot/gdGASWorld.h"
+#include "godot/gdTagContainer.h"
+#include "godot/gdTagData.h"
 
 using namespace godot;
 
@@ -39,6 +40,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
     ClassDB::register_class<sm::AttributeSetData>();
     ClassDB::register_class<sm::EffectData>();
     ClassDB::register_class<sm::ModifierData>();
+    ClassDB::register_class<sm::TagData>();
     
     ClassDB::register_class<sm::AttributeContainer>();
     ClassDB::register_class<sm::AbilityContainer>();

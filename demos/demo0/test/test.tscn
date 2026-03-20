@@ -36,6 +36,7 @@ attributes = Array[AttributeData]([SubResource("AttributeData_s3n3v"), SubResour
 script = ExtResource("1_65205")
 
 [node name="TagContainer" type="TagContainer" parent="."]
+tags = Array[StringName]([&"hola", &"paco.peoe", &"hola.pio"])
 script = ExtResource("1_errlg")
 
 [node name="AttributeContainer" type="AttributeContainer" parent="."]
