@@ -12,6 +12,23 @@ namespace sm
 	class BitSet
 	{
 	private:
+		using T = std::conditional_t<
+			(N <= 8), uint8_t,
+			std::conditional_t<
+			(N <= 16), uint16_t,
+			std::conditional_t<
+			(N <= 32), uint32_t, uint64_t>
+			>
+		>;
+
+		// Calc the size rounding up
+		static constexpr size_t m_Size = (N + sizeof(T) * 8 - 1) / (sizeof(T) * 8);
+
+		static constexpr size_t m_BitsPerBlock = sizeof(T) * 8;
+
+		T data[m_Size] = {};
+
+	private:
 		void MaskResult()
 		{
 			constexpr int remain = N % m_BitsPerBlock;
@@ -22,6 +39,11 @@ namespace sm
 	public:
 		BitSet() = default;
 		~BitSet() = default;
+
+		T& operator[](unsigned int index)
+		{
+			return data[index];
+		}
 
 		BitSet& operator &=(const BitSet& other)
 		{
@@ -148,6 +170,11 @@ namespace sm
 			return ret;
 		}
 
+		size_t Count(unsigned int index) const
+		{
+			return std::popcount(data[index]);
+		}
+
 		inline bool Has(unsigned int index)	 const // std::bitset::Test()
 		{
 			assert_m(index < N, "Bitset: out of bounds");
@@ -197,22 +224,5 @@ namespace sm
 
 			return false;
 		}
-
-	private:
-		using T = std::conditional_t<
-			(N <= 8), uint8_t,
-			std::conditional_t<
-			(N <= 16), uint16_t,
-			std::conditional_t<
-			(N <= 32), uint32_t, uint64_t>
-			>
-		>;
-
-		// Calc the size rounding up
-		static constexpr size_t m_Size = (N + sizeof(T) * 8 - 1) / (sizeof(T) * 8);
-
-		static constexpr size_t m_BitsPerBlock = sizeof(T) * 8;
-
-		T data[m_Size] = {};
 	};
 } //namespace sm

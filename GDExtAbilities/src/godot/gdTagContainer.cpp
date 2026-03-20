@@ -262,26 +262,44 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 
 void sm::TagContainer::AddTags(BitSet<TAG_BITSET_SIZE> tags)
 {
-	for (size_t i = 0; i < TAG_BITSET_SIZE; i++)
+	for (size_t block = 0; block < tags.GetSize(); ++block)
 	{
-		if (tags.Has(i))
+		// Get bits per block
+		auto bits = tags[block];
+
+		while (bits)
 		{
-			m_TagsStack[i]++;
+			int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
+			int index = block * 64 + bit;
+
+			if (++m_TagsStack[index] == 1)
+			{
+				m_TagsSet.Set(index, true);
+			}
+
+			bits &= bits - 1;
 		}
 	}
-
-	m_TagsSet |= tags;
 }
 
 void sm::TagContainer::RemoveTags(BitSet<TAG_BITSET_SIZE> tags)
 {
-	for (size_t i = 0; i < tags.GetSize(); i++)
+	for (size_t block = 0; block < tags.GetSize(); ++block)
 	{
-		if (tags.Has(i) && m_TagsStack[i] > 0)
-		{
-			m_TagsStack[i]--;
-		}
+		// Get bits per block
+		auto bits = tags[block];
 
-		m_TagsSet.Set(i, false);
+		while (bits)
+		{
+			int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
+			int index = block * 64 + bit;
+
+			if (--m_TagsStack[index] == 1)
+			{
+				m_TagsSet.Set(index, false);
+			}
+
+			bits &= bits - 1;
+		}
 	}
 }
