@@ -75,7 +75,18 @@ void sm::TagData::UpdateChildrenParents()
 
 	for (int64_t i = 0; i < m_Children.size(); i++)
 	{
-		tagsStack.push_back(TagStackEntry{ m_Children[i], m_Path + "." + m_Name});
+		godot::String root;
+		if (m_Path.is_empty())
+		{
+			root = m_Name;
+		}
+		else
+		{
+			root = m_Path + "." + m_Name;
+		}
+
+		tagsStack.push_back(TagStackEntry{ m_Children[i], root });
+		m_TagFullPath = root;
 	}
 
 	while (!tagsStack.empty())

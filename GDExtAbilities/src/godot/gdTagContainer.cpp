@@ -101,13 +101,7 @@ void sm::TagContainer::RegisterTags(const godot::TypedArray<sm::TagData>& tags)
 
 void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 {
-	if (tag->GetInternalID() != GameplayTag::INVALID_TAG)
-	{
-		m_TagsSet.Set(tag->GetInternalID());
-		return;
-	}
-
-	AddTagFromPath(tag->GetTagFullPath());
+	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
 }
 
 void sm::TagContainer::AddTagFromPath(const godot::String& tag)
@@ -123,13 +117,13 @@ void sm::TagContainer::AddTagFromPath(const godot::String& tag)
 
 void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
 {
+	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
+	
 	if (tag->GetInternalID() != GameplayTag::INVALID_TAG)
 	{
 		m_TagsSet.Set(tag->GetInternalID(), false);
 		return;
 	}
-
-	RemoveTagFromPath(tag->GetTagFullPath());
 }
 
 void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
@@ -144,10 +138,7 @@ void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
 
 bool sm::TagContainer::HasTag(const sm::TagData& tag) const
 {
-	TagRegistry& instance = TagRegistry::Instance();
-	TagID id = instance.FindTagID(tag.GetTagFullPath());
-
-	return m_TagsSet.Has(id);
+	return m_TagsSet.Has(tag.GetInternalID());
 }
 
 bool sm::TagContainer::HasTagFromPath(const godot::String& tag) const
@@ -195,6 +186,7 @@ bool sm::TagContainer::HasAllTags(const godot::Array& tags) const
 		//break;
 
 		default:
+			ERR_FAIL_V_MSG(false, godot::vformat("HasAllTags failed: Unsupported tag type '%s'", v));
 			break;
 		}
 
