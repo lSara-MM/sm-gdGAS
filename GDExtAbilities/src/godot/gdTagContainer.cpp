@@ -107,8 +107,7 @@ void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 void sm::TagContainer::AddTagFromPath(const godot::String& tag)
 {
 	TagRegistry& instance = TagRegistry::Instance();
-	godot::StringName fullPath = TagRegistry::s_RootTag() + godot::String(".") + tag;
-	TagID id = instance.FindTagID(fullPath);
+	TagID id = instance.FindTagID(tag);
 
 	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
 
@@ -136,9 +135,9 @@ void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
 	m_TagsSet.Set(id, false);
 }
 
-bool sm::TagContainer::HasTag(const sm::TagData& tag) const
+bool sm::TagContainer::HasTag(const godot::Ref<TagData>& tag) const
 {
-	return m_TagsSet.Has(tag.GetInternalID());
+	return m_TagsSet.Has(tag->GetInternalID());
 }
 
 bool sm::TagContainer::HasTagFromPath(const godot::String& tag) const
@@ -164,8 +163,7 @@ bool sm::TagContainer::HasAllTags(const godot::Array& tags) const
 		case godot::Variant::STRING:
 		case godot::Variant::STRING_NAME:
 		{
-			godot::StringName fullPath = TagRegistry::s_RootTag() + godot::StringName(".") + godot::StringName(v);
-			id = instance.FindTagID(fullPath);
+			id = instance.FindTagID(v);
 		}
 		break;
 
@@ -216,8 +214,7 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 		case godot::Variant::STRING:
 		case godot::Variant::STRING_NAME:
 		{
-			godot::StringName fullPath = TagRegistry::s_RootTag() + godot::StringName(".") + godot::StringName(v);
-			id = instance.FindTagID(fullPath);
+			id = instance.FindTagID(v);
 		}
 		break;
 

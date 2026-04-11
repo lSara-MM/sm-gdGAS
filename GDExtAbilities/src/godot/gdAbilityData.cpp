@@ -4,7 +4,12 @@
 
 sm::AbilityData::AbilityData()
 {
-	m_CooldownData.SetDuration(m_Cooldown);
+	if (m_CooldownData.is_null())
+	{
+		m_CooldownData.instantiate();
+	}
+
+	m_CooldownData->SetDuration(m_Cooldown);
 }
 
 void sm::AbilityData::_bind_methods()
@@ -28,13 +33,13 @@ void sm::AbilityData::_bind_methods()
 
 void sm::AbilityData::SetAbilityID(godot::StringName name)
 {
-//#ifdef EDITOR_MODE
-//	TagRegistry& registry = TagRegistry::Instance();
-//	if (!registry.RegisterTag(m_ID))
-//	{
-//		return;
-//	}
-//#endif // EDITOR_MODE
+	//#ifdef EDITOR_MODE
+	//	TagRegistry& registry = TagRegistry::Instance();
+	//	if (!registry.RegisterTag(m_ID))
+	//	{
+	//		return;
+	//	}
+	//#endif // EDITOR_MODE
 
 	m_ID = name;
 	//m_CooldownData.AddTag(m_CooldownData.GetName());
@@ -43,5 +48,5 @@ void sm::AbilityData::SetAbilityID(godot::StringName name)
 void sm::AbilityData::SetCooldown(float value)
 {
 	m_Cooldown = value;
-	m_CooldownData.SetDuration(m_Cooldown);
+	m_CooldownData->SetDuration(m_Cooldown);
 }

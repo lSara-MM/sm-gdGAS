@@ -11,7 +11,7 @@ namespace sm
 
 	protected:
 		static void _bind_methods() {};
-		
+
 	public:
 		GAS_World* GetWorld() { return m_World; };
 		void SetWorld(GAS_World* world) { m_World = world; };
@@ -36,7 +36,10 @@ namespace sm
 		};
 
 		virtual void OnEnterTree() {};
-		virtual void OnExitTree() {};
+		virtual void OnExitTree()
+		{
+			//print_orphan_nodes();
+		};
 		virtual void OnReady() {};
 		virtual void OnProcess() {};
 

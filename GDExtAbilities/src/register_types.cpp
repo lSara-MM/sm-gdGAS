@@ -6,6 +6,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "gdExample.h"
+#include "godot/ui/gdTagRegistryEditor.h"
 #include "godot/gdAbilityData.h"
 #include "godot/gdAbilityContainer.h"
 #include "godot/gdAttributeContainer.h"
@@ -18,33 +19,39 @@
 #include "godot/gdGASWorld.h"
 #include "godot/gdTagContainer.h"
 #include "godot/gdTagData.h"
+#include "godot/gdTagRegistry.h"
 
 using namespace godot;
 
 void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 {
-    if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
+    if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE)
     {
-        return;
+        ClassDB::register_class<GDExample>();
+        ClassDB::register_abstract_class<sm::GameplayAbilitySystem>();
+        ClassDB::register_abstract_class<sm::GameplayAbilitySystemResource>();
+
+        ClassDB::register_class<sm::GAS_World>();
+        ClassDB::register_class<sm::GAS_Entity>();
+
+        ClassDB::register_class<sm::AbilityData>();
+        ClassDB::register_class<sm::AttributeData>();
+        ClassDB::register_class<sm::AttributeSetData>();
+        ClassDB::register_class<sm::EffectData>();
+        ClassDB::register_class<sm::ModifierData>();
+        ClassDB::register_class<sm::TagData>();
+        ClassDB::register_class<sm::TagRegistryData>();
+
+        ClassDB::register_class<sm::AttributeContainer>();
+        ClassDB::register_class<sm::AbilityContainer>();
+        ClassDB::register_class<sm::TagContainer>();
     }
 
-    ClassDB::register_class<GDExample>();
-    ClassDB::register_abstract_class<sm::GameplayAbilitySystem>();
-    ClassDB::register_abstract_class<sm::GameplayAbilitySystemResource>();
-    
-    ClassDB::register_class<sm::GAS_World>();
-    ClassDB::register_class<sm::GAS_Entity>();
-    
-    ClassDB::register_class<sm::AbilityData>();
-    ClassDB::register_class<sm::AttributeData>();
-    ClassDB::register_class<sm::AttributeSetData>();
-    ClassDB::register_class<sm::EffectData>();
-    ClassDB::register_class<sm::ModifierData>();
-    ClassDB::register_class<sm::TagData>();
-    
-    ClassDB::register_class<sm::AttributeContainer>();
-    ClassDB::register_class<sm::AbilityContainer>();
-    ClassDB::register_class<sm::TagContainer>();
+    if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR)
+    {
+        ClassDB::register_class<sm::TagRegistryEditor>();
+        EditorPlugins::add_by_type<sm::TagRegistryEditor>();
+    }
 }
 
 void uninitialize_gdextabilities_plugin(ModuleInitializationLevel p_level)

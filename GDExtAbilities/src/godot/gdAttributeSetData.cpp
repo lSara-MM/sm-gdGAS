@@ -54,11 +54,11 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 
 void sm::AttributeSetData::AddAttribute(float baseValue, const godot::StringName& name)
 {
-	godot::Ref<AttributeData> attr;
+	/*godot::Ref<AttributeData> attr;
 	attr.instantiate();
 	attr->SetBaseValue(baseValue);
 	attr->SetName(name);
-	m_gdAttributes.append(attr);
+	m_gdAttributes.append(attr);*/
 
 	emit_changed();
 }
@@ -154,7 +154,7 @@ std::vector<godot::Ref<sm::AttributeData>> sm::AttributeSetData::SortByName()
 	return ret;
 }
 
-const godot::TypedArray<sm::AttributeData>& sm::AttributeSetData::ValidateSetData(const godot::TypedArray<AttributeData>& attr, bool getNull)
+godot::TypedArray<sm::AttributeData> sm::AttributeSetData::ValidateSetData(const godot::TypedArray<AttributeData>& attr, bool getNull)
 {
 	godot::TypedArray<AttributeData> validatedSet;
 	std::unordered_set<godot::StringName> seen;

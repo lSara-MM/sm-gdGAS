@@ -1,0 +1,77 @@
+#pragma once
+#include <godot/gdTagRegistry.h>
+#include <godot/gdTagData.h>
+#include <godot_cpp/classes/editor_plugin.hpp>
+#include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/classes/resource.hpp>
+
+namespace godot
+{
+	class AcceptDialog;
+	class EditorResourcePicker;
+	class LineEdit;
+	class Tree;
+	class TreeItem;
+	class VBoxContainer;
+	class VSplitContainer;
+}
+
+namespace sm
+{
+	class TagRegistryEditor : public godot::EditorPlugin
+	{
+		GDCLASS(TagRegistryEditor, godot::EditorPlugin)
+
+	protected:
+		static void _bind_methods();
+
+	public:
+		enum class ButtonId : int
+		{
+			ADD = 0,
+			DELETE_ALL,
+			DELETE_SELF,
+			EDIT,
+
+			MAX
+		};
+
+		struct Icons
+		{
+			godot::Ref<godot::Texture2D> add;
+			godot::Ref<godot::Texture2D> edit;
+			godot::Ref<godot::Texture2D> remove;
+			godot::Ref<godot::Texture2D> removeInternal;
+		};
+
+	public:
+		void _enter_tree() override;
+		void _exit_tree() override;
+
+		void _make_visible(bool visible) override;
+
+		TagRegistryEditor();
+		~TagRegistryEditor() = default;
+
+		void CreateTreeBoxContainer();
+		void CreateTree(const godot::Ref<TagData> resource);
+		void DeleteTree();
+
+		void _OnResourceChanged(const godot::Ref<godot::Resource> resource);
+
+		void _OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex);
+
+		void _OnCreateTagClicked(godot::AcceptDialog* menu);
+		void _OnTagNameChanged(const godot::String& newText, godot::LineEdit* result, godot::TreeItem* item);
+
+	private:
+		godot::VSplitContainer* m_MainSplit = nullptr;
+		godot::VBoxContainer* m_TreeContainer = nullptr;
+		godot::VBoxContainer* m_InfoContainer = nullptr;
+		godot::Tree* m_Tree = nullptr;
+		godot::EditorResourcePicker* m_Picker = nullptr;
+
+		Icons m_Icons;
+		const godot::String m_SettingsPath;
+	};
+}

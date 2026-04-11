@@ -24,6 +24,21 @@ namespace sm
 
 		godot::StringName GetName() { return m_Name; };
 
+		std::vector<TagID>& GetChildren() { return m_Children; };
+
+		size_t GetChildIndex(TagID id) const
+		{
+			for (size_t i = 0; i < m_Children.size(); i++)
+			{
+				if (m_Children[i] == id)
+				{
+					return i;
+				}
+			}
+
+			return m_Children.size();
+		}
+
 	public:
 		static constexpr TagID INVALID_TAG = 0;
 		static constexpr TagID ROOT_TAG = 1;
@@ -33,12 +48,11 @@ namespace sm
 		TagID m_ParentUID;
 		godot::StringName m_Name;
 
-	public:
 //#ifdef TOOLS_DEBUG_VS
 		std::string stdName;
 //#endif //  TOOLS_DEBUG_VS
 
-		std::vector<TagID> children;
+		std::vector<TagID> m_Children;
 
 		//BitSet<512> ascendantsMask;
 		//BitSet<512> descendantsMask;

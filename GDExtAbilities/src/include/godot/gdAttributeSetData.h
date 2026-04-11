@@ -23,7 +23,7 @@ namespace sm
 
 		void AddAttribute(float baseValue, const godot::StringName& name);
 		void AddAttribute(const godot::Ref<AttributeData>& attr);
-		
+
 		//uint32 GetAttributeID(godot::StringName name) const;
 
 		// TODO: myb useless?
@@ -35,7 +35,7 @@ namespace sm
 		std::vector<godot::Ref<AttributeData>> ToRefAttributeVector();
 		std::vector<godot::Ref<AttributeData>> SortByName();
 
-		const godot::TypedArray<AttributeData>& ValidateSetData(const godot::TypedArray<AttributeData>& attr, bool getNull = false);
+		godot::TypedArray<AttributeData> ValidateSetData(const godot::TypedArray<AttributeData>& attr, bool getNull = false);
 
 	private:
 		AttributeSetData() = default;

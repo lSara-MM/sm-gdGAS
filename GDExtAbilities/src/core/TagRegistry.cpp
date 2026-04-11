@@ -488,13 +488,14 @@
 //
 //#pragma endregion Internal methods
 
-sm::TagRegistry::TagRegistry()	
+sm::TagRegistry::TagRegistry()
 {
-	GameplayTag newTag = GameplayTag(m_IDs.GenerateUID(), s_RootTag());
+	godot::StringName root(">");
+	GameplayTag newTag = GameplayTag(m_IDs.GenerateUID(), root);
 	m_TagsSet.Set(newTag.GetUID());
 
-	m_TagsDictionary.emplace(s_RootTag(), newTag.GetUID());
-	m_TagsDictionaryDebug.emplace(ToStdString(s_RootTag()), newTag.GetUID());
+	m_TagsDictionary.emplace(root, newTag.GetUID());
+	m_TagsDictionaryDebug.emplace(ToStdString(root), newTag.GetUID());
 
 	m_Tags.push_back(std::move(newTag));
 }
@@ -564,7 +565,7 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& fullName, c
 	// - Tag (name)
 	// -- Tags (All children)
 	// basically, tags should have array of tags
-	
+
 	m_TagsDictionary.emplace(fullName, newTag.GetUID());
 
 	// TODO: Only on debug
@@ -583,17 +584,14 @@ TagID sm::TagRegistry::FindTagID(const godot::StringName& name) const
 	return GameplayTag::INVALID_TAG;
 }
 
-sm::GameplayTag* sm::TagRegistry::FindGameplayTagFromData(const godot::Ref<TagData>& tag)
+sm::GameplayTag* sm::TagRegistry::FindGameplayTag(const godot::Ref<TagData>& tag)
 {
-	if (tag->GetInternalID() < m_Tags.size())
-	{
-		return &m_Tags[tag->GetInternalID()];
-	}
+	ERR_FAIL_COND_V_MSG(tag->GetInternalID() > m_Tags.size(), nullptr, godot::vformat("Tag not found: %s", tag->GetName()));
 
-	if (auto id = FindTagID(tag->GetTagFullPath()); id != GameplayTag::INVALID_TAG)
-	{
-		return &m_Tags[id];
-	}
+	return &m_Tags[tag->GetInternalID()];
+}
 
-	return nullptr;
+bool sm::TagRegistry::HasChild(TagID tagID, TagID childID) const
+{
+	return false;
 }

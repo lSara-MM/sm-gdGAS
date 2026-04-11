@@ -2,28 +2,28 @@
 
 [sub_resource type="TagData" id="TagData_653ps"]
 name = "paco"
-path = ".leo.hola"
+path = "leo.hola"
 
 [sub_resource type="TagData" id="TagData_7jdoe"]
 name = "hola"
-path = ".leo"
+path = "leo"
 children = Array[TagData]([SubResource("TagData_653ps")])
 
 [sub_resource type="TagData" id="TagData_idswv"]
 name = "eee"
-path = ".leo"
+path = "leo"
 
 [sub_resource type="TagData" id="TagData_x0igy"]
 name = "pepe"
-path = ".leo.poaco"
+path = "leo.poaco"
 
 [sub_resource type="TagData" id="TagData_gpph5"]
 name = "looo"
-path = ".leo.poaco"
+path = "leo.poaco"
 
 [sub_resource type="TagData" id="TagData_p03dq"]
 name = "poaco"
-path = ".leo"
+path = "leo"
 children = Array[TagData]([SubResource("TagData_x0igy"), SubResource("TagData_gpph5")])
 
 [resource]

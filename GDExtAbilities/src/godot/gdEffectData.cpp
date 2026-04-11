@@ -68,15 +68,15 @@ void sm::EffectData::_bind_methods()
 
 void sm::EffectData::SetModifiers(const godot::TypedArray<ModifierData>& modifiers)
 {
-	for (size_t i = 0; i < modifiers.size(); i++)
+	for (int i = 0; i < modifiers.size(); i++)
 	{
 		godot::Ref<ModifierData> data = modifiers[i];
-		
+
 		if (data.is_null())
 		{
 			continue;
 		}
-		
+
 		data->SetSourceID(m_Name);
 	}
 

@@ -44,7 +44,7 @@ void sm::TagData::SetName(godot::String value)
 void sm::TagData::SetPath(godot::String value)
 {
 	m_Path = value;
-	m_TagFullPath = TagRegistry::s_RootTag() + m_Path + "." + m_Name;
+	m_TagFullPath = m_Path + "." + m_Name;
 }
 
 void sm::TagData::SetTagFullPath(godot::String value)

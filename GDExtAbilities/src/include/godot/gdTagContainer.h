@@ -28,8 +28,10 @@ namespace sm
 		void AddTagFromPath(const godot::String& tag);
 		void RemoveTag(const godot::Ref<TagData>& tag);
 		void RemoveTagFromPath(const godot::String& tag);
-		bool HasTag(const sm::TagData& tag) const;
+
+		bool HasTag(const godot::Ref<TagData>& tag) const;
 		bool HasTagFromPath(const godot::String& tag) const;
+
 		bool HasAllTags(const godot::Array& tags) const;
 		bool HasAnyTag(const godot::Array& tags) const;
 

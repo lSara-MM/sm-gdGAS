@@ -79,7 +79,7 @@ namespace sm
 		The Target GameplayTags are only set if the GameplayAbility is triggered by an event.
 		*/
 
-		EffectData m_CooldownData;
+		godot::Ref<EffectData> m_CooldownData;
 
 		AbilityID m_ID;
 		AttributeID m_CostAttributeID;
