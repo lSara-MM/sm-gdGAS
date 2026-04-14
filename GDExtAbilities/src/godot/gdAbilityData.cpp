@@ -33,13 +33,13 @@ void sm::AbilityData::_bind_methods()
 
 void sm::AbilityData::SetAbilityID(godot::StringName name)
 {
-	//#ifdef EDITOR_MODE
+	//#ifdef TOOLS_ENABLED
 	//	TagRegistry& registry = TagRegistry::Instance();
 	//	if (!registry.RegisterTag(m_ID))
 	//	{
 	//		return;
 	//	}
-	//#endif // EDITOR_MODE
+	//#endif // TOOLS_ENABLED
 
 	m_ID = name;
 	//m_CooldownData.AddTag(m_CooldownData.GetName());

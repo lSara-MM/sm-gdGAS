@@ -47,10 +47,12 @@ namespace sm
 		static TagRegistry* m_Instance;
 
 		DumbUID m_IDs;
-		sm::BitSet<TAG_BITSET_SIZE> m_TagsSet;
+		sm::BitSet<MAX_TAGS> m_TagsSet;
 		std::vector<GameplayTag> m_Tags;
 		std::unordered_map<godot::StringName, TagID> m_TagsDictionary;
 
+#ifdef DEBUG_ENABLED
 		std::unordered_map<std::string, TagID> m_TagsDictionaryDebug;
+#endif // DEBUG_ENABLED
 	};
 }

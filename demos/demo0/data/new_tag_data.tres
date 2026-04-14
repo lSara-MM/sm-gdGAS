@@ -1,0 +1,40 @@
+[gd_resource type="TagData" load_steps=9 format=3 uid="uid://2s5y82afpcds"]
+
+[sub_resource type="TagData" id="TagData_go4r2"]
+name = "paco"
+path = "hola.pepe"
+
+[sub_resource type="TagData" id="TagData_pwyu3"]
+name = "pepe"
+path = "hola"
+children = Array[TagData]([SubResource("TagData_go4r2")])
+
+[sub_resource type="TagData" id="TagData_ywnmq"]
+name = "pacopaco"
+path = "hola.lali.popo"
+
+[sub_resource type="TagData" id="TagData_6db34"]
+name = "aaaa"
+path = "hola.lali.popo"
+
+[sub_resource type="TagData" id="TagData_npo1b"]
+name = "popo"
+path = "hola.lali"
+children = Array[TagData]([SubResource("TagData_ywnmq"), SubResource("TagData_6db34")])
+
+[sub_resource type="TagData" id="TagData_ljg14"]
+name = "paco"
+path = "hola.lali"
+
+[sub_resource type="TagData" id="TagData_17pcm"]
+name = "prepe"
+path = "hola.lali"
+
+[sub_resource type="TagData" id="TagData_obsn0"]
+name = "lali"
+path = "hola"
+children = Array[TagData]([SubResource("TagData_npo1b"), SubResource("TagData_ljg14"), SubResource("TagData_17pcm")])
+
+[resource]
+name = "hola"
+children = Array[TagData]([SubResource("TagData_pwyu3"), SubResource("TagData_obsn0")])

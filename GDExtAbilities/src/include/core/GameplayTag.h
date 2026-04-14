@@ -8,12 +8,11 @@ namespace sm
 {
 	struct GameplayTag
 	{
-
 		GameplayTag(TagID id, godot::StringName name, TagID parent = ROOT_TAG) : m_UID(id), m_Name(name), m_ParentUID(parent)
 		{
-//#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 			stdName = ToStdString(name);
-//#endif //  TOOLS_DEBUG_VS
+#endif //  DEBUG_ENABLED
 		};
 
 		TagID GetUID() { return m_UID; };
@@ -48,9 +47,9 @@ namespace sm
 		TagID m_ParentUID;
 		godot::StringName m_Name;
 
-//#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 		std::string stdName;
-//#endif //  TOOLS_DEBUG_VS
+#endif //  DEBUG_ENABLED
 
 		std::vector<TagID> m_Children;
 

@@ -24,8 +24,8 @@ namespace sm
 		EntityID GetTargetID() const { return m_TargetID; }
 		EntityID GetSourceUID() const { return m_SourceID; }
 
-		BitSet<TAG_BITSET_SIZE> GetTagsToAdd() const { return m_TagsToAdd; }
-		BitSet<TAG_BITSET_SIZE> GetTagsToRemove() const { return m_TagsToRemove; }
+		BitSet<MAX_TAGS> GetTagsToAdd() const { return m_TagsToAdd; }
+		BitSet<MAX_TAGS> GetTagsToRemove() const { return m_TagsToRemove; }
 
 		bool HasExpired() const;
 
@@ -45,7 +45,7 @@ namespace sm
 		DumbUID m_ModifiersUID;
 		GameplayEffect::Type m_EffectType;
 
-		BitSet<TAG_BITSET_SIZE> m_TagsToAdd;
-		BitSet<TAG_BITSET_SIZE> m_TagsToRemove;
+		BitSet<MAX_TAGS> m_TagsToAdd;
+		BitSet<MAX_TAGS> m_TagsToRemove;
 	};
 }

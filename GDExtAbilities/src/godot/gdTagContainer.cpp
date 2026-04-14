@@ -14,7 +14,6 @@ sm::TagContainer::~TagContainer()
 void sm::TagContainer::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tags"), &GetTags);
-	godot::ClassDB::bind_method(godot::D_METHOD("RegisterTags", "tags"), &RegisterTags);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_tags"), &SetTags);
 
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -93,15 +92,14 @@ void sm::TagContainer::_ready()
 	}*/
 }
 
-void sm::TagContainer::RegisterTags(const godot::TypedArray<sm::TagData>& tags)
-{
-	TagRegistry& instance = TagRegistry::Instance();
-	instance.RegisterTags(tags);
-}
-
 void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 {
 	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
+
+	if (tag->GetInternalID() != GameplayTag::INVALID_TAG)
+	{
+		m_TagsSet.Set(tag->GetInternalID());
+	}
 }
 
 void sm::TagContainer::AddTagFromPath(const godot::String& tag)
@@ -117,11 +115,10 @@ void sm::TagContainer::AddTagFromPath(const godot::String& tag)
 void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
 {
 	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
-	
+
 	if (tag->GetInternalID() != GameplayTag::INVALID_TAG)
 	{
 		m_TagsSet.Set(tag->GetInternalID(), false);
-		return;
 	}
 }
 
@@ -240,7 +237,7 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 
 		ERR_FAIL_COND_V_MSG(id == GameplayTag::INVALID_TAG, false, godot::vformat("HasAnyTags failed: Unknown tag '%s'", v));
 
-		if (!m_TagsSet.Has(id))
+		if (m_TagsSet.Has(id))
 		{
 			return true;
 		}
@@ -249,7 +246,28 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 	return false;
 }
 
-void sm::TagContainer::AddTags(BitSet<TAG_BITSET_SIZE> tags)
+void sm::TagContainer::SetTag(const TagID id, bool value)
+{
+	ERR_FAIL_COND_MSG(id >= MAX_TAGS, godot::vformat("SetTag failed: id %d out of range (MAX_TAGS=%d)", id, MAX_TAGS));
+
+	uint16& count = m_TagsStack[id];
+	if (value)
+	{
+		if (++count == 1)
+		{
+			m_TagsSet.Set(id, true);
+		}
+	}
+	else
+	{
+		if (count > 0 && --count == 0)
+		{
+			m_TagsSet.Set(id, false);
+		}
+	}
+}
+
+void sm::TagContainer::AddTags(BitSet<MAX_TAGS> tags)
 {
 	for (size_t block = 0; block < tags.GetSize(); ++block)
 	{
@@ -260,6 +278,8 @@ void sm::TagContainer::AddTags(BitSet<TAG_BITSET_SIZE> tags)
 		{
 			int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
 			int index = block * 64 + bit;
+
+			ERR_CONTINUE_MSG(index >= MAX_TAGS, godot::vformat("AddTags skipped: index %d out of range (MAX_TAGS=%d)", index, MAX_TAGS));
 
 			if (++m_TagsStack[index] == 1)
 			{
@@ -271,7 +291,7 @@ void sm::TagContainer::AddTags(BitSet<TAG_BITSET_SIZE> tags)
 	}
 }
 
-void sm::TagContainer::RemoveTags(BitSet<TAG_BITSET_SIZE> tags)
+void sm::TagContainer::RemoveTags(BitSet<MAX_TAGS> tags)
 {
 	for (size_t block = 0; block < tags.GetSize(); ++block)
 	{
@@ -283,7 +303,7 @@ void sm::TagContainer::RemoveTags(BitSet<TAG_BITSET_SIZE> tags)
 			int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
 			int index = block * 64 + bit;
 
-			if (--m_TagsStack[index] == 1)
+			if (m_TagsStack[index] > 0 && --m_TagsStack[index] == 0)
 			{
 				m_TagsSet.Set(index, false);
 			}

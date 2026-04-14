@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 #   define SM_ASSERT(Expr, Msg, ...) \
     __SM_Assert(#Expr, Expr, __FILE__, __LINE__, Msg, __VA_ARGS__)
 #else

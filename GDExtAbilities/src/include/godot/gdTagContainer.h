@@ -22,8 +22,6 @@ namespace sm
 		godot::TypedArray<godot::StringName> GetTags() const { return m_gdTags; };
 		void SetTags(const godot::TypedArray<godot::StringName>& tags) { m_gdTags = tags; };
 
-		void RegisterTags(const godot::TypedArray<sm::TagData>& tags);
-
 		void AddTag(const godot::Ref<TagData>& tag);
 		void AddTagFromPath(const godot::String& tag);
 		void RemoveTag(const godot::Ref<TagData>& tag);
@@ -36,14 +34,14 @@ namespace sm
 		bool HasAnyTag(const godot::Array& tags) const;
 
 		//
-		void AddTags(BitSet<TAG_BITSET_SIZE> tags);
-		void RemoveTags(BitSet<TAG_BITSET_SIZE> tags);
+		void SetTag(const TagID id, bool value = true);
+		void AddTags(BitSet<MAX_TAGS> tags);
+		void RemoveTags(BitSet<MAX_TAGS> tags);
 
 	private:
 		godot::TypedArray<godot::StringName> m_gdTags;
-		std::vector<godot::StringName> m_GameplayTags;
 
-		sm::BitSet<TAG_BITSET_SIZE> m_TagsSet;
-		uint16 m_TagsStack[TAG_BITSET_SIZE];
+		sm::BitSet<MAX_TAGS> m_TagsSet;
+		uint16 m_TagsStack[MAX_TAGS] = {};
 	};
 }

@@ -120,7 +120,7 @@ float sm::AttributeContainer::GetAttributeBaseValue(AttributeID id)
 float sm::AttributeContainer::GetAttributeCurrentValue(AttributeID id)
 {
 	sm::GameplayAttribute* attr = FindAttribute(id);
-	
+
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
 	return attr->GetCurrent();
@@ -173,7 +173,6 @@ ModifierID sm::AttributeContainer::AddModifier(AttributeID id, godot::Ref<Modifi
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
 	ModifierID modID = attr->AddModifier(mod).id;
-
 	emit_signal("modifier_added", this, id, mod);
 
 	return modID;
@@ -191,8 +190,8 @@ void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<Modifier
 void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	attr->RemoveModifier(mod);
-	ERR_PRINT("added");
 
 	emit_signal("modifier_removed", this, id, mod);
 }
@@ -245,6 +244,7 @@ void sm::AttributeContainer::AddAttribute(godot::StringName id, float baseValue)
 void sm::AttributeContainer::ModifyAttribute(AttributeID id, float newValue)
 {
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
+	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	float oldValue = attr->GetBase();
 	attr->SetBase(newValue);
 

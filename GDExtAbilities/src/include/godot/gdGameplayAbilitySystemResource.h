@@ -30,16 +30,16 @@ namespace sm
 
 		virtual void OnPostInit()
 		{
-#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 			//ERR_PRINT(godot::vformat("Resource loaded: '%s'", get_class()));
-#endif // TOOLS_DEBUG_VS
+#endif // DEBUG_ENABLED
 		};
 
 		virtual void OnPreDelete()
 		{
-#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 			//ERR_PRINT(godot::vformat("Resource deleted: '%s'", get_class()));
-#endif // TOOLS_DEBUG_VS
+#endif // DEBUG_ENABLED
 		};
 
 		virtual void OnExtensionReloaded() {};

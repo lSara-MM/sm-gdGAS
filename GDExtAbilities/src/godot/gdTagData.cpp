@@ -44,7 +44,27 @@ void sm::TagData::SetName(godot::String value)
 void sm::TagData::SetPath(godot::String value)
 {
 	m_Path = value;
-	m_TagFullPath = m_Path + "." + m_Name;
+
+	if (value.is_empty())
+	{
+		m_TagFullPath = m_Name;
+	}
+	else
+	{
+		m_TagFullPath = m_Path + "." + m_Name;
+	}
+}
+
+void sm::TagData::AddChild(godot::Ref<TagData> child)
+{
+	m_Children.push_back(child);
+	UpdateChildrenParents();
+}
+
+void sm::TagData::RemoveChild(godot::Ref<TagData> child)
+{
+	m_Children.erase(child);
+	emit_changed();
 }
 
 void sm::TagData::SetTagFullPath(godot::String value)
@@ -60,6 +80,8 @@ void sm::TagData::SetChildren(const godot::TypedArray<TagData>& value)
 
 void sm::TagData::UpdateChildrenParents()
 {
+	emit_changed();
+
 	if (m_Children.is_empty())
 	{
 		return;
@@ -115,4 +137,16 @@ void sm::TagData::UpdateChildrenParents()
 			tagsStack.emplace_back(tagChild, root);
 		}
 	}
+}
+
+void sm::TagData::Reset()
+{
+	m_Name = "";
+	m_Path = "";
+	m_TagFullPath = godot::StringName();
+	m_InternalID = GameplayTag::INVALID_TAG;
+
+	m_Children.clear();
+
+	emit_changed();
 }

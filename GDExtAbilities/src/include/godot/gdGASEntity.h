@@ -36,7 +36,7 @@ namespace sm
 		void AddEffect(const godot::Ref<EffectData> gdEffect);
 
 		bool HandleTags(const godot::Ref<sm::EffectData>& gdEffect);
-		void RemoveTags(const BitSet<TAG_BITSET_SIZE> tags);
+		void RemoveTags(const BitSet<MAX_TAGS> tags);
 
 	private:
 		void OnExitTree() override;

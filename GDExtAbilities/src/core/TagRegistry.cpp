@@ -3,20 +3,21 @@
 #include "internal/smAssert.h"
 #include <regex>
 #include <sstream>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 //sm::TagRegistry::TagRegistry() : ROOT("<")
 //{
 //	auto& tag = m_Tags.emplace_back(GameplayTag(ROOT));
 //	m_NameToIndex[tag.GetUID()] = m_Tags.size() - 1;
 //
-//#ifdef TOOLS_DEBUG_VS
+//#ifdef DEBUG_ENABLED
 //	m_StdNameToID.try_emplace(ToStdString(ROOT), tag.GetUID());
-//#endif //  TOOLS_DEBUG_VS
+//#endif //  DEBUG_ENABLED
 //}
 //
 ////void sm::TagRegistry::_bind_methods()
 ////{
-////#ifdef EDITOR_MODE
+////#ifdef TOOLS_ENABLED
 ////	godot::ClassDB::bind_method(godot::D_METHOD("get_tag", "tag_name"), &GetTag);
 ////	godot::ClassDB::bind_method(godot::D_METHOD("get_parent", "tag_name"), &GetParent);
 ////	godot::ClassDB::bind_method(godot::D_METHOD("get_ascendants", "tag_name"), &GetAscendants);
@@ -30,7 +31,7 @@
 ////
 ////	godot::ClassDB::bind_method(godot::D_METHOD("rename_tag", "tagId", "newName"), &RenameTag);
 ////	godot::ClassDB::bind_method(godot::D_METHOD("is_name_valid", "tag_name"), &IsNameValid);
-////#endif // EDITOR_MODE
+////#endif // TOOLS_ENABLED
 ////
 ////	godot::ClassDB::bind_method(godot::D_METHOD("has_child", "tag_name", "child_name"), &HasChild);
 ////	godot::ClassDB::bind_method(godot::D_METHOD("has_descendant", "tag_name", "child_name"), &HasDescendant);
@@ -42,7 +43,7 @@
 ////		godot::PropertyInfo(godot::Variant::STRING_NAME, "new_name")));
 ////}
 
-//#ifdef EDITOR_MODE
+//#ifdef TOOLS_ENABLED
 //TagID sm::TagRegistry::GetTag(TagID tagID)
 //{
 //	GameplayTag* tag = GetGameplayTag(_GetFullID(tagID));
@@ -286,7 +287,7 @@
 //	m_DisplayNamesToID.try_emplace(newN, oldN);
 //	//emit_signal("tag_renamed", tagID, newN);
 //}
-//#endif // EDITOR_MODE
+//#endif // TOOLS_ENABLED
 //
 //sm::GameplayTag* sm::TagRegistry::GetGameplayTag(TagID tagID)
 //{
@@ -295,9 +296,9 @@
 //
 //const sm::GameplayTag* sm::TagRegistry::GetGameplayTag(TagID tagID) const
 //{
-//#ifdef TOOLS_DEBUG_VS
+//#ifdef DEBUG_ENABLED
 //	auto a = ToStdString(tagID);
-//#endif TOOLS_DEBUG_VS
+//#endif DEBUG_ENABLED
 //
 //	if (auto itr = m_NameToIndex.find(tagID); itr != m_NameToIndex.end())
 //	{
@@ -405,9 +406,9 @@
 //			break;
 //		}
 //
-//#ifdef TOOLS_DEBUG_VS
+//#ifdef DEBUG_ENABLED
 //		m_StdSuffixToFullPaths.try_emplace(ToStdString(prevRTag), ToStdString(fullName));
-//#endif //  TOOLS_DEBUG_VS
+//#endif //  DEBUG_ENABLED
 //
 //		prevRTag = "." + prevRTag;
 //	}
@@ -442,9 +443,9 @@
 //{
 //	godot::StringName full = tagID;
 //
-//#ifdef TOOLS_DEBUG_VS
+//#ifdef DEBUG_ENABLED
 //	auto a = ToStdString(tagID);
-//#endif //  TOOLS_DEBUG_VS
+//#endif //  DEBUG_ENABLED
 //
 //	if (auto itr = m_NameToIndex.find(tagID);
 //		itr == m_NameToIndex.end() && !tagID.begins_with(ROOT))
@@ -465,9 +466,9 @@
 //
 //	m_NameToIndex.try_emplace(fullName, m_Tags.size() - 1);
 //
-//#ifdef EDITOR_MODE
+//#ifdef TOOLS_ENABLED
 //	m_StdNameToID.try_emplace(ToStdString(fullName), newTag.GetUID());
-//#endif //  EDITOR_MODE
+//#endif //  TOOLS_ENABLED
 //
 //	newTag.m_ParentID = idParent;
 //
@@ -490,13 +491,22 @@
 
 sm::TagRegistry::TagRegistry()
 {
+	godot::StringName invalid("invalid");
+	GameplayTag newInvalidTag = GameplayTag(m_IDs.GenerateUID(), invalid);
+	m_TagsSet.Set(newInvalidTag.GetUID());
+	m_TagsDictionary.emplace(invalid, newInvalidTag.GetUID());
+
 	godot::StringName root(">");
 	GameplayTag newTag = GameplayTag(m_IDs.GenerateUID(), root);
 	m_TagsSet.Set(newTag.GetUID());
-
 	m_TagsDictionary.emplace(root, newTag.GetUID());
-	m_TagsDictionaryDebug.emplace(ToStdString(root), newTag.GetUID());
 
+#ifdef DEBUG_ENABLED
+	m_TagsDictionaryDebug.emplace(ToStdString(invalid), newInvalidTag.GetUID());
+	m_TagsDictionaryDebug.emplace(ToStdString(root), newTag.GetUID());
+#endif // DEBUG_ENABLED
+
+	m_Tags.push_back(std::move(newInvalidTag));
 	m_Tags.push_back(std::move(newTag));
 }
 
@@ -516,11 +526,7 @@ bool sm::TagRegistry::RegisterTags(const godot::TypedArray<sm::TagData>& tags)
 
 		GameplayTag* tag = CreateTag(tagData->GetTagFullPath(), tagData->GetPath());
 
-		if (!tag)
-		{
-			ERR_PRINT(godot::vformat("AddTag failed: Unknown tag '%s'", tagData->GetTagFullPath()));
-			continue;
-		}
+		ERR_CONTINUE_MSG(!tag, godot::vformat("AddTag failed: Unknown tag '%s'", tagData->GetTagFullPath()));
 
 		tagData->SetInternalID(tag->GetUID());
 
@@ -548,15 +554,13 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& fullName, c
 
 	if (!parentName.is_empty())
 	{
-		std::string a = ToStdString(parentName);
-
 		auto it = m_TagsDictionary.find(parentName);
 		parentTag = (it != m_TagsDictionary.end()) ? it->second : GameplayTag::INVALID_TAG;
 	}
 
 	ERR_FAIL_COND_V_MSG(parentTag == GameplayTag::INVALID_TAG, nullptr, godot::vformat("ParentTag does not exists: %s", parentName));
 
-	GameplayTag newTag = GameplayTag(m_IDs.GenerateUID(), fullName, parentTag);
+	GameplayTag& newTag = m_Tags.emplace_back(m_IDs.GenerateUID(), fullName, parentTag);
 	m_TagsSet.Set(newTag.GetUID());
 
 	// inspector idea:
@@ -568,10 +572,11 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& fullName, c
 
 	m_TagsDictionary.emplace(fullName, newTag.GetUID());
 
-	// TODO: Only on debug
+#ifdef DEBUG_ENABLED
 	m_TagsDictionaryDebug.emplace(ToStdString(fullName), newTag.GetUID());
+#endif // DEBUG_ENABLED
 
-	return &m_Tags.emplace_back(std::move(newTag));
+	return &newTag;
 }
 
 TagID sm::TagRegistry::FindTagID(const godot::StringName& name) const

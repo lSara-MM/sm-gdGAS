@@ -16,7 +16,7 @@ namespace sm
 		GAS_World* GetWorld() { return m_World; };
 		void SetWorld(GAS_World* world) { m_World = world; };
 
-		virtual void _notification(int notification)
+		virtual void _notification(int notification) final
 		{
 			switch (notification)
 			{

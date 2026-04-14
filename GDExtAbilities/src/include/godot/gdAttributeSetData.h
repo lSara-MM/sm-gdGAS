@@ -46,8 +46,8 @@ namespace sm
 	private:
 		godot::TypedArray<AttributeData> m_gdAttributes;
 
-#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 		std::vector<std::string> m_DebugNames;
-#endif //  TOOLS_DEBUG_VS
+#endif //  DEBUG_ENABLED
 	};
 }

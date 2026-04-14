@@ -65,7 +65,7 @@ void sm::GAS_Entity::OnReady()
 	}
 
 	m_ID = world->RegisterEntity(this);
-	
+
 	m_AttrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
 	m_TagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
 }
@@ -83,7 +83,7 @@ void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)
 void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 {
 	sm::GAS_World* world = sm::GAS_World::Instance();
-	
+
 	ERR_FAIL_NULL_MSG(world,
 		godot::vformat("AddEffect: Could not add '%s'. The EffectSystem was not found.",
 			gdEffect->GetName()));
@@ -169,7 +169,7 @@ bool sm::GAS_Entity::HandleTags(const godot::Ref<sm::EffectData>& gdEffect)
 	return true;
 }
 
-void sm::GAS_Entity::RemoveTags(const BitSet<TAG_BITSET_SIZE> tags)
+void sm::GAS_Entity::RemoveTags(const BitSet<MAX_TAGS> tags)
 {
 	m_TagContainer->RemoveTags(tags);
 }

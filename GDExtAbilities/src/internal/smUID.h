@@ -8,7 +8,7 @@ namespace sm
 	public:
 		uint32 GenerateUID()
 		{
-			return ++nextID;
+			return nextID++;
 		}
 
 		// Use carefully

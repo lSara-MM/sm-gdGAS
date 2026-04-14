@@ -25,13 +25,19 @@ namespace sm
 		void SetPath(godot::String value);
 
 		godot::String GetTagFullPath() const { return m_TagFullPath; };
-		void SetTagFullPath(godot::String value);
 
 		godot::TypedArray<TagData> GetChildren() const { return m_Children; };
 		void SetChildren(const godot::TypedArray<TagData>& value);
 
 		TagID GetInternalID() const { return m_InternalID; };
 		void SetInternalID(TagID value) { m_InternalID = value; };
+
+		void AddChild(godot::Ref<TagData> child);
+		void RemoveChild(godot::Ref<TagData> child);
+		void Reset();
+
+	private:
+		void SetTagFullPath(godot::String value);
 
 		void UpdateChildrenParents();
 

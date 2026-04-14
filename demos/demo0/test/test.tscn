@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dxvoh0h0g5o1n"]
+[gd_scene load_steps=14 format=3 uid="uid://dxvoh0h0g5o1n"]
 
 [ext_resource type="Script" uid="uid://c2hqcxvefpv18" path="res://test/test.gd" id="1_65205"]
 [ext_resource type="Script" uid="uid://sinqoekac5sb" path="res://test/tag_container.gd" id="1_errlg"]
@@ -29,8 +29,10 @@ name = &"6yu"
 [sub_resource type="AttributeData" id="AttributeData_aeque"]
 name = &"aaaaa"
 
+[sub_resource type="AttributeData" id="AttributeData_f6u32"]
+
 [sub_resource type="AttributeSetData" id="AttributeSetData_f6u32"]
-attributes = Array[AttributeData]([SubResource("AttributeData_s3n3v"), SubResource("AttributeData_kgdm3"), SubResource("AttributeData_aeque")])
+attributes = Array[AttributeData]([SubResource("AttributeData_s3n3v"), SubResource("AttributeData_kgdm3"), SubResource("AttributeData_aeque"), SubResource("AttributeData_f6u32")])
 
 [node name="Test" type="Node2D"]
 script = ExtResource("1_65205")

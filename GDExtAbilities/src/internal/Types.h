@@ -4,14 +4,6 @@
 #include <stdio.h>
 #include <string>
 
-#if defined(TOOLS_ENABLED) || defined(DEBUG_ENABLED)
-#define EDITOR_MODE
-#endif
-
-#if defined(_MSC_VER) && (defined(TOOLS_ENABLED) || defined(DEBUG_ENABLED))
-#define TOOLS_DEBUG_VS
-#endif // defined(_MSC_VER) && (defined(TOOLS_ENABLED) || defined(DEBUG_ENABLED))
-
 // NOTES: ERR_PRINT("Error. No para ejecucion, no return. Solo escribe consola");
 // NOTES: ERR_FAIL_COND_MSG(cond, "Error. Return de la funcion actual.");
 // NOTES: UtilityFunctions::push_error("Error. No para ejecucion, no return. Warning en editor");
@@ -49,7 +41,7 @@ using EffectInstanceID = uint32;
 using ModifierID = uint16;
 using TagID = uint32;
 
-inline constexpr size_t TAG_BITSET_SIZE = 1024;
+inline constexpr size_t MAX_TAGS = 1024;
 
 inline std::string ToStdString(const godot::StringName& sn)
 {

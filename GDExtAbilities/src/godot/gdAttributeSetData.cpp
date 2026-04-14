@@ -23,12 +23,12 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 {
 	m_gdAttributes = attr;
 
-#ifdef EDITOR_MODE
+#ifdef TOOLS_ENABLED
 	for (int64_t i = 0; i < attr.size(); i++)
 	{
 		const godot::Ref<AttributeData> attribute = attr[i];
 
-#ifdef TOOLS_DEBUG_VS
+#ifdef DEBUG_ENABLED
 		if (attribute.is_null())
 		{
 			m_DebugNames.push_back("<empty>");
@@ -37,7 +37,7 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 		{
 			m_DebugNames.push_back(ToStdString(attribute->GetName()));
 		}
-#endif //  TOOLS_DEBUG_VS
+#endif //  DEBUG_ENABLED
 
 		if (attribute.is_null())
 		{
@@ -49,7 +49,7 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 				this->_OnAttributeSetName(new_name);
 			});
 	}
-#endif // EDITOR_MODE
+#endif // TOOLS_ENABLED
 }
 
 void sm::AttributeSetData::AddAttribute(float baseValue, const godot::StringName& name)

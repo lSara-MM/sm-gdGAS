@@ -1,3 +1,4 @@
+#ifdef TOOLS_ENABLED
 #include "godot/ui/gdTagRegistryEditor.h"
 
 #include <godot_cpp/classes/accept_dialog.hpp>
@@ -14,11 +15,17 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
 #include <godot_cpp/classes/tree.hpp>
+#include <godot_cpp/classes/texture_rect.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/v_split_container.hpp>
+#include <godot_cpp/classes/check_box.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/margin_container.hpp>
 
 sm::TagRegistryEditor::TagRegistryEditor() : m_SettingsPath("GDExtAbilities/tag_registry_path")
-{}
+{
+	m_TagsCache.reserve(realMaxTags);
+}
 
 void sm::TagRegistryEditor::_bind_methods()
 {}
@@ -64,13 +71,31 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 
 	m_Picker = memnew(godot::EditorResourcePicker);
 	m_Picker->set_base_type("TagData");
-	m_Picker->connect("resource_changed", callable_mp(this, &TagRegistryEditor::_OnResourceChanged));
+	m_Picker->connect("resource_changed", callable_mp(this, &TagRegistryEditor::_OnRegistryResourceChanged));
 
 	m_TreeContainer->add_child(m_Picker);
 	m_MainSplit->add_child(m_TreeContainer);
+
+	auto editorSettings = get_editor_interface()->get_editor_settings();
+	godot::String resPath = editorSettings->get_setting(m_SettingsPath);
+
+	if (resPath.is_empty() || !godot::ResourceLoader::get_singleton()->exists(resPath))
+	{
+		editorSettings->erase(m_SettingsPath);
+	}
+	else
+	{
+		godot::Ref<TagData> resource = godot::ResourceLoader::get_singleton()->load(resPath);
+		if (resource.is_valid())
+		{
+			m_Picker->set_edited_resource(resource);
+			m_TagRegistry = resource;
+			CreateTree();
+		}
+	}
 }
 
-void sm::TagRegistryEditor::CreateTree(const godot::Ref<TagData> resource)
+void sm::TagRegistryEditor::CreateTree()
 {
 	if (m_Tree)
 	{
@@ -87,6 +112,9 @@ void sm::TagRegistryEditor::CreateTree(const godot::Ref<TagData> resource)
 
 		m_TreeContainer->add_child(m_Tree);
 		m_Tree->connect("button_clicked", callable_mp(this, &TagRegistryEditor::_OnButtonClicked));
+
+		// Don't allow direct edit to avoid dupes
+		//m_Tree->connect("item_edited", callable_mp(this, &TagRegistryEditor::_OnItemEdited));
 	}
 
 	godot::TreeItem* root = m_Tree->create_item();
@@ -95,24 +123,38 @@ void sm::TagRegistryEditor::CreateTree(const godot::Ref<TagData> resource)
 	root->add_button(1, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
 	root->add_button(1, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
 
-	std::vector<std::pair<godot::Ref<sm::TagData>, godot::TreeItem*>> stack;
-	stack.push_back({ resource, root });
+	CreateTag(m_TagRegistry, root);
+}
 
-	godot::TreeItem* treeTag = nullptr;
+void sm::TagRegistryEditor::CreateTag(const godot::Ref<sm::TagData>& resource, godot::TreeItem* parent)
+{
+	std::vector<std::pair<godot::Ref<sm::TagData>, godot::TreeItem*>> stack;
+	stack.push_back({ resource, parent });
 
 	while (!stack.empty())
 	{
 		std::pair<godot::Ref<sm::TagData>, godot::TreeItem*> tagPair = stack.back();
 		stack.pop_back();
 
-		treeTag = m_Tree->create_item(tagPair.second);
+		godot::TreeItem* treeTag = m_Tree->create_item(tagPair.second);
 		treeTag->set_text(0, tagPair.first->GetName());
+		treeTag->set_metadata(0, tagPair.first);
 		treeTag->set_tooltip_text(0, tagPair.first->GetTagFullPath());
+		treeTag->set_editable(0, false);
+
+		// Refresh tree when resource children change
+		auto cb = callable_mp(this, &TagRegistryEditor::CreateTree);
+		if (!tagPair.first->is_connected("changed", cb))
+		{
+			tagPair.first->connect("changed", cb);
+		}
 
 		treeTag->add_button(1, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
 
 		treeTag->add_button(1, m_Icons.edit, static_cast<int>(ButtonId::EDIT), false, "Rename tag.");
 		treeTag->add_button(1, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children.");
+
+		AddToCache(tagPair.first->GetTagFullPath());
 
 		godot::TypedArray<TagData> children = tagPair.first->GetChildren();
 		for (int i = 0; i < children.size(); i++)
@@ -122,7 +164,7 @@ void sm::TagRegistryEditor::CreateTree(const godot::Ref<TagData> resource)
 	}
 }
 
-void sm::TagRegistryEditor::_OnResourceChanged(const godot::Ref<godot::Resource> resource)
+void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::Resource> resource)
 {
 	auto editorSettings = get_editor_interface()->get_editor_settings();
 
@@ -132,6 +174,8 @@ void sm::TagRegistryEditor::_OnResourceChanged(const godot::Ref<godot::Resource>
 		m_Tree->clear();
 		return;
 	}
+
+	m_TagRegistry = resource;
 
 	godot::String path = resource->get_path();
 
@@ -147,16 +191,18 @@ void sm::TagRegistryEditor::_OnResourceChanged(const godot::Ref<godot::Resource>
 
 	get_editor_interface()->get_editor_settings()->set(m_SettingsPath, path);
 
-	godot::String resPath = editorSettings->get_setting(m_SettingsPath);
-
-	if (resPath.is_empty() || !godot::ResourceLoader::get_singleton()->exists(resPath))
+	// If it wasn't saved properly, fail
+	if (path.is_empty() || !godot::ResourceLoader::get_singleton()->exists(path))
 	{
 		editorSettings->erase(m_SettingsPath);
 		m_Tree->clear();
 		return;
 	}
 
-	CreateTree(resource);
+	godot::TreeItem* root = m_Tree->get_root();
+	root->set_metadata(0, resource);
+
+	CreateTree();
 }
 
 void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex)
@@ -165,45 +211,18 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 	{
 	case ButtonId::ADD:
 	{
-		godot::AcceptDialog* menu = memnew(godot::AcceptDialog);
-		menu->set_min_size(godot::Size2(300, 200));
-		menu->set_initial_position(godot::Window::WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN);
-		menu->set_title("Create new tag");
-		menu->add_cancel_button("Cancel");
-		menu->set_exclusive(true);
-
-		menu->connect("confirmed", callable_mp(this, &TagRegistryEditor::_OnCreateTagClicked).bind(menu));
-		menu->connect("canceled", godot::Callable(menu, "queue_free"));
-
-		m_TreeContainer->add_child(menu);
-		godot::VBoxContainer* popupBox = memnew(godot::VBoxContainer);
-		menu->add_child(popupBox);
-
-		godot::HBoxContainer* box = memnew(godot::HBoxContainer);
-		popupBox->add_child(box);
-
-		godot::Label* label = memnew(godot::Label);
-		label->set_text("New tag:");
-		box->add_child(label);
-
-		godot::LineEdit* newTagName = memnew(godot::LineEdit);
-		newTagName->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
-		box->add_child(newTagName);
-
-		godot::Label* labelResult = memnew(godot::Label);
-		labelResult->set_text("New tag:");
-		popupBox->add_child(labelResult);
-
-		newTagName->connect(
-			"text_changed",
-			callable_mp(this, &sm::TagRegistryEditor::_OnTagNameChanged).bind(labelResult, item)
-		);
-
-		menu->show();
+		AddTagButton(item);
 	}
 	break;
 	case ButtonId::DELETE_ALL:
 	{
+		godot::Ref<TagData> resource = item->get_metadata(0);
+
+		if (!resource->GetTagFullPath().is_empty())
+		{
+			resource->Reset();
+		}
+
 		m_Tree->clear();
 
 		godot::TreeItem* root = m_Tree->create_item();
@@ -215,7 +234,14 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 	break;
 	case ButtonId::DELETE_SELF:
 	{
-		memdelete(item);
+		if (m_DontShowAgain)
+		{
+			_OnDeleteTagClicked(item);
+		}
+		else
+		{
+			DeleteTagButton(item);
+		}
 	}
 	break;
 	case ButtonId::EDIT:
@@ -226,25 +252,223 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 	default:
 		break;
 	}
-
-	ERR_PRINT("button _OnButtonClicked");
 }
 
-void sm::TagRegistryEditor::_OnCreateTagClicked(godot::AcceptDialog* menu)
+void sm::TagRegistryEditor::AddTagButton(godot::TreeItem*& item)
 {
-	ERR_PRINT("button _OnCreateTagClicked");
+	godot::AcceptDialog* menu = memnew(godot::AcceptDialog);
+	menu->set_min_size(godot::Size2(300, 200));
+	menu->set_initial_position(godot::Window::WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN);
+	menu->set_title("Create new tag");
+	menu->add_cancel_button("Cancel");
+	menu->set_exclusive(true);
 
+	m_TreeContainer->add_child(menu);
+	godot::VBoxContainer* popupBox = memnew(godot::VBoxContainer);
+	menu->add_child(popupBox);
 
+	godot::HBoxContainer* box = memnew(godot::HBoxContainer);
+	popupBox->add_child(box);
 
-	/*godot::TreeItem* root = m_Tree->create_item();
-	root->set_text(0, "");*/
+	godot::Label* label = memnew(godot::Label);
+	label->set_text("New tag:");
+	box->add_child(label);
+
+	godot::LineEdit* newTagName = memnew(godot::LineEdit);
+	newTagName->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
+	box->add_child(newTagName);
+
+	godot::Label* labelResult = memnew(godot::Label);
+	labelResult->set_text("Full tag:");
+	popupBox->add_child(labelResult);
+
+	menu->connect("confirmed", callable_mp(this, &TagRegistryEditor::_OnCreateTagClicked).bind(newTagName, item, menu));
+
+	menu->connect("canceled", godot::Callable(menu, "queue_free"));
+
+	newTagName->connect(
+		"text_changed",
+		callable_mp(this, &sm::TagRegistryEditor::_OnTagNameChanged).bind(item, labelResult)
+	);
+
+	menu->show();
+}
+
+void sm::TagRegistryEditor::DeleteTagButton(godot::TreeItem*& item)
+{
+	godot::AcceptDialog* menu = memnew(godot::AcceptDialog);
+	menu->set_min_size(godot::Size2(300, 200));
+	menu->set_initial_position(godot::Window::WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN);
+	menu->add_cancel_button("Cancel");
+	menu->set_exclusive(true);
+
+	m_TreeContainer->add_child(menu);
+
+	godot::MarginContainer* margin = memnew(godot::MarginContainer);
+	margin->add_theme_constant_override("margin_left", 12);
+	margin->add_theme_constant_override("margin_right", 12);
+	margin->add_theme_constant_override("margin_top", 12);
+	margin->add_theme_constant_override("margin_bottom", 12);
+	menu->add_child(margin);
+
+	godot::VBoxContainer* vertical = memnew(godot::VBoxContainer);
+	margin->add_child(vertical);
+
+	godot::TextureRect* deleteImg = memnew(godot::TextureRect);
+	deleteImg->set_texture(m_Icons.remove);
+	deleteImg->set_expand_mode(godot::TextureRect::EXPAND_FIT_WIDTH);
+	deleteImg->set_stretch_mode(godot::TextureRect::STRETCH_KEEP_ASPECT_CENTERED);
+	deleteImg->set_custom_minimum_size(godot::Size2(80, 80));
+	vertical->add_child(deleteImg);
+
+	godot::Label* label = memnew(godot::Label);
+	label->set_text("Delete tag?");
+	label->set_horizontal_alignment(godot::HorizontalAlignment::HORIZONTAL_ALIGNMENT_CENTER);
+	label->add_theme_font_size_override("font_size", 24);
+	vertical->add_child(label);
+
+	godot::Label* labelDescription = memnew(godot::Label);
+	labelDescription->set_text("Your tag will be permanently deleted.\nThis includes unsaved tag children.");
+	labelDescription->set_horizontal_alignment(godot::HorizontalAlignment::HORIZONTAL_ALIGNMENT_CENTER);
+	vertical->add_child(labelDescription);
+
+	godot::MarginContainer* hMargin = memnew(godot::MarginContainer);
+	margin->add_theme_constant_override("margin_top", 24);
+	margin->add_theme_constant_override("margin_bottom", 12);
+	vertical->add_child(hMargin);
+
+	godot::HBoxContainer* checkBoxContainer = memnew(godot::HBoxContainer);
+	hMargin->add_child(checkBoxContainer);
+
+	godot::CheckBox* dontShowCheckbox = memnew(godot::CheckBox);
+	checkBoxContainer->add_child(dontShowCheckbox);
+	dontShowCheckbox->set_h_size_flags(godot::Control::SIZE_SHRINK_BEGIN);
+	dontShowCheckbox->set_v_size_flags(godot::Control::SIZE_SHRINK_CENTER);
+
+	godot::Label* labelCheckBox = memnew(godot::Label);
+	labelCheckBox->set_text("Don't ask again.");
+	checkBoxContainer->add_child(labelCheckBox);
+
+	menu->connect("confirmed", callable_mp(this, &TagRegistryEditor::_OnDeleteTagClicked).bind(item, dontShowCheckbox, menu));
+
+	menu->connect("canceled", godot::Callable(menu, "queue_free"));
+
+	menu->show();
+}
+
+void sm::TagRegistryEditor::SaveRegistryResource()
+{
+	auto editorSettings = get_editor_interface()->get_editor_settings();
+	godot::String registryPath = editorSettings->get_setting(m_SettingsPath);
+
+	if (!registryPath.is_empty() && m_TagRegistry.is_valid())
+	{
+		godot::ResourceSaver::get_singleton()->save(m_TagRegistry, registryPath);
+	}
+}
+
+//void sm::TagRegistryEditor::_OnItemEdited()
+//{
+//	godot::TreeItem* edited = m_Tree->get_edited();
+//
+//
+//}
+
+void sm::TagRegistryEditor::_OnCreateTagClicked(godot::LineEdit* newText, godot::TreeItem* parentItem, godot::AcceptDialog* menu)
+{
+	ERR_FAIL_COND_MSG((!newText || !parentItem || !menu), "CreateTag failed: Null references");
+
+	godot::Ref<sm::TagData> data;
+	data.instantiate();
+	data->SetName(newText->get_text());
+
+	godot::Ref<sm::TagData> parentData = parentItem->get_metadata(0);
+
+	ERR_FAIL_COND_MSG(parentData.is_null(), "CreateTag failed: Tag parent null");
+
+	data->SetPath(parentData->GetTagFullPath());
+
+	godot::String registryPath = get_editor_interface()->get_editor_settings()->get(m_SettingsPath);
+
+	if (HasTagInCache(data->GetTagFullPath()))
+	{
+		ERR_FAIL_MSG("CreateTag failed: Tag already exists");
+	}
+
+	if (!registryPath.is_empty())
+	{
+		godot::ResourceSaver::get_singleton()->save(m_TagRegistry, registryPath);
+	}
+
+	parentData->AddChild(data);
+
+	CreateTag(data, parentItem);
 
 	menu->queue_free();
 }
 
-void sm::TagRegistryEditor::_OnTagNameChanged(const godot::String& newText, godot::LineEdit* result, godot::TreeItem* item)
+void sm::TagRegistryEditor::_OnTagNameChanged(const godot::String& newText, godot::TreeItem* item, godot::Label* labelResult)
 {
+	godot::Ref<TagData> resource = item->get_metadata(0);
 
+	godot::String path;
+
+	if (resource->GetTagFullPath().is_empty())
+	{
+		path = newText;
+	}
+	else
+	{
+		path = resource->GetPath() + "." + newText;
+	}
+
+	if (HasTagInCache(path))
+	{
+		labelResult->set_text(godot::vformat("Full tag: %s\nWarning: This tag already exists", path));
+
+		return;
+	}
+
+	resource->SetName(newText);
+
+	SaveRegistryResource();
+}
+
+void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::CheckBox* checkbox, godot::AcceptDialog* menu)
+{
+	if (checkbox)
+	{
+		m_DontShowAgain = checkbox->is_pressed();
+	}
+
+	godot::Ref<TagData> resource = item->get_metadata(0);
+	godot::Ref<TagData> parentResource = item->get_parent()->get_metadata(0);
+	parentResource->RemoveChild(resource);
+
+	SaveRegistryResource();
+
+	memdelete(item);
+	menu->queue_free();
+}
+
+void sm::TagRegistryEditor::AddToCache(const godot::String& tag)
+{
+	ERR_FAIL_COND_MSG(m_TagsCache.size() == realMaxTags, "Tag count exceeds the number of tags allowed.");
+
+	m_TagsCache.push_back(tag);
+}
+
+bool sm::TagRegistryEditor::HasTagInCache(const godot::String& tag)
+{
+	for (auto tagToCheck : m_TagsCache)
+	{
+		if (tagToCheck == tag)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void sm::TagRegistryEditor::DeleteTree()
@@ -256,3 +480,5 @@ void sm::TagRegistryEditor::DeleteTree()
 		m_Tree = nullptr;
 	}
 }
+
+#endif // TOOLS_ENABLED
