@@ -90,12 +90,12 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 		{
 			m_Picker->set_edited_resource(resource);
 			m_TagRegistry = resource;
-			CreateTree();
+			CreateOrUpdateTree();
 		}
 	}
 }
 
-void sm::TagRegistryEditor::CreateTree()
+void sm::TagRegistryEditor::CreateOrUpdateTree()
 {
 	if (m_Tree)
 	{
@@ -143,7 +143,7 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<sm::TagData>& resource, g
 		treeTag->set_editable(0, false);
 
 		// Refresh tree when resource children change
-		auto cb = callable_mp(this, &TagRegistryEditor::CreateTree);
+		auto cb = callable_mp(this, &TagRegistryEditor::CreateOrUpdateTree);
 		if (!tagPair.first->is_connected("changed", cb))
 		{
 			tagPair.first->connect("changed", cb);
@@ -202,7 +202,7 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 	godot::TreeItem* root = m_Tree->get_root();
 	root->set_metadata(0, resource);
 
-	CreateTree();
+	CreateOrUpdateTree();
 }
 
 void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex)

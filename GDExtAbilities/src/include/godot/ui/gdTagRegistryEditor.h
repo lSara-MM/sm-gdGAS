@@ -48,16 +48,16 @@ namespace sm
 		};
 
 	public:
+		TagRegistryEditor();
+		~TagRegistryEditor() = default;
+
 		void _enter_tree() override;
 		void _exit_tree() override;
 
 		void _make_visible(bool visible) override;
 
-		TagRegistryEditor();
-		~TagRegistryEditor() = default;
-
 		void CreateTreeBoxContainer();
-		void CreateTree();
+		void CreateOrUpdateTree();
 		void CreateTag(const godot::Ref<sm::TagData>& resource, godot::TreeItem* parent);
 
 		void DeleteTree();
@@ -101,6 +101,7 @@ namespace sm
 
 		std::vector<godot::String> m_TagsCache;
 
+		bool m_WasActive = false;
 		bool m_DontShowAgain = false;
 	};
 }
