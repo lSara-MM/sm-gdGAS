@@ -75,7 +75,11 @@ namespace sm
 
 		void _OnRegistryResourceChanged(const godot::Ref<godot::Resource> resource);
 
+		void _OnRegistryResourceSelected(const godot::Ref<godot::Resource> resource, bool inspect);
+
 		void _OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex);
+
+		void _OnItemSelected();
 
 		void _OnItemEdited();
 
@@ -100,6 +104,8 @@ namespace sm
 		godot::VSplitContainer* m_MainSplit = nullptr;
 		godot::VBoxContainer* m_TreeContainer = nullptr;
 		godot::VBoxContainer* m_InfoContainer = nullptr;
+
+		// Tree
 		godot::Tree* m_Tree = nullptr;
 		godot::EditorResourcePicker* m_Picker = nullptr;
 		godot::FileSystemDock* m_FileSystemDock = nullptr;
@@ -116,6 +122,8 @@ namespace sm
 #endif // DEBUG_ENABLED
 
 		bool m_DontShowAgain = false;
+
+		// Info
 	};
 }
 

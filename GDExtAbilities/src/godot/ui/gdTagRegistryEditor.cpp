@@ -135,6 +135,7 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 	m_Picker = memnew(godot::EditorResourcePicker);
 	m_Picker->set_base_type("TagData");
 	m_Picker->connect("resource_changed", callable_mp(this, &TagRegistryEditor::_OnRegistryResourceChanged));
+	m_Picker->connect("resource_selected", callable_mp(this, &TagRegistryEditor::_OnRegistryResourceSelected));
 
 	m_TreeContainer->add_child(m_Picker);
 	m_MainSplit->add_child(m_TreeContainer);
@@ -177,10 +178,12 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 		m_Tree->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 		m_Tree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
 		m_Tree->set_custom_minimum_size(godot::Size2(200, 300));
-		m_Tree->set_columns(2);
+		m_Tree->set_columns(1);
 
 		m_TreeContainer->add_child(m_Tree);
 		m_Tree->connect("button_clicked", callable_mp(this, &TagRegistryEditor::_OnButtonClicked));
+
+		m_Tree->connect("item_selected", callable_mp(this, &TagRegistryEditor::_OnItemSelected));
 
 		// Don't allow direct edit to avoid dupes
 		//m_Tree->connect("item_edited", callable_mp(this, &TagRegistryEditor::_OnItemEdited));
@@ -190,8 +193,8 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 	root->set_text(0, "Tags");
 	root->set_tooltip_text(0, "Root tag");
 	root->set_metadata(0, m_TagRegistry);
-	root->add_button(1, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
-	root->add_button(1, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
+	root->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
+	root->add_button(0, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
 
 	CreateTag(m_TagRegistry, root);
 }
@@ -219,10 +222,10 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<sm::TagData> resource, go
 			tagPair.first->connect("changed", cb);
 		}
 
-		treeTag->add_button(1, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
+		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
 
-		treeTag->add_button(1, m_Icons.edit, static_cast<int>(ButtonId::EDIT), false, "Rename tag.");
-		treeTag->add_button(1, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children.");
+		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::EDIT), false, "Rename tag.");
+		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children.");
 
 		AddToCache(tagPair.first->GetTagFullPath());
 
@@ -273,6 +276,14 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 	CreateOrUpdateTree();
 }
 
+void sm::TagRegistryEditor::_OnRegistryResourceSelected(const godot::Ref<godot::Resource> resource, bool inspect)
+{
+	if (resource.is_valid())
+	{
+		get_editor_interface()->inspect_object(resource.ptr());
+	}
+}
+
 void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex)
 {
 	switch (static_cast<ButtonId>(id))
@@ -297,8 +308,8 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 		godot::TreeItem* root = m_Tree->create_item();
 		root->set_text(0, "Tags");
 		root->set_tooltip_text(0, "Root tag");
-		root->add_button(1, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
-		root->add_button(1, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
+		root->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
+		root->add_button(0, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
 	}
 	break;
 	case ButtonId::DELETE_SELF:
@@ -321,6 +332,19 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 	default:
 		break;
 	}
+}
+
+void sm::TagRegistryEditor::_OnItemSelected()
+{
+	godot::TreeItem* item = m_Tree->get_selected();
+	if (!item)
+	{
+		return;
+	}
+
+	// TODO: Info panel. Should show: 
+	// Parent tag
+	// Number of children and reference to them probably
 }
 
 void sm::TagRegistryEditor::AddTagButton(godot::TreeItem* item)
