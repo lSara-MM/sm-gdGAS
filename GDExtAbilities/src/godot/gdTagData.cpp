@@ -64,7 +64,7 @@ void sm::TagData::AddChild(godot::Ref<TagData> child)
 void sm::TagData::RemoveChild(godot::Ref<TagData> child)
 {
 	m_Children.erase(child);
-	emit_changed();
+	//emit_changed();
 }
 
 void sm::TagData::SetTagFullPath(godot::String value)
