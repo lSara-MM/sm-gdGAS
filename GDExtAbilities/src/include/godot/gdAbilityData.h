@@ -41,7 +41,6 @@ namespace sm
 	private:
 		AbilityData();
 		~AbilityData() = default;
-
 		//void _OnAbilityName(godot::StringName newName);
 
 	private:

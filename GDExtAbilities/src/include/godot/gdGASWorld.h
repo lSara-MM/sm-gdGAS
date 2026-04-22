@@ -16,6 +16,7 @@ namespace sm
 	private:
 		GAS_World();
 		GAS_World(const GAS_World&) = delete;
+		~GAS_World() = default;
 
 	public:
 		static GAS_World* Instance()

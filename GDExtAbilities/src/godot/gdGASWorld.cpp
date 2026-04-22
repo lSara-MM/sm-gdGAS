@@ -1,6 +1,7 @@
 #include "godot/gdGASWorld.h"
 
 #include "core/EffectSystem.h"
+#include <godot_cpp/classes/engine.hpp>
 
 namespace sm
 {
@@ -33,7 +34,7 @@ void sm::GAS_World::_bind_methods()
 
 void sm::GAS_World::OnEnterTree()
 {
-	if (GAS_World::Instance())
+	if (m_Instance && m_Instance != this)
 	{
 		queue_free();
 		ERR_FAIL_MSG("GAS: Only one GAS_World allowed.");
@@ -45,13 +46,17 @@ void sm::GAS_World::OnEnterTree()
 void sm::GAS_World::OnExitTree()
 {
 	m_Entities.clear();
-	m_Instance = nullptr;
+
+	if (m_Instance == this)
+	{
+		m_Instance = nullptr;
+	}
 }
 
 void sm::GAS_World::OnReady()
 {
 	set_process(true);
-	
+
 	if (enableEffects && !m_EffectsSystem)
 	{
 		m_EffectsSystem = std::make_unique<EffectSystem>();

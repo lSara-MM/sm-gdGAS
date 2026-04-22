@@ -19,8 +19,11 @@ namespace sm
 
 		void _ready();
 
-		godot::TypedArray<godot::StringName> GetTags() const { return m_gdTags; };
-		void SetTags(const godot::TypedArray<godot::StringName>& tags) { m_gdTags = tags; };
+		//godot::TypedArray<godot::StringName> GetTags() const { return m_gdTags; };
+		//void SetTags(const godot::TypedArray<godot::StringName>& tags) { m_gdTags = tags; };
+
+		godot::TypedArray<TagData> GetTags() const { return m_gdTags; };
+		void SetTags(const godot::TypedArray<TagData>& tags) { m_gdTags = tags; };
 
 		void AddTag(const godot::Ref<TagData>& tag);
 		void AddTagFromPath(const godot::String& tag);
@@ -39,7 +42,8 @@ namespace sm
 		void RemoveTags(BitSet<MAX_TAGS> tags);
 
 	private:
-		godot::TypedArray<godot::StringName> m_gdTags;
+		//godot::TypedArray<godot::StringName> m_gdTags;
+		godot::TypedArray<TagData> m_gdTags;
 
 		sm::BitSet<MAX_TAGS> m_TagsSet;
 		uint16 m_TagsStack[MAX_TAGS] = {};

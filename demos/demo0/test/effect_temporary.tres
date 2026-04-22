@@ -1,4 +1,4 @@
-[gd_resource type="EffectData" load_steps=3 format=3 uid="uid://bafwf04i2qdak"]
+[gd_resource type="EffectData" load_steps=4 format=3 uid="uid://bafwf04i2qdak"]
 
 [sub_resource type="ModifierData" id="ModifierData_ki2fl"]
 target_id = &"Health"
@@ -8,7 +8,10 @@ value = -20.0
 target_id = &"Health"
 value = 3.0
 
+[sub_resource type="TagData" id="TagData_ki2fl"]
+
 [resource]
 effect_type = 1
 duration = 20.0
 modifiers = Array[ModifierData]([SubResource("ModifierData_ki2fl"), SubResource("ModifierData_jbyqi")])
+tags_to_remove = Array[TagData]([SubResource("TagData_ki2fl")])

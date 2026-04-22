@@ -31,7 +31,7 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectID effectID)
 		}
 	);
 
-	return (it != m_ActiveEffects.end()) ? it._Ptr : nullptr;
+	return (it != m_ActiveEffects.end()) ? &(*it) : nullptr;
 }
 
 void sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
@@ -68,7 +68,7 @@ void sm::EffectSystem::RemoveEffect(GameplayEffect& effect)
 
 	GAS_Entity* entity = world->GetEntity(effect.GetTargetID());
 	SM_ASSERT(entity != nullptr, "Critical error: Could not remove effect. Entity %d was not found.", effect.GetTargetID());
-	
+
 	RemoveEffectModifiers(entity, effect);
 
 	entity->RemoveTags(effect.GetTagsToAdd());

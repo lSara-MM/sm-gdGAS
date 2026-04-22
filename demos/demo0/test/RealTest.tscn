@@ -1,0 +1,61 @@
+[gd_scene load_steps=14 format=3 uid="uid://c1paa8dc7dn22"]
+
+[sub_resource type="AttributeData" id="AttributeData_nd0oo"]
+name = &"CurrentHealth"
+
+[sub_resource type="AttributeData" id="AttributeData_k62bo"]
+name = &"MaxHealth"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_ec8nx"]
+name = &"Atk"
+base_value = 10.0
+
+[sub_resource type="AttributeData" id="AttributeData_681wa"]
+name = &"Def"
+base_value = 5.0
+
+[sub_resource type="AttributeSetData" id="AttributeSetData_ac4bk"]
+attributes = Array[AttributeData]([SubResource("AttributeData_nd0oo"), SubResource("AttributeData_k62bo"), SubResource("AttributeData_ec8nx"), SubResource("AttributeData_681wa")])
+
+[sub_resource type="TagData" id="TagData_nd0oo"]
+name = "Melee"
+path = "Entity.Enemy"
+
+[sub_resource type="TagData" id="TagData_k62bo"]
+name = "Enemy"
+path = "Entity"
+children = Array[TagData]([SubResource("TagData_nd0oo")])
+
+[sub_resource type="TagData" id="TagData_ec8nx"]
+name = "Entity"
+children = Array[TagData]([SubResource("TagData_k62bo")])
+
+[sub_resource type="TagData" id="TagData_681wa"]
+name = "Fire"
+path = "Race.Elemental"
+
+[sub_resource type="TagData" id="TagData_ac4bk"]
+name = "Elemental"
+path = "Race"
+children = Array[TagData]([SubResource("TagData_681wa")])
+
+[sub_resource type="TagData" id="TagData_brci8"]
+name = "Race"
+children = Array[TagData]([SubResource("TagData_ac4bk")])
+
+[sub_resource type="TagData" id="TagData_cjqce"]
+name = "Low"
+path = "Dangerous"
+
+[sub_resource type="TagData" id="TagData_ju53t"]
+name = "Dangerous"
+children = Array[TagData]([SubResource("TagData_cjqce")])
+
+[node name="RealTest" type="Node2D"]
+
+[node name="AttributeContainer" type="AttributeContainer" parent="."]
+attribute_set = SubResource("AttributeSetData_ac4bk")
+
+[node name="TagContainer" type="TagContainer" parent="."]
+tags = Array[TagData]([SubResource("TagData_ec8nx"), SubResource("TagData_brci8"), SubResource("TagData_ju53t")])

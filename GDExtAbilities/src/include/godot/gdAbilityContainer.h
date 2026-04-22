@@ -26,6 +26,9 @@ namespace sm
 		AbilityContainer() = default;
 		~AbilityContainer() = default;
 
+		void OnReady() override;
+		void OnExitTree() override;
+
 	private:
 		godot::TypedArray<AbilityData> m_gdAbilities;
 	};

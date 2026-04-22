@@ -20,6 +20,7 @@ void sm::GAS_Entity::SetID(EntityID id)
 		m_ID = id;
 	}
 }
+
 void sm::GAS_Entity::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_container"), &GetAttributeContainer);
@@ -52,6 +53,12 @@ void sm::GAS_Entity::OnExitTree()
 {
 	m_AttrContainer = nullptr;
 	m_TagContainer = nullptr;
+
+	sm::GAS_World* world = sm::GAS_World::Instance();
+	if (!world)
+	{
+		world->UnregisterEntity(this);
+	}
 }
 
 void sm::GAS_Entity::OnReady()
