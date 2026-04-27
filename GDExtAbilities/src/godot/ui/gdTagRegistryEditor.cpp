@@ -2,6 +2,7 @@
 #include "godot/ui/gdTagRegistryEditor.h"
 
 #include <godot_cpp/classes/accept_dialog.hpp>
+#include <godot_cpp/classes/check_box.hpp>
 #include <godot_cpp/classes/control.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/editor_file_system.hpp>
@@ -19,7 +20,6 @@
 #include <godot_cpp/classes/tree.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/v_split_container.hpp>
-#include <godot_cpp/classes/check_box.hpp>
 
 sm::TagRegistryEditor::TagRegistryEditor() : m_SettingsPath("GDExtAbilities/tag_registry_path")
 {

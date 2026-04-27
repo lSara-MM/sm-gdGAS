@@ -1,24 +1,21 @@
 #include "godot/gdGameplayAbility.h"
 
+#include "godot/gdAttributeContainer.h"
+
 void sm::GameplayAbility::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &GetAbilityData);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_data", "data"), &SetAbilityData);
-
-
 }
 
 void sm::GameplayAbility::Grant()
-{
-}
+{}
 
 void sm::GameplayAbility::Revoke()
-{
-}
+{}
 
 void sm::GameplayAbility::CleanUp()
-{
-}
+{}
 
 bool sm::GameplayAbility::TryActivate()
 {
@@ -48,10 +45,10 @@ bool sm::GameplayAbility::CheckCost()
 bool sm::GameplayAbility::CheckTags()
 {
 	const TagContainer* tagContainer = m_Entity->GetTagContainer();
-	
+
 	/*if (tagContainer)
 	{
-		
+
 	}*/
 
 	return false;

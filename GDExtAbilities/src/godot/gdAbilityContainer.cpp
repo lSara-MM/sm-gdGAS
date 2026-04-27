@@ -4,8 +4,17 @@
 
 void sm::AbilityContainer::_bind_methods()
 {
+	godot::ClassDB::bind_method(godot::D_METHOD("get_entity_node_path"), &GetEntityNodePath);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_entity_node_path", "path"), &SetEntityNodePath);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities"), &GetAbilities);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities", "abilities"), &SetAbilities);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::NODE_PATH,
+		"entity_node_path", godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "GAS_Entity"),
+		"set_entity_node_path", "get_entity_node_path"
+	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::ARRAY,
@@ -23,14 +32,30 @@ void sm::AbilityContainer::SetAbilities(const godot::TypedArray<sm::AbilityData>
 
 void sm::AbilityContainer::OnReady()
 {
-	sm::GAS_World* world = sm::GAS_World::Instance();
+	GAS_Entity* entity = GetParentNodeOfType<GAS_Entity>(this);
 
-	if (!world)
+	if (!entity)
 	{
 		queue_free();
-		ERR_FAIL_MSG("Could not create AbilityContainer. GAS_World Node required");
+		ERR_FAIL_MSG("Could not create AbilityContainer. Node must be in a GAS_Entity node hierarchy.");
 	}
+
+	m_EntityNodePath = entity->get_path();
 }
 
 void sm::AbilityContainer::OnExitTree()
-{}
+{
+	m_WorldBound.OnExitTree();
+}
+
+godot::NodePath sm::AbilityContainer::GetEntityNodePath() const
+{
+	return m_EntityNodePath;
+}
+
+void sm::AbilityContainer::SetEntityNodePath(godot::NodePath path)
+{
+	ERR_FAIL_COND_MSG(path.is_empty(), "Could not set node path. Node must be in a GAS_Entity node hierarchy.");
+
+	m_EntityNodePath = path;
+}

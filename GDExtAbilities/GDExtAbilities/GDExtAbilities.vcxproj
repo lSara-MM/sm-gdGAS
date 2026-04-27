@@ -351,6 +351,7 @@
     <ClInclude Include="..\src\include\core\GameplayModifier.h" />
     <ClInclude Include="..\src\include\core\GameplayTag.h" />
     <ClInclude Include="..\src\include\core\TagRegistry.h" />
+    <ClInclude Include="..\src\include\godot\GASWorldBound.h" />
     <ClInclude Include="..\src\include\godot\gdAbilityContainer.h" />
     <ClInclude Include="..\src\include\godot\gdAbilityData.h" />
     <ClInclude Include="..\src\include\godot\gdAttribute.h" />
@@ -383,6 +384,7 @@
     <ClCompile Include="..\src\core\GameplayModifier.cpp" />
     <ClCompile Include="..\src\core\TagRegistry.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
+    <ClCompile Include="..\src\godot\GASWorldBound.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityContainer.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityData.cpp" />
     <ClCompile Include="..\src\godot\gdAttribute.cpp" />
@@ -398,6 +400,7 @@
     <ClCompile Include="..\src\godot\gdTagData.cpp" />
     <ClCompile Include="..\src\godot\gdTagRegistry.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp" />
+    <ClCompile Include="..\src\include\godot\gdGameplayAbilitySystemNode.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

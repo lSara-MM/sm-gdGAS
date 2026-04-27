@@ -19,10 +19,10 @@ namespace sm
 		~TagData() = default;
 
 		godot::String GetName() const { return m_Name; };
-		void SetName(godot::String value);
+		void SetName(const godot::String& value);
 
 		godot::String GetPath() const { return m_Path; };
-		void SetPath(godot::String value);
+		void SetPath(const godot::String& value);
 
 		godot::String GetTagFullPath() const { return m_TagFullPath; };
 

@@ -34,14 +34,14 @@ void sm::TagData::_bind_methods()
 	);
 }
 
-void sm::TagData::SetName(godot::String value)
+void sm::TagData::SetName(const godot::String& value)
 {
 	m_Name = value;
 
 	UpdateChildrenParents();
 }
 
-void sm::TagData::SetPath(godot::String value)
+void sm::TagData::SetPath(const godot::String& value)
 {
 	m_Path = value;
 

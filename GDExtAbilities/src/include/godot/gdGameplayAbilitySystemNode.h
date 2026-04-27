@@ -1,5 +1,6 @@
 #pragma once
 #include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
 
 namespace sm
 {
@@ -13,37 +14,108 @@ namespace sm
 		static void _bind_methods() {};
 
 	public:
-		GAS_World* GetWorld() { return m_World; };
-		void SetWorld(GAS_World* world) { m_World = world; };
-
-		virtual void _notification(int notification) final
-		{
-			switch (notification)
-			{
-			case NOTIFICATION_ENTER_TREE:
-				OnEnterTree();
-				break;
-			case NOTIFICATION_EXIT_TREE:
-				OnExitTree();
-				break;
-			case NOTIFICATION_READY:
-				OnReady();
-				break;
-			case NOTIFICATION_PROCESS:
-				OnProcess();
-				break;
-			}
-		};
+		virtual void _notification(int notification) final;
 
 		virtual void OnEnterTree() {};
-		virtual void OnExitTree()
-		{
-			//print_orphan_nodes();
-		};
+		virtual void OnExitTree() {};
 		virtual void OnReady() {};
 		virtual void OnProcess() {};
+		virtual void OnParented() {};
+		virtual void OnUnparented() {};
 
-	private:
-		GAS_World* m_World = nullptr;
+		godot::Node* GetActiveSceneRootOrWorld(godot::Node* owner);
+
+		template <typename T>
+		static T* GetParentNodeOfType(godot::Node* target)
+		{
+			if (!target)
+			{
+				return nullptr;
+			}
+
+			godot::Node* parent = target->get_parent();
+
+			while (parent)
+			{
+				if (T* typed = godot::Object::cast_to<T>(parent))
+				{
+					return typed;
+				}
+
+				parent = parent->get_parent();
+			}
+
+			return nullptr;
+		}
+
+		template <typename T>
+		static T* GetChildNodeOfType(godot::Node* target)
+		{
+			if (!target)
+			{
+				return nullptr;
+			}
+
+			std::vector<godot::Node*> nodesStack;
+			for (int i = 0; i < target->get_child_count(); ++i)
+			{
+				nodesStack.push_back(target->get_child(i));
+			}
+
+			while (!nodesStack.empty())
+			{
+				godot::Node* currentNode = nodesStack.back();
+				nodesStack.pop_back();
+
+				T* typed = godot::Object::cast_to<T>(currentNode);
+				if (typed)
+				{
+					return typed;
+				}
+
+				for (int i = 0; i < currentNode->get_child_count(); ++i)
+				{
+					nodesStack.push_back(currentNode->get_child(i));
+				}
+			}
+
+			return nullptr;
+		}
+
+		template <typename T>
+		static std::vector<T*> GetAllChildNodesOfType(godot::Node* target)
+		{
+			std::vector<T*> nodesOfType;
+
+			if (!target)
+			{
+				return nodesOfType;
+			}
+
+			std::vector<godot::Node*> nodesStack;
+			for (int i = 0; i < target->get_child_count(); ++i)
+			{
+				nodesStack.push_back(target->get_child(i));
+			}
+
+			while (!nodesStack.empty())
+			{
+				godot::Node* currentNode = nodesStack.back();
+				nodesStack.pop_back();
+
+				T* typed = godot::Object::cast_to<T>(currentNode);
+				if (typed)
+				{
+					nodesOfType.push_back(typed);
+				}
+
+				for (int i = 0; i < currentNode->get_child_count(); ++i)
+				{
+					nodesStack.push_back(currentNode->get_child(i));
+				}
+			}
+
+			return nodesOfType;
+		}
 	};
 }

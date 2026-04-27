@@ -5,12 +5,13 @@
 namespace sm
 {
 	class GAS_Entity;
+	class GAS_World;
 
 	class EffectSystem : public GameplaySystem
 	{
 
 	public:
-		EffectSystem() = default;
+		explicit EffectSystem(GAS_World* world) : m_World(world) {}
 		~EffectSystem() = default;
 		void Update(float dt) override;
 
@@ -30,6 +31,7 @@ namespace sm
 		DumbUID m_EffectsID;
 
 	private:
+		GAS_World* m_World = nullptr;
 		std::vector<GameplayEffect> m_ActiveEffects;
 	};
 }

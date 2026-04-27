@@ -1,6 +1,8 @@
 #include "godot/gdGASEntity.h"
 
 #include "godot/gdGASWorld.h"
+#include "godot/gdAttributeContainer.h"
+#include "godot/gdTagContainer.h"
 #include "core/EffectSystem.h"
 #include "core/GameplayEffect.h"
 
@@ -13,16 +15,10 @@ sm::GAS_Entity::~GAS_Entity()
 	m_TagContainer = nullptr;
 }
 
-void sm::GAS_Entity::SetID(EntityID id)
-{
-	if (m_ID == 0)
-	{
-		m_ID = id;
-	}
-}
-
 void sm::GAS_Entity::_bind_methods()
 {
+	godot::ClassDB::bind_method(godot::D_METHOD("init_entity"), &Init);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_container"), &GetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attribute_container", "node"), &SetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_node_path"), &GetAttributeContainerNodePath);
@@ -49,32 +45,50 @@ void sm::GAS_Entity::_bind_methods()
 	);
 }
 
+void sm::GAS_Entity::OnEnterTree()
+{
+	call_deferred("init_entity");
+}
+
 void sm::GAS_Entity::OnExitTree()
 {
 	m_AttrContainer = nullptr;
 	m_TagContainer = nullptr;
 
-	sm::GAS_World* world = sm::GAS_World::Instance();
-	if (!world)
+	sm::GAS_World* world = m_WorldBound.GetWorld(this);
+	if (world)
 	{
 		world->UnregisterEntity(this);
 	}
+
+	m_WorldBound.OnExitTree();
 }
 
 void sm::GAS_Entity::OnReady()
 {
-	sm::GAS_World* world = sm::GAS_World::Instance();
+	m_AttrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
+	m_TagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
+}
+
+void sm::GAS_Entity::Init()
+{
+	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this);
 
 	if (!world)
 	{
 		queue_free();
-		ERR_FAIL_MSG("Could not create Entity. GAS_World Node required");
+		ERR_FAIL_MSG("Could not create Entity. GAS_World Node required.");
 	}
 
 	m_ID = world->RegisterEntity(this);
+}
 
-	m_AttrContainer = godot::Object::cast_to<AttributeContainer>(get_node_or_null(attrContainerNodePath));
-	m_TagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
+void sm::GAS_Entity::SetID(EntityID id)
+{
+	if (m_ID != 0)
+	{
+		m_ID = id;
+	}
 }
 
 void sm::GAS_Entity::SetAttributeContainerNodePath(godot::NodePath path)
@@ -89,7 +103,7 @@ void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)
 
 void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 {
-	sm::GAS_World* world = sm::GAS_World::Instance();
+	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this);
 
 	ERR_FAIL_NULL_MSG(world,
 		godot::vformat("AddEffect: Could not add '%s'. The EffectSystem was not found.",

@@ -1,6 +1,9 @@
 #pragma once
 #include "godot/gdGameplayAbilitySystemNode.h"
 #include "godot/gdGASEntity.h"
+#include "internal/smUID.h"
+
+#include <unordered_set>
 
 namespace sm
 {
@@ -19,10 +22,7 @@ namespace sm
 		~GAS_World() = default;
 
 	public:
-		static GAS_World* Instance()
-		{
-			return m_Instance;
-		}
+		int GetEntitiesCount() const { return m_EntitiesRegistry.size() - 1; };
 
 		bool GetEffectsAvailability() const { return enableEffects; };
 		void SetEffectsAvailability(bool value);
@@ -47,10 +47,12 @@ namespace sm
 		bool enableAbilities = false;
 
 	private:
-		static GAS_World* m_Instance;
 		DumbUID m_EntityUIDs;
 
 		std::unique_ptr<EffectSystem> m_EffectsSystem;
-		std::unordered_map<EntityID, GAS_Entity*> m_Entities;
+
+		// ID: 0 = invalid entity
+		std::unordered_map<EntityID, GAS_Entity*> m_EntitiesRegistry;
+		std::unordered_set<GAS_Entity*> m_Entities;
 	};
 }

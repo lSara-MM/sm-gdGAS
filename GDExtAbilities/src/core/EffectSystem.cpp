@@ -63,7 +63,7 @@ void sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
 
 void sm::EffectSystem::RemoveEffect(GameplayEffect& effect)
 {
-	GAS_World* world = GAS_World::Instance();
+	GAS_World* world = m_World;
 	SM_ASSERT(world != nullptr, "Critical error: Could not remove effect. World not created.");
 
 	GAS_Entity* entity = world->GetEntity(effect.GetTargetID());

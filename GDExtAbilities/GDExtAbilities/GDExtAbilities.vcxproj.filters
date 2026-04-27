@@ -114,6 +114,12 @@
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp">
       <Filter>Source Files\tags</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\godot\gdGameplayAbilitySystemNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\GASWorldBound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h">
@@ -208,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="..\src\include\godot\ui\gdTagRegistryEditor.h">
       <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\GASWorldBound.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
