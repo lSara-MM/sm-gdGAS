@@ -5,6 +5,7 @@
 #include "godot/gdTagContainer.h"
 #include "core/EffectSystem.h"
 #include "core/GameplayEffect.h"
+#include <godot_cpp/classes/engine.hpp>
 
 sm::GAS_Entity::GAS_Entity()
 {}
@@ -17,8 +18,6 @@ sm::GAS_Entity::~GAS_Entity()
 
 void sm::GAS_Entity::_bind_methods()
 {
-	godot::ClassDB::bind_method(godot::D_METHOD("init_entity"), &Init);
-
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_container"), &GetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attribute_container", "node"), &SetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_node_path"), &GetAttributeContainerNodePath);
@@ -34,20 +33,48 @@ void sm::GAS_Entity::_bind_methods()
 	// Properties
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::NODE_PATH,
-		"attribute_container_node_path", godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "AttributeContainer"),
-		"set_attribute_node_path", "get_attribute_node_path"
+		"attribute_container",
+		godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "AttributeContainer",
+		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		"", "get_attribute_node_path"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::NODE_PATH,
-		"tag_container_node_path", godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "TagContainer"),
-		"set_tag_node_path", "get_tag_node_path"
+		"tag_container",
+		godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "TagContainer",
+		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		"", "get_tag_node_path"
 	);
 }
 
 void sm::GAS_Entity::OnEnterTree()
 {
-	call_deferred("init_entity");
+	//bool isInEditedScene = false;
+
+	//godot::Node* edited = get_tree()->get_edited_scene_root();
+	//if (edited)
+	//{
+	//	// Walk up the parent chain
+	//	Node* current = this;
+	//	while (current)
+	//	{
+	//		if (current == edited)
+	//		{
+	//			isInEditedScene = true;
+	//			break;
+	//		}
+
+	//		current = current->get_parent();
+	//	}
+	//}
+
+	//if (godot::Engine::get_singleton()->is_editor_hint() && !isInEditedScene)
+	//{
+	//	return;
+	//}
+
+	callable_mp(this, &GAS_Entity::Init).call_deferred();
 }
 
 void sm::GAS_Entity::OnExitTree()
@@ -61,7 +88,7 @@ void sm::GAS_Entity::OnExitTree()
 		world->UnregisterEntity(this);
 	}
 
-	m_WorldBound.OnExitTree();
+	m_WorldBound.CleanUp();
 }
 
 void sm::GAS_Entity::OnReady()
@@ -70,9 +97,60 @@ void sm::GAS_Entity::OnReady()
 	m_TagContainer = godot::Object::cast_to<TagContainer>(get_node_or_null(tagContainerNodePath));
 }
 
+void sm::GAS_Entity::OnChildOrderChanged()
+{
+	godot::TypedArray<godot::Node> children = get_children();
+	bool hasAttr = false;
+	bool hasTags = false;
+
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		if (auto* node = godot::Object::cast_to<AttributeContainer>(children[i]))
+		{
+			m_AttrContainer = node;
+			SetAttributeContainerNodePath(get_path_to(node));
+			hasAttr = true;
+			continue;
+		}
+
+		if (auto* node = godot::Object::cast_to<TagContainer>(children[i]))
+		{
+			m_TagContainer = node;
+			SetTagContainerNodePath(get_path_to(node));
+			hasTags = true;
+			continue;
+		}
+	}
+
+	if (!hasAttr)
+	{
+		m_AttrContainer = nullptr;
+		SetAttributeContainerNodePath("");
+	}
+
+	if (!hasTags)
+	{
+		m_TagContainer = nullptr;
+		SetTagContainerNodePath("");
+	}
+}
+
 void sm::GAS_Entity::Init()
 {
-	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this);
+	godot::Node* sceneRoot = NodeUtils::GetSceneRoot(this);
+
+	if (!is_inside_tree() || !get_tree())
+	{
+		return;
+	}
+
+	if (godot::Engine::get_singleton()->is_editor_hint()
+		&& sceneRoot != get_tree()->get_edited_scene_root())
+	{
+		return;
+	}
+
+	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this, sceneRoot);
 
 	if (!world)
 	{
@@ -103,7 +181,7 @@ void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)
 
 void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 {
-	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this);
+	sm::GAS_World* world = m_WorldBound.GetWorld(this);
 
 	ERR_FAIL_NULL_MSG(world,
 		godot::vformat("AddEffect: Could not add '%s'. The EffectSystem was not found.",
@@ -188,6 +266,11 @@ bool sm::GAS_Entity::HandleTags(const godot::Ref<sm::EffectData>& gdEffect)
 	}
 
 	return true;
+}
+
+void sm::GAS_Entity::AddTags(const BitSet<MAX_TAGS> tags)
+{
+	m_TagContainer->AddTags(tags);
 }
 
 void sm::GAS_Entity::RemoveTags(const BitSet<MAX_TAGS> tags)

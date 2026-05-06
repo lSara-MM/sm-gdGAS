@@ -41,12 +41,14 @@ namespace sm
 		void AddEffect(const godot::Ref<EffectData> gdEffect);
 
 		bool HandleTags(const godot::Ref<sm::EffectData>& gdEffect);
+		void AddTags(const BitSet<MAX_TAGS> tags);
 		void RemoveTags(const BitSet<MAX_TAGS> tags);
 
 	private:
 		void OnEnterTree() override;
 		void OnExitTree() override;
 		void OnReady() override;
+		void OnChildOrderChanged() override;
 
 	public:
 		godot::NodePath attrContainerNodePath = "";

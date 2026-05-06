@@ -3,3 +3,8 @@
 [node name="SecondTest" type="Node2D"]
 
 [node name="GAS_World" type="GAS_World" parent="."]
+entity_count = 0
+
+[node name="GAS_Entity" type="GAS_Entity" parent="."]
+
+[node name="GAS_Entity2" type="GAS_Entity" parent="."]

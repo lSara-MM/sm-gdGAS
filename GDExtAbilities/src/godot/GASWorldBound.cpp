@@ -5,14 +5,14 @@
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-sm::GAS_World* sm::WorldBound::GetOrInitWorld(GameplayAbilitySystem* owner)
+sm::GAS_World* sm::WorldBound::GetOrInitWorld(GameplayAbilitySystem* owner, godot::Node* sceneRootNode)
 {
 	if (m_World)
 	{
 		return m_World;
 	}
 
-	if (!owner)
+	if (!owner || !owner->is_inside_tree())
 	{
 		return nullptr;
 	}
@@ -24,21 +24,25 @@ sm::GAS_World* sm::WorldBound::GetOrInitWorld(GameplayAbilitySystem* owner)
 		return m_World;
 	}
 
-	godot::Node* scene = nullptr;
-
-	if (godot::SceneTree* tree = owner->get_tree(); tree)
-	{
-		scene = tree->get_root();
-	}
-
+	godot::Node* scene = (sceneRootNode ? sceneRootNode : NodeUtils::GetSceneRoot(owner));
 	m_World = NodeUtils::GetChildNodeOfType<GAS_World>(scene);
 
+	return m_World;
+}
+
+sm::GAS_World* sm::WorldBound::GetWorld(GameplayAbilitySystem* owner)
+{
 	return m_World;
 }
 
 void sm::WorldBound::SetWorld(GAS_World* world)
 {
 	m_World = world;
+}
+
+void sm::WorldBound::CleanUp()
+{
+	m_World = nullptr;
 }
 
 void sm::WorldBound::PrintWorld()

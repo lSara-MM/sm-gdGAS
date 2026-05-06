@@ -31,7 +31,7 @@ void sm::GameplayAbilitySystem::_notification(int notification)
 	}
 }
 
-godot::Node* sm::GameplayAbilitySystem::GetActiveSceneRootOrWorld(godot::Node* owner)
+godot::Node* sm::NodeUtils::GetSceneRoot(godot::Node* owner)
 {
 	if (!owner || !owner->is_inside_tree())
 	{
@@ -50,12 +50,7 @@ godot::Node* sm::GameplayAbilitySystem::GetActiveSceneRootOrWorld(godot::Node* o
 	while (current->get_parent() && current->get_parent() != globalRoot)
 	{
 		current = current->get_parent();
-
-		if (auto* world = godot::Object::cast_to<GAS_World>(current); world != owner)
-		{
-			return current;
-		}
 	}
 
-	return NodeUtils::GetChildNodeOfType<GAS_World>(current);
+	return current;
 }

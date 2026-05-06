@@ -23,8 +23,6 @@ namespace sm
 		virtual void OnParented() {};
 		virtual void OnUnparented() {};
 		virtual void OnChildOrderChanged() {};
-
-		godot::Node* GetActiveSceneRootOrWorld(godot::Node* owner);
 	};
 
 	namespace NodeUtils
@@ -139,5 +137,7 @@ namespace sm
 
 			return false;
 		}
+
+		godot::Node* GetSceneRoot(godot::Node* owner);
 	}
 }

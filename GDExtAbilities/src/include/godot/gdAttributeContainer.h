@@ -26,6 +26,9 @@ namespace sm
 #pragma region Godot public 
 		// TODO: unused?
 		//godot::Ref<Attribute> GetAttribute(AttributeID id) const;
+		godot::Node* GetOwnerNode() const { return m_OwnerNode; }
+		godot::NodePath GetOwnerNodePath() const { return m_OwnerNodePath; }
+		void SetOwnerNodePath(godot::NodePath path = "");
 
 		godot::Ref<AttributeSetData> GetAttributeSet() const;
 		void SetAttributeSet(const godot::Ref<AttributeSetData>& attr);
@@ -55,9 +58,11 @@ namespace sm
 		void OnReady() override;
 
 	private:
+		godot::Node* m_OwnerNode = nullptr;
+		godot::NodePath m_OwnerNodePath = "";
 		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;
 		std::unordered_map<godot::StringName, GameplayAttribute*> m_AttributesByName;
-		
+
 		godot::Ref<AttributeSetData> m_gdAttributeSetData;
 	};
 }

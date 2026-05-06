@@ -12,7 +12,8 @@ void sm::AbilityContainer::_bind_methods()
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::NODE_PATH,
-		"entity_node_path", godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "GAS_Entity"),
+		"entity_node_path", godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "GAS_Entity",
+		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
 		"set_entity_node_path", "get_entity_node_path"
 	);
 
@@ -45,7 +46,7 @@ void sm::AbilityContainer::OnReady()
 
 void sm::AbilityContainer::OnExitTree()
 {
-	m_WorldBound.OnExitTree();
+	m_WorldBound.CleanUp();
 }
 
 godot::NodePath sm::AbilityContainer::GetEntityNodePath() const

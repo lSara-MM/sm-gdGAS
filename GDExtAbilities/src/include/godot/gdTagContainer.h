@@ -6,9 +6,9 @@
 
 namespace sm
 {
-	class TagContainer final : public sm::GameplayAbilitySystem
+	class TagContainer final : public GameplayAbilitySystem
 	{
-		GDCLASS(TagContainer, sm::GameplayAbilitySystem)
+		GDCLASS(TagContainer, GameplayAbilitySystem)
 
 	protected:
 		static void _bind_methods();
@@ -18,6 +18,13 @@ namespace sm
 		~TagContainer();
 
 		void _ready();
+		void OnEnterTree() override;
+		void OnExitTree() override;
+		void OnParented() override;
+		void RevertParenting();
+		void OnUnparented() override;
+
+		godot::NodePath GetParentNodePath();
 
 		//godot::TypedArray<godot::StringName> GetTags() const { return m_gdTags; };
 		//void SetTags(const godot::TypedArray<godot::StringName>& tags) { m_gdTags = tags; };
@@ -44,6 +51,8 @@ namespace sm
 	private:
 		//godot::TypedArray<godot::StringName> m_gdTags;
 		godot::TypedArray<TagData> m_gdTags;
+		godot::Node* prevParent = nullptr;
+		godot::StringName prevName;
 
 		sm::BitSet<MAX_TAGS> m_TagsSet;
 		uint16 m_TagsStack[MAX_TAGS] = {};

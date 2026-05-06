@@ -5,11 +5,11 @@ namespace sm
 {
 	enum class ModifierOperationType : uint8_t
 	{
-		Add = 0,		// Add to CurrentValue
-		Multiply,		// Multiply to CurrentValue
-		PercentAdd,		// Add x% of Base to CurrentValue
-		PercentStack,	// Multiply x% of CurrentValue to CurrentValue
-		Override,		// Ignore all modifiers and substitute CurrentValue
+		Add = 0,		// Add a flat value to CurrentValue
+		Multiply,		// Raw Multiply to CurrentValue
+		PercentAdd,		// Add x% of Base to CurrentValue (ex. 20%)
+		PercentStack,	// Multiply CurrentValue by a percentage (ex. 20%)
+		Override,		// Ignore all modifiers and replace CurrentValue
 		Max
 	};
 
@@ -30,8 +30,7 @@ namespace sm
 
 		GameplayModifier(ModifierID id, ModifierOperationType op, float val, EffectID source, ModifierHandle& hd) :
 			ID(id), value(val), sourceID(source), operation(op), handle(hd)
-		{
-		};
+		{};
 
 		/*const */ModifierID ID;
 		ModifierOperationType operation;

@@ -16,13 +16,15 @@ void sm::TagContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tags"), &GetTags);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_tags"), &SetTags);
 
-	/*ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::ARRAY,
-		"tags",
-		godot::PROPERTY_HINT_NONE,
-		"StringName"),
-		"set_tags", "get_tags"
-	);*/
+	godot::ClassDB::bind_method(godot::D_METHOD("get_parent_node_path"), &GetParentNodePath);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::NODE_PATH,
+		"owner",
+		godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "Node",
+		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		"", "get_parent_node_path"
+	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::ARRAY,
@@ -98,6 +100,65 @@ void sm::TagContainer::_ready()
 			ERR_PRINT(arr3[i]);
 		}
 	}*/
+}
+
+void sm::TagContainer::OnEnterTree()
+{
+	bool hasSibling = NodeUtils::HasSiblingOfType<TagContainer>(this);
+
+	if (hasSibling)
+	{
+		if (!prevParent)
+		{
+			queue_free();
+		}
+
+		ERR_FAIL_MSG("Error: this node already has an existing TagContainer");
+	}
+}
+
+void sm::TagContainer::OnExitTree()
+{
+	prevParent = nullptr;
+}
+
+void sm::TagContainer::OnParented()
+{
+	bool hasSibling = NodeUtils::HasSiblingOfType<TagContainer>(this);
+
+	if (hasSibling)
+	{
+		callable_mp(this, &TagContainer::RevertParenting).call_deferred();
+	}
+}
+
+void sm::TagContainer::RevertParenting()
+{
+	if (!prevName.is_empty())
+	{
+		set_name(prevName);
+	}
+
+	if (prevParent)
+	{
+		reparent(prevParent);
+	}
+}
+
+void sm::TagContainer::OnUnparented()
+{
+	prevParent = get_parent();
+	prevName = get_name();
+}
+
+godot::NodePath sm::TagContainer::GetParentNodePath()
+{
+	if (get_parent())
+	{
+		return get_parent()->get_path();
+	}
+
+	return godot::NodePath();
 }
 
 void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)

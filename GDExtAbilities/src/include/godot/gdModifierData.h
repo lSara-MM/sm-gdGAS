@@ -15,11 +15,11 @@ namespace sm
 	public:
 		enum OperationType : uint8_t
 		{
-			Add = 0,		// Add to CurrentValue
-			Multiply,		// Multiply to CurrentValue
-			PercentAdd,		// Add x% of Base to CurrentValue
-			PercentStack,	// Multiply x% of CurrentValue to CurrentValue
-			Override,		// Ignore all modifiers and substitute CurrentValue
+			Add = 0,		// Add a flat value to CurrentValue
+			Multiply,		// Raw Multiply to CurrentValue
+			PercentAdd,		// Add x% of Base to CurrentValue (ex. 20%)
+			PercentStack,	// Multiply CurrentValue by a percentage (ex. 20%)
+			Override,		// Ignore all modifiers and replace CurrentValue
 		};
 
 		ModifierData::OperationType GetOperationType()  const { return m_Operation; };
