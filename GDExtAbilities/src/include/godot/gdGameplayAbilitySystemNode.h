@@ -22,9 +22,13 @@ namespace sm
 		virtual void OnProcess() {};
 		virtual void OnParented() {};
 		virtual void OnUnparented() {};
+		virtual void OnChildOrderChanged() {};
 
 		godot::Node* GetActiveSceneRootOrWorld(godot::Node* owner);
+	};
 
+	namespace NodeUtils
+	{
 		template <typename T>
 		static T* GetParentNodeOfType(godot::Node* target)
 		{
@@ -117,5 +121,23 @@ namespace sm
 
 			return nodesOfType;
 		}
-	};
+
+
+		template <typename T>
+		bool HasSiblingOfType(godot::Node* target)
+		{
+			godot::TypedArray<godot::Node> siblings = target->get_parent()->get_children();
+
+			for (size_t i = 0; i < siblings.size(); i++)
+			{
+				if (auto* node = godot::Object::cast_to<T>(siblings[i]);
+					node && node != target)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+	}
 }

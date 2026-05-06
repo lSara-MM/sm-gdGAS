@@ -1,13 +1,11 @@
 #pragma once
 #include "godot/gdGameplayAbilitySystemNode.h"
 
-#include <godot_cpp/variant/node_path.hpp>
-
 namespace sm
 {
 	class GAS_World;
 
-	class WorldBound : public GameplayAbilitySystem
+	class WorldBound
 	{
 	public:
 		// Get world if set. If not set, search for it and set it.
@@ -16,7 +14,7 @@ namespace sm
 		GAS_World* GetWorld(GameplayAbilitySystem* owner) { return m_World; };
 		void SetWorld(GAS_World* world);
 
-		void OnExitTree() override { m_World = nullptr; };
+		void OnExitTree() { m_World = nullptr; };
 
 		void PrintWorld();
 

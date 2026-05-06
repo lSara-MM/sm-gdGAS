@@ -49,7 +49,7 @@ void sm::GAS_World::OnEnterTree()
 	}
 
 	godot::Node* globalRoot = tree->get_root();
-	std::vector<GAS_World*> worldsInScene = GetAllChildNodesOfType<GAS_World>(globalRoot);
+	std::vector<GAS_World*> worldsInScene = NodeUtils::GetAllChildNodesOfType<GAS_World>(globalRoot);
 
 	if (worldsInScene.empty())
 	{
@@ -73,16 +73,23 @@ void sm::GAS_World::OnExitTree()
 {
 	int entityNum = m_EntitiesRegistry.size();
 
+	std::vector<EntityID> pendingToDelete;
+
 	for (const auto& [id, entity] : m_EntitiesRegistry)
 	{
-		if (entity)
+		if (entity && !entity->is_queued_for_deletion())
 		{
 			entity->queue_free();
 		}
 		else
 		{
-			m_EntitiesRegistry.erase(id);
+			pendingToDelete.push_back(id);
 		}
+	}
+
+	for (EntityID id : pendingToDelete)
+	{
+		m_EntitiesRegistry.erase(id);
 	}
 
 	m_Entities.clear();

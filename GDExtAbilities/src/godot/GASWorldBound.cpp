@@ -17,15 +17,21 @@ sm::GAS_World* sm::WorldBound::GetOrInitWorld(GameplayAbilitySystem* owner)
 		return nullptr;
 	}
 
-	auto* world = GetParentNodeOfType<GAS_World>(owner);
+	auto* world = NodeUtils::GetParentNodeOfType<GAS_World>(owner);
 	if (world)
 	{
 		m_World = world;
 		return m_World;
 	}
 
-	godot::Node* scene = owner->get_tree()->get_root();
-	m_World = GetChildNodeOfType<GAS_World>(scene);
+	godot::Node* scene = nullptr;
+
+	if (godot::SceneTree* tree = owner->get_tree(); tree)
+	{
+		scene = tree->get_root();
+	}
+
+	m_World = NodeUtils::GetChildNodeOfType<GAS_World>(scene);
 
 	return m_World;
 }

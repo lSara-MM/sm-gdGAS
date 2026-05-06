@@ -21,11 +21,9 @@ namespace sm
 		//void RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect);
 
 		//void RemoveEffect(EffectID effectID);
-		void RemoveEffect(GameplayEffect& effect);
+		void RemoveEffect(GameplayEffect* effect, size_t index);
 
-		void RemoveEffectModifiers(GAS_Entity* entity, std::vector<GameplayEffect>::iterator& itr);
-
-		void RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect& effect);
+		void RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect* effect);
 
 	public:
 		DumbUID m_EffectsID;

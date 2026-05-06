@@ -32,7 +32,7 @@ void sm::AbilityContainer::SetAbilities(const godot::TypedArray<sm::AbilityData>
 
 void sm::AbilityContainer::OnReady()
 {
-	GAS_Entity* entity = GetParentNodeOfType<GAS_Entity>(this);
+	GAS_Entity* entity = NodeUtils::GetParentNodeOfType<GAS_Entity>(this);
 
 	if (!entity)
 	{

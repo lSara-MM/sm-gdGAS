@@ -25,6 +25,9 @@ void sm::GameplayAbilitySystem::_notification(int notification)
 	case NOTIFICATION_UNPARENTED:
 		OnUnparented();
 		break;
+	case NOTIFICATION_CHILD_ORDER_CHANGED:
+		OnChildOrderChanged();
+		break;
 	}
 }
 
@@ -54,5 +57,5 @@ godot::Node* sm::GameplayAbilitySystem::GetActiveSceneRootOrWorld(godot::Node* o
 		}
 	}
 
-	return GetChildNodeOfType<GAS_World>(current);
+	return NodeUtils::GetChildNodeOfType<GAS_World>(current);
 }

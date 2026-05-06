@@ -9,16 +9,22 @@
 
 void sm::EffectSystem::Update(float dt)
 {
+	std::vector<std::pair<GameplayEffect*, size_t>> pendingToDelete;
+
 	for (size_t i = 0; i < m_ActiveEffects.size(); ++i)
 	{
-		auto& effect = m_ActiveEffects[i];
+		GameplayEffect* effect = &m_ActiveEffects[i];
 
-		effect.Tick(dt);
-		if (effect.HasExpired())
+		effect->Tick(dt);
+		if (effect->HasExpired())
 		{
-			RemoveEffect(effect);
-			--i;
+			pendingToDelete.push_back({ effect,  i });
 		}
+	}
+
+	for (auto const [effect, index] : pendingToDelete)
+	{
+		RemoveEffect(effect, index);
 	}
 }
 
@@ -61,47 +67,31 @@ void sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
 //	RemoveEffectModifiers((*itr)->GetTargetID(), itr);
 //}
 
-void sm::EffectSystem::RemoveEffect(GameplayEffect& effect)
+void sm::EffectSystem::RemoveEffect(GameplayEffect* effect, size_t index)
 {
 	GAS_World* world = m_World;
 	SM_ASSERT(world != nullptr, "Critical error: Could not remove effect. World not created.");
 
-	GAS_Entity* entity = world->GetEntity(effect.GetTargetID());
-	SM_ASSERT(entity != nullptr, "Critical error: Could not remove effect. Entity %d was not found.", effect.GetTargetID());
+	GAS_Entity* entity = world->GetEntity(effect->GetTargetID());
+	SM_ASSERT(entity != nullptr, "Critical error: Could not remove effect. Entity %d was not found.", effect->GetTargetID());
 
 	RemoveEffectModifiers(entity, effect);
 
-	entity->RemoveTags(effect.GetTagsToAdd());
+	entity->AddTags(effect->GetTagsToRemove());
+	entity->RemoveTags(effect->GetTagsToAdd());
+
+	m_ActiveEffects.erase(m_ActiveEffects.begin() + index);
 }
 
-void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, std::vector<GameplayEffect>::iterator& itr)
-{
-	AttributeContainer* attrContainer = entity->GetAttributeContainer();
-
-	for (auto itr2 = itr; itr2 != m_ActiveEffects.end(); ++itr2)
-	{
-		for (ModifierHandle& handle : (itr2)->GetModifierHandles())
-		{
-			GameplayAttribute* attr = attrContainer->FindAttribute(handle.targetID);
-			attr->RemoveModifier(handle);
-		}
-	}
-
-	m_ActiveEffects.erase(itr, m_ActiveEffects.end());
-}
-
-void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect& effect)
+void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect* effect)
 {
 	AttributeContainer* attrContainer = entity->GetAttributeContainer();
 	ERR_FAIL_NULL_MSG(attrContainer,
-		godot::vformat("RemoveEffect: Could not remove '%s'. The AttributeContainer was not found.", effect.GetID()));
+		godot::vformat("RemoveEffect: Could not remove '%s'. The AttributeContainer was not found.", effect->GetID()));
 
-	for (ModifierHandle& handle : effect.GetModifierHandles())
+	for (ModifierHandle& handle : effect->GetModifierHandles())
 	{
 		GameplayAttribute* attr = attrContainer->FindAttribute(handle.targetID);
 		attr->RemoveModifier(handle);
 	}
-
-	std::swap(effect, m_ActiveEffects.back());
-	m_ActiveEffects.pop_back();
 }
