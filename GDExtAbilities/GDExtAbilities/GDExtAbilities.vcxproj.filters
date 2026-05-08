@@ -114,11 +114,17 @@
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp">
       <Filter>Source Files\tags</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\godot\gdGameplayAbilitySystemNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\godot\GASWorldBound.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\godot\gdGameplayAbilitySystemNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\GameplayTag.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\TagSystem.cpp">
+      <Filter>Source Files\tags</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="..\src\include\godot\GASWorldBound.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\TagSystem.h">
+      <Filter>Header Files\tags</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

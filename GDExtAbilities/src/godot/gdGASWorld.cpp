@@ -1,10 +1,12 @@
 #include "godot/gdGASWorld.h"
 
 #include "core/EffectSystem.h"
+#include "core/TagSystem.h"
+#include "godot/gdTagContainer.h"
 
+#include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/window.hpp>
-#include <godot_cpp/classes/accept_dialog.hpp>
 
 sm::GAS_World::GAS_World()
 {
@@ -20,6 +22,9 @@ void sm::GAS_World::_bind_methods()
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities_availability", "value"), &SetAbilitiesAvailability);
+
+	// Tags
+	//godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "entity_count",
@@ -182,4 +187,20 @@ void sm::GAS_World::UnregisterEntity(GAS_Entity* entity)
 	m_Entities.erase(entity);
 	m_EntitiesRegistry.erase(entity->GetID());
 	notify_property_list_changed();
+}
+
+void sm::GAS_World::RegisterTagContainer(TagContainer* container)
+{
+	m_TagSystem->RegisterTagContainer(container);
+}
+
+void sm::GAS_World::UnregisterTagContainer(TagContainer* container)
+{
+	m_TagSystem->UnregisterTagContainer(container);
+}
+
+godot::TypedArray<godot::Node> sm::GAS_World::NodesWithTag(const godot::Ref<TagData> tag) const
+{
+	return {};
+	//return m_TagSystem->ContainersWithTag(tag);
 }

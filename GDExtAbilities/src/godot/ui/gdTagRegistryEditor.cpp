@@ -20,6 +20,7 @@
 #include <godot_cpp/classes/tree.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/v_split_container.hpp>
+#include <regex>
 
 sm::TagRegistryEditor::TagRegistryEditor() : m_SettingsPath("GDExtAbilities/tag_registry_path")
 {
@@ -491,21 +492,16 @@ void sm::TagRegistryEditor::SaveRegistryResource()
 void sm::TagRegistryEditor::_OnCreateTagClicked(godot::LineEdit* newText, godot::TreeItem* parentItem, godot::AcceptDialog* menu)
 {
 	ERR_FAIL_COND_MSG((!newText || !parentItem || !menu), "CreateTag failed: Null references");
-	ERR_FAIL_COND_MSG(newText->get_text().is_empty(), "CreateTag failed: Tag already exists");
+	ERR_FAIL_COND_MSG(m_CanBeCreated, "CreateTag failed: conditions were not met.");
+
+	godot::Ref<sm::TagData> parentData = parentItem->get_metadata(0);
+	ERR_FAIL_COND_MSG(parentData.is_null(), "CreateTag failed: Tag parent null");
 
 	godot::Ref<sm::TagData> data;
 	data.instantiate();
 	data->SetName(newText->get_text());
 
-	godot::Ref<sm::TagData> parentData = parentItem->get_metadata(0);
-
-	ERR_FAIL_COND_MSG(parentData.is_null(), "CreateTag failed: Tag parent null");
-
 	data->SetPath(parentData->GetTagFullPath());
-
-	godot::String registryPath = get_editor_interface()->get_editor_settings()->get(m_SettingsPath);
-
-	ERR_FAIL_COND_MSG(HasTagInCache(data->GetTagFullPath()), "CreateTag failed: Tag already exists");
 
 	CreateTag(data, parentItem);
 	parentData->AddChild(data);
@@ -519,6 +515,7 @@ void sm::TagRegistryEditor::_OnCreateTagNameChanged(const godot::String& newText
 	godot::Ref<TagData> parentResource = item->get_metadata(0);
 
 	godot::String path;
+	m_CanBeCreated = false;
 
 	ERR_FAIL_COND_MSG(parentResource.is_null(), "CreateTag failed: parent resource is null.");
 
@@ -529,6 +526,13 @@ void sm::TagRegistryEditor::_OnCreateTagNameChanged(const godot::String& newText
 	else
 	{
 		path = parentResource->GetTagFullPath() + "." + newText;
+	}
+
+	if (!IsNameValid(newText))
+	{
+		labelResult->set_text(godot::vformat("Full tag: %s\nWarning: Tag name must follow this structure: {tagParent.tagChild.other} and cannot include special characters.", path));
+		labelResult->add_theme_color_override("font_color", godot::Color(1, 0, 0, 1));
+		return;
 	}
 
 	if (newText.is_empty())
@@ -547,6 +551,8 @@ void sm::TagRegistryEditor::_OnCreateTagNameChanged(const godot::String& newText
 
 	labelResult->set_text(godot::vformat("Full tag: %s", path));
 	labelResult->add_theme_color_override("font_color", godot::Color(1, 1, 1, 1));
+
+	m_CanBeCreated = true;
 }
 
 void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::CheckBox* checkbox, godot::AcceptDialog* menu)
@@ -710,6 +716,13 @@ void sm::TagRegistryEditor::RefreshTreeFromEditorChanges()
 #endif // DEBUG_ENABLED
 
 	CreateOrUpdateTree();
+}
+
+bool sm::TagRegistryEditor::IsNameValid(const godot::String& name) const
+{
+	//Tags must follow this structure: <root>.tagParent.tagChild.other
+	std::regex rgx(R"(^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$)");
+	return std::regex_match(ToStdString(name), rgx);
 }
 
 #endif // TOOLS_ENABLED

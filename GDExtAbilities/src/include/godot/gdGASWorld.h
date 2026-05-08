@@ -1,4 +1,5 @@
 #pragma once
+#include "core/TagRegistry.h"
 #include "godot/gdGameplayAbilitySystemNode.h"
 #include "godot/gdGASEntity.h"
 #include "internal/smUID.h"
@@ -8,6 +9,8 @@
 namespace sm
 {
 	class EffectSystem;
+	class TagContainer;
+	class TagSystem;
 
 	class GAS_World : public GameplayAbilitySystem
 	{
@@ -22,6 +25,8 @@ namespace sm
 		~GAS_World() = default;
 
 	public:
+
+#pragma region Godot
 		int GetEntitiesCount() const { return m_EntitiesRegistry.size() - 1; };
 
 		bool GetEffectsAvailability() const { return enableEffects; };
@@ -33,8 +38,16 @@ namespace sm
 		EffectSystem* GetEffectSystem() const { return m_EffectsSystem.get(); };
 		GAS_Entity* GetEntity(EntityID id);
 
+		// Tags
+		godot::TypedArray<godot::Node> NodesWithTag(const godot::Ref<TagData> tag) const;
+
+#pragma endregion Godot
+
 		EntityID RegisterEntity(GAS_Entity* entity);
 		void UnregisterEntity(GAS_Entity* entity);
+
+		void RegisterTagContainer(TagContainer* container);
+		void UnregisterTagContainer(TagContainer* container);
 
 	private:
 		void OnEnterTree() override;
@@ -42,9 +55,12 @@ namespace sm
 		void OnReady() override;
 		void OnProcess() override;
 
+		void OnNodeAdded(godot::Node* node);
+		void OnNodeRemoved(godot::Node* node);
+
 	public:
-		bool enableEffects = false;
-		bool enableAbilities = false;
+		bool enableEffects = true;
+		bool enableAbilities = true;
 
 	private:
 		DumbUID m_EntityUIDs;
@@ -54,5 +70,9 @@ namespace sm
 		// ID: 0 = invalid entity
 		std::unordered_map<EntityID, GAS_Entity*> m_EntitiesRegistry;
 		std::unordered_set<GAS_Entity*> m_Entities;
+
+		TagSystem* m_TagSystem;
+		TagRegistry* m_TagRegistry;
+		//godot::Ref<TagData> m_TagRegistry;
 	};
 }

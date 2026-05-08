@@ -97,6 +97,9 @@ namespace sm
 		bool HasTagInCache(const godot::String& tag);
 		void RefreshTreeFromEditorChanges();
 
+	private:
+		bool IsNameValid(const godot::String& name) const;
+
 	public:
 		const int realMaxTags = MAX_TAGS - 2;
 
@@ -122,6 +125,7 @@ namespace sm
 #endif // DEBUG_ENABLED
 
 		bool m_DontShowAgain = false;
+		bool m_CanBeCreated = false;
 
 		// Info
 	};

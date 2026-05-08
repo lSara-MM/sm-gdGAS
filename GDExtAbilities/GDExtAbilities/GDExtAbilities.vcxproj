@@ -351,6 +351,7 @@
     <ClInclude Include="..\src\include\core\GameplayModifier.h" />
     <ClInclude Include="..\src\include\core\GameplayTag.h" />
     <ClInclude Include="..\src\include\core\TagRegistry.h" />
+    <ClInclude Include="..\src\include\core\TagSystem.h" />
     <ClInclude Include="..\src\include\godot\GASWorldBound.h" />
     <ClInclude Include="..\src\include\godot\gdAbilityContainer.h" />
     <ClInclude Include="..\src\include\godot\gdAbilityData.h" />
@@ -382,7 +383,9 @@
     <ClCompile Include="..\src\core\GameplayAttributeSet.cpp" />
     <ClCompile Include="..\src\core\GameplayEffect.cpp" />
     <ClCompile Include="..\src\core\GameplayModifier.cpp" />
+    <ClCompile Include="..\src\core\GameplayTag.cpp" />
     <ClCompile Include="..\src\core\TagRegistry.cpp" />
+    <ClCompile Include="..\src\core\TagSystem.cpp" />
     <ClCompile Include="..\src\gdExample.cpp" />
     <ClCompile Include="..\src\godot\GASWorldBound.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityContainer.cpp" />

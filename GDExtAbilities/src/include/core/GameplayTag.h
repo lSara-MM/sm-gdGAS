@@ -8,35 +8,19 @@ namespace sm
 {
 	struct GameplayTag
 	{
-		GameplayTag(TagID id, godot::StringName name, TagID parent = ROOT_TAG) : m_UID(id), m_Name(name), m_ParentUID(parent)
-		{
-#ifdef DEBUG_ENABLED
-			stdName = ToStdString(name);
-#endif //  DEBUG_ENABLED
-		};
+		GameplayTag(TagID id, godot::StringName name, TagID parent = ROOT_TAG);
 
-		TagID GetUID() { return m_UID; };
-		//const TagID GetUID() const { return static_cast<const TagID>(m_UID); };
+		TagID GetUID();
+		TagID GetParentUID();
 
-		TagID GetParentUID() { return m_ParentUID; };
-		//const TagID GetUID() const { return static_cast<const TagID>(m_UID); };
+		godot::StringName GetName();
 
-		godot::StringName GetName() { return m_Name; };
+		std::vector<TagID>& GetChildren();
 
-		std::vector<TagID>& GetChildren() { return m_Children; };
+		size_t GetChildIndex(TagID id) const;
 
-		size_t GetChildIndex(TagID id) const
-		{
-			for (size_t i = 0; i < m_Children.size(); i++)
-			{
-				if (m_Children[i] == id)
-				{
-					return i;
-				}
-			}
-
-			return m_Children.size();
-		}
+		bool HasChild(TagID childID) const;
+		bool HasDescendant(TagID childID) const;
 
 	public:
 		static constexpr TagID INVALID_TAG = 0;

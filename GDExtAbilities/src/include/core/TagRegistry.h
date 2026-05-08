@@ -26,7 +26,7 @@ namespace sm
 		~TagRegistry() = default;
 		TagRegistry(const TagRegistry& obj) = delete;
 
-		bool RegisterTags(const godot::TypedArray<sm::TagData>& tag);
+		bool RegisterTags(const godot::Ref<sm::TagData>& tagRoot);
 		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
 
 		TagID FindTagID(const godot::StringName& name) const;

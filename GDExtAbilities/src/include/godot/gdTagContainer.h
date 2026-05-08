@@ -21,10 +21,8 @@ namespace sm
 		void OnEnterTree() override;
 		void OnExitTree() override;
 		void OnParented() override;
-		void RevertParenting();
 		void OnUnparented() override;
-
-		godot::NodePath GetParentNodePath();
+		void OnChildOrderChanged() override;
 
 		//godot::TypedArray<godot::StringName> GetTags() const { return m_gdTags; };
 		//void SetTags(const godot::TypedArray<godot::StringName>& tags) { m_gdTags = tags; };
@@ -44,9 +42,15 @@ namespace sm
 		bool HasAnyTag(const godot::Array& tags) const;
 
 		//
-		void SetTag(const TagID id, bool value = true);
+		void SetTag(TagID id, bool value = true);
 		void AddTags(BitSet<MAX_TAGS> tags);
 		void RemoveTags(BitSet<MAX_TAGS> tags);
+
+		// non godot
+		bool HasTag(TagID id) const;
+
+	private:
+		void RevertParenting();
 
 	private:
 		//godot::TypedArray<godot::StringName> m_gdTags;
