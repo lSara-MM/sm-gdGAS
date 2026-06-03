@@ -37,7 +37,6 @@ void sm::TagData::_bind_methods()
 void sm::TagData::SetName(const godot::String& value)
 {
 	m_Name = value;
-
 	UpdateChildrenParents();
 }
 
@@ -92,7 +91,6 @@ void sm::TagData::UpdateChildrenParents()
 		return;
 	}
 
-	// TODO URGENT: probably here is where the problem with tags "..Tag" naming is done 
 	struct TagStackEntry
 	{
 		godot::Ref<TagData> tag;
@@ -104,7 +102,11 @@ void sm::TagData::UpdateChildrenParents()
 	for (int64_t i = 0; i < m_Children.size(); i++)
 	{
 		godot::String root;
-		if (!m_Path.is_empty())
+		if (m_Path == ".")
+		{
+			root = m_Path + m_Name;
+		}
+		else if (!m_Path.is_empty())
 		{
 			root = m_Path + "." + m_Name;
 		}
