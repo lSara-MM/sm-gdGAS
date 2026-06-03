@@ -43,15 +43,15 @@ void sm::TagData::SetName(const godot::String& value)
 
 void sm::TagData::SetPath(const godot::String& value)
 {
-	m_Path = value;
+	m_TagFullPath = godot::String(value) + "." + m_Name;
 
-	/*if (value.is_empty())
+	if (value.is_empty())
 	{
-		m_TagFullPath = m_Name;
+		m_Path = ".";
 	}
-	else*/
+	else
 	{
-		m_TagFullPath = m_Path + "." + m_Name;
+		m_Path = value;
 	}
 
 #ifdef DEBUG_ENABLED
@@ -92,6 +92,7 @@ void sm::TagData::UpdateChildrenParents()
 		return;
 	}
 
+	// TODO URGENT: probably here is where the problem with tags "..Tag" naming is done 
 	struct TagStackEntry
 	{
 		godot::Ref<TagData> tag;
@@ -103,11 +104,7 @@ void sm::TagData::UpdateChildrenParents()
 	for (int64_t i = 0; i < m_Children.size(); i++)
 	{
 		godot::String root;
-		if (m_Path.is_empty())
-		{
-			root = m_Name;
-		}
-		else
+		if (!m_Path.is_empty())
 		{
 			root = m_Path + "." + m_Name;
 		}
@@ -127,6 +124,10 @@ void sm::TagData::UpdateChildrenParents()
 			continue;
 		}
 
+#ifdef DEBUG_ENABLED
+		auto pathDebug = ToStdString(tagEntry.hierarchy);
+#endif // DEBUG_ENABLED
+
 		tag->SetPath(tagEntry.hierarchy);
 
 		for (int64_t i = 0; i < tag->GetChildren().size(); i++)
@@ -140,6 +141,9 @@ void sm::TagData::UpdateChildrenParents()
 
 			godot::String root = tagEntry.hierarchy + "." + tagEntry.tag->GetName();
 			tagsStack.emplace_back(tagChild, root);
+#ifdef DEBUG_ENABLED
+			auto pathDebug = ToStdString(root);
+#endif // DEBUG_ENABLED
 		}
 	}
 }

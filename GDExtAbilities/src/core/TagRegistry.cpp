@@ -108,14 +108,18 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& tagName, co
 	}
 
 	godot::StringName fullParent;
-	if (!parentName.is_empty() && !parentName.begins_with(">"))
+	if (parentName == godot::StringName("."))
+	{
+		fullParent = ">";
+	}
+	else if (!parentName.is_empty() && !parentName.begins_with(">"))
 	{
 		fullParent = godot::StringName(">" + parentName);
 	}
 
 	TagID parentTagID = GameplayTag::ROOT_TAG;
 
-	if (!fullParent.is_empty())
+	if (!fullParent.is_empty() && !fullParent.begins_with("."))
 	{
 		auto it = m_TagsDictionary.find(fullParent);
 		parentTagID = (it != m_TagsDictionary.end()) ? it->second : GameplayTag::INVALID_TAG;
