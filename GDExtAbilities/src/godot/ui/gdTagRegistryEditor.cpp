@@ -271,6 +271,10 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData> resource, godot:
 		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::EDIT), false, "Rename tag.");
 		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children.");
 
+#ifdef DEBUG_ENABLED
+		auto pathDebug = ToStdString(tagPair.first->GetTagFullPath());
+#endif // DEBUG_ENABLED
+
 		AddToCache(tagPair.first->GetTagFullPath());
 
 		godot::TypedArray<TagData> children = tagPair.first->GetChildren();
@@ -580,6 +584,10 @@ void sm::TagRegistryEditor::_OnCreateTagNameChanged(const godot::String& newText
 		return;
 	}
 
+#ifdef DEBUG_ENABLED
+	auto pathDebug = ToStdString(path);
+#endif // DEBUG
+
 	if (HasTagInCache(path))
 	{
 		labelResult->set_text(godot::vformat("Full tag: %s\nWarning: This tag already exists", path));
@@ -601,10 +609,9 @@ void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::Ch
 	}
 
 	godot::Ref<TagData> resource = item->get_metadata(0);
-	ClearTagData(resource);
-
 	godot::Ref<TagData> parentResource = item->get_parent()->get_metadata(0);
 	parentResource->RemoveChild(resource);
+	ClearTagData(resource);
 
 	SaveRegistryResource();
 
