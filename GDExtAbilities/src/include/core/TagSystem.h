@@ -13,12 +13,15 @@ namespace sm
 	class TagSystem : public GameplaySystem
 	{
 	public:
+		TagSystem(GAS_World* w);
+		void Update(float dt) override;
+
 		void RegisterTagContainer(TagContainer* container);
 		void UnregisterTagContainer(TagContainer* container);
 
 		// Queries
 		const std::vector<TagContainer*>& ContainersWithTag(const godot::Ref<TagData> tag);
-		const std::vector<TagContainer*>& ContainersWithoutTag(const godot::Ref<TagData> tag);
+		const std::vector<TagContainer*> ContainersWithoutTag(const godot::Ref<TagData> tag);
 
 		std::vector<TagContainer*> All(const godot::TypedArray<TagData>& tags);
 		std::vector<TagContainer*> None(const godot::TypedArray<TagData>& tags);
@@ -26,13 +29,59 @@ namespace sm
 
 	private:
 		const std::vector<TagContainer*>& ContainersWithTag(TagID tag);
-		const std::vector<TagContainer*>& ContainersWithoutTag(TagID tag);
+		const std::vector<TagContainer*> ContainersWithoutTag(TagID tag);
+
+		void _OnContainerAdded();
+		void _OnContainerRemoved();
+
+		void _OnTagAdded();
+		void _OnTagRemoved();
 
 	private:
-		std::unordered_set<TagContainer*> m_TagContainers;
+		struct TagCache
+		{
+			std::vector<TagContainer*> iterable;
+			std::unordered_map<TagContainer*, int> unique;
+
+			void Add(TagContainer* node)
+			{
+				if (node)
+				{
+					if (unique.try_emplace(node, iterable.size()).second)
+					{
+						iterable.push_back(node);
+					}
+				}
+			}
+
+			void Remove(TagContainer* node)
+			{
+				if (auto found = unique.find(node);
+					found != unique.end())
+				{
+					size_t lastIndex = iterable.size() - 1;
+					size_t currentIndex = unique[node];
+					TagContainer* lastContainer = iterable[lastIndex];
+
+					unique[lastContainer] = currentIndex;
+
+					std::swap(iterable[currentIndex], iterable[lastIndex]);
+
+					iterable.pop_back();
+					unique.erase(found);
+				}
+			}
+		};
+
+		TagCache m_TagContainers;
+
+		std::vector<TagContainer*> m_ContainersToAdd;
+		std::vector<TagContainer*> m_ContainersToRemove;
+
+		std::vector<std::pair<TagID, TagContainer*>> m_TagsToAdd;
+		std::vector<std::pair<TagID, TagContainer*>> m_TagsToRemove;
 
 		// Cache
-		std::unordered_map<TagID, std::vector<TagContainer*>> m_ContainersWithTag;
-		std::unordered_map<TagID, std::vector<TagContainer*>> m_ContainersWithoutTag;
+		std::unordered_map<TagID, TagCache> m_ContainersWithTag;
 	};
 }

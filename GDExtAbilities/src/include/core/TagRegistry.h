@@ -5,7 +5,6 @@
 #include "internal/smUID.h"
 #include "internal/Types.h"
 
-#include <godot_cpp/classes/object.hpp>
 #include <unordered_map>
 #include <vector>
 
@@ -26,6 +25,8 @@ namespace sm
 		~TagRegistry() = default;
 		TagRegistry(const TagRegistry& obj) = delete;
 
+		void Init();
+
 		bool RegisterTags(const godot::Ref<sm::TagData>& tagRoot);
 		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
 
@@ -44,8 +45,6 @@ namespace sm
 		bool IsChildOf(TagID tagID, TagID parentID) const;
 
 	private:
-		static TagRegistry* m_Instance;
-
 		DumbUID m_IDs;
 		sm::BitSet<MAX_TAGS> m_TagsSet;
 		std::vector<GameplayTag> m_Tags;

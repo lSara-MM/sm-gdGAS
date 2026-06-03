@@ -5,15 +5,14 @@
 #include <godot_cpp/classes/check_box.hpp>
 #include <godot_cpp/classes/control.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
-#include <godot_cpp/classes/editor_file_system.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/editor_resource_picker.hpp>
-#include <godot_cpp/classes/editor_settings.hpp>
 #include <godot_cpp/classes/file_system_dock.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/line_edit.hpp>
 #include <godot_cpp/classes/margin_container.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
 #include <godot_cpp/classes/texture_rect.hpp>
@@ -22,7 +21,7 @@
 #include <godot_cpp/classes/v_split_container.hpp>
 #include <regex>
 
-sm::TagRegistryEditor::TagRegistryEditor() : m_SettingsPath("GDExtAbilities/tag_registry_path")
+sm::TagRegistryEditor::TagRegistryEditor()
 {
 	m_TagsCache.reserve(realMaxTags);
 }
@@ -32,23 +31,12 @@ void sm::TagRegistryEditor::_bind_methods()
 
 void sm::TagRegistryEditor::_enter_tree()
 {
-	m_MainSplit = memnew(godot::VSplitContainer);
-	m_MainSplit->set_name("Tags");
+	m_ProjectSettings = godot::ProjectSettings::get_singleton();
 
-	auto gui = get_editor_interface()->get_base_control();
-	m_Icons.add = gui->get_theme_icon("Add", "EditorIcons");
-	m_Icons.edit = gui->get_theme_icon("Edit", "EditorIcons");
-	m_Icons.remove = gui->get_theme_icon("Remove", "EditorIcons");
-	m_Icons.removeInternal = gui->get_theme_icon("RemoveInternal", "EditorIcons");
-
-	CreateTreeBoxContainer();
-
-	m_InfoContainer = memnew(godot::VBoxContainer);
-	m_MainSplit->add_child(m_InfoContainer);
-
-	add_control_to_dock(EditorPlugin::DOCK_SLOT_LEFT_UL, m_MainSplit);
+	CreateTab();
 
 	m_FileSystemDock = get_editor_interface()->get_file_system_dock();
+
 	if (m_FileSystemDock)
 	{
 		m_FileSystemDock->connect("files_moved", callable_mp(this, &TagRegistryEditor::_OnFileMoved));
@@ -108,8 +96,14 @@ void sm::TagRegistryEditor::ClearTagData(godot::Ref<sm::TagData>& resource)
 		godot::Ref<sm::TagData> tag = stack.back();
 		stack.pop_back();
 
+		m_TagsCache.erase(tag->GetTagFullPath());
+
+#ifdef DEBUG_ENABLED
+		m_TagsCacheDebug.erase(ToStdString(tag->GetTagFullPath()));
+#endif
+
 		auto cb = callable_mp(this, &TagRegistryEditor::CreateOrUpdateTree);
-		if (!tag->is_connected("changed", cb))
+		if (tag->is_connected("changed", cb))
 		{
 			tag->disconnect("changed", cb);
 		}
@@ -129,6 +123,25 @@ void sm::TagRegistryEditor::_make_visible(bool visible)
 	m_MainSplit->set_visible(visible);
 }
 
+void sm::TagRegistryEditor::CreateTab()
+{
+	m_MainSplit = memnew(godot::VSplitContainer);
+	m_MainSplit->set_name("Tags");
+
+	auto gui = get_editor_interface()->get_base_control();
+	m_Icons.add = gui->get_theme_icon("Add", "EditorIcons");
+	m_Icons.edit = gui->get_theme_icon("Edit", "EditorIcons");
+	m_Icons.remove = gui->get_theme_icon("Remove", "EditorIcons");
+	m_Icons.removeInternal = gui->get_theme_icon("RemoveInternal", "EditorIcons");
+
+	CreateTreeBoxContainer();
+
+	m_InfoContainer = memnew(godot::VBoxContainer);
+	m_MainSplit->add_child(m_InfoContainer);
+
+	add_control_to_dock(EditorPlugin::DOCK_SLOT_LEFT_UL, m_MainSplit);
+}
+
 void sm::TagRegistryEditor::CreateTreeBoxContainer()
 {
 	m_TreeContainer = memnew(godot::VBoxContainer);
@@ -141,24 +154,29 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 	m_TreeContainer->add_child(m_Picker);
 	m_MainSplit->add_child(m_TreeContainer);
 
-	auto editorSettings = get_editor_interface()->get_editor_settings();
-	godot::String resPath = editorSettings->get_setting(m_SettingsPath);
+	godot::String resPath = m_ProjectSettings->get_setting(SETTINGS_PATH);
 
 	if (resPath.is_empty() || !godot::ResourceLoader::get_singleton()->exists(resPath))
 	{
-		editorSettings->erase(m_SettingsPath);
+		SetSetting(SETTINGS_PATH, "");
+		return;
 	}
-	else
+
+	godot::Ref<TagData> resource = godot::ResourceLoader::get_singleton()->load(resPath);
+	if (resource.is_valid())
 	{
-		godot::Ref<TagData> resource = godot::ResourceLoader::get_singleton()->load(resPath);
-		if (resource.is_valid())
-		{
-			m_Picker->set_edited_resource(resource);
-			m_TagRegistry = resource;
-			m_TagRegistryPath = resource->get_path();
-			CreateOrUpdateTree();
-		}
+		m_Picker->set_edited_resource(resource);
+		CreateTagRegistry(resource);
+		CreateOrUpdateTree();
 	}
+}
+
+void sm::TagRegistryEditor::CreateTagRegistry(const godot::Ref<sm::TagData>& resource)
+{
+	m_TagRegistry = resource;
+	//m_TagRegistry->SetName(">");
+	//m_TagRegistry->SetPath("");
+	m_TagRegistryPath = resource->get_path();
 }
 
 void sm::TagRegistryEditor::CreateOrUpdateTree()
@@ -171,6 +189,14 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 #ifdef DEBUG_ENABLED
 		m_TagsCacheDebug.clear();
 #endif // DEBUG_ENABLED
+		//CreateTag(m_TagRegistry, CreateRootItem());
+
+		auto children = m_TagRegistry->GetChildren();
+		auto root = CreateRootItem();
+		for (size_t i = 0; i < children.size(); i++)
+		{
+			CreateTag(children[i], root);
+		}
 	}
 	else
 	{
@@ -188,8 +214,20 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 
 		// Don't allow direct edit to avoid dupes
 		//m_Tree->connect("item_edited", callable_mp(this, &TagRegistryEditor::_OnItemEdited));
-	}
 
+		//CreateRootItem();
+
+		auto children = m_TagRegistry->GetChildren();
+		auto root = CreateRootItem();
+		for (size_t i = 0; i < children.size(); i++)
+		{
+			CreateTag(children[i], root);
+		}
+	}
+}
+
+godot::TreeItem* sm::TagRegistryEditor::CreateRootItem()
+{
 	godot::TreeItem* root = m_Tree->create_item();
 	root->set_text(0, "Tags");
 	root->set_tooltip_text(0, "Root tag");
@@ -197,17 +235,22 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 	root->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
 	root->add_button(0, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
 
-	CreateTag(m_TagRegistry, root);
+	return root;
 }
 
-void sm::TagRegistryEditor::CreateTag(const godot::Ref<sm::TagData> resource, godot::TreeItem* parent)
+void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData> resource, godot::TreeItem* parent)
 {
-	std::vector<std::pair<godot::Ref<sm::TagData>, godot::TreeItem*>> stack;
+	if (resource.is_null())
+	{
+		return;
+	}
+
+	std::vector<std::pair<godot::Ref<TagData>, godot::TreeItem*>> stack;
 	stack.push_back({ resource, parent });
 
 	while (!stack.empty())
 	{
-		std::pair<godot::Ref<sm::TagData>, godot::TreeItem*> tagPair = stack.back();
+		std::pair<godot::Ref<TagData>, godot::TreeItem*> tagPair = stack.back();
 		stack.pop_back();
 
 		godot::TreeItem* treeTag = m_Tree->create_item(tagPair.second);
@@ -217,11 +260,11 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<sm::TagData> resource, go
 		treeTag->set_editable(0, false);
 
 		// Refresh tree when resource children change
-		auto cb = callable_mp(this, &TagRegistryEditor::CreateOrUpdateTree);
+		/*auto cb = callable_mp(this, &TagRegistryEditor::CreateOrUpdateTree);
 		if (!tagPair.first->is_connected("changed", cb))
 		{
 			tagPair.first->connect("changed", cb);
-		}
+		}*/
 
 		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
 
@@ -240,11 +283,9 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<sm::TagData> resource, go
 
 void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::Resource> resource)
 {
-	auto editorSettings = get_editor_interface()->get_editor_settings();
-
 	if (!resource.is_valid())
 	{
-		editorSettings->erase(m_SettingsPath);
+		SetSetting(SETTINGS_PATH, "");
 		m_Tree->clear();
 		return;
 	}
@@ -253,26 +294,26 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 
 	if (resource->get_path().is_empty())
 	{
-		path = "res://data/tag_registry.tres";
+		path = "res://data/tags/tag_registry.tres";
 
 		godot::Ref<godot::DirAccess> dir = godot::DirAccess::open("res://");
-		dir->make_dir_recursive("res://data");
+		dir->make_dir_recursive("res://data/tags");
 
 		godot::ResourceSaver::get_singleton()->save(resource, path);
 	}
 
-	get_editor_interface()->get_editor_settings()->set(m_SettingsPath, path);
+	//m_ProjectSettings->set_initial_value(SETTINGS_PATH, path);
+	SetSetting(SETTINGS_PATH, path);
 
 	// If it wasn't saved properly, fail
 	if (path.is_empty() || !godot::ResourceLoader::get_singleton()->exists(path))
 	{
-		editorSettings->erase(m_SettingsPath);
+		SetSetting(SETTINGS_PATH, "");
 		m_Tree->clear();
 		return;
 	}
 
-	m_TagRegistry = resource;
-	m_TagRegistryPath = resource->get_path();
+	CreateTagRegistry(resource);
 
 	CreateOrUpdateTree();
 }
@@ -296,21 +337,16 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 	break;
 	case ButtonId::DELETE_ALL:
 	{
-		godot::Ref<TagData> resource = item->get_metadata(0);
-		ClearTagData(resource);
+		m_TagRegistry->Reset();
 
-		if (!resource->GetTagFullPath().is_empty())
-		{
-			resource->Reset();
-		}
+		m_TagsCache.clear();
+
+#ifdef DEBUG_ENABLED
+		m_TagsCacheDebug.clear();
+#endif // DEBUG_ENABLED
 
 		m_Tree->clear();
-
-		godot::TreeItem* root = m_Tree->create_item();
-		root->set_text(0, "Tags");
-		root->set_tooltip_text(0, "Root tag");
-		root->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
-		root->add_button(0, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
+		CreateRootItem();
 	}
 	break;
 	case ButtonId::DELETE_SELF:
@@ -473,13 +509,16 @@ void sm::TagRegistryEditor::DeleteTagButton(godot::TreeItem* item)
 
 void sm::TagRegistryEditor::SaveRegistryResource()
 {
-	auto editorSettings = get_editor_interface()->get_editor_settings();
-	godot::String registryPath = editorSettings->get_setting(m_SettingsPath);
-
-	if (!registryPath.is_empty() && m_TagRegistry.is_valid())
+	if (!m_TagRegistryPath.is_empty() && m_TagRegistry.is_valid())
 	{
-		godot::ResourceSaver::get_singleton()->save(m_TagRegistry, registryPath);
+		godot::ResourceSaver::get_singleton()->save(m_TagRegistry, m_TagRegistryPath);
 	}
+}
+
+void sm::TagRegistryEditor::SetSetting(godot::String settingPath, godot::String value)
+{
+	m_ProjectSettings->set_setting(settingPath, value);
+	m_ProjectSettings->save();
 }
 
 //void sm::TagRegistryEditor::_OnItemEdited()
@@ -492,15 +531,14 @@ void sm::TagRegistryEditor::SaveRegistryResource()
 void sm::TagRegistryEditor::_OnCreateTagClicked(godot::LineEdit* newText, godot::TreeItem* parentItem, godot::AcceptDialog* menu)
 {
 	ERR_FAIL_COND_MSG((!newText || !parentItem || !menu), "CreateTag failed: Null references");
-	ERR_FAIL_COND_MSG(m_CanBeCreated, "CreateTag failed: conditions were not met.");
+	ERR_FAIL_COND_MSG(!m_CanBeCreated, "CreateTag failed: conditions were not met.");
 
-	godot::Ref<sm::TagData> parentData = parentItem->get_metadata(0);
+	godot::Ref<TagData> parentData = parentItem->get_metadata(0);
 	ERR_FAIL_COND_MSG(parentData.is_null(), "CreateTag failed: Tag parent null");
 
-	godot::Ref<sm::TagData> data;
+	godot::Ref<TagData> data;
 	data.instantiate();
 	data->SetName(newText->get_text());
-
 	data->SetPath(parentData->GetTagFullPath());
 
 	CreateTag(data, parentItem);
@@ -574,7 +612,7 @@ void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::Ch
 	menu->queue_free();
 }
 
-void sm::TagRegistryEditor::AddToCache(const godot::String& tag)
+void sm::TagRegistryEditor::AddToCache(const godot::StringName& tag)
 {
 	ERR_FAIL_COND_MSG(m_TagsCache.size() == realMaxTags, "Tag count exceeds the number of tags allowed.");
 
@@ -583,25 +621,21 @@ void sm::TagRegistryEditor::AddToCache(const godot::String& tag)
 		return;
 	}
 
-	m_TagsCache.push_back(tag);
+	m_TagsCache.emplace(tag);
 
 #ifdef DEBUG_ENABLED
-	m_TagsCacheDebug.push_back(ToStdString(tag));
+	m_TagsCacheDebug.emplace(ToStdString(tag));
 #endif // DEBUG_ENABLED
-
 }
 
-bool sm::TagRegistryEditor::HasTagInCache(const godot::String& tag)
+bool sm::TagRegistryEditor::HasTagInCache(const godot::StringName& tag)
 {
-	for (auto tagToCheck : m_TagsCache)
-	{
-		if (tagToCheck == tag)
-		{
-			return true;
-		}
-	}
+	return m_TagsCache.find(tag) != m_TagsCache.end();
+}
 
-	return false;
+void sm::TagRegistryEditor::RemoveFromCache(const godot::Ref<TagData> tag)
+{
+
 }
 
 void sm::TagRegistryEditor::DeleteTree()
@@ -637,8 +671,7 @@ void sm::TagRegistryEditor::_OnFileMoved(const godot::String& oldFile, const god
 		return;
 	}
 
-	auto editorSettings = get_editor_interface()->get_editor_settings();
-	editorSettings->set(m_SettingsPath, newFile);
+	SetSetting(SETTINGS_PATH, newFile);
 
 	godot::Ref<TagData> movedResource = godot::ResourceLoader::get_singleton()->load(newFile);
 	if (movedResource.is_valid())
@@ -665,8 +698,7 @@ void sm::TagRegistryEditor::_OnFileRemoved(const godot::String& removedFile)
 		return;
 	}
 
-	auto editorSettings = get_editor_interface()->get_editor_settings();
-	editorSettings->erase(m_SettingsPath);
+	SetSetting(SETTINGS_PATH, "");
 
 	DeleteTree();
 }
@@ -685,14 +717,12 @@ void sm::TagRegistryEditor::_OnFolderMoved(const godot::String& oldFolder, const
 		godot::String suffix = currentPath.substr(oldFolder.length(), currentPath.length() - oldFolder.length());
 		godot::String movedPath = newFolder + suffix;
 
-		auto editorSettings = get_editor_interface()->get_editor_settings();
-		editorSettings->set(m_SettingsPath, movedPath);
+		SetSetting(SETTINGS_PATH, movedPath);
 
 		godot::Ref<TagData> movedResource = godot::ResourceLoader::get_singleton()->load(movedPath);
 		if (movedResource.is_valid())
 		{
-			m_TagRegistry = movedResource;
-			m_TagRegistryPath = movedResource->get_path();
+			CreateTagRegistry(movedResource);
 
 			if (m_Picker)
 			{

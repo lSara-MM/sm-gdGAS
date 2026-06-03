@@ -4,9 +4,10 @@
 #include "core/TagSystem.h"
 #include "godot/gdTagContainer.h"
 
-#include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
 
 sm::GAS_World::GAS_World()
 {
@@ -22,6 +23,10 @@ void sm::GAS_World::_bind_methods()
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities_availability", "value"), &SetAbilitiesAvailability);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("all_with_tags"), &AllTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("any_with_tags"), &AnyTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("none_with_tags"), &NoneTags);
 
 	// Tags
 	//godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
@@ -71,7 +76,26 @@ void sm::GAS_World::OnEnterTree()
 		}
 	}
 
+	InitTagSystem(globalRoot);
+
+	callable_mp(this, &GAS_World::_DeferredUpdate).call_deferred();
+
 	m_EntitiesRegistry.emplace(m_EntityUIDs.GenerateUID(), nullptr);
+}
+
+void sm::GAS_World::InitTagSystem(godot::Node* globalRoot)
+{
+	m_TagSystem = new TagSystem(this);
+
+	std::vector<TagContainer*> tagContainersInScene = NodeUtils::GetAllChildNodesOfType<TagContainer>(globalRoot);
+
+	for (TagContainer* node : tagContainersInScene)
+	{
+		node->SetIniTags();
+		RegisterTagContainer(node);
+	}
+
+	m_TagSystem->Update(get_process_delta_time());
 }
 
 void sm::GAS_World::OnExitTree()
@@ -126,6 +150,13 @@ void sm::GAS_World::OnProcess()
 	{
 		m_EffectsSystem->Update(get_process_delta_time());
 	}
+
+	m_TagSystem->Update(get_process_delta_time());
+}
+
+void sm::GAS_World::_DeferredUpdate()
+{
+	m_TagSystem->Update(get_process_delta_time());
 }
 
 void sm::GAS_World::SetEffectsAvailability(bool value)
@@ -199,8 +230,35 @@ void sm::GAS_World::UnregisterTagContainer(TagContainer* container)
 	m_TagSystem->UnregisterTagContainer(container);
 }
 
-godot::TypedArray<godot::Node> sm::GAS_World::NodesWithTag(const godot::Ref<TagData> tag) const
+godot::TypedArray<godot::Node> sm::GAS_World::AllTags(const godot::TypedArray<TagData> tags)
 {
-	return {};
-	//return m_TagSystem->ContainersWithTag(tag);
+	godot::TypedArray<godot::Node> ret;
+	for (auto node : m_TagSystem->All(tags))
+	{
+		ret.push_back(node->get_parent());
+	}
+
+	return ret;
+}
+
+godot::TypedArray<godot::Node> sm::GAS_World::AnyTags(const godot::TypedArray<TagData> tags)
+{
+	godot::TypedArray<godot::Node> ret;
+	for (auto node : m_TagSystem->Any(tags))
+	{
+		ret.push_back(node->get_parent());
+	}
+
+	return ret;
+}
+
+godot::TypedArray<godot::Node> sm::GAS_World::NoneTags(const godot::TypedArray<TagData> tags)
+{
+	godot::TypedArray<godot::Node> ret;
+	for (auto node : m_TagSystem->None(tags))
+	{
+		ret.push_back(node->get_parent());
+	}
+
+	return ret;
 }

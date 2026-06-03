@@ -2,6 +2,8 @@
 
 #include "internal/smAssert.h"
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
 
 sm::TagRegistry::TagRegistry()
 {
@@ -22,6 +24,35 @@ sm::TagRegistry::TagRegistry()
 
 	m_Tags.push_back(std::move(newInvalidTag));
 	m_Tags.push_back(std::move(newTag));
+}
+
+void sm::TagRegistry::Init()
+{
+	godot::ProjectSettings* ps = godot::ProjectSettings::get_singleton();
+	const godot::String fallbackPath = "res://data/tag_registry.tres";
+	godot::String path = fallbackPath;
+
+	if (ps->has_setting(SETTINGS_PATH))
+	{
+		path = ps->get_setting(SETTINGS_PATH);
+	}
+
+	godot::ResourceLoader* rl = godot::ResourceLoader::get_singleton();
+	if (path.is_empty() || !rl->exists(path, "tag_data"))
+	{
+		WARN_PRINT_ONCE_ED("Create a TagData and assign it in the Tag Editor before creating tags.\nEditor > Editor Docks > Tags.");
+		return;
+	}
+
+	godot::Ref<TagData> tagRoot = rl->load(path);
+	if (tagRoot.is_null())
+	{
+		WARN_PRINT_ONCE_ED("Warning: Create a TagData and assign it in the Tag Editor. Editor > Editor Docks > Tags.");
+
+		return;
+	}
+
+	RegisterTags(tagRoot);
 }
 
 bool sm::TagRegistry::RegisterTags(const godot::Ref<sm::TagData>& tagRoot)
@@ -63,20 +94,46 @@ bool sm::TagRegistry::RegisterTags(const godot::Ref<sm::TagData>& tagRoot)
 	return true;
 }
 
-sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& fullName, const godot::StringName& parentName)
+sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& tagName, const godot::StringName& parentName)
 {
-	TagID parentTag = GameplayTag::ROOT_TAG;
+#ifdef DEBUG_ENABLED
+	auto tagDebug = ToStdString(tagName);
+	auto parentDebug = ToStdString(parentName);
+#endif // DEBUG_ENABLED
 
-	if (!parentName.is_empty())
+	godot::StringName fullName;
+	if (!tagName.is_empty() && !tagName.begins_with(">"))
 	{
-		auto it = m_TagsDictionary.find(parentName);
-		parentTag = (it != m_TagsDictionary.end()) ? it->second : GameplayTag::INVALID_TAG;
+		fullName = godot::StringName(">" + tagName);
 	}
 
-	ERR_FAIL_COND_V_MSG(parentTag == GameplayTag::INVALID_TAG, nullptr, godot::vformat("ParentTag does not exists: %s", parentName));
+	godot::StringName fullParent;
+	if (!parentName.is_empty() && !parentName.begins_with(">"))
+	{
+		fullParent = godot::StringName(">" + parentName);
+	}
 
-	GameplayTag& newTag = m_Tags.emplace_back(m_IDs.GenerateUID(), fullName, parentTag);
+	TagID parentTagID = GameplayTag::ROOT_TAG;
+
+	if (!fullParent.is_empty())
+	{
+		auto it = m_TagsDictionary.find(fullParent);
+		parentTagID = (it != m_TagsDictionary.end()) ? it->second : GameplayTag::INVALID_TAG;
+	}
+
+	ERR_FAIL_COND_V_MSG(parentTagID == GameplayTag::INVALID_TAG, nullptr, godot::vformat("ParentTag does not exists: %s", fullParent));
+
+	GameplayTag& newTag = m_Tags.emplace_back(m_IDs.GenerateUID(), fullName, parentTagID);
 	m_TagsSet.Set(newTag.GetUID());
+
+	GameplayTag& parent = m_Tags[parentTagID];
+	parent.AddChild(newTag.GetUID());
+
+	//if (parentTagID != GameplayTag::ROOT_TAG)
+	{
+		newTag.ascendantsMask = parent.ascendantsMask;
+		newTag.ascendantsMask.Set(parentTagID);
+	}
 
 	// inspector idea:
 	// the idea is to have a tag registry with an array of tags

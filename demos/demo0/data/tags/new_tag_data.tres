@@ -1,0 +1,37 @@
+[gd_resource type="TagData" load_steps=9 format=3 uid="uid://bvtm6uq4hocae"]
+
+[sub_resource type="TagData" id="TagData_vspi7"]
+name = "b"
+path = ".a"
+
+[sub_resource type="TagData" id="TagData_kdhg3"]
+name = "a"
+children = Array[TagData]([SubResource("TagData_vspi7")])
+
+[sub_resource type="TagData" id="TagData_fxla6"]
+name = "ga"
+path = ".c.d.f"
+
+[sub_resource type="TagData" id="TagData_l8adh"]
+name = "f"
+path = ".c.d"
+children = Array[TagData]([SubResource("TagData_fxla6")])
+
+[sub_resource type="TagData" id="TagData_ra8cc"]
+name = "d"
+path = ".c"
+children = Array[TagData]([SubResource("TagData_l8adh")])
+
+[sub_resource type="TagData" id="TagData_fltk5"]
+name = "e"
+path = ".c"
+
+[sub_resource type="TagData" id="TagData_mie3r"]
+name = "c"
+children = Array[TagData]([SubResource("TagData_ra8cc"), SubResource("TagData_fltk5")])
+
+[sub_resource type="TagData" id="TagData_q1soa"]
+name = "ae"
+
+[resource]
+children = Array[TagData]([SubResource("TagData_kdhg3"), SubResource("TagData_mie3r"), SubResource("TagData_q1soa")])

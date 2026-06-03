@@ -45,14 +45,19 @@ void sm::TagData::SetPath(const godot::String& value)
 {
 	m_Path = value;
 
-	if (value.is_empty())
+	/*if (value.is_empty())
 	{
 		m_TagFullPath = m_Name;
 	}
-	else
+	else*/
 	{
 		m_TagFullPath = m_Path + "." + m_Name;
 	}
+
+#ifdef DEBUG_ENABLED
+	auto pathDebug = ToStdString(m_TagFullPath);
+	ERR_PRINT(m_TagFullPath);
+#endif // DEBUG_ENABLED
 }
 
 void sm::TagData::AddChild(godot::Ref<TagData> child)

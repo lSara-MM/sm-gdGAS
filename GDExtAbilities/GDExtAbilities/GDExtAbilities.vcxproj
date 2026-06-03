@@ -288,7 +288,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;TYPED_METHOD_BIND;NOMINMAX;HOT_RELOAD_ENABLED;_CONSOLE;DEBUG_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\src\include;$(SolutionDir)\godot-cpp\include;$(SolutionDir)\godot-cpp\gen\include;$(SolutionDir)\godot-cpp\gen\include\godot_cpp;$(SolutionDir)\godot-cpp\gdextension;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

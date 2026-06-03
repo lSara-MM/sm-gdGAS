@@ -28,6 +28,14 @@ std::vector<TagID>& sm::GameplayTag::GetChildren()
 	return m_Children;
 }
 
+void sm::GameplayTag::AddChild(TagID id)
+{
+	if (!HasChild(id))
+	{
+		m_Children.push_back(id);
+	}
+}
+
 size_t sm::GameplayTag::GetChildIndex(TagID id) const
 {
 	for (size_t i = 0; i < m_Children.size(); i++)

@@ -5,10 +5,8 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
-#include "gdExample.h"
-#include "godot/ui/gdTagRegistryEditor.h"
-#include "godot/gdAbilityData.h"
 #include "godot/gdAbilityContainer.h"
+#include "godot/gdAbilityData.h"
 #include "godot/gdAttributeContainer.h"
 #include "godot/gdAttributeData.h"
 #include "godot/gdAttributeSetData.h"
@@ -19,7 +17,9 @@
 #include "godot/gdGASWorld.h"
 #include "godot/gdTagContainer.h"
 #include "godot/gdTagData.h"
-#include "godot/gdTagRegistry.h"
+#include "godot/ui/gdTagRegistryEditor.h"
+#include <godot_cpp/classes/editor_script.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
 
@@ -27,7 +27,6 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 {
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE)
 	{
-		ClassDB::register_class<GDExample>();
 		ClassDB::register_abstract_class<sm::GameplayAbilitySystem>();
 		ClassDB::register_abstract_class<sm::GameplayAbilitySystemResource>();
 
@@ -40,11 +39,16 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 		ClassDB::register_class<sm::EffectData>();
 		ClassDB::register_class<sm::ModifierData>();
 		ClassDB::register_class<sm::TagData>();
-		//ClassDB::register_class<sm::TagRegistryData>();
 
 		ClassDB::register_class<sm::AttributeContainer>();
 		ClassDB::register_class<sm::AbilityContainer>();
 		ClassDB::register_class<sm::TagContainer>();
+
+		if (!godot::Engine::get_singleton()->is_editor_hint())
+		{
+			sm::TagRegistry& registry = sm::TagRegistry::Instance();
+			registry.Init();
+		}
 	}
 
 #ifdef TOOLS_ENABLED

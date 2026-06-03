@@ -1,10 +1,12 @@
 #pragma once
 #include "core/TagRegistry.h"
+#include "godot/gdTagData.h"
 #include "godot/gdGameplayAbilitySystemNode.h"
 #include "godot/gdGASEntity.h"
 #include "internal/smUID.h"
 
 #include <unordered_set>
+#include <godot_cpp/classes/ref.hpp>
 
 namespace sm
 {
@@ -39,7 +41,11 @@ namespace sm
 		GAS_Entity* GetEntity(EntityID id);
 
 		// Tags
-		godot::TypedArray<godot::Node> NodesWithTag(const godot::Ref<TagData> tag) const;
+		godot::TypedArray<godot::Node> AllTags(const godot::TypedArray<TagData> tags);
+
+		godot::TypedArray<godot::Node> AnyTags(const godot::TypedArray<TagData> tags);
+
+		godot::TypedArray<godot::Node> NoneTags(const godot::TypedArray<TagData> tags);
 
 #pragma endregion Godot
 
@@ -51,12 +57,12 @@ namespace sm
 
 	private:
 		void OnEnterTree() override;
+		void InitTagSystem(godot::Node* globalRoot);
 		void OnExitTree() override;
 		void OnReady() override;
 		void OnProcess() override;
 
-		void OnNodeAdded(godot::Node* node);
-		void OnNodeRemoved(godot::Node* node);
+		void _DeferredUpdate();
 
 	public:
 		bool enableEffects = true;

@@ -2,8 +2,14 @@
 
 #include "core/TagRegistry.h"
 
+#include <godot_cpp/classes/editor_plugin.hpp>
+#include <godot_cpp/classes/editor_settings.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
+
+bool sm::TagContainer::s_HasLoadedRegistry = false;
 
 sm::TagContainer::TagContainer()
 {}
@@ -104,6 +110,8 @@ void sm::TagContainer::_ready()
 
 void sm::TagContainer::OnEnterTree()
 {
+	//InitRootResource();
+
 	bool hasSibling = NodeUtils::HasSiblingOfType<TagContainer>(this);
 
 	if (hasSibling)
@@ -115,11 +123,64 @@ void sm::TagContainer::OnEnterTree()
 
 		ERR_FAIL_MSG("Error: this node already has an existing TagContainer");
 	}
+
+	SetIniTags();
+
+	emit_signal("tag_container_added");
+}
+
+void sm::TagContainer::InitRootResource()
+{
+	if (s_HasLoadedRegistry)
+	{
+		return;
+	}
+
+	godot::ProjectSettings* ps = godot::ProjectSettings::get_singleton();
+	const godot::String fallbackPath = "res://data/tag_registry.tres";
+	godot::String path = fallbackPath;
+
+	if (ps->has_setting(SETTINGS_PATH))
+	{
+		path = ps->get_setting(SETTINGS_PATH);
+	}
+
+	godot::ResourceLoader* rl = godot::ResourceLoader::get_singleton();
+	if (path.is_empty() || !rl->exists(path, "tag_data"))
+	{
+		WARN_PRINT_ONCE_ED("Create a TagData and assign it in the Tag Editor before creating tags.\nEditor > Editor Docks > Tags.");
+		return;
+	}
+
+	godot::Ref<TagData> tagRoot = rl->load(path);
+	if (tagRoot.is_null())
+	{
+		WARN_PRINT_ONCE_ED("Warning: Create a TagData and assign it in the Tag Editor. Editor > Editor Docks > Tags.");
+
+		return;
+	}
+
+	TagRegistry& registry = TagRegistry::Instance();
+	registry.RegisterTags(tagRoot);
+
+	s_HasLoadedRegistry = true;
+}
+
+void sm::TagContainer::SetIniTags()
+{
+	for (size_t i = 0; i < m_gdTags.size(); i++)
+	{
+		godot::Ref<TagData> tag = m_gdTags[i];
+
+		// TODO: Tags havent been initialized so all ids are 0 
+		SetTag(tag->GetInternalID());
+	}
 }
 
 void sm::TagContainer::OnExitTree()
 {
 	prevParent = nullptr;
+	emit_signal("tag_container_removed");
 }
 
 void sm::TagContainer::OnParented()
@@ -154,6 +215,16 @@ void sm::TagContainer::OnUnparented()
 void sm::TagContainer::OnChildOrderChanged()
 {
 	WARN_PRINT_ED("TagContainer should not have children.");
+}
+
+godot::TypedArray<sm::TagData> sm::TagContainer::GetTags() const
+{
+	return m_gdTags;
+}
+
+void sm::TagContainer::SetTags(const godot::TypedArray<TagData>& tags)
+{
+	m_gdTags = tags;
 }
 
 void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
@@ -192,12 +263,17 @@ void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
 
 bool sm::TagContainer::HasTag(const godot::Ref<TagData>& tag) const
 {
-	return m_TagsSet.Has(tag->GetInternalID());
+	return m_TagsSet.tags.Has(tag->GetInternalID());
+}
+
+sm::TagSet sm::TagContainer::GetTagSet() const
+{
+	return m_TagsSet;
 }
 
 bool sm::TagContainer::HasTag(TagID id) const
 {
-	return m_TagsSet.Has(id);
+	return m_TagsSet.tags.Has(id);
 }
 
 bool sm::TagContainer::HasTagFromPath(const godot::String& tag) const
@@ -205,7 +281,7 @@ bool sm::TagContainer::HasTagFromPath(const godot::String& tag) const
 	TagRegistry& instance = TagRegistry::Instance();
 	TagID id = instance.FindTagID(tag);
 
-	return m_TagsSet.Has(id);
+	return m_TagsSet.tags.Has(id);
 }
 
 bool sm::TagContainer::HasAllTags(const godot::Array& tags) const
@@ -250,7 +326,7 @@ bool sm::TagContainer::HasAllTags(const godot::Array& tags) const
 
 		ERR_FAIL_COND_V_MSG(id == GameplayTag::INVALID_TAG, false, godot::vformat("HasAllTags failed: Unknown tag '%s'", v));
 
-		if (!m_TagsSet.Has(id))
+		if (!m_TagsSet.tags.Has(id))
 		{
 			return false;
 		}
@@ -300,7 +376,7 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 
 		ERR_FAIL_COND_V_MSG(id == GameplayTag::INVALID_TAG, false, godot::vformat("HasAnyTags failed: Unknown tag '%s'", v));
 
-		if (m_TagsSet.Has(id))
+		if (m_TagsSet.tags.Has(id))
 		{
 			return true;
 		}
@@ -313,24 +389,34 @@ void sm::TagContainer::SetTag(TagID id, bool value)
 {
 	ERR_FAIL_COND_MSG(id >= MAX_TAGS, godot::vformat("SetTag failed: id %d out of range (MAX_TAGS=%d)", id, MAX_TAGS));
 
-	uint16& count = m_TagsStack[id];
+	uint16& count = m_TagsSet.stack[id];
 	if (value)
 	{
 		if (++count == 1)
 		{
-			m_TagsSet.Set(id, true);
+			m_TagsSet.tags.Set(id, true);
 		}
 
 		emit_signal("tag_added");
+
+		if (OnTagAdded)
+		{
+			OnTagAdded(this, id);
+		}
 	}
 	else
 	{
 		if (count > 0 && --count == 0)
 		{
-			m_TagsSet.Set(id, false);
+			m_TagsSet.tags.Set(id, false);
 		}
 
 		emit_signal("tag_removed");
+
+		if (OnTagRemoved)
+		{
+			OnTagRemoved(this, id);
+		}
 	}
 }
 

@@ -8,10 +8,14 @@
 
 config_version=5
 
+[GDExtAbilities]
+
+tag_registry_path="res://data/tags/new_tag_data.tres"
+
 [application]
 
 config/name="demo0"
-run/main_scene="uid://w4omg3s6rpd5"
+run/main_scene="uid://c1paa8dc7dn22"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

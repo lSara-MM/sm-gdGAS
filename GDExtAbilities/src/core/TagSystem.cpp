@@ -1,18 +1,45 @@
 #include "core/TagSystem.h"
 
 #include "godot/gdTagContainer.h"
+#include "godot/gdGASWorld.h"
 
 #include <godot_cpp/classes/node.hpp>
 #include <algorithm>
 
+sm::TagSystem::TagSystem(GAS_World* w)
+{
+	_world = w;
+}
+
+void sm::TagSystem::Update(float dt)
+{
+	_OnContainerRemoved();
+	_OnContainerAdded();
+
+	_OnTagRemoved();
+	_OnTagAdded();
+}
+
 void sm::TagSystem::RegisterTagContainer(TagContainer* container)
 {
-	m_TagContainers.emplace(container);
+	container->OnTagAdded = [this](TagContainer* node, TagID id)
+		{
+			this->m_TagsToAdd.emplace_back(std::pair<TagID, TagContainer*>{ id, node });
+		};
+
+	container->OnTagRemoved = [this](TagContainer* node, TagID id)
+		{
+			this->m_TagsToRemove.emplace_back(std::pair<TagID, TagContainer*>{ id, node });
+		};
+
+	m_ContainersToAdd.push_back(container);
+	m_TagContainers.Add(container);
 }
 
 void sm::TagSystem::UnregisterTagContainer(TagContainer* container)
 {
-	m_TagContainers.erase(container);
+	m_ContainersToRemove.push_back(container);
+	m_TagContainers.Remove(container);
 }
 
 const std::vector<sm::TagContainer*>& sm::TagSystem::ContainersWithTag(const godot::Ref<TagData> tag)
@@ -20,7 +47,7 @@ const std::vector<sm::TagContainer*>& sm::TagSystem::ContainersWithTag(const god
 	return ContainersWithTag(tag->GetInternalID());
 }
 
-const std::vector<sm::TagContainer*>& sm::TagSystem::ContainersWithoutTag(const godot::Ref<TagData> tag)
+const std::vector<sm::TagContainer*> sm::TagSystem::ContainersWithoutTag(const godot::Ref<TagData> tag)
 {
 	return ContainersWithoutTag(tag->GetInternalID());
 }
@@ -45,8 +72,8 @@ std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::TypedArray<TagDat
 		std::vector<TagContainer*> containers;
 	};
 
-	std::vector<TagContainer*> allNodes;
-	allNodes.reserve(64);
+	std::vector<TagContainer*> retNodes;
+	retNodes.reserve(64);
 
 	std::vector<TagList> anyNodes;
 	anyNodes.reserve(tags.size());
@@ -56,7 +83,7 @@ std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::TypedArray<TagDat
 		godot::Ref<TagData> tag = tags[i];
 		auto result = m_ContainersWithTag.find(tag->GetInternalID());
 		const std::vector<TagContainer*>& nodesWithTag = (result != m_ContainersWithTag.end()
-			? result->second : ContainersWithTag(tag));
+			? result->second.iterable : ContainersWithTag(tag));
 
 		anyNodes.emplace_back(TagList{ tag->GetInternalID(), nodesWithTag });
 	}
@@ -77,7 +104,7 @@ std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::TypedArray<TagDat
 		bool has_all = true;
 
 		// Ignore first Tag
-		for (size_t i = 1; i < anyNodes.size() - 1; i++)
+		for (size_t i = 1; i < anyNodes.size(); i++)
 		{
 			if (!container->HasTag(anyNodes[i].id))
 			{
@@ -88,83 +115,33 @@ std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::TypedArray<TagDat
 
 		if (has_all)
 		{
-			allNodes.push_back(container);
+			retNodes.push_back(container);
 		}
 	}
 
-	//std::vector<TagID> tagIDs;
-	//tagIDs.reserve(tags.size());
-
-	//for (size_t i = 0; i < tags.size(); i++)
-	//{
-	//	godot::Ref<TagData> tag = tags[i];
-	//	tagIDs.push_back(tag->GetInternalID());
-	//}
-
-	//std::sort(tagIDs.begin(), tagIDs.end(),
-	//	[&](const TagID a, const TagID b)
-	//	{
-	//		auto aTag = m_ContainersWithTag.find(a);
-	//		const std::vector<TagContainer*>* nodesWithTagA = &(aTag != m_ContainersWithTag.end()
-	//			? aTag->second : ContainersWithTag(aTag->first));
-
-	//		auto bTag = m_ContainersWithTag.find(a);
-	//		const std::vector<TagContainer*>* nodesWithTagB = &(bTag != m_ContainersWithTag.end()
-	//			? bTag->second : ContainersWithTag(bTag->first));
-
-	//		return nodesWithTagA < nodesWithTagB;
-	//	});
-
-	//for (auto tagID : tagIDs)
-	//{
-	//	if ()
-	//	{
-
-	//	}
-	//}
-
-	/*std::vector<TagContainer*> allNodes;
-	allNodes.reserve(64);
-
-	std::vector<const std::vector<TagContainer*>*> anyNodes;
-	anyNodes.reserve(tags.size());
-
-	for (size_t i = 0; i < tags.size(); i++)
-	{
-		godot::Ref<TagData> tag = tags[i];
-		auto result = m_ContainersWithTag.find(tag->GetInternalID());
-		const std::vector<TagContainer*>* nodesWithTag = &(result != m_ContainersWithTag.end()
-			? result->second : ContainersWithTag(tag));
-
-		anyNodes.push_back(nodesWithTag);
-	}
-
-	std::sort(anyNodes.begin(), anyNodes.end(),
-		[](const std::vector<TagContainer*>* a, const std::vector<TagContainer*>* b)
-		{
-			return a->size() < b->size();
-		});
-
-	for (TagContainer* container : *anyNodes[0])
-	{
-		for (size_t i = 0; i < anyNodes.size(); i++)
-		{
-			container->HasTag(tags[i]);
-		}
-	}*/
-
-	return allNodes;
+	return retNodes;
 }
 
 std::vector<sm::TagContainer*> sm::TagSystem::None(const godot::TypedArray<TagData>& tags)
 {
-	return std::vector<TagContainer*>();
+	std::vector<TagContainer*> retNodes;
+	retNodes.reserve(64);
+
+	for (TagContainer* container : m_TagContainers.iterable)
+	{
+		if (!container->HasAnyTag(tags))
+		{
+			retNodes.push_back(container);
+		}
+	}
+
+	return retNodes;
 }
 
 std::vector<sm::TagContainer*> sm::TagSystem::Any(const godot::TypedArray<TagData>& tags)
 {
-	std::vector<TagContainer*> anyNodes;
-	anyNodes.reserve(64);
+	std::vector<TagContainer*> retNodes;
+	retNodes.reserve(64);
 
 	std::unordered_set<uint64> added;
 
@@ -174,7 +151,7 @@ std::vector<sm::TagContainer*> sm::TagSystem::Any(const godot::TypedArray<TagDat
 		auto result = m_ContainersWithTag.find(tag->GetInternalID());
 
 		const std::vector<TagContainer*>& nodesWithTag = (result != m_ContainersWithTag.end()
-			? result->second : ContainersWithTag(tag));
+			? result->second.iterable : ContainersWithTag(tag));
 
 		for (TagContainer* node : nodesWithTag)
 		{
@@ -182,12 +159,12 @@ std::vector<sm::TagContainer*> sm::TagSystem::Any(const godot::TypedArray<TagDat
 
 			if (added.insert(id).second)
 			{
-				anyNodes.push_back(node);
+				retNodes.push_back(node);
 			}
 		}
 	}
 
-	return anyNodes;
+	return retNodes;
 }
 
 const std::vector<sm::TagContainer*>& sm::TagSystem::ContainersWithTag(TagID id)
@@ -196,44 +173,126 @@ const std::vector<sm::TagContainer*>& sm::TagSystem::ContainersWithTag(TagID id)
 
 	if (mapFound != m_ContainersWithTag.end())
 	{
-		return mapFound->second;
+		return mapFound->second.iterable;
 	}
 
-	std::vector<TagContainer*> nodes;
-	for (auto* container : m_TagContainers)
+	TagCache cache;
+	cache.iterable.reserve(64);
+	for (auto* container : m_TagContainers.iterable)
 	{
 		if (container->HasTag(id))
 		{
-			nodes.push_back(container);
+			cache.Add(container);
 		}
 	}
 
 	// Cache id
-	auto [it, inserted] = m_ContainersWithTag.emplace(id, std::move(nodes));
-	return it->second;
+	auto [it, inserted] = m_ContainersWithTag.emplace(id, std::move(cache));
+	return it->second.iterable;
 }
 
-const std::vector<sm::TagContainer*>& sm::TagSystem::ContainersWithoutTag(TagID id)
+const std::vector<sm::TagContainer*> sm::TagSystem::ContainersWithoutTag(TagID id)
 {
-	auto mapFound = m_ContainersWithoutTag.find(id);
+	std::vector<sm::TagContainer*> ret;
+	ret.reserve(64);
 
-	if (mapFound != m_ContainersWithoutTag.end())
-	{
-		return mapFound->second;
-	}
-
-	std::vector<TagContainer*> nodes;
-	nodes.reserve(64);
-
-	for (auto* container : m_TagContainers)
+	for (auto* container : m_TagContainers.iterable)
 	{
 		if (!container->HasTag(id))
 		{
-			nodes.push_back(container);
+			ret.push_back(container);
 		}
 	}
 
-	// Cache id
-	auto [it, inserted] = m_ContainersWithTag.emplace(id, std::move(nodes));
-	return it->second;
+	return ret;
+}
+
+void sm::TagSystem::_OnContainerAdded()
+{
+	for (TagContainer* node : m_ContainersToAdd)
+	{
+		BitSet<MAX_TAGS> tags = node->GetTagSet().tags;
+
+		for (size_t block = 0; block < tags.GetSize(); ++block)
+		{
+			// Get bits per block
+			auto bits = tags[block];
+
+			while (bits)
+			{
+				int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
+				int index = block * 64 + bit;
+
+				ERR_CONTINUE_MSG(index >= MAX_TAGS, godot::vformat("AddTags skipped: index %d out of range (MAX_TAGS=%d)", index, MAX_TAGS));
+
+				if (auto found = m_ContainersWithTag.find(index);
+					found != m_ContainersWithTag.end())
+				{
+					TagCache& cache = found->second;
+					cache.Add(node);
+				}
+				else
+				{
+					m_ContainersWithTag[index].Add(node);
+				}
+
+				bits &= bits - 1;
+			}
+		}
+	}
+
+	m_ContainersToAdd.clear();
+}
+
+void sm::TagSystem::_OnContainerRemoved()
+{
+	for (TagContainer* node : m_ContainersToRemove)
+	{
+		BitSet<MAX_TAGS> tags = node->GetTagSet().tags;
+
+		for (size_t block = 0; block < tags.GetSize(); ++block)
+		{
+			// Get bits per block
+			auto bits = tags[block];
+
+			while (bits)
+			{
+				int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
+				int index = block * 64 + bit;
+
+				ERR_CONTINUE_MSG(index >= MAX_TAGS, godot::vformat("RemoveTags skipped: index %d out of range (MAX_TAGS=%d)", index, MAX_TAGS));
+
+				if (auto found = m_ContainersWithTag.find(index);
+					found != m_ContainersWithTag.end())
+				{
+					TagCache& cache = found->second;
+					cache.Remove(node);
+				}
+
+				bits &= bits - 1;
+			}
+		}
+	}
+
+	m_ContainersToRemove.clear();
+}
+
+void sm::TagSystem::_OnTagAdded()
+{
+	for (auto& [id, node] : m_TagsToAdd)
+	{
+		m_ContainersWithTag[id].Add(node);
+	}
+
+	m_TagsToAdd.clear();
+}
+
+void sm::TagSystem::_OnTagRemoved()
+{
+	for (auto& [id, node] : m_TagsToRemove)
+	{
+		m_ContainersWithTag[id].Remove(node);
+	}
+
+	m_TagsToRemove.clear();
 }

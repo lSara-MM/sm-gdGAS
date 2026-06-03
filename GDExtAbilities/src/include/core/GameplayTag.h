@@ -16,6 +16,7 @@ namespace sm
 		godot::StringName GetName();
 
 		std::vector<TagID>& GetChildren();
+		void AddChild(TagID id);
 
 		size_t GetChildIndex(TagID id) const;
 
@@ -25,6 +26,8 @@ namespace sm
 	public:
 		static constexpr TagID INVALID_TAG = 0;
 		static constexpr TagID ROOT_TAG = 1;
+
+		BitSet<512> ascendantsMask;
 
 	private:
 		const TagID m_UID;
@@ -36,8 +39,6 @@ namespace sm
 #endif //  DEBUG_ENABLED
 
 		std::vector<TagID> m_Children;
-
-		//BitSet<512> ascendantsMask;
 		//BitSet<512> descendantsMask;
 	};
 }

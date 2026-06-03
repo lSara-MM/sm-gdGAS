@@ -7,6 +7,8 @@
 
 namespace sm
 {
+	inline const char* SETTINGS_PATH = "GDExtAbilities/tag_registry_path";
+
 	class TagData : public GameplayAbilitySystemResource
 	{
 		GDCLASS(TagData, GameplayAbilitySystemResource)

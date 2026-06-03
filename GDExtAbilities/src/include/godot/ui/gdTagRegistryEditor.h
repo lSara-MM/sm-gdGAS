@@ -1,10 +1,10 @@
 #pragma once
 #ifdef TOOLS_ENABLED
-#include <godot/gdTagRegistry.h>
 #include <godot/gdTagData.h>
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/resource.hpp>
+#include <unordered_set>
 
 namespace godot
 {
@@ -15,6 +15,7 @@ namespace godot
 	class FileSystemDock;
 	class Label;
 	class LineEdit;
+	class ProjectSettings;
 	class Tree;
 	class TreeItem;
 	class VBoxContainer;
@@ -59,19 +60,24 @@ namespace sm
 		void _make_visible(bool visible) override;
 
 		void CreateTreeBoxContainer();
+		void CreateTagRegistry(const godot::Ref<sm::TagData>& resource);
 		void CreateOrUpdateTree();
+		godot::TreeItem* CreateRootItem();
 		void CreateTag(const godot::Ref<sm::TagData> resource, godot::TreeItem* parent);
 
 		void DeleteTree();
 		void DeleteTag(const godot::Ref<sm::TagData> resource, godot::TreeItem* parent);
 
 	private:
+		void CreateTab();
 		// Disconnect signals
 		void ClearTagData(godot::Ref<sm::TagData>& resource);
 		void AddTagButton(godot::TreeItem* item);
 		void DeleteTagButton(godot::TreeItem* item);
 
 		void SaveRegistryResource();
+
+		void SetSetting(godot::String settingPath, godot::String value);
 
 		void _OnRegistryResourceChanged(const godot::Ref<godot::Resource> resource);
 
@@ -93,8 +99,9 @@ namespace sm
 		void _OnFileRemoved(const godot::String& removedFile);
 		void _OnFolderMoved(const godot::String& oldFolder, const godot::String& newFolder);
 
-		void AddToCache(const godot::String& tag);
-		bool HasTagInCache(const godot::String& tag);
+		void AddToCache(const godot::StringName& tag);
+		bool HasTagInCache(const godot::StringName& tag);
+		void RemoveFromCache(const godot::Ref<TagData> tag);
 		void RefreshTreeFromEditorChanges();
 
 	private:
@@ -112,16 +119,17 @@ namespace sm
 		godot::Tree* m_Tree = nullptr;
 		godot::EditorResourcePicker* m_Picker = nullptr;
 		godot::FileSystemDock* m_FileSystemDock = nullptr;
+		godot::ProjectSettings* m_ProjectSettings = nullptr;
 
+		//
 		godot::Ref<TagData> m_TagRegistry;
 
 		Icons m_Icons;
-		const godot::String m_SettingsPath;
 		godot::String m_TagRegistryPath;
 
-		std::vector<godot::String> m_TagsCache;
+		std::unordered_set<godot::StringName> m_TagsCache;
 #ifdef DEBUG_ENABLED
-		std::vector<std::string> m_TagsCacheDebug;
+		std::unordered_set<std::string> m_TagsCacheDebug;
 #endif // DEBUG_ENABLED
 
 		bool m_DontShowAgain = false;

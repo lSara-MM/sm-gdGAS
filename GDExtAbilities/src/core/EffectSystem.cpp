@@ -69,10 +69,9 @@ void sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
 
 void sm::EffectSystem::RemoveEffect(GameplayEffect* effect, size_t index)
 {
-	GAS_World* world = m_World;
-	SM_ASSERT(world != nullptr, "Critical error: Could not remove effect. World not created.");
+	SM_ASSERT(_world != nullptr, "Critical error: Could not remove effect. World not created.");
 
-	GAS_Entity* entity = world->GetEntity(effect->GetTargetID());
+	GAS_Entity* entity = _world->GetEntity(effect->GetTargetID());
 	SM_ASSERT(entity != nullptr, "Critical error: Could not remove effect. Entity %d was not found.", effect->GetTargetID());
 
 	RemoveEffectModifiers(entity, effect);

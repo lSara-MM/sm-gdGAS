@@ -37,7 +37,7 @@ namespace sm
 		void SetName(const godot::StringName& n);
 
 	public:
-		sm::Event<godot::StringName> eventSetName;
+		Event<godot::StringName> eventSetName;
 
 	private:
 		// Godot
