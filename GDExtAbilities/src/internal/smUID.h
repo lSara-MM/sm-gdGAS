@@ -17,6 +17,11 @@ namespace sm
 			return nextID;
 		}
 
+		void Reset()
+		{
+			nextID = 0;
+		}
+
 	private:
 		uint32 nextID = 0;
 	};

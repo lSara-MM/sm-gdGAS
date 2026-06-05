@@ -68,6 +68,8 @@ namespace sm
 		void DeleteTree();
 		void DeleteTag(const godot::Ref<sm::TagData> resource, godot::TreeItem* parent);
 
+		void GenerateConstants();
+
 	private:
 		void CreateTab();
 		// Disconnect signals
@@ -109,6 +111,7 @@ namespace sm
 
 	public:
 		const int realMaxTags = MAX_TAGS - 2;
+		const godot::String generatedPath = "res://gen/tags";
 
 	private:
 		godot::VSplitContainer* m_MainSplit = nullptr;

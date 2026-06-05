@@ -1,12 +1,15 @@
 #ifdef TOOLS_ENABLED
 #include "godot/ui/gdTagRegistryEditor.h"
 
+#include "core/TagRegistry.h"
+#include <fstream>
 #include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/check_box.hpp>
 #include <godot_cpp/classes/control.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/editor_resource_picker.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/file_system_dock.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
 #include <godot_cpp/classes/label.hpp>
@@ -15,6 +18,7 @@
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
+#include <godot_cpp/classes/script.hpp>
 #include <godot_cpp/classes/texture_rect.hpp>
 #include <godot_cpp/classes/tree.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
@@ -81,19 +85,19 @@ void sm::TagRegistryEditor::_exit_tree()
 	}
 }
 
-void sm::TagRegistryEditor::ClearTagData(godot::Ref<sm::TagData>& resource)
+void sm::TagRegistryEditor::ClearTagData(godot::Ref<TagData>& resource)
 {
 	if (!resource.is_valid())
 	{
 		return;
 	}
 
-	std::vector<godot::Ref<sm::TagData>> stack;
+	std::vector<godot::Ref<TagData>> stack;
 	stack.push_back(resource);
 
 	while (!stack.empty())
 	{
-		godot::Ref<sm::TagData> tag = stack.back();
+		godot::Ref<TagData> tag = stack.back();
 		stack.pop_back();
 
 		m_TagsCache.erase(tag->GetTagFullPath());
@@ -169,13 +173,16 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 		CreateTagRegistry(resource);
 		CreateOrUpdateTree();
 	}
+
+	auto genConstantsButton = memnew(godot::Button);
+	genConstantsButton->set_text("Generate tags");
+	genConstantsButton->connect("pressed", callable_mp(this, &TagRegistryEditor::GenerateConstants));
+	m_TreeContainer->add_child(genConstantsButton);
 }
 
-void sm::TagRegistryEditor::CreateTagRegistry(const godot::Ref<sm::TagData>& resource)
+void sm::TagRegistryEditor::CreateTagRegistry(const godot::Ref<TagData>& resource)
 {
 	m_TagRegistry = resource;
-	//m_TagRegistry->SetName(">");
-	//m_TagRegistry->SetPath("");
 	m_TagRegistryPath = resource->get_path();
 }
 
@@ -214,8 +221,6 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 
 		// Don't allow direct edit to avoid dupes
 		//m_Tree->connect("item_edited", callable_mp(this, &TagRegistryEditor::_OnItemEdited));
-
-		//CreateRootItem();
 
 		auto children = m_TagRegistry->GetChildren();
 		auto root = CreateRootItem();
@@ -259,13 +264,6 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData> resource, godot:
 		treeTag->set_tooltip_text(0, tagPair.first->GetTagFullPath());
 		treeTag->set_editable(0, false);
 
-		// Refresh tree when resource children change
-		/*auto cb = callable_mp(this, &TagRegistryEditor::CreateOrUpdateTree);
-		if (!tagPair.first->is_connected("changed", cb))
-		{
-			tagPair.first->connect("changed", cb);
-		}*/
-
 		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
 
 		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::EDIT), false, "Rename tag.");
@@ -296,17 +294,16 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 
 	godot::String path = resource->get_path();
 
-	if (resource->get_path().is_empty())
+	if (path.is_empty())
 	{
-		path = "res://data/tags/tag_registry.tres";
+		path = generatedPath + godot::String("/tag_registry.tres");
 
 		godot::Ref<godot::DirAccess> dir = godot::DirAccess::open("res://");
-		dir->make_dir_recursive("res://data/tags");
-
-		godot::ResourceSaver::get_singleton()->save(resource, path);
+		dir->make_dir_recursive(generatedPath);
 	}
 
-	//m_ProjectSettings->set_initial_value(SETTINGS_PATH, path);
+	godot::ResourceSaver::get_singleton()->save(resource, path);
+
 	SetSetting(SETTINGS_PATH, path);
 
 	// If it wasn't saved properly, fail
@@ -657,6 +654,52 @@ void sm::TagRegistryEditor::DeleteTree()
 		ClearTagData(m_TagRegistry);
 		m_TagRegistryPath = "";
 	}
+}
+
+void sm::TagRegistryEditor::GenerateConstants()
+{
+	godot::String path = generatedPath + godot::String("/gen_tags.gd");
+	godot::String globalPath = godot::ProjectSettings::get_singleton()->globalize_path(path);
+
+	godot::Ref<godot::DirAccess> dir = godot::DirAccess::open("res://");
+	dir->make_dir_recursive(generatedPath);
+
+	std::ofstream outfile;
+	std::string outputFilePath = ToStdString(globalPath);
+	outfile.open(outputFilePath);
+
+	outfile << "# This is a generated file.\n\nclass_name GameplayTags\n\n";
+
+	TagRegistry& registry = TagRegistry::Instance();
+	registry.Reset();
+
+	if (m_TagRegistry.is_null())
+	{
+		WARN_PRINT_ED("Warning: Invalid Tag Registry.");
+		outfile.close();
+		return;
+	}
+
+	registry.RegisterTags(m_TagRegistry);
+
+	std::vector<GameplayTag> tags = registry.GetTags();
+
+	if (tags.empty())
+	{
+		WARN_PRINT_ED("Warning: 0 Tags created.");
+		outfile.close();
+		return;
+	}
+
+	for (size_t i = 0; i < tags.size(); i++)
+	{
+		auto gdName = tags[i].GetName();
+		auto replaced = gdName.replace(".", "_");
+
+		outfile << "const " << ToStdString(replaced) << " = " << i << "\n";
+	}
+
+	outfile.close();
 }
 
 void sm::TagRegistryEditor::_OnFileMoved(const godot::String& oldFile, const godot::String& newFile)
