@@ -561,14 +561,7 @@ void sm::TagRegistryEditor::_OnCreateTagNameChanged(const godot::String& newText
 
 	ERR_FAIL_COND_MSG(parentResource.is_null(), "CreateTag failed: parent resource is null.");
 
-	if (parentResource->GetTagFullPath().is_empty())
-	{
-		path = newText;
-	}
-	else
-	{
-		path = parentResource->GetTagFullPath() + "." + newText;
-	}
+	path = parentResource->GetTagFullPath() + "." + newText;
 
 	if (!IsNameValid(newText))
 	{
