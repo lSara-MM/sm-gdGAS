@@ -126,6 +126,9 @@
     <ClCompile Include="..\src\core\TagSystem.cpp">
       <Filter>Source Files\tags</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h">
@@ -225,6 +228,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\core\TagSystem.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagContainerInspector.h">
       <Filter>Header Files\tags</Filter>
     </ClInclude>
   </ItemGroup>

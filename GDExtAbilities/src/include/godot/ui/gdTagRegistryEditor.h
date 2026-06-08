@@ -1,6 +1,8 @@
 #pragma once
 #ifdef TOOLS_ENABLED
-#include <godot/gdTagData.h>
+#include "godot/ui/gdTagContainerInspector.h"
+#include "godot/gdTagData.h"
+
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -59,6 +61,8 @@ namespace sm
 
 		void _make_visible(bool visible) override;
 
+		const std::vector<godot::Ref<TagData>> GetTags() const;
+
 		void CreateTreeBoxContainer();
 		void CreateTagRegistry(const godot::Ref<sm::TagData>& resource);
 		void CreateOrUpdateTree();
@@ -72,6 +76,7 @@ namespace sm
 
 	private:
 		void CreateTab();
+		void CreateInfoBoxContainer();
 		// Disconnect signals
 		void ClearTagData(godot::Ref<sm::TagData>& resource);
 		void AddTagButton(godot::TreeItem* item);
@@ -106,6 +111,8 @@ namespace sm
 		void RemoveFromCache(const godot::Ref<TagData> tag);
 		void RefreshTreeFromEditorChanges();
 
+		godot::Ref<TagData> GetSelectedItem() const;
+
 	private:
 		bool IsNameValid(const godot::String& name) const;
 
@@ -114,6 +121,10 @@ namespace sm
 		const godot::String generatedPath = "res://gen/tags";
 
 	private:
+		//
+		godot::Ref<TagContainerInspector> m_Inspector;
+
+		//
 		godot::VSplitContainer* m_MainSplit = nullptr;
 		godot::VBoxContainer* m_TreeContainer = nullptr;
 		godot::VBoxContainer* m_InfoContainer = nullptr;
@@ -124,12 +135,17 @@ namespace sm
 		godot::FileSystemDock* m_FileSystemDock = nullptr;
 		godot::ProjectSettings* m_ProjectSettings = nullptr;
 
+		// Info container
+		godot::Label* m_CurrentTagInfo = nullptr;
+		godot::Label* m_ParentTagInfo = nullptr;
+
 		//
 		godot::Ref<TagData> m_TagRegistry;
 
 		Icons m_Icons;
 		godot::String m_TagRegistryPath;
 
+		std::vector<godot::Ref<TagData>> m_TagDatas;
 		std::unordered_set<godot::StringName> m_TagsCache;
 #ifdef DEBUG_ENABLED
 		std::unordered_set<std::string> m_TagsCacheDebug;
@@ -141,5 +157,4 @@ namespace sm
 		// Info
 	};
 }
-
 #endif // TOOLS_ENABLED

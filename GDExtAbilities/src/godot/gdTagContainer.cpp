@@ -232,6 +232,7 @@ void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
 
 	SetTag(tag->GetInternalID());
+	m_gdTags.append(tag);
 }
 
 void sm::TagContainer::AddTagFromPath(const godot::String& tag)
@@ -249,6 +250,7 @@ void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
 	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
 
 	SetTag(tag->GetInternalID(), false);
+	m_gdTags.erase(tag);
 }
 
 void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)

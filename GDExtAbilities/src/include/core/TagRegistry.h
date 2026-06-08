@@ -19,8 +19,6 @@ namespace sm
 			return instance;
 		}
 
-		//private:
-
 		TagRegistry();
 		~TagRegistry() = default;
 		TagRegistry(const TagRegistry& obj) = delete;
@@ -30,11 +28,12 @@ namespace sm
 		void Reset();
 
 		bool RegisterTags(const godot::Ref<sm::TagData>& tagRoot);
-		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
 
 		std::vector<GameplayTag> GetTags() const;
-
 		TagID FindTagID(const godot::StringName& name) const;
+
+	private:
+		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
 
 		GameplayTag* FindGameplayTag(const godot::Ref<TagData>& tag);
 

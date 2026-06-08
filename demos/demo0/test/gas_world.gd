@@ -6,8 +6,6 @@ func _ready() -> void:
 	#var a = all_with_tags([resource])
 	#print(a.size())
 	
-	print(GameplayTags._abc_a)
-	
 	pass
 
 

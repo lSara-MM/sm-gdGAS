@@ -369,6 +369,7 @@
     <ClInclude Include="..\src\include\godot\gdTagContainer.h" />
     <ClInclude Include="..\src\include\godot\gdTagData.h" />
     <ClInclude Include="..\src\include\godot\gdTagRegistry.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagContainerInspector.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagRegistryEditor.h" />
     <ClInclude Include="..\src\internal\Event.h" />
     <ClInclude Include="..\src\internal\smAssert.h" />
@@ -402,6 +403,7 @@
     <ClCompile Include="..\src\godot\gdTagContainer.cpp" />
     <ClCompile Include="..\src\godot\gdTagData.cpp" />
     <ClCompile Include="..\src\godot\gdTagRegistry.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp" />
     <ClCompile Include="..\src\include\godot\gdGameplayAbilitySystemNode.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />

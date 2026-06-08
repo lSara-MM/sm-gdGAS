@@ -17,6 +17,7 @@
 #include "godot/gdGASWorld.h"
 #include "godot/gdTagContainer.h"
 #include "godot/gdTagData.h"
+#include "godot/ui/gdTagContainerInspector.h"
 #include "godot/ui/gdTagRegistryEditor.h"
 #include <godot_cpp/classes/editor_script.hpp>
 #include <godot_cpp/classes/engine.hpp>
@@ -56,6 +57,8 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 	{
 		ClassDB::register_class<sm::TagRegistryEditor>();
 		EditorPlugins::add_by_type<sm::TagRegistryEditor>();
+
+		ClassDB::register_class<sm::TagContainerInspector>();
 	}
 #endif //TOOLS_ENABLED
 }

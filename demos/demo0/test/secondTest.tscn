@@ -1,3 +1,5 @@
 [gd_scene format=3 uid="uid://w7xiss3ld1kq"]
 
 [node name="SecondTest" type="Node2D"]
+
+[node name="TagContainer" type="TagContainer" parent="."]
