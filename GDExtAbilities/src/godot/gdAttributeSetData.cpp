@@ -116,16 +116,6 @@ std::vector<godot::Ref<sm::AttributeData>> sm::AttributeSetData::SortByName()
 {
 	std::vector<godot::Ref<AttributeData>> ret = ToRefAttributeVector();
 
-	//// TODO: delete
-	//std::vector<std::string> ret2;
-	//ret2.reserve(ret.size());
-
-	//for (int64_t i = 0; i < ret.size(); ++i)
-	//{
-	//	ret2.emplace_back(ToStdString(ret[i]->GetName()));
-	//}
-	////
-
 	ret.erase(
 		std::remove_if(ret.begin(), ret.end(),
 			[](const godot::Ref<AttributeData>& attr)
@@ -135,21 +125,11 @@ std::vector<godot::Ref<sm::AttributeData>> sm::AttributeSetData::SortByName()
 		ret.end()
 	);
 
-
 	std::sort(ret.begin(), ret.end(),
 		[](const godot::Ref<AttributeData>& a, const godot::Ref<AttributeData>& b)
 		{
 			return a->GetName() < b->GetName();
 		});
-
-	//// TODO: delete
-	//std::vector<std::string> ret3;
-	//ret3.reserve(ret.size());
-
-	//for (int64_t i = 0; i < ret.size(); ++i)
-	//{
-	//	ret3.emplace_back(ToStdString(ret[i]->GetName()));
-	////}
 
 	return ret;
 }

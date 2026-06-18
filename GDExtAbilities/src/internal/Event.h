@@ -11,15 +11,25 @@ namespace sm
 	class Event
 	{
 	public:
-		Event() = default;
-		virtual ~Event() = default;
-
 		uint32 SubscribeEvent(std::function<void(Args...)> callback)
 		{
 			uint32 id = m_IDs.GenerateUID();
 			m_Listeners.emplace_back(Listener{ id, callback });
-
 			return id;
+		}
+
+		template<typename T>
+		uint32 SubscribeEvent(
+			T* instance,
+			void (T::* method)(Args...)
+		)
+		{
+			return SubscribeEvent(
+				[instance, method](Args... args)
+				{
+					(instance->*method)(args...);
+				}
+			);
 		}
 
 		void Unsubscribe(uint32 id)
@@ -49,7 +59,6 @@ namespace sm
 		};
 
 		DumbUID m_IDs;
-
 		std::vector<Listener> m_Listeners;
 	};
 }

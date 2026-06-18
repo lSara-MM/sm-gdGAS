@@ -1,42 +1,56 @@
-[gd_scene load_steps=5 format=3 uid="uid://c1paa8dc7dn22"]
+[gd_scene load_steps=7 format=3 uid="uid://c1paa8dc7dn22"]
 
-[ext_resource type="TagData" uid="uid://bpu6gkp8om4xm" path="res://test/tag1.tres" id="1_ec8nx"]
-[ext_resource type="Script" uid="uid://bv78sx3saurpk" path="res://test/gas_world.gd" id="1_k62bo"]
+[sub_resource type="TagData" id="TagData_b7uce"]
+name = "a"
+path = ".abc"
+id = 3
 
-[sub_resource type="TagData" id="TagData_681wa"]
-name = "paoc"
+[sub_resource type="TagData" id="TagData_2eqi6"]
+name = "c"
+path = ".abc.b"
+id = 5
 
-[sub_resource type="TagData" id="TagData_ec8nx"]
-name = "eee"
+[sub_resource type="TagData" id="TagData_ogg1x"]
+name = "b"
+path = ".abc"
+id = 4
+children = Array[TagData]([SubResource("TagData_2eqi6")])
+
+[sub_resource type="TagData" id="TagData_rdx71"]
+name = "none"
+path = "."
+id = 6
+
+[sub_resource type="TagData" id="TagData_nd0oo"]
+name = "a"
+path = ".abc"
+id = 3
+
+[sub_resource type="TagData" id="TagData_88urv"]
+name = "abc"
+path = "."
+id = 2
+children = Array[TagData]([SubResource("TagData_nd0oo"), SubResource("TagData_ogg1x")])
 
 [node name="RealTest" type="Node2D"]
 
-[node name="TagContainer" type="TagContainer" parent="."]
-tags = Array[TagData]([ExtResource("1_ec8nx")])
-
 [node name="GAS_World" type="GAS_World" parent="."]
-entity_count = 0
-script = ExtResource("1_k62bo")
-
-[node name="GAS_Entity" type="GAS_Entity" parent="."]
-tag_container = NodePath("TagContainer")
-
-[node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
-tags = Array[TagData]([ExtResource("1_ec8nx")])
-
-[node name="GAS_Entity2" type="GAS_Entity" parent="."]
-tag_container = NodePath("TagContainer")
-
-[node name="TagContainer" type="TagContainer" parent="GAS_Entity2"]
-tags = Array[TagData]([SubResource("TagData_681wa"), ExtResource("1_ec8nx")])
+entity_count = 3
 
 [node name="GAS_Entity3" type="GAS_Entity" parent="."]
 tag_container = NodePath("TagContainer")
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity3"]
-tags = Array[TagData]([SubResource("TagData_ec8nx")])
+tags = Array[TagData]([SubResource("TagData_b7uce"), SubResource("TagData_ogg1x")])
 
-[node name="GAS_Entity4" type="GAS_Entity" parent="."]
+[node name="GAS_Entity2" type="GAS_Entity" parent="."]
 tag_container = NodePath("TagContainer")
 
-[node name="TagContainer" type="TagContainer" parent="GAS_Entity4"]
+[node name="TagContainer" type="TagContainer" parent="GAS_Entity2"]
+tags = Array[TagData]([SubResource("TagData_2eqi6"), SubResource("TagData_rdx71")])
+
+[node name="GAS_Entity" type="GAS_Entity" parent="."]
+tag_container = NodePath("TagContainer")
+
+[node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
+tags = Array[TagData]([SubResource("TagData_88urv")])

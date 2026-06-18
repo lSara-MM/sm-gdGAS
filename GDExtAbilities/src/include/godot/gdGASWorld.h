@@ -41,11 +41,11 @@ namespace sm
 		GAS_Entity* GetEntity(EntityID id);
 
 		// Tags
-		godot::TypedArray<godot::Node> AllTags(const godot::TypedArray<TagData> tags);
+		godot::TypedArray<godot::Node> AllTags(const godot::TypedArray<TagID> tags);
 
-		godot::TypedArray<godot::Node> AnyTags(const godot::TypedArray<TagData> tags);
+		godot::TypedArray<godot::Node> AnyTags(const godot::TypedArray<TagID> tags);
 
-		godot::TypedArray<godot::Node> NoneTags(const godot::TypedArray<TagData> tags);
+		godot::TypedArray<godot::Node> NoneTags(const godot::TypedArray<TagID> tags);
 
 #pragma endregion Godot
 

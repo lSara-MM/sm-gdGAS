@@ -1,10 +1,8 @@
 extends GAS_World
 
 func _ready() -> void:
-	#var resource = preload("res://test/tag1.tres")
-	#
-	#var a = all_with_tags([resource])
-	#print(a.size())
+	var a = all_with_tags([Tags._abc_a])
+	print(a.size())
 	
 	pass
 

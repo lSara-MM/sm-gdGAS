@@ -230,7 +230,7 @@ void sm::GAS_World::UnregisterTagContainer(TagContainer* container)
 	m_TagSystem->UnregisterTagContainer(container);
 }
 
-godot::TypedArray<godot::Node> sm::GAS_World::AllTags(const godot::TypedArray<TagData> tags)
+godot::TypedArray<godot::Node> sm::GAS_World::AllTags(const godot::TypedArray<TagID> tags)
 {
 	godot::TypedArray<godot::Node> ret;
 	for (auto node : m_TagSystem->All(tags))
@@ -241,7 +241,7 @@ godot::TypedArray<godot::Node> sm::GAS_World::AllTags(const godot::TypedArray<Ta
 	return ret;
 }
 
-godot::TypedArray<godot::Node> sm::GAS_World::AnyTags(const godot::TypedArray<TagData> tags)
+godot::TypedArray<godot::Node> sm::GAS_World::AnyTags(const godot::TypedArray<TagID> tags)
 {
 	godot::TypedArray<godot::Node> ret;
 	for (auto node : m_TagSystem->Any(tags))
@@ -252,7 +252,7 @@ godot::TypedArray<godot::Node> sm::GAS_World::AnyTags(const godot::TypedArray<Ta
 	return ret;
 }
 
-godot::TypedArray<godot::Node> sm::GAS_World::NoneTags(const godot::TypedArray<TagData> tags)
+godot::TypedArray<godot::Node> sm::GAS_World::NoneTags(const godot::TypedArray<TagID> tags)
 {
 	godot::TypedArray<godot::Node> ret;
 	for (auto node : m_TagSystem->None(tags))

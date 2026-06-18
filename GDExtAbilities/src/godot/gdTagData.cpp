@@ -11,6 +11,10 @@ void sm::TagData::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_name", "id"), &SetName);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_path"), &GetPath);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_path", "path"), &SetPath);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("get_internal_id"), &GetInternalID);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_internal_id", "internal_id"), &SetInternalID);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_children"), &GetChildren);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_children", "value"), &SetChildren);
@@ -21,8 +25,13 @@ void sm::TagData::_bind_methods()
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::STRING_NAME, "path"),
-		"", "get_path"
+		godot::Variant::STRING_NAME, "path", godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		"set_path", "get_path"
+	);
+
+	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::INT, "id", godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_STORAGE),
+		"set_internal_id", "get_internal_id"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -37,26 +46,49 @@ void sm::TagData::_bind_methods()
 void sm::TagData::SetName(const godot::String& value)
 {
 	m_Name = value;
+	m_DebugName = ToStdString(value);
 	UpdateChildrenParents();
 }
 
 void sm::TagData::SetPath(const godot::String& value)
 {
-	m_TagFullPath = godot::String(value) + "." + m_Name;
+	m_Path = value;
 
-	if (value.is_empty())
+	godot::String root;
+	if (m_Path == ".")
+	{
+		root = m_Path + m_Name;
+	}
+	else if (!m_Path.is_empty())
+	{
+		root = m_Path + "." + m_Name;
+	}
+	else
+	{
+		root = "." + m_Name;
+	}
+
+	SetTagFullPath(root);
+}
+
+void sm::TagData::SetFullPath(const godot::String& value)
+{
+	if (value.is_empty() || value == ".")
 	{
 		m_Path = ".";
+		SetTagFullPath(m_Path + m_Name);
 	}
 	else
 	{
 		m_Path = value;
+		SetTagFullPath(m_Path + "." + m_Name);
 	}
+}
 
-#ifdef DEBUG_ENABLED
-	auto pathDebug = ToStdString(m_TagFullPath);
-	ERR_PRINT(m_TagFullPath);
-#endif // DEBUG_ENABLED
+void sm::TagData::SetInternalID(TagID value)
+{
+	m_InternalID = value;
+	emit_changed();
 }
 
 void sm::TagData::AddChild(godot::Ref<TagData> child)
@@ -74,6 +106,11 @@ void sm::TagData::RemoveChild(godot::Ref<TagData> child)
 void sm::TagData::SetTagFullPath(godot::String value)
 {
 	m_TagFullPath = value;
+
+#ifdef DEBUG_ENABLED
+	m_DebugPath = ToStdString(m_TagFullPath);
+	ERR_PRINT(m_TagFullPath);
+#endif // DEBUG_ENABLED
 }
 
 void sm::TagData::SetChildren(const godot::TypedArray<TagData>& value)
@@ -85,6 +122,16 @@ void sm::TagData::SetChildren(const godot::TypedArray<TagData>& value)
 void sm::TagData::UpdateChildrenParents()
 {
 	emit_changed();
+
+	godot::String root;
+	if (m_Path == ".")
+	{
+		root = m_Path + m_Name;
+	}
+	else if (!m_Path.is_empty())
+	{
+		root = m_Path + "." + m_Name;
+	}
 
 	if (m_Children.is_empty())
 	{
@@ -101,18 +148,7 @@ void sm::TagData::UpdateChildrenParents()
 
 	for (int64_t i = 0; i < m_Children.size(); i++)
 	{
-		godot::String root;
-		if (m_Path == ".")
-		{
-			root = m_Path + m_Name;
-		}
-		else if (!m_Path.is_empty())
-		{
-			root = m_Path + "." + m_Name;
-		}
-
 		tagsStack.push_back(TagStackEntry{ m_Children[i], root });
-		m_TagFullPath = root;
 	}
 
 	while (!tagsStack.empty())
@@ -130,7 +166,7 @@ void sm::TagData::UpdateChildrenParents()
 		auto pathDebug = ToStdString(tagEntry.hierarchy);
 #endif // DEBUG_ENABLED
 
-		tag->SetPath(tagEntry.hierarchy);
+		tag->SetFullPath(tagEntry.hierarchy);
 
 		for (int64_t i = 0; i < tag->GetChildren().size(); i++)
 		{
@@ -144,7 +180,7 @@ void sm::TagData::UpdateChildrenParents()
 			godot::String root = tagEntry.hierarchy + "." + tagEntry.tag->GetName();
 			tagsStack.emplace_back(tagChild, root);
 #ifdef DEBUG_ENABLED
-			auto pathDebug = ToStdString(root);
+			auto rootDebug = ToStdString(root);
 #endif // DEBUG_ENABLED
 		}
 	}

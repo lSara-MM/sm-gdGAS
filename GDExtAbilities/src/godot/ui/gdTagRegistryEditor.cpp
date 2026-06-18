@@ -2,6 +2,7 @@
 #include "godot/ui/gdTagRegistryEditor.h"
 
 #include "core/TagRegistry.h"
+#include "godot/gdTagContainer.h"
 #include <fstream>
 #include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/check_box.hpp>
@@ -12,6 +13,7 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/file_system_dock.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
+#include <godot_cpp/classes/item_list.hpp>
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/line_edit.hpp>
 #include <godot_cpp/classes/margin_container.hpp>
@@ -35,12 +37,13 @@ void sm::TagRegistryEditor::_bind_methods()
 
 void sm::TagRegistryEditor::_enter_tree()
 {
+	//
+	m_ProjectSettings = godot::ProjectSettings::get_singleton();
+
+	//
 	m_Inspector.instantiate();
 	add_inspector_plugin(m_Inspector);
 	m_Inspector->SetEditorPlugin(this);
-
-	//
-	m_ProjectSettings = godot::ProjectSettings::get_singleton();
 
 	CreateTab();
 
@@ -53,6 +56,7 @@ void sm::TagRegistryEditor::_enter_tree()
 		m_FileSystemDock->connect("folder_moved", callable_mp(this, &TagRegistryEditor::_OnFolderMoved));
 	}
 
+	GenerateConstants();
 	_make_visible(false);
 }
 
@@ -116,9 +120,7 @@ void sm::TagRegistryEditor::CreateTab()
 	m_Icons.removeInternal = gui->get_theme_icon("RemoveInternal", "EditorIcons");
 
 	CreateTreeBoxContainer();
-
-	// TODO: uncomment when done
-	//CreateInfoBoxContainer();
+	CreateInfoBoxContainer();
 
 	add_control_to_dock(EditorPlugin::DOCK_SLOT_LEFT_UL, m_MainSplit);
 }
@@ -154,7 +156,7 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 	if (resource.is_valid())
 	{
 		m_Picker->set_edited_resource(resource);
-		CreateTagRegistry(resource);
+		CreateTagRegistryData(resource);
 		CreateOrUpdateTree();
 	}
 }
@@ -168,15 +170,32 @@ void sm::TagRegistryEditor::CreateInfoBoxContainer()
 	margin->add_theme_constant_override("margin_left", 24);
 	m_InfoContainer->add_child(margin);
 
-	m_CurrentTagInfo = memnew(godot::Label);
-	margin->add_child(m_CurrentTagInfo);
-	m_ParentTagInfo = memnew(godot::Label);
-	margin->add_child(m_ParentTagInfo);
+	auto* vContainer = memnew(godot::VBoxContainer);
+	margin->add_child(vContainer);
 
-	_OnItemSelected();
+	m_CurrentTagInfo = memnew(godot::Label);
+	vContainer->add_child(m_CurrentTagInfo);
+	m_ParentTagInfo = memnew(godot::Label);
+	vContainer->add_child(m_ParentTagInfo);
+	m_ReferencesSize = memnew(godot::Label);
+	vContainer->add_child(m_ReferencesSize);
+
+	m_ReferencesTree = memnew(godot::Tree);
+	m_ReferencesTree->set_columns(1);
+	m_ReferencesTree->set_hide_root(true);
+	m_ReferencesTree->set_hide_folding(true);
+	m_ReferencesTree->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
+	m_ReferencesTree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
+	m_ReferencesTree->set_custom_minimum_size(godot::Vector2(100, 70));
+	m_ReferencesTree->connect(
+		"item_activated",
+		callable_mp(this, &TagRegistryEditor::_OnReferenceActivated)
+	);
+
+	m_InfoContainer->add_child(m_ReferencesTree);
 }
 
-void sm::TagRegistryEditor::CreateTagRegistry(const godot::Ref<TagData>& resource)
+void sm::TagRegistryEditor::CreateTagRegistryData(const godot::Ref<TagData>& resource)
 {
 	m_TagRegistry = resource;
 	m_TagRegistryPath = resource->get_path();
@@ -188,11 +207,11 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 	{
 		m_Tree->clear();
 		m_TagsCache.clear();
+		m_TagDatas.clear();
 
 #ifdef DEBUG_ENABLED
 		m_TagsCacheDebug.clear();
 #endif // DEBUG_ENABLED
-		//CreateTag(m_TagRegistry, CreateRootItem());
 
 		auto children = m_TagRegistry->GetChildren();
 		auto root = CreateRootItem();
@@ -239,7 +258,7 @@ godot::TreeItem* sm::TagRegistryEditor::CreateRootItem()
 	return root;
 }
 
-void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData> resource, godot::TreeItem* parent)
+void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData>& resource, godot::TreeItem* parent)
 {
 	if (resource.is_null())
 	{
@@ -318,7 +337,7 @@ void sm::TagRegistryEditor::ClearTagData(godot::Ref<TagData>& resource)
 	resource.unref();
 }
 
-void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::Resource> resource)
+void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::Resource>& resource)
 {
 	if (!resource.is_valid())
 	{
@@ -349,12 +368,12 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 		return;
 	}
 
-	CreateTagRegistry(resource);
+	CreateTagRegistryData(resource);
 
 	CreateOrUpdateTree();
 }
 
-void sm::TagRegistryEditor::_OnRegistryResourceSelected(const godot::Ref<godot::Resource> resource, bool inspect)
+void sm::TagRegistryEditor::_OnRegistryResourceSelected(const godot::Ref<godot::Resource>& resource, bool inspect)
 {
 	if (resource.is_valid())
 	{
@@ -409,7 +428,7 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 
 void sm::TagRegistryEditor::_OnItemSelected()
 {
-	auto item = GetSelectedItem();
+	godot::Ref<TagData> item = GetSelectedItem();
 	if (item.is_null())
 	{
 		m_CurrentTagInfo->set_text("Tag: <null>");
@@ -417,13 +436,45 @@ void sm::TagRegistryEditor::_OnItemSelected()
 		return;
 	}
 
-	// TODO: Info panel. Should show: 
-	// Parent tag
-	// Number of children and reference to them probably
-
 	m_CurrentTagInfo->set_text(godot::vformat("Tag: %s", item->GetTagFullPath()));
 	m_ParentTagInfo->set_text(godot::vformat("Path: %s", item->GetPath()));
 
+	const auto& it = m_CurrentReferences.find(item->GetInternalID());
+
+	if (it == m_CurrentReferences.end())
+	{
+		return;
+	}
+
+	auto vec = it->second;
+	m_ReferencesTree->clear();
+	m_ReferencesSize->set_text(godot::vformat("References: %d", vec.size()));
+
+	auto icon = get_editor_interface()->get_base_control()->get_theme_icon("Node", "EditorIcons");
+
+	godot::TreeItem* rootItem = m_ReferencesTree->create_item();
+	m_ReferencesTree->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
+	m_ReferencesTree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
+	m_ReferencesTree->set_custom_minimum_size(godot::Size2(100, 70));
+
+	godot::TreeItem* row = m_ReferencesTree->create_item(rootItem);
+
+	for (uint64_t id : vec)
+	{
+		auto* object = godot::ObjectDB::get_instance(id);
+		auto* node = godot::Object::cast_to<godot::Node>(object);
+
+		if (!node)
+		{
+			continue;
+		}
+
+		auto* parentNode = node->get_parent();
+		get_editor_interface()->edit_node(parentNode);
+		row->set_text(0, parentNode->get_parent()->get_name());
+		row->set_icon(0, icon);
+		row->set_metadata(0, id);
+	}
 }
 
 void sm::TagRegistryEditor::AddTagButton(godot::TreeItem* item)
@@ -557,7 +608,7 @@ void sm::TagRegistryEditor::SaveRegistryResource()
 	}
 }
 
-void sm::TagRegistryEditor::SetSetting(godot::String settingPath, godot::String value)
+void sm::TagRegistryEditor::SetSetting(const char* settingPath, godot::String  value)
 {
 	m_ProjectSettings->set_setting(settingPath, value);
 	m_ProjectSettings->save();
@@ -581,7 +632,7 @@ void sm::TagRegistryEditor::_OnCreateTagClicked(godot::LineEdit* newText, godot:
 	godot::Ref<TagData> data;
 	data.instantiate();
 	data->SetName(newText->get_text());
-	data->SetPath(parentData->GetTagFullPath());
+	data->SetFullPath(parentData->GetTagFullPath());
 
 	CreateTag(data, parentItem);
 	parentData->AddChild(data);
@@ -641,6 +692,8 @@ void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::Ch
 
 	godot::Ref<TagData> resource = item->get_metadata(0);
 	godot::Ref<TagData> parentResource = item->get_parent()->get_metadata(0);
+
+	DeleteFromVector(resource);
 	parentResource->RemoveChild(resource);
 	ClearTagData(resource);
 
@@ -648,6 +701,41 @@ void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::Ch
 
 	memdelete(item);
 	menu->queue_free();
+}
+
+void sm::TagRegistryEditor::DeleteFromVector(const godot::Ref<TagData> resource)
+{
+	std::vector<godot::Ref<TagData>> toDelete;
+	std::vector<godot::Ref<TagData>> stack;
+	stack.push_back(resource);
+
+	while (!stack.empty())
+	{
+		godot::Ref<TagData> t = stack.back();
+		stack.pop_back();
+
+		toDelete.push_back(t);
+
+		auto children = t->GetChildren();
+		for (size_t i = 0; i < children.size(); i++)
+		{
+			stack.push_back(children[i]);
+		}
+	}
+
+	deleteTag.Notify(toDelete);
+
+	std::unordered_set<uint64_t> ids;
+	for (auto& tag : toDelete)
+	{
+		ids.insert(tag->GetInternalID());
+	}
+
+	std::erase_if(m_TagDatas,
+		[&](const godot::Ref<TagData>& tag)
+		{
+			return ids.contains(tag->GetInternalID());
+		});
 }
 
 void sm::TagRegistryEditor::AddToCache(const godot::StringName& tag)
@@ -750,10 +838,23 @@ void sm::TagRegistryEditor::GenerateConstants()
 		auto gdName = tags[i].GetName();
 		auto replaced = gdName.replace(".", "_");
 
-		outfile << "const " << ToStdString(replaced) << " = " << i << "\n";
+		outfile << "const " << ToStdString(replaced) << " = " << tags[i].GetUID() << "\n";
 	}
 
 	outfile.close();
+}
+
+void sm::TagRegistryEditor::_TagAddedToContainer(TagID id, const TagContainer* container)
+{
+	m_CurrentReferences[id].push_back(container->get_instance_id());
+}
+
+void sm::TagRegistryEditor::_TagRemovedFromContainer(TagID id, const TagContainer* container)
+{
+	if (auto map = m_CurrentReferences.find(id); map != m_CurrentReferences.end())
+	{
+		std::erase(map->second, container->get_instance_id());
+	}
 }
 
 void sm::TagRegistryEditor::_OnFileMoved(const godot::String& oldFile, const godot::String& newFile)
@@ -819,7 +920,7 @@ void sm::TagRegistryEditor::_OnFolderMoved(const godot::String& oldFolder, const
 		godot::Ref<TagData> movedResource = godot::ResourceLoader::get_singleton()->load(movedPath);
 		if (movedResource.is_valid())
 		{
-			CreateTagRegistry(movedResource);
+			CreateTagRegistryData(movedResource);
 
 			if (m_Picker)
 			{
@@ -829,6 +930,24 @@ void sm::TagRegistryEditor::_OnFolderMoved(const godot::String& oldFolder, const
 	}
 
 	RefreshTreeFromEditorChanges();
+}
+
+void sm::TagRegistryEditor::_OnReferenceActivated()
+{
+	godot::TreeItem* item = m_ReferencesTree->get_selected();
+	if (!item)
+	{
+		return;
+	}
+
+	godot::ObjectID id = item->get_metadata(0);
+	auto* object = godot::ObjectDB::get_instance(id);
+	auto* node = godot::Object::cast_to<godot::Node>(object);
+
+	if (node)
+	{
+		get_editor_interface()->edit_node(node);
+	}
 }
 
 void sm::TagRegistryEditor::RefreshTreeFromEditorChanges()

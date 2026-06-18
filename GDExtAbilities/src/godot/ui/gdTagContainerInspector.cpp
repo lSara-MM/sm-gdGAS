@@ -37,6 +37,19 @@ void sm::TagContainerInspector::_parse_begin(godot::Object* object)
 	if (auto* node = godot::Object::cast_to<TagContainer>(object))
 	{
 		m_Container = node;
+
+		auto callAdded = callable_mp(m_Editor, &TagRegistryEditor::_TagAddedToContainer);
+		if (!m_Container->is_connected("tag_added", callAdded))
+		{
+			m_Container->connect("tag_added", callAdded);
+		}
+
+		auto callRemoved = callable_mp(m_Editor, &TagRegistryEditor::_TagRemovedFromContainer);
+		if (!m_Container->is_connected("tag_removed", callRemoved))
+		{
+			m_Container->connect("tag_removed", callRemoved);
+		}
+
 		m_Search = "";
 		m_VisibleTreeItems.clear();
 	}
@@ -147,6 +160,7 @@ bool sm::TagContainerInspector::_parse_property(
 			item->set_metadata(0, tag);
 
 			auto gdName = tag->GetTagFullPath();
+			auto a = ToStdString(gdName);
 			item->set_text(0, gdName);
 			item->add_button(0, remove);
 		}
@@ -157,7 +171,7 @@ bool sm::TagContainerInspector::_parse_property(
 
 		add_custom_control(root);
 
-		return true;
+		//return true;
 	}
 
 	return false;
@@ -166,6 +180,7 @@ bool sm::TagContainerInspector::_parse_property(
 void sm::TagContainerInspector::SetEditorPlugin(TagRegistryEditor* editor)
 {
 	m_Editor = editor;
+	m_Editor->deleteTag.SubscribeEvent(this, &TagContainerInspector::DeleteTags);
 }
 
 void sm::TagContainerInspector::RefreshTreeSetter()
@@ -184,9 +199,18 @@ void sm::TagContainerInspector::RefreshTreeSetter()
 		{
 			item->set_visible(true);
 			m_VisibleTreeItems.push_back(item);
-
 		}
 	}
+}
+
+void sm::TagContainerInspector::DeleteTags(const std::vector<godot::Ref<TagData>>& tags)
+{
+	for (const auto& tag : tags)
+	{
+		m_Container->RemoveTag(tag);
+	}
+
+	m_Container->notify_property_list_changed();
 }
 
 void sm::TagContainerInspector::_OnCheckboxChanged()

@@ -144,11 +144,11 @@ void sm::GAS_Entity::Init()
 		return;
 	}
 
-	if (godot::Engine::get_singleton()->is_editor_hint()
+	/*if (godot::Engine::get_singleton()->is_editor_hint()
 		&& sceneRoot != get_tree()->get_edited_scene_root())
 	{
 		return;
-	}
+	}*/
 
 	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this, sceneRoot);
 

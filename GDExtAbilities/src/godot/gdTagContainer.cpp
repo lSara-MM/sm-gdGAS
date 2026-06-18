@@ -9,8 +9,6 @@
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 
-bool sm::TagContainer::s_HasLoadedRegistry = false;
-
 sm::TagContainer::TagContainer()
 {}
 
@@ -31,13 +29,13 @@ void sm::TagContainer::_bind_methods()
 	);
 
 	ADD_SIGNAL(godot::MethodInfo("tag_added",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "tag", godot::PROPERTY_HINT_RESOURCE_TYPE, "tag_data")
+		godot::PropertyInfo(godot::Variant::INT, "id"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("tag_removed",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "tag", godot::PROPERTY_HINT_RESOURCE_TYPE, "tag_data")
+		godot::PropertyInfo(godot::Variant::INT, "id"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer")
 	));
 }
 
@@ -110,8 +108,6 @@ void sm::TagContainer::_ready()
 
 void sm::TagContainer::OnEnterTree()
 {
-	//InitRootResource();
-
 	bool hasSibling = NodeUtils::HasSiblingOfType<TagContainer>(this);
 
 	if (hasSibling)
@@ -125,45 +121,6 @@ void sm::TagContainer::OnEnterTree()
 	}
 
 	SetIniTags();
-
-	emit_signal("tag_container_added");
-}
-
-void sm::TagContainer::InitRootResource()
-{
-	if (s_HasLoadedRegistry)
-	{
-		return;
-	}
-
-	godot::ProjectSettings* ps = godot::ProjectSettings::get_singleton();
-	const godot::String fallbackPath = "res://data/tag_registry.tres";
-	godot::String path = fallbackPath;
-
-	if (ps->has_setting(SETTINGS_PATH))
-	{
-		path = ps->get_setting(SETTINGS_PATH);
-	}
-
-	godot::ResourceLoader* rl = godot::ResourceLoader::get_singleton();
-	if (path.is_empty() || !rl->exists(path, "tag_data"))
-	{
-		WARN_PRINT_ONCE_ED("Create a TagData and assign it in the Tag Editor before creating tags.\nEditor > Editor Docks > Tags.");
-		return;
-	}
-
-	godot::Ref<TagData> tagRoot = rl->load(path);
-	if (tagRoot.is_null())
-	{
-		WARN_PRINT_ONCE_ED("Warning: Create a TagData and assign it in the Tag Editor. Editor > Editor Docks > Tags.");
-
-		return;
-	}
-
-	TagRegistry& registry = TagRegistry::Instance();
-	registry.RegisterTags(tagRoot);
-
-	s_HasLoadedRegistry = true;
 }
 
 void sm::TagContainer::SetIniTags()
@@ -171,8 +128,6 @@ void sm::TagContainer::SetIniTags()
 	for (size_t i = 0; i < m_gdTags.size(); i++)
 	{
 		godot::Ref<TagData> tag = m_gdTags[i];
-
-		// TODO: Tags havent been initialized so all ids are 0 
 		SetTag(tag->GetInternalID());
 	}
 }
@@ -231,19 +186,25 @@ void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 {
 	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
 
+	if (HasTag(tag))
+	{
+		return;
+	}
+
 	SetTag(tag->GetInternalID());
 	m_gdTags.append(tag);
 }
 
-void sm::TagContainer::AddTagFromPath(const godot::String& tag)
-{
-	TagRegistry& instance = TagRegistry::Instance();
-	TagID id = instance.FindTagID(tag);
-
-	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
-
-	SetTag(id);
-}
+//void sm::TagContainer::AddTagFromPath(const godot::String& tag)
+//{
+//	TagRegistry& instance = TagRegistry::Instance();
+//	TagID id = instance.FindTagID(tag);
+//
+//	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
+//
+//	SetTag(id);
+//	emit_signal("tag_added");
+//}
 
 void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
 {
@@ -399,11 +360,11 @@ void sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, true);
 		}
 
-		emit_signal("tag_added");
+		emit_signal("tag_added", id, this);
 
 		if (OnTagAdded)
 		{
-			OnTagAdded(this, id);
+			OnTagAdded(id, this);
 		}
 	}
 	else
@@ -413,11 +374,11 @@ void sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, false);
 		}
 
-		emit_signal("tag_removed");
+		emit_signal("tag_removed", id, this);
 
 		if (OnTagRemoved)
 		{
-			OnTagRemoved(this, id);
+			OnTagRemoved(id, this);
 		}
 	}
 }

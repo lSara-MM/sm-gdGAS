@@ -1,5 +1,7 @@
 #pragma once
 #ifdef TOOLS_ENABLED
+#include "godot/gdTagData.h"
+
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/editor_inspector_plugin.hpp>
 
@@ -37,6 +39,8 @@ namespace sm
 
 	private:
 		void RefreshTreeSetter();
+
+		void DeleteTags(const std::vector<godot::Ref<TagData>>& tags);
 
 		void _OnCheckboxChanged();
 		void _OnAddButtonClicked();

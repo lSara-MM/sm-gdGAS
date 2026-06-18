@@ -2,6 +2,7 @@
 #ifdef TOOLS_ENABLED
 #include "godot/ui/gdTagContainerInspector.h"
 #include "godot/gdTagData.h"
+#include "internal/Event.h"
 
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/ref.hpp>
@@ -63,32 +64,35 @@ namespace sm
 
 		const std::vector<godot::Ref<TagData>> GetTags() const;
 
-		void CreateTreeBoxContainer();
-		void CreateTagRegistry(const godot::Ref<sm::TagData>& resource);
-		void CreateOrUpdateTree();
-		godot::TreeItem* CreateRootItem();
-		void CreateTag(const godot::Ref<sm::TagData> resource, godot::TreeItem* parent);
-
-		void DeleteTree();
-		void DeleteTag(const godot::Ref<sm::TagData> resource, godot::TreeItem* parent);
-
 		void GenerateConstants();
+		void _TagAddedToContainer(TagID id, const TagContainer* container);
+		void _TagRemovedFromContainer(TagID id, const TagContainer* container);
 
 	private:
 		void CreateTab();
+
+		void CreateTreeBoxContainer();
+		void CreateTagRegistryData(const godot::Ref<TagData>& resource);
+		void CreateOrUpdateTree();
+
+		godot::TreeItem* CreateRootItem();
+		void CreateTag(const godot::Ref<TagData>& resource, godot::TreeItem* parent);
+		void DeleteTree();
+
 		void CreateInfoBoxContainer();
+
 		// Disconnect signals
-		void ClearTagData(godot::Ref<sm::TagData>& resource);
+		void ClearTagData(godot::Ref<TagData>& resource);
 		void AddTagButton(godot::TreeItem* item);
 		void DeleteTagButton(godot::TreeItem* item);
 
 		void SaveRegistryResource();
 
-		void SetSetting(godot::String settingPath, godot::String value);
+		void SetSetting(const char* settingPath, godot::String value);
 
-		void _OnRegistryResourceChanged(const godot::Ref<godot::Resource> resource);
+		void _OnRegistryResourceChanged(const godot::Ref<godot::Resource>& resource);
 
-		void _OnRegistryResourceSelected(const godot::Ref<godot::Resource> resource, bool inspect);
+		void _OnRegistryResourceSelected(const godot::Ref<godot::Resource>& resource, bool inspect);
 
 		void _OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex);
 
@@ -106,6 +110,10 @@ namespace sm
 		void _OnFileRemoved(const godot::String& removedFile);
 		void _OnFolderMoved(const godot::String& oldFolder, const godot::String& newFolder);
 
+		void _OnReferenceActivated();
+
+		void DeleteFromVector(const godot::Ref<TagData> resource);
+
 		void AddToCache(const godot::StringName& tag);
 		bool HasTagInCache(const godot::StringName& tag);
 		void RemoveFromCache(const godot::Ref<TagData> tag);
@@ -113,12 +121,12 @@ namespace sm
 
 		godot::Ref<TagData> GetSelectedItem() const;
 
-	private:
 		bool IsNameValid(const godot::String& name) const;
 
 	public:
 		const int realMaxTags = MAX_TAGS - 2;
 		const godot::String generatedPath = "res://gen/tags";
+		Event<const std::vector<godot::Ref<TagData>>&> deleteTag;
 
 	private:
 		//
@@ -138,6 +146,9 @@ namespace sm
 		// Info container
 		godot::Label* m_CurrentTagInfo = nullptr;
 		godot::Label* m_ParentTagInfo = nullptr;
+		godot::Label* m_ReferencesSize = nullptr;
+		godot::Tree* m_ReferencesTree = nullptr;
+		std::unordered_map<TagID, std::vector<uint64_t>> m_CurrentReferences;
 
 		//
 		godot::Ref<TagData> m_TagRegistry;
@@ -153,8 +164,6 @@ namespace sm
 
 		bool m_DontShowAgain = false;
 		bool m_CanBeCreated = false;
-
-		// Info
 	};
 }
 #endif // TOOLS_ENABLED

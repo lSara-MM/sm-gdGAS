@@ -76,9 +76,9 @@ void sm::TagRegistry::Reset()
 	Essentials();
 }
 
-bool sm::TagRegistry::RegisterTags(const godot::Ref<sm::TagData>& tagRoot)
+bool sm::TagRegistry::RegisterTags(const godot::Ref<TagData>& tagRoot)
 {
-	std::vector<godot::Ref<sm::TagData>> stack;
+	std::vector<godot::Ref<TagData>> stack;
 	auto tagsTree = tagRoot->GetChildren();
 
 	for (int64_t i = tagsTree.size() - 1; i >= 0; --i)

@@ -56,12 +56,11 @@ namespace sm
 		bool HasTag(TagID id) const;
 
 	private:
-		void InitRootResource();
 		void RevertParenting();
 
 	public:
-		std::function<void(TagContainer*, TagID)> OnTagAdded;
-		std::function<void(TagContainer*, TagID)> OnTagRemoved;
+		std::function<void(TagID, TagContainer*)> OnTagAdded;
+		std::function<void(TagID, TagContainer*)> OnTagRemoved;
 
 	private:
 		godot::TypedArray<TagData> m_gdTags;
@@ -69,6 +68,5 @@ namespace sm
 		godot::StringName prevName;
 
 		TagSet m_TagsSet;
-		static bool s_HasLoadedRegistry;
 	};
 }

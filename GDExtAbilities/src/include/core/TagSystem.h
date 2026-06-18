@@ -20,16 +20,14 @@ namespace sm
 		void UnregisterTagContainer(TagContainer* container);
 
 		// Queries
-		const std::vector<TagContainer*>& ContainersWithTag(const godot::Ref<TagData> tag);
-		const std::vector<TagContainer*> ContainersWithoutTag(const godot::Ref<TagData> tag);
-
-		std::vector<TagContainer*> All(const godot::TypedArray<TagData>& tags);
-		std::vector<TagContainer*> None(const godot::TypedArray<TagData>& tags);
-		std::vector<TagContainer*> Any(const godot::TypedArray<TagData>& tags);
-
-	private:
 		const std::vector<TagContainer*>& ContainersWithTag(TagID tag);
 		const std::vector<TagContainer*> ContainersWithoutTag(TagID tag);
+
+		std::vector<TagContainer*> All(const godot::TypedArray<TagID>& tags);
+		std::vector<TagContainer*> None(const godot::TypedArray<TagID>& tags);
+		std::vector<TagContainer*> Any(const godot::TypedArray<TagID>& tags);
+
+	private:
 
 		void _OnContainerAdded();
 		void _OnContainerRemoved();
