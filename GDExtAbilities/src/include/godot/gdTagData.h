@@ -27,7 +27,7 @@ namespace sm
 		void SetPath(const godot::String& value);
 		void SetFullPath(const godot::String& value);
 
-		godot::String GetTagFullPath() const { return m_TagFullPath; };
+		godot::StringName GetTagFullPath() const { return m_TagFullPath; }
 
 		godot::TypedArray<TagData> GetChildren() const { return m_Children; };
 		void SetChildren(const godot::TypedArray<TagData>& value);
@@ -35,8 +35,8 @@ namespace sm
 		TagID GetInternalID() const { return m_InternalID; };
 		void SetInternalID(TagID value);
 
-		void AddChild(godot::Ref<TagData> child);
-		void RemoveChild(godot::Ref<TagData> child);
+		void AddChild(const godot::Ref<TagData>& child);
+		void RemoveChild(const godot::Ref<TagData>& child);
 		void Reset();
 
 	private:

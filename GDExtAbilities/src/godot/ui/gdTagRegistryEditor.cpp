@@ -122,6 +122,11 @@ void sm::TagRegistryEditor::CreateTab()
 	CreateTreeBoxContainer();
 	CreateInfoBoxContainer();
 
+	m_MainSplit->connect(
+		"visibility_changed",
+		callable_mp(this, &TagRegistryEditor::BindContainersSignals)
+	);
+
 	add_control_to_dock(EditorPlugin::DOCK_SLOT_LEFT_UL, m_MainSplit);
 }
 
@@ -433,6 +438,8 @@ void sm::TagRegistryEditor::_OnItemSelected()
 	{
 		m_CurrentTagInfo->set_text("Tag: <null>");
 		m_ParentTagInfo->set_text("Path: <null>");
+		m_ReferencesTree->clear();
+		m_ReferencesSize->set_text(godot::vformat("References: 0"));
 		return;
 	}
 
@@ -443,12 +450,13 @@ void sm::TagRegistryEditor::_OnItemSelected()
 
 	if (it == m_CurrentReferences.end())
 	{
+		m_ReferencesTree->clear();
+		m_ReferencesSize->set_text(godot::vformat("References: 0"));
 		return;
 	}
 
-	auto vec = it->second;
+	auto& vec = it->second;
 	m_ReferencesTree->clear();
-	m_ReferencesSize->set_text(godot::vformat("References: %d", vec.size()));
 
 	auto icon = get_editor_interface()->get_base_control()->get_theme_icon("Node", "EditorIcons");
 
@@ -457,24 +465,71 @@ void sm::TagRegistryEditor::_OnItemSelected()
 	m_ReferencesTree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
 	m_ReferencesTree->set_custom_minimum_size(godot::Size2(100, 70));
 
-	godot::TreeItem* row = m_ReferencesTree->create_item(rootItem);
-
-	for (uint64_t id : vec)
+	size_t i;
+	for (i = 0; i < vec.size(); ++i)
 	{
+		auto id = vec[i];
 		auto* object = godot::ObjectDB::get_instance(id);
 		auto* node = godot::Object::cast_to<godot::Node>(object);
-
 		if (!node)
 		{
+			vec.erase(vec.begin() + i);
+			i--;
 			continue;
 		}
 
-		auto* parentNode = node->get_parent();
-		get_editor_interface()->edit_node(parentNode);
-		row->set_text(0, parentNode->get_parent()->get_name());
+		auto* parent = node->get_parent();
+		if (!parent)
+		{
+			vec.erase(vec.begin() + i);
+			i--;
+			continue;
+		}
+
+		godot::TreeItem* row = m_ReferencesTree->create_item(rootItem);
+		get_editor_interface()->edit_node(node);
+
+		row->set_text(0, parent->get_name());
 		row->set_icon(0, icon);
 		row->set_metadata(0, id);
 	}
+
+	m_ReferencesSize->set_text(godot::vformat("References: %d", vec.size()));
+}
+
+void sm::TagRegistryEditor::BindContainersSignals()
+{
+	auto* editedSceneRoot = get_editor_interface()->get_edited_scene_root();
+	if (!m_MainSplit->is_visible_in_tree() || !editedSceneRoot)
+	{
+		return;
+	}
+
+	std::vector<TagContainer*> containers = NodeUtils::GetAllChildNodesOfType<TagContainer>(editedSceneRoot);
+
+	for (auto* container : containers)
+	{
+		auto callAdded = callable_mp(this, &TagRegistryEditor::_TagAddedToContainer);
+		if (!container->is_connected("tag_added", callAdded))
+		{
+			container->connect("tag_added", callAdded);
+
+			godot::TypedArray<TagData> arr = container->GetTags();
+			for (size_t i = 0; i < arr.size(); i++)
+			{
+				godot::Ref<TagData> tag = arr[i];
+				_TagAddedToContainer(tag->GetInternalID(), container);
+			}
+		}
+
+		auto callRemoved = callable_mp(this, &TagRegistryEditor::_TagRemovedFromContainer);
+		if (!container->is_connected("tag_removed", callRemoved))
+		{
+			container->connect("tag_removed", callRemoved);
+		}
+	}
+
+	_OnItemSelected();
 }
 
 void sm::TagRegistryEditor::AddTagButton(godot::TreeItem* item)
@@ -650,7 +705,7 @@ void sm::TagRegistryEditor::_OnCreateTagNameChanged(const godot::String& newText
 
 	ERR_FAIL_COND_MSG(parentResource.is_null(), "CreateTag failed: parent resource is null.");
 
-	path = parentResource->GetTagFullPath() + "." + newText;
+	path = godot::String(parentResource->GetTagFullPath()) + "." + newText;
 
 	if (!IsNameValid(newText))
 	{
@@ -696,8 +751,10 @@ void sm::TagRegistryEditor::_OnDeleteTagClicked(godot::TreeItem* item, godot::Ch
 	DeleteFromVector(resource);
 	parentResource->RemoveChild(resource);
 	ClearTagData(resource);
-
+	_OnItemSelected();
 	SaveRegistryResource();
+
+	m_TagRegistry->emit_changed();
 
 	memdelete(item);
 	menu->queue_free();
@@ -783,6 +840,8 @@ void sm::TagRegistryEditor::DeleteTree()
 		ClearTagData(m_TagRegistry);
 		m_TagRegistryPath = "";
 	}
+
+	_OnItemSelected();
 }
 
 void sm::TagRegistryEditor::GenerateConstants()
@@ -962,10 +1021,16 @@ void sm::TagRegistryEditor::RefreshTreeFromEditorChanges()
 #endif // DEBUG_ENABLED
 
 	CreateOrUpdateTree();
+	_OnItemSelected();
 }
 
 godot::Ref<sm::TagData> sm::TagRegistryEditor::GetSelectedItem() const
 {
+	if (!m_Tree)
+	{
+		return {};
+	}
+
 	godot::TreeItem* item = m_Tree->get_selected();
 	if (!item)
 	{

@@ -14,6 +14,7 @@
 #include <godot_cpp/classes/tree.hpp>
 #include <godot_cpp/classes/tree_item.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
+#include <godot_cpp/classes/v_split_container.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/h_separator.hpp>
 
@@ -37,19 +38,6 @@ void sm::TagContainerInspector::_parse_begin(godot::Object* object)
 	if (auto* node = godot::Object::cast_to<TagContainer>(object))
 	{
 		m_Container = node;
-
-		auto callAdded = callable_mp(m_Editor, &TagRegistryEditor::_TagAddedToContainer);
-		if (!m_Container->is_connected("tag_added", callAdded))
-		{
-			m_Container->connect("tag_added", callAdded);
-		}
-
-		auto callRemoved = callable_mp(m_Editor, &TagRegistryEditor::_TagRemovedFromContainer);
-		if (!m_Container->is_connected("tag_removed", callRemoved))
-		{
-			m_Container->connect("tag_removed", callRemoved);
-		}
-
 		m_Search = "";
 		m_VisibleTreeItems.clear();
 	}
@@ -67,9 +55,13 @@ bool sm::TagContainerInspector::_parse_property(
 	if (name == "tags")
 	{
 		auto* container = Object::cast_to<TagContainer>(object);
+		auto* mainSplit = memnew(godot::VSplitContainer);
+
 		auto* root = memnew(godot::VBoxContainer);
 		root->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 		root->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
+		root->set_custom_minimum_size(godot::Vector2(100, 70));
+		mainSplit->add_child(root);
 
 		auto gui = m_Editor->get_editor_interface()->get_base_control();
 
@@ -81,24 +73,24 @@ bool sm::TagContainerInspector::_parse_property(
 		root->add_child(search);
 
 		m_Tree = memnew(godot::Tree);
-		m_Tree->set_columns(2);
-		m_Tree->set_column_title(0, "Tag");
-		m_Tree->set_column_title(1, "Enabled");
+		m_Tree->set_columns(1);
+		m_Tree->connect(
+			"item_edited",
+			callable_mp(this, &TagContainerInspector::_OnCheckboxChanged)
+		);
+		m_Tree->connect(
+			"item_activated",
+			callable_mp(this, &TagContainerInspector::_OnItemActivated)
+		);
 
 		m_Tree->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 		m_Tree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
-		m_Tree->set_custom_minimum_size(godot::Vector2(100, 70));
+		m_Tree->set_custom_minimum_size(godot::Vector2(100, 24));
 
 		godot::TreeItem* rootItem = m_Tree->create_item();
 		rootItem->set_selectable(0, false);
-		rootItem->set_selectable(1, false);
 		m_Tree->set_hide_root(true);
 		m_Tree->set_hide_folding(true);
-		m_Tree->set_column_expand(0, false);
-		m_Tree->set_column_custom_minimum_width(0, 12);
-		m_Tree->set_column_expand(1, true);
-		m_Tree->set_column_clip_content(0, false);
-		m_Tree->set_column_clip_content(1, false);
 
 		auto& tags = m_Editor->GetTags();
 
@@ -113,7 +105,9 @@ bool sm::TagContainerInspector::_parse_property(
 			item->set_editable(0, true);
 			item->set_checked(0, false);
 
-			item->set_text(1, gdName);
+			item->set_text(0, gdName);
+			m_ItemsByName[gdName] = item;
+			m_ItemsByNameDebug[ToStdString(gdName)] = item;
 
 			if (m_Container->HasTag(tag) ||
 				(!m_Search.is_empty() && !gdName.contains(m_Search)))
@@ -127,22 +121,19 @@ bool sm::TagContainerInspector::_parse_property(
 			}
 		}
 
+		m_Tree->set_custom_minimum_size(godot::Vector2(100, 70));
 		root->add_child(m_Tree);
 
 		auto* addButton = memnew(godot::Button);
 		addButton->set_text("Add Tag");
+		addButton->set_custom_minimum_size((godot::Vector2(50, 24)));
 		addButton->connect("pressed", callable_mp(this, &TagContainerInspector::_OnAddButtonClicked));
 		root->add_child(addButton);
 
-		auto* separator = memnew(godot::HSeparator);
-		root->add_child(separator);
-
 		auto* tree = memnew(godot::Tree);
 		tree->set_columns(1);
-
 		tree->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 		tree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
-		tree->set_custom_minimum_size(godot::Vector2(100, 70));
 
 		godot::TreeItem* rootItem2 = tree->create_item();
 		rootItem2->set_selectable(0, false);
@@ -160,18 +151,23 @@ bool sm::TagContainerInspector::_parse_property(
 			item->set_metadata(0, tag);
 
 			auto gdName = tag->GetTagFullPath();
-			auto a = ToStdString(gdName);
 			item->set_text(0, gdName);
 			item->add_button(0, remove);
 		}
 
+		tree->set_custom_minimum_size(godot::Vector2(100, 70));
+
 		tree->connect("button_clicked", callable_mp(this, &TagContainerInspector::_OnRemoveButtonClicked));
 
-		root->add_child(tree);
+		int tagsFullSize = tags.size() * 50 + 50;
+		mainSplit->set_custom_minimum_size(godot::Vector2(100, tagsFullSize + 50));
+		mainSplit->add_child(tree);
 
-		add_custom_control(root);
+		add_custom_control(mainSplit);
 
-		//return true;
+		//#ifndef DEBUG_ENABLED
+		//		return true;
+		//#endif // DEBUG_ENABLED
 	}
 
 	return false;
@@ -216,15 +212,16 @@ void sm::TagContainerInspector::DeleteTags(const std::vector<godot::Ref<TagData>
 void sm::TagContainerInspector::_OnCheckboxChanged()
 {
 	godot::TreeItem* item = m_Tree->get_edited();
-	int column = m_Tree->get_edited_column();
 
 	if (!item)
 	{
 		return;
 	}
 
-	bool checked = item->is_checked(column);
-	godot::Ref<TagData> tag = item->get_metadata(0);
+	if (item->is_checked(0))
+	{
+		SetCheckbox(item);
+	}
 }
 
 void sm::TagContainerInspector::_OnAddButtonClicked()
@@ -256,4 +253,53 @@ void sm::TagContainerInspector::_OnSearchTextChanged(const godot::String& text)
 	m_Search = text;
 	RefreshTreeSetter();
 }
+
+void sm::TagContainerInspector::_OnItemActivated()
+{
+	godot::TreeItem* item = m_Tree->get_selected();
+
+	godot::Ref<TagData> tag = item->get_metadata(0);
+	std::vector<godot::Ref<TagData>> toAdd{ tag };
+
+	while (tag.is_valid())
+	{
+		auto it = m_ItemsByName.find(tag->GetPath());
+		if (it == m_ItemsByName.end() || !it->second)
+		{
+			break;
+		}
+
+		godot::TreeItem* parentItem = parentItem = it->second;
+		tag = parentItem->get_metadata(0);
+		toAdd.push_back(tag);
+	}
+
+	for (godot::Ref<TagData> t : toAdd)
+	{
+		m_Container->AddTag(t);
+	}
+
+	m_Container->notify_property_list_changed();
+}
+
+void sm::TagContainerInspector::SetCheckbox(godot::TreeItem* item, bool value)
+{
+	godot::Ref<TagData> tag = item->get_metadata(0);
+	while (tag.is_valid())
+	{
+		auto it = m_ItemsByName.find(tag->GetPath());
+
+		if (it == m_ItemsByName.end() || !it->second)
+		{
+			return;
+		}
+		auto a = ToStdString(it->first);
+
+		godot::TreeItem* parentItem = it->second;
+		parentItem->set_checked(0, value);
+
+		tag = parentItem->get_metadata(0);
+	}
+}
+
 #endif // TOOLS_ENABLED

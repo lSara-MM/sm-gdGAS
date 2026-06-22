@@ -81,6 +81,8 @@ namespace sm
 
 		void CreateInfoBoxContainer();
 
+		void BindContainersSignals();
+
 		// Disconnect signals
 		void ClearTagData(godot::Ref<TagData>& resource);
 		void AddTagButton(godot::TreeItem* item);
@@ -113,6 +115,7 @@ namespace sm
 		void _OnReferenceActivated();
 
 		void DeleteFromVector(const godot::Ref<TagData> resource);
+		void _DeleteContainer(TagContainer* node);
 
 		void AddToCache(const godot::StringName& tag);
 		bool HasTagInCache(const godot::StringName& tag);

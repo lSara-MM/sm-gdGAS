@@ -91,13 +91,13 @@ void sm::TagData::SetInternalID(TagID value)
 	emit_changed();
 }
 
-void sm::TagData::AddChild(godot::Ref<TagData> child)
+void sm::TagData::AddChild(const godot::Ref<TagData>& child)
 {
 	m_Children.push_back(child);
 	UpdateChildrenParents();
 }
 
-void sm::TagData::RemoveChild(godot::Ref<TagData> child)
+void sm::TagData::RemoveChild(const godot::Ref<TagData>& child)
 {
 	m_Children.erase(child);
 	//emit_changed();
@@ -148,7 +148,8 @@ void sm::TagData::UpdateChildrenParents()
 
 	for (int64_t i = 0; i < m_Children.size(); i++)
 	{
-		tagsStack.push_back(TagStackEntry{ m_Children[i], root });
+		godot::Ref<TagData> tagChild = m_Children[i];
+		tagsStack.push_back(TagStackEntry{ tagChild, root });
 	}
 
 	while (!tagsStack.empty())

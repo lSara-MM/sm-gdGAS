@@ -1,8 +1,8 @@
 extends GAS_World
 
 func _ready() -> void:
-	var a = all_with_tags([Tags._abc_a])
-	print(a.size())
+	#var a = all_with_tags([Tags._abc_a])
+	#print(a.size())
 	
 	pass
 

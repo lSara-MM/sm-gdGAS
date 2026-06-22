@@ -47,6 +47,10 @@ namespace sm
 		void _OnRemoveButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex);
 		void _OnSearchTextChanged(const godot::String& text);
 
+		void _OnItemActivated();
+
+		void SetCheckbox(godot::TreeItem* item, bool value = true);
+
 	private:
 		TagContainer* m_Container;
 		godot::Tree* m_Tree;
@@ -55,6 +59,8 @@ namespace sm
 		godot::String m_Search;
 
 		std::vector<godot::TreeItem*> m_VisibleTreeItems;
+		std::unordered_map<godot::StringName, godot::TreeItem*> m_ItemsByName;
+		std::unordered_map<std::string, godot::TreeItem*> m_ItemsByNameDebug;
 	};
 }
 

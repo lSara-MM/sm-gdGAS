@@ -47,7 +47,7 @@ namespace sm
 		bool HasAnyTag(const godot::Array& tags) const;
 
 		//
-		void SetTag(TagID id, bool value = true);
+		bool SetTag(TagID id, bool value = true);
 		void AddTags(BitSet<MAX_TAGS> tags);
 		void RemoveTags(BitSet<MAX_TAGS> tags);
 

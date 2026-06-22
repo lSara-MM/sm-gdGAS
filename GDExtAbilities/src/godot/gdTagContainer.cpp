@@ -135,7 +135,6 @@ void sm::TagContainer::SetIniTags()
 void sm::TagContainer::OnExitTree()
 {
 	prevParent = nullptr;
-	emit_signal("tag_container_removed");
 }
 
 void sm::TagContainer::OnParented()
@@ -191,8 +190,11 @@ void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 		return;
 	}
 
-	SetTag(tag->GetInternalID());
-	m_gdTags.append(tag);
+	bool ret = SetTag(tag->GetInternalID());
+	if (ret)
+	{
+		m_gdTags.append(tag);
+	}
 }
 
 //void sm::TagContainer::AddTagFromPath(const godot::String& tag)
@@ -210,19 +212,23 @@ void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
 {
 	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
 
-	SetTag(tag->GetInternalID(), false);
-	m_gdTags.erase(tag);
+	bool ret = SetTag(tag->GetInternalID(), false);
+
+	if (ret)
+	{
+		m_gdTags.erase(tag);
+	}
 }
 
-void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
-{
-	TagRegistry& instance = TagRegistry::Instance();
-	TagID id = instance.FindTagID(tag);
-
-	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
-
-	SetTag(id, false);
-}
+//void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
+//{
+//	TagRegistry& instance = TagRegistry::Instance();
+//	TagID id = instance.FindTagID(tag);
+//
+//	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
+//
+//	SetTag(id, false);
+//}
 
 bool sm::TagContainer::HasTag(const godot::Ref<TagData>& tag) const
 {
@@ -348,9 +354,11 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 	return false;
 }
 
-void sm::TagContainer::SetTag(TagID id, bool value)
+bool sm::TagContainer::SetTag(TagID id, bool value)
 {
-	ERR_FAIL_COND_MSG(id >= MAX_TAGS, godot::vformat("SetTag failed: id %d out of range (MAX_TAGS=%d)", id, MAX_TAGS));
+	bool ret = false;
+
+	ERR_FAIL_COND_V_MSG(id >= MAX_TAGS, ret, godot::vformat("SetTag failed: id %d out of range (MAX_TAGS=%d)", id, MAX_TAGS));
 
 	uint16& count = m_TagsSet.stack[id];
 	if (value)
@@ -360,7 +368,9 @@ void sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, true);
 		}
 
+		ret = true;
 		emit_signal("tag_added", id, this);
+		notify_property_list_changed();
 
 		if (OnTagAdded)
 		{
@@ -374,13 +384,17 @@ void sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, false);
 		}
 
+		ret = true;
 		emit_signal("tag_removed", id, this);
+		notify_property_list_changed();
 
 		if (OnTagRemoved)
 		{
 			OnTagRemoved(id, this);
 		}
 	}
+
+	return ret;
 }
 
 void sm::TagContainer::AddTags(BitSet<MAX_TAGS> tags)
