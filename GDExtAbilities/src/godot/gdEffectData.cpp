@@ -50,18 +50,12 @@ void sm::EffectData::_bind_methods()
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::ARRAY,
-		"tags_to_add",
-		godot::PROPERTY_HINT_RESOURCE_TYPE,
-		"24/17:TagData"),
+		godot::Variant::PACKED_INT32_ARRAY, "tags_to_add"),
 		"set_tags_to_add", "get_tags_to_add"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::ARRAY,
-		"tags_to_remove",
-		godot::PROPERTY_HINT_RESOURCE_TYPE,
-		"24/17:TagData"),
+		godot::Variant::PACKED_INT32_ARRAY, "tags_to_remove"),
 		"set_tags_to_remove", "get_tags_to_remove"
 	);
 }
@@ -89,6 +83,41 @@ void sm::EffectData::SetEffectType(EffectData::Type lt)
 	notify_property_list_changed();
 }
 
+bool sm::EffectData::AddTagToAdd(TagID id)
+{
+	if (!m_TagsToAdd.has(id))
+	{
+		m_TagsToAdd.push_back(id);
+		return true;
+	}
+
+	return false;
+}
+
+bool sm::EffectData::AddTagToRemove(TagID id)
+{
+	if (!m_TagsToRemove.has(id))
+	{
+		m_TagsToRemove.push_back(id);
+		return true;
+	}
+
+	return false;
+}
+
+bool sm::EffectData::HasTag(TagID id, const godot::PackedInt32Array& arr) const
+{
+	for (size_t i = 0; i < arr.size(); i++)
+	{
+		if (id == arr[i])
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void sm::EffectData::_validate_property(godot::PropertyInfo& property) const
 {
 	if (property.name.match("duration"))
@@ -108,15 +137,3 @@ void sm::EffectData::_validate_property(godot::PropertyInfo& property) const
 		}
 	}*/
 }
-
-//bool sm::EffectData::AddTag(TagID tag)
-//{
-//	if (!m_TagsToAdd.has(tag))
-//	{
-//		m_TagsToAdd.clear();
-//		m_TagsToAdd.push_back(tag);
-//		return true;
-//	}
-//
-//	return false;
-//}

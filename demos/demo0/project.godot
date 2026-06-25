@@ -10,7 +10,7 @@ config_version=5
 
 [GDExtAbilities]
 
-tag_registry_path="res://data/tags/tag_registry.tres"
+tag_registry_path="res://gen/tags/tag_registry.tres"
 
 [application]
 

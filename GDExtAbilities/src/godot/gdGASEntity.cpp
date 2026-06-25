@@ -21,59 +21,35 @@ void sm::GAS_Entity::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_container"), &GetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attribute_container", "node"), &SetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_node_path"), &GetAttributeContainerNodePath);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_attribute_node_path", "path"), &SetAttributeContainerNodePath);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tag_container"), &GetTagContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_tag_container", "node"), &SetTagContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tag_node_path"), &GetTagContainerNodePath);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_tag_node_path", "path"), &SetTagContainerNodePath);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("add_effect", "effect"), &AddEffect);
 
 	// Properties
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::NODE_PATH,
+		godot::Variant::OBJECT,
 		"attribute_container",
-		godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "AttributeContainer",
-		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		godot::PROPERTY_HINT_NODE_TYPE,
+		"AttributeContainer",
+		godot::PROPERTY_USAGE_EDITOR | godot::PROPERTY_USAGE_READ_ONLY),
 		"", "get_attribute_node_path"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::NODE_PATH,
-		"tag_container",
-		godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "TagContainer",
-		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
-		"", "get_tag_node_path"
+		godot::Variant::OBJECT,
+		"tag_container_node",
+		godot::PROPERTY_HINT_NODE_TYPE,
+		"TagContainer",
+		godot::PROPERTY_USAGE_EDITOR | godot::PROPERTY_USAGE_READ_ONLY),
+		"", "get_tag_container"
 	);
 }
 
 void sm::GAS_Entity::OnEnterTree()
 {
-	//bool isInEditedScene = false;
-
-	//godot::Node* edited = get_tree()->get_edited_scene_root();
-	//if (edited)
-	//{
-	//	// Walk up the parent chain
-	//	Node* current = this;
-	//	while (current)
-	//	{
-	//		if (current == edited)
-	//		{
-	//			isInEditedScene = true;
-	//			break;
-	//		}
-
-	//		current = current->get_parent();
-	//	}
-	//}
-
-	//if (godot::Engine::get_singleton()->is_editor_hint() && !isInEditedScene)
-	//{
-	//	return;
-	//}
-
 	callable_mp(this, &GAS_Entity::Init).call_deferred();
 }
 
@@ -241,10 +217,10 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 	world->GetEffectSystem()->AddActiveEffect(effect);
 }
 
-bool sm::GAS_Entity::HandleTags(const godot::Ref<sm::EffectData>& gdEffect)
+bool sm::GAS_Entity::HandleTags(const godot::Ref<EffectData>& gdEffect)
 {
-	godot::TypedArray<TagData> tagsToAdd = gdEffect->GetTagsToAdd();
-	godot::TypedArray<godot::StringName> tagsToRemove = gdEffect->GetTagsToRemove();
+	godot::PackedInt32Array tagsToAdd = gdEffect->GetTagsToAdd();
+	godot::PackedInt32Array tagsToRemove = gdEffect->GetTagsToRemove();
 
 	if (!tagsToAdd.is_empty() || !tagsToRemove.is_empty())
 	{

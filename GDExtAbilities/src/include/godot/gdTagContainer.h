@@ -24,7 +24,6 @@ namespace sm
 		TagContainer();
 		~TagContainer();
 
-		void _ready();
 		void OnEnterTree() override;
 		void OnExitTree() override;
 		void OnParented() override;
@@ -32,17 +31,13 @@ namespace sm
 		void OnChildOrderChanged() override;
 
 		void SetIniTags();
-		godot::TypedArray<TagData> GetTags() const;
-		void SetTags(const godot::TypedArray<TagData>& tags);
+		godot::PackedInt32Array GetTags() const;
+		void SetTags(const godot::PackedInt32Array& tags);
 
-		void AddTag(const godot::Ref<TagData>& tag);
-		void AddTagFromPath(const godot::String& tag);
-		void RemoveTag(const godot::Ref<TagData>& tag);
-		void RemoveTagFromPath(const godot::String& tag);
+		void AddTag(TagID id);
+		void RemoveTag(TagID id);
 
-		bool HasTag(const godot::Ref<TagData>& tag) const;
-		bool HasTagFromPath(const godot::String& tag) const;
-
+		bool HasTag(TagID id) const;
 		bool HasAllTags(const godot::Array& tags) const;
 		bool HasAnyTag(const godot::Array& tags) const;
 
@@ -53,7 +48,6 @@ namespace sm
 
 		// non godot
 		TagSet GetTagSet() const;
-		bool HasTag(TagID id) const;
 
 	private:
 		void RevertParenting();
@@ -63,7 +57,7 @@ namespace sm
 		std::function<void(TagID, TagContainer*)> OnTagRemoved;
 
 	private:
-		godot::TypedArray<TagData> m_gdTags;
+		godot::PackedInt32Array m_gdTags;
 		godot::Node* prevParent = nullptr;
 		godot::StringName prevName;
 

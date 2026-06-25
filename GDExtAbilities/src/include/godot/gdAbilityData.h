@@ -30,11 +30,11 @@ namespace sm
 		void SetCostAttributeID(AttributeID value) { m_CostAttributeID = value; };
 
 		// Tags
-		godot::TypedArray<TagID> GetAbilityTags() const { return m_AbilityTags; };
-		godot::TypedArray<TagID> GetCancelAbilityTags() const { return m_CancelAbilitiesWithTag; };
-		godot::TypedArray<TagID> GetBlockAbilityTags() const { return m_BlockAbilitiesWithTag; };
-		godot::TypedArray<TagID> GetActivationTags() const { return m_ActivationRequirements; };
-		godot::TypedArray<TagID> GetActivationBlockedTags() const { return m_ActivationBlocked; };
+		godot::PackedInt32Array GetAbilityTags() const { return m_AbilityTags; };
+		godot::PackedInt32Array GetCancelAbilityTags() const { return m_CancelAbilitiesWithTag; };
+		godot::PackedInt32Array GetBlockAbilityTags() const { return m_BlockAbilitiesWithTag; };
+		godot::PackedInt32Array GetActivationTags() const { return m_ActivationRequirements; };
+		godot::PackedInt32Array GetActivationBlockedTags() const { return m_ActivationBlocked; };
 
 #pragma endregion Godot public 
 
@@ -46,19 +46,19 @@ namespace sm
 	private:
 		// GameplayTags that the GameplayAbility owns.
 		// These are just GameplayTags to describe the GameplayAbility.
-		godot::TypedArray<TagID> m_AbilityTags;
+		godot::PackedInt32Array m_AbilityTags;
 
 		// Other GameplayAbilities that have these GameplayTags in their Ability Tags will be canceled when this GameplayAbility is activated.
-		godot::TypedArray<TagID> m_CancelAbilitiesWithTag;
+		godot::PackedInt32Array m_CancelAbilitiesWithTag;
 
 		// Other GameplayAbilities that have these GameplayTags in their Ability Tags are blocked from activating while this GameplayAbility is active.
-		godot::TypedArray<TagID> m_BlockAbilitiesWithTag;
+		godot::PackedInt32Array m_BlockAbilitiesWithTag;
 
 		// This GameplayAbility can only be activated if the owner has all of these GameplayTags.
-		godot::TypedArray<TagID> m_ActivationRequirements;
+		godot::PackedInt32Array m_ActivationRequirements;
 
 		// This GameplayAbility cannot be activated if the owner has any of these GameplayTags.
-		godot::TypedArray<TagID> m_ActivationBlocked;
+		godot::PackedInt32Array m_ActivationBlocked;
 
 		/* TODO:
 		Source Required Tags

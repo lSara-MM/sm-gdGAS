@@ -91,7 +91,7 @@ const std::vector<sm::TagContainer*> sm::TagSystem::ContainersWithoutTag(TagID i
 /// Hence checking the smallest container already guarantees that all tags must
 /// be within those.
 /// 3. Check if other tags are also in the smallest container. If they aren't, discard.
-std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::TypedArray<TagID>& tags)
+std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::PackedInt32Array& tags)
 {
 	struct TagList
 	{
@@ -149,7 +149,7 @@ std::vector<sm::TagContainer*> sm::TagSystem::All(const godot::TypedArray<TagID>
 	return retNodes;
 }
 
-std::vector<sm::TagContainer*> sm::TagSystem::None(const godot::TypedArray<TagID>& tags)
+std::vector<sm::TagContainer*> sm::TagSystem::None(const godot::PackedInt32Array& tags)
 {
 	std::vector<TagContainer*> retNodes;
 	retNodes.reserve(64);
@@ -165,7 +165,7 @@ std::vector<sm::TagContainer*> sm::TagSystem::None(const godot::TypedArray<TagID
 	return retNodes;
 }
 
-std::vector<sm::TagContainer*> sm::TagSystem::Any(const godot::TypedArray<TagID>& tags)
+std::vector<sm::TagContainer*> sm::TagSystem::Any(const godot::PackedInt32Array& tags)
 {
 	std::vector<TagContainer*> retNodes;
 	retNodes.reserve(64);

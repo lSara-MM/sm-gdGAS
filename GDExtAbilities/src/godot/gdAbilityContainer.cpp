@@ -11,9 +11,11 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities", "abilities"), &SetAbilities);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::NODE_PATH,
-		"entity_node_path", godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES, "GAS_Entity",
-		godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		godot::Variant::OBJECT,
+		"entity_node_path",
+		godot::PROPERTY_HINT_NODE_PATH_VALID_TYPES,
+		"GAS_Entity",
+		godot::PROPERTY_USAGE_EDITOR | godot::PROPERTY_USAGE_READ_ONLY),
 		"set_entity_node_path", "get_entity_node_path"
 	);
 
@@ -41,7 +43,7 @@ void sm::AbilityContainer::OnReady()
 		ERR_FAIL_MSG("Could not create AbilityContainer. Node must be in a GAS_Entity node hierarchy.");
 	}
 
-	m_EntityNodePath = entity->get_path();
+	SetEntityNodePath(entity->get_path());
 }
 
 void sm::AbilityContainer::OnExitTree()

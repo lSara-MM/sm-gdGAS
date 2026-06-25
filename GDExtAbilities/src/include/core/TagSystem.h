@@ -23,9 +23,9 @@ namespace sm
 		const std::vector<TagContainer*>& ContainersWithTag(TagID tag);
 		const std::vector<TagContainer*> ContainersWithoutTag(TagID tag);
 
-		std::vector<TagContainer*> All(const godot::TypedArray<TagID>& tags);
-		std::vector<TagContainer*> None(const godot::TypedArray<TagID>& tags);
-		std::vector<TagContainer*> Any(const godot::TypedArray<TagID>& tags);
+		std::vector<TagContainer*> All(const godot::PackedInt32Array& tags);
+		std::vector<TagContainer*> None(const godot::PackedInt32Array& tags);
+		std::vector<TagContainer*> Any(const godot::PackedInt32Array& tags);
 
 	private:
 

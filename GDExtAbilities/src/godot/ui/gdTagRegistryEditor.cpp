@@ -514,11 +514,10 @@ void sm::TagRegistryEditor::BindContainersSignals()
 		{
 			container->connect("tag_added", callAdded);
 
-			godot::TypedArray<TagData> arr = container->GetTags();
+			godot::PackedInt32Array arr = container->GetTags();
 			for (size_t i = 0; i < arr.size(); i++)
 			{
-				godot::Ref<TagData> tag = arr[i];
-				_TagAddedToContainer(tag->GetInternalID(), container);
+				_TagAddedToContainer(arr[i], container);
 			}
 		}
 

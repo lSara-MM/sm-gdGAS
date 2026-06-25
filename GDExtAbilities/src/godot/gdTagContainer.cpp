@@ -21,10 +21,7 @@ void sm::TagContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_tags"), &SetTags);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::ARRAY,
-		"tags",
-		godot::PROPERTY_HINT_RESOURCE_TYPE,
-		"24/17:TagData"),
+		godot::Variant::PACKED_INT32_ARRAY, "tags"),
 		"set_tags", "get_tags"
 	);
 
@@ -37,73 +34,6 @@ void sm::TagContainer::_bind_methods()
 		godot::PropertyInfo(godot::Variant::INT, "id"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer")
 	));
-}
-
-void sm::TagContainer::_ready()
-{
-	/*{
-		godot::UtilityFunctions::print("hola");
-		TagRegistry& instance = TagRegistry::Instance();
-
-		instance.RegisterTag("hola.tag");
-		instance.RegisterTag("hola.tag.aaa");
-		instance.RegisterTag("hola.tag.aaa");
-		instance.RegisterTag("hola.tag.ccc");
-		instance.RegisterTag("hola.TAG.aaa");
-		instance.RegisterTag("hola.GA.bbb");
-		instance.RegisterTag("hola.tag.hh");
-		instance.RegisterTag("hola.45aa.hh");
-		instance.RegisterTag("hola.33daa.hh");
-
-		ERR_PRINT("PARENT");
-		ERR_PRINT(instance.GetParent("bbb"));
-
-		ERR_PRINT("TAGS");
-		ERR_PRINT(instance.GetTag("bbb"));
-		ERR_PRINT(instance.GetTag("TAG"));
-		ERR_PRINT("Next should fail");
-		ERR_PRINT(instance.GetTag("TAGa"));
-
-		ERR_PRINT("CHILDREN");
-		godot::TypedArray<godot::StringName> arr = instance.GetChildren("hola");
-		for (size_t i = 0; i < arr.size(); i++)
-		{
-			ERR_PRINT(arr[i]);
-		}
-
-		ERR_PRINT("ASCENDANTS");
-		godot::TypedArray<godot::StringName> arr2 = instance.GetAscendants("ccc");
-		for (size_t i = 0; i < arr2.size(); i++)
-		{
-			ERR_PRINT(arr2[i]);
-		}
-
-		ERR_PRINT("DESCENDANTS");
-		godot::TypedArray<godot::StringName> arr3 = instance.GetDescendants("hola");
-		for (size_t i = 0; i < arr3.size(); i++)
-		{
-			ERR_PRINT(arr3[i]);
-		}
-
-		instance.UnregisterTag("hola.tag.hh");
-		instance.UnregisterTag("hola.tag.ccc");
-		instance.UnregisterTag("hola.tag.ccc");
-		instance.UnregisterTag("hola.tag");
-
-		ERR_PRINT("DESCENDANTS AFTER UNREGISTER");
-		godot::TypedArray<godot::StringName> arr6 = instance.GetDescendants("hola");
-		for (size_t i = 0; i < arr6.size(); i++)
-		{
-			ERR_PRINT(arr6[i]);
-		}
-
-		ERR_PRINT("CHILDREN");
-		godot::TypedArray<godot::StringName> arr4 = instance.GetChildren("hola");
-		for (size_t i = 0; i < arr3.size(); i++)
-		{
-			ERR_PRINT(arr3[i]);
-		}
-	}*/
 }
 
 void sm::TagContainer::OnEnterTree()
@@ -127,8 +57,7 @@ void sm::TagContainer::SetIniTags()
 {
 	for (size_t i = 0; i < m_gdTags.size(); i++)
 	{
-		godot::Ref<TagData> tag = m_gdTags[i];
-		SetTag(tag->GetInternalID());
+		SetTag(m_gdTags[i]);
 	}
 }
 
@@ -171,29 +100,29 @@ void sm::TagContainer::OnChildOrderChanged()
 	WARN_PRINT_ED("TagContainer should not have children.");
 }
 
-godot::TypedArray<sm::TagData> sm::TagContainer::GetTags() const
+godot::PackedInt32Array sm::TagContainer::GetTags() const
 {
 	return m_gdTags;
 }
 
-void sm::TagContainer::SetTags(const godot::TypedArray<TagData>& tags)
+void sm::TagContainer::SetTags(const godot::PackedInt32Array& tags)
 {
 	m_gdTags = tags;
 }
 
-void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
+void sm::TagContainer::AddTag(TagID id)
 {
-	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
+	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag"));
 
-	if (HasTag(tag))
+	if (HasTag(id))
 	{
 		return;
 	}
 
-	bool ret = SetTag(tag->GetInternalID());
+	bool ret = SetTag(id);
 	if (ret)
 	{
-		m_gdTags.append(tag);
+		m_gdTags.push_back(id);
 	}
 }
 
@@ -208,15 +137,17 @@ void sm::TagContainer::AddTag(const godot::Ref<TagData>& tag)
 //	emit_signal("tag_added");
 //}
 
-void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
+void sm::TagContainer::RemoveTag(TagID id)
 {
-	ERR_FAIL_COND_MSG(tag->GetInternalID() == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
+	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag"));
 
-	bool ret = SetTag(tag->GetInternalID(), false);
-
+	bool ret = SetTag(id, false);
 	if (ret)
 	{
-		m_gdTags.erase(tag);
+		if (int pos = m_gdTags.find(id); pos != -1)
+		{
+			m_gdTags.remove_at(pos);
+		}
 	}
 }
 
@@ -230,11 +161,6 @@ void sm::TagContainer::RemoveTag(const godot::Ref<TagData>& tag)
 //	SetTag(id, false);
 //}
 
-bool sm::TagContainer::HasTag(const godot::Ref<TagData>& tag) const
-{
-	return m_TagsSet.tags.Has(tag->GetInternalID());
-}
-
 sm::TagSet sm::TagContainer::GetTagSet() const
 {
 	return m_TagsSet;
@@ -242,14 +168,6 @@ sm::TagSet sm::TagContainer::GetTagSet() const
 
 bool sm::TagContainer::HasTag(TagID id) const
 {
-	return m_TagsSet.tags.Has(id);
-}
-
-bool sm::TagContainer::HasTagFromPath(const godot::String& tag) const
-{
-	TagRegistry& instance = TagRegistry::Instance();
-	TagID id = instance.FindTagID(tag);
-
 	return m_TagsSet.tags.Has(id);
 }
 
