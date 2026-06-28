@@ -206,9 +206,6 @@
     <ClInclude Include="..\src\include\godot\gdTagData.h">
       <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\godot\gdTagRegistry.h">
-      <Filter>Header Files\tags</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\godot\gdGameplayAbilitySystemNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>

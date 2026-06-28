@@ -20,6 +20,9 @@ namespace sm
 		AbilityID GetAbilityID() const { return m_ID; };
 		void SetAbilityID(godot::StringName name);
 
+		TagID GetAbilityTag() const { return m_AbilityTag; };
+		void SetAbilityTag(TagID id);
+
 		float GetCooldown() const { return m_Cooldown; };
 		void SetCooldown(float value);
 
@@ -31,11 +34,17 @@ namespace sm
 
 		// Tags
 		godot::PackedInt32Array GetAbilityTags() const { return m_AbilityTags; };
-		godot::PackedInt32Array GetCancelAbilityTags() const { return m_CancelAbilitiesWithTag; };
-		godot::PackedInt32Array GetBlockAbilityTags() const { return m_BlockAbilitiesWithTag; };
-		godot::PackedInt32Array GetActivationTags() const { return m_ActivationRequirements; };
-		godot::PackedInt32Array GetActivationBlockedTags() const { return m_ActivationBlocked; };
+		void SetAbilityTags(godot::PackedInt32Array arr);
 
+		/*godot::PackedInt32Array GetCancelAbilityTags() const { return m_CancelAbilitiesWithTag; };*/
+		godot::PackedInt32Array GetBlockAbilityTags() const { return m_BlockAbilitiesWithTag; };
+		void SetBlockAbilityTags(godot::PackedInt32Array arr);
+
+		godot::PackedInt32Array GetActivationTags() const { return m_ActivationRequirements; };
+		void SetActivationTags(godot::PackedInt32Array arr);
+
+		godot::PackedInt32Array GetActivationBlockedTags() const { return m_ActivationBlocked; };
+		void SetActivationBlockedTags(godot::PackedInt32Array arr);
 #pragma endregion Godot public 
 
 	private:
@@ -44,12 +53,14 @@ namespace sm
 		//void _OnAbilityName(godot::StringName newName);
 
 	private:
+		TagID m_AbilityTag;
+
 		// GameplayTags that the GameplayAbility owns.
 		// These are just GameplayTags to describe the GameplayAbility.
 		godot::PackedInt32Array m_AbilityTags;
 
-		// Other GameplayAbilities that have these GameplayTags in their Ability Tags will be canceled when this GameplayAbility is activated.
-		godot::PackedInt32Array m_CancelAbilitiesWithTag;
+		//// Other GameplayAbilities that have these GameplayTags in their Ability Tags will be canceled when this GameplayAbility is activated.
+		//godot::PackedInt32Array m_CancelAbilitiesWithTag;
 
 		// Other GameplayAbilities that have these GameplayTags in their Ability Tags are blocked from activating while this GameplayAbility is active.
 		godot::PackedInt32Array m_BlockAbilitiesWithTag;

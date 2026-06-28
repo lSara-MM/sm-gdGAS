@@ -21,7 +21,8 @@ void sm::TagContainerInspector::_bind_methods()
 bool sm::TagContainerInspector::_can_handle(godot::Object* object) const
 {
 	return godot::Object::cast_to<TagContainer>(object) ||
-		godot::Object::cast_to<EffectData>(object);
+		godot::Object::cast_to<EffectData>(object) ||
+		godot::Object::cast_to<AbilityData>(object);
 }
 
 void sm::TagContainerInspector::_parse_begin(godot::Object* object)
@@ -29,14 +30,15 @@ void sm::TagContainerInspector::_parse_begin(godot::Object* object)
 	m_Contexts.clear();
 
 	if (!godot::Object::cast_to<TagContainer>(object) &&
-		!godot::Object::cast_to<EffectData>(object))
+		!godot::Object::cast_to<EffectData>(object) &&
+		!godot::Object::cast_to<AbilityData>(object))
 	{
 		m_IdToResource.clear();
-	}
 
 #ifdef DEBUG_ENABLED
-	m_ItemsByNameDebug.clear();
+		m_ItemsByNameDebug.clear();
 #endif // DEBUG_ENABLED
+	}
 }
 
 bool sm::TagContainerInspector::_parse_property(
@@ -69,6 +71,30 @@ bool sm::TagContainerInspector::_parse_property(
 		return true;
 	}
 
+	if (name == "tags" && godot::Object::cast_to<AbilityData>(object))
+	{
+		ShowTagTreeEditor(Inspect::ABILITY, object, "Tags");
+		return true;
+	}
+
+	if (name == "block_tags" && godot::Object::cast_to<AbilityData>(object))
+	{
+		ShowTagTreeEditor(Inspect::ABILITY, object, "Block Tags");
+		return true;
+	}
+
+	if (name == "activation_tags" && godot::Object::cast_to<AbilityData>(object))
+	{
+		ShowTagTreeEditor(Inspect::ABILITY, object, "Activation Tags");
+		return true;
+	}
+
+	if (name == "activation_blocked" && godot::Object::cast_to<AbilityData>(object))
+	{
+		ShowTagTreeEditor(Inspect::ABILITY, object, "Activation Blocked Tags");
+		return true;
+	}
+
 	return false;
 }
 
@@ -84,9 +110,13 @@ void sm::TagContainerInspector::ShowTagTreeEditor(Inspect current, godot::Object
 	context.current = current;
 	context.ownerId = object->get_instance_id();
 
-	if (auto* effect = godot::Object::cast_to<EffectData>(object))
+	if (auto* data = godot::Object::cast_to<EffectData>(object))
 	{
-		context.effect = godot::Ref<EffectData>(effect);
+		context.effect = godot::Ref<EffectData>(data);
+	}
+	else if (auto* data = godot::Object::cast_to<AbilityData>(object))
+	{
+		context.ability = godot::Ref<AbilityData>(data);
 	}
 
 	auto* mainSplit = memnew(godot::VSplitContainer);
@@ -94,7 +124,7 @@ void sm::TagContainerInspector::ShowTagTreeEditor(Inspect current, godot::Object
 	auto* root = memnew(godot::VBoxContainer);
 	root->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 	root->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
-	root->set_custom_minimum_size(godot::Vector2(100, 100));
+	root->set_custom_minimum_size(godot::Vector2(100, 70));
 	mainSplit->add_child(root);
 
 	auto* separator = memnew(godot::HSeparator);
@@ -121,7 +151,7 @@ void sm::TagContainerInspector::ShowTagTreeEditor(Inspect current, godot::Object
 		AddSelectedTagsTree(gui, mainSplit, context);
 	}
 
-	const int rowHeight = current == Inspect::CONTAINER ? 50 : 24;
+	const int rowHeight = current == Inspect::CONTAINER ? 50 : 12;
 	const int extraHeight = 100;
 	mainSplit->set_custom_minimum_size(godot::Vector2(100, tagsSize * rowHeight + extraHeight));
 

@@ -11,6 +11,7 @@
 #include "godot/gdAttributeData.h"
 #include "godot/gdAttributeSetData.h"
 #include "godot/gdEffectData.h"
+#include "godot/gdGameplayAbility.h"
 #include "godot/gdGameplayAbilitySystemNode.h"
 #include "godot/gdGameplayAbilitySystemResource.h"
 #include "godot/gdGASEntity.h"
@@ -34,6 +35,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 		ClassDB::register_class<sm::GAS_World>();
 		ClassDB::register_class<sm::GAS_Entity>();
 
+		ClassDB::register_class<sm::GameplayAbility>();
 		ClassDB::register_class<sm::AbilityData>();
 		ClassDB::register_class<sm::AttributeData>();
 		ClassDB::register_class<sm::AttributeSetData>();

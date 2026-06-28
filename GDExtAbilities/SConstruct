@@ -1,35 +1,48 @@
 #!/usr/bin/env python
 
+import os
+
 env = SConscript("godot-cpp/SConstruct")
 
-VariantDir("build", "src", duplicate=0)
+# ---------------------------------------------------
+env.Append(CXXFLAGS=[
+    "/std:c++20",
+    "/EHsc"
+])
 
+# ---------------------------------------------------
 env.Append(CPPPATH=[
     "src/include",
     "src/private",
     "src",
-	"godot-cpp/gen/include/"
+    "godot-cpp/gen/include/",
 ])
 
+# ---------------------------------------------------
 sources = []
-sources += Glob("build/*.cpp")
+for root, dirs, files in os.walk("src"):
+    for file in files:
+        if file.endswith(".cpp"):
+            sources.append(os.path.join(root, file))
 
+# ---------------------------------------------------
 folder = "addons/GDExtAbilities/bin"
 
 if env["platform"] == "macos":
-	file_name = "libGDExtAbilities.{}.{}".format(env["platform"], env["target"])
+    file_name = f"libGDExtAbilities.{env['platform']}.{env['target']}"
 
-	library = env.SharedLibrary(
-		"{}/{}.framework/{}".format(folder, file_name, file_name),
-		source=sources
-	)
+    library = env.SharedLibrary(
+        f"{folder}/{file_name}.framework/{file_name}",
+        source=sources
+    )
 else:
-	library = env.SharedLibrary(
-		"{}/libGDExtAbilities{}{}"
-			.format(folder, env["suffix"], env["SHLIBSUFFIX"]),
-		source=sources,
-	)
+    library = env.SharedLibrary(
+        f"{folder}/libGDExtAbilities{env['suffix']}{env['SHLIBSUFFIX']}",
+        source=sources
+    )
 
+# ---------------------------------------------------
+# Cache
+# ---------------------------------------------------
 CacheDir(".scons_cache/")
-
 Default(library)

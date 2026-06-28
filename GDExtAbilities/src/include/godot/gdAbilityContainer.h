@@ -5,6 +5,7 @@
 #include "internal/Types.h"
 
 #include <godot_cpp/variant/node_path.hpp>
+#include <godot_cpp/core/gdvirtual.gen.inc>
 
 namespace sm
 {
@@ -20,11 +21,15 @@ namespace sm
 	public:
 #pragma region Godot public 
 
-		godot::TypedArray<sm::AbilityData> GetAbilities() const { return m_gdAbilities; };
-		void SetAbilities(const godot::TypedArray<sm::AbilityData>& ability);
+		godot::TypedArray<AbilityData> GetAbilities() const { return m_gdAbilities; };
+		void SetAbilities(const godot::TypedArray<AbilityData>& ability);
 
 		godot::NodePath	GetEntityNodePath() const;
 		void SetEntityNodePath(godot::NodePath path);
+
+		bool GrantAbility(godot::Ref<AbilityData> ability);
+
+		GDVIRTUAL1R(bool, _can_be_granted, godot::Ref<AbilityData>)
 
 #pragma endregion
 

@@ -404,4 +404,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/demos/demo0/gen
+/demos/demo0/gen/
+/GDExtAbilities/godot-cpp/

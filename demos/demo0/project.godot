@@ -16,7 +16,7 @@ tag_registry_path="res://gen/tags/tag_registry.tres"
 
 config/name="demo0"
 run/main_scene="uid://c1paa8dc7dn22"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
 [input]

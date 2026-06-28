@@ -26,6 +26,8 @@ void sm::AbilityContainer::_bind_methods()
 		"24/17:AbilityData"),
 		"set_abilities", "get_abilities"
 	);
+
+	GDVIRTUAL_BIND(_can_be_granted, "ability");
 }
 
 void sm::AbilityContainer::SetAbilities(const godot::TypedArray<sm::AbilityData>& ability)
@@ -61,4 +63,16 @@ void sm::AbilityContainer::SetEntityNodePath(godot::NodePath path)
 	ERR_FAIL_COND_MSG(path.is_empty(), "Could not set node path. Node must be in a GAS_Entity node hierarchy.");
 
 	m_EntityNodePath = path;
+}
+
+bool sm::AbilityContainer::GrantAbility(godot::Ref<AbilityData> ability)
+{
+	bool ret = false;
+
+	if (GDVIRTUAL_IS_OVERRIDDEN(_can_be_granted))
+	{
+		GDVIRTUAL_CALL(_can_be_granted, ability, ret);
+	}
+
+	return ret;
 }

@@ -1,11 +1,14 @@
 #pragma once
 #ifdef TOOLS_ENABLED
+#include "godot/gdAbilityData.h"
 #include "godot/gdEffectData.h"
 #include "godot/gdTagData.h"
 
 #include <godot_cpp/classes/editor_inspector_plugin.hpp>
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/core/object_id.hpp>
+
+// TODO: Refactor inspector so its not a messy mix of data types
 
 namespace godot
 {
@@ -35,7 +38,8 @@ namespace sm
 		{
 			CONTAINER,
 			EFFECT_ADD,
-			EFFECT_REMOVE
+			EFFECT_REMOVE,
+			ABILITY
 		};
 
 		bool _can_handle(godot::Object* object) const override;
@@ -56,6 +60,8 @@ namespace sm
 			Inspect current = Inspect::CONTAINER;
 			godot::ObjectID ownerId;
 			godot::Ref<EffectData> effect;
+			godot::Ref<AbilityData> ability;
+
 			godot::Tree* availableTree = nullptr;
 			godot::Tree* selectedTree = nullptr;
 			godot::String search;

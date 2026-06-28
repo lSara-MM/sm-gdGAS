@@ -2,6 +2,7 @@
 #include "godot/gdAbilityData.h"
 #include "godot/gdGASEntity.h"
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/core/gdvirtual.gen.inc>
 
 namespace sm
 {
@@ -25,13 +26,14 @@ namespace sm
 		void SetAbilityData(const godot::Ref<AbilityData> data) { return abilityData = data; }
 
 #pragma region GDScript API
-		virtual bool V_CheckAvailability() const {};
 
-		virtual void V_TryActivateAbility() {};
-		virtual void V_EndAbility([[maybe_unused]] bool wasCancelled = false) {};
+		GDVIRTUAL0R(bool, _check_availability)
+			GDVIRTUAL0(_try_activate)
+			GDVIRTUAL1(_end_ability, bool)
+
 #pragma endregion
 
-		void Grant();
+			void Grant();
 		void Revoke();
 		void CleanUp();
 
@@ -54,8 +56,6 @@ namespace sm
 	private:
 		float m_CurrentCooldownRemaining = 0.0f;
 		bool  m_IsActive;
-		
-
 
 		GAS_Entity* m_Entity;
 	};
