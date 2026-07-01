@@ -288,7 +288,10 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 
 		ret = true;
 		emit_signal("tag_added", id, this);
+
+#ifdef TOOLS_ENABLED
 		notify_property_list_changed();
+#endif // TOOLS_ENABLED
 
 		if (OnTagAdded)
 		{
@@ -304,7 +307,10 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 
 		ret = true;
 		emit_signal("tag_removed", id, this);
+
+#ifdef TOOLS_ENABLED
 		notify_property_list_changed();
+#endif // TOOLS_ENABLED
 
 		if (OnTagRemoved)
 		{

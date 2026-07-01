@@ -142,11 +142,21 @@ void sm::TagContainerInspector::ShowTagTreeEditor(Inspect current, godot::Object
 
 	if (current == Inspect::CONTAINER)
 	{
+		auto* hbox2 = memnew(godot::HBoxContainer);
+		hbox2->set_alignment(hbox2->ALIGNMENT_CENTER);
+		root->add_child(hbox2);
+
 		auto* addButton = memnew(godot::Button);
 		addButton->set_text("Add Tag");
-		addButton->set_custom_minimum_size(godot::Vector2(50, 24));
+		addButton->set_custom_minimum_size(godot::Vector2(100, 30));
 		addButton->connect("pressed", callable_mp(this, &TagContainerInspector::_OnAddButtonClicked).bind(context.availableTree));
-		root->add_child(addButton);
+		hbox2->add_child(addButton);
+
+		auto* clearButton = memnew(godot::Button);
+		clearButton->set_text("Clear");
+		clearButton->set_custom_minimum_size(godot::Vector2(100, 30));
+		//clearButton->connect("pressed", callable_mp(this, &TagContainerInspector::_OnAddButtonClicked).bind(context.availableTree));
+		hbox2->add_child(clearButton);
 
 		AddSelectedTagsTree(gui, mainSplit, context);
 	}

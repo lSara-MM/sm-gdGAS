@@ -77,10 +77,31 @@ void sm::EffectData::SetModifiers(const godot::TypedArray<ModifierData>& modifie
 	m_Modifiers = modifiers;
 }
 
+void sm::EffectData::AddModifier(const godot::Ref<ModifierData>& modifier)
+{
+	m_Modifiers.push_back(modifier);
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
+}
+
+void sm::EffectData::ClearModifiers()
+{
+	m_Modifiers.clear();
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
+}
+
 void sm::EffectData::SetEffectType(EffectData::Type lt)
 {
 	m_EffectType = lt;
+
+#ifdef TOOLS_ENABLED
 	notify_property_list_changed();
+#endif // TOOLS_ENABLED
 }
 
 bool sm::EffectData::AddTagToAdd(TagID id)

@@ -1,11 +1,12 @@
 #pragma once
-#include "godot/gdGameplayAbilitySystemNode.h"
-#include "godot/gdAbilityData.h"
 #include "godot/GASWorldBound.h"
+#include "godot/gdAbilityData.h"
+#include "godot/gdGameplayAbility.h"
+#include "godot/gdGameplayAbilitySystemNode.h"
 #include "internal/Types.h"
 
-#include <godot_cpp/variant/node_path.hpp>
 #include <godot_cpp/core/gdvirtual.gen.inc>
+#include <godot_cpp/variant/node_path.hpp>
 
 namespace sm
 {
@@ -24,13 +25,26 @@ namespace sm
 		godot::TypedArray<AbilityData> GetAbilities() const { return m_gdAbilities; };
 		void SetAbilities(const godot::TypedArray<AbilityData>& ability);
 
+		godot::Ref<GameplayAbility> GetAbilityInstance(const godot::Ref<AbilityData>& ability);
+
 		godot::NodePath	GetEntityNodePath() const;
 		void SetEntityNodePath(godot::NodePath path);
 
-		bool GrantAbility(godot::Ref<AbilityData> ability);
+		void AddAbility(const godot::Ref<AbilityData>& ability);
+
+		void RemoveAbility(const godot::Ref<AbilityData>& ability);
+
+		bool Grant(const godot::Ref<AbilityData>& ability);
+		bool Revoke(const godot::Ref<AbilityData>& ability);
+		void Clear();
+		bool Has(const godot::Ref<AbilityData>& ability) const;
+
+		bool IsActive(const godot::Ref<AbilityData>& ability) const;
+		bool IsOnCooldown(const godot::Ref<AbilityData>& ability) const;
+		int GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const;
 
 		GDVIRTUAL1R(bool, _can_be_granted, godot::Ref<AbilityData>)
-
+			GDVIRTUAL1R(bool, _can_activate, godot::Ref<AbilityData>)
 #pragma endregion
 
 	private:
@@ -42,7 +56,9 @@ namespace sm
 
 	private:
 		godot::TypedArray<AbilityData> m_gdAbilities;
+		std::unordered_map<TagID, godot::Ref<GameplayAbility>> m_Scripts;
 		godot::NodePath m_EntityNodePath = "";
+		GAS_Entity* m_Owner = nullptr;
 		WorldBound m_WorldBound;
 	};
 }

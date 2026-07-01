@@ -1,6 +1,7 @@
 #include "godot/gdAbilityContainer.h"
 
 #include "godot/gdGASWorld.h"
+#include <godot_cpp/classes/engine.hpp>
 
 void sm::AbilityContainer::_bind_methods()
 {
@@ -10,6 +11,10 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities"), &GetAbilities);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities", "abilities"), &SetAbilities);
 
+	GDVIRTUAL_BIND(_can_be_granted, "ability");
+	GDVIRTUAL_BIND(_can_activate, "ability");
+
+	//
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::OBJECT,
 		"entity_node_path",
@@ -27,25 +32,63 @@ void sm::AbilityContainer::_bind_methods()
 		"set_abilities", "get_abilities"
 	);
 
-	GDVIRTUAL_BIND(_can_be_granted, "ability");
+	//
+	ADD_SIGNAL(godot::MethodInfo("_on_ability_granted",
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
+			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
+			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
+	));
+
+	ADD_SIGNAL(godot::MethodInfo("_on_ability_revoked",
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
+			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
+			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
+	));
+
+	ADD_SIGNAL(godot::MethodInfo("_on_ability_activated",
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
+			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
+			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
+	));
+
+	ADD_SIGNAL(godot::MethodInfo("_on_ability_ended",
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
+			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
+			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
+	));
+
+	ADD_SIGNAL(godot::MethodInfo("_on_abilities_cleared",
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
+			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity")
+	));
 }
 
-void sm::AbilityContainer::SetAbilities(const godot::TypedArray<sm::AbilityData>& ability)
+void sm::AbilityContainer::SetAbilities(const godot::TypedArray<AbilityData>& ability)
 {
 	m_gdAbilities = ability;
 }
 
+godot::Ref<sm::GameplayAbility> sm::AbilityContainer::GetAbilityInstance(const godot::Ref<AbilityData>& ability)
+{
+
+	return godot::Ref<GameplayAbility>();
+}
+
 void sm::AbilityContainer::OnReady()
 {
-	GAS_Entity* entity = NodeUtils::GetParentNodeOfType<GAS_Entity>(this);
+	m_Owner = NodeUtils::GetParentNodeOfType<GAS_Entity>(this);
 
-	if (!entity)
+	if (!m_Owner)
 	{
 		queue_free();
 		ERR_FAIL_MSG("Could not create AbilityContainer. Node must be in a GAS_Entity node hierarchy.");
 	}
 
-	SetEntityNodePath(entity->get_path());
+	SetEntityNodePath(m_Owner->get_path());
 }
 
 void sm::AbilityContainer::OnExitTree()
@@ -65,14 +108,129 @@ void sm::AbilityContainer::SetEntityNodePath(godot::NodePath path)
 	m_EntityNodePath = path;
 }
 
-bool sm::AbilityContainer::GrantAbility(godot::Ref<AbilityData> ability)
+void sm::AbilityContainer::AddAbility(const godot::Ref<AbilityData>& ability)
 {
-	bool ret = false;
+	m_gdAbilities.push_back(ability);
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
+}
+
+void sm::AbilityContainer::RemoveAbility(const godot::Ref<AbilityData>& ability)
+{
+	m_gdAbilities.erase(ability);
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED}
+}
+
+bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
+{
+	ERR_FAIL_COND_V_MSG(ability.is_null(), false, "Grant failed. AbilityData is null."); bool ret = true;
 
 	if (GDVIRTUAL_IS_OVERRIDDEN(_can_be_granted))
 	{
 		GDVIRTUAL_CALL(_can_be_granted, ability, ret);
 	}
 
+	if (!ret)
+	{
+		WARN_PRINT("Ability can't be granted");
+		return false;
+	}
+
+	godot::Ref<godot::Script> script = ability->GetAbilityScript();
+	ERR_FAIL_COND_V_MSG(script.is_null(), false, "Grant failed. AbilityData has no valid script.");
+
+	godot::Ref<GameplayAbility> abilityInstance = memnew(GameplayAbility);
+	abilityInstance->set_script(script);
+	abilityInstance->SetOwner(m_Owner);
+	abilityInstance->SetAbilityData(ability);
+
+	m_Scripts.emplace(ability->GetAbilityID(), abilityInstance);
+
+	AddAbility(ability);
+
+	emit_signal("_on_ability_granted", ability, m_Owner);
 	return ret;
+}
+
+bool sm::AbilityContainer::Revoke(const godot::Ref<AbilityData>& ability)
+{
+	ERR_FAIL_COND_V_MSG(ability.is_null(), false, "Revoke failed. AbilityData is null.");
+	auto itr = m_Scripts.find(ability->GetAbilityID());
+
+	if (itr == m_Scripts.end())
+	{
+		return false;
+	}
+
+	godot::Ref<GameplayAbility> abilityInstance = itr->second;
+	ERR_FAIL_COND_V_MSG(abilityInstance.is_null(), false, "Revoke failed. GameplayAbility is null.");
+
+	if (abilityInstance->TryEnd(true))
+	{
+		emit_signal("_on_ability_ended", ability, m_Owner);
+	}
+
+	RemoveAbility(ability);
+	emit_signal("_on_ability_revoked", ability, m_Owner);
+	return false;
+}
+
+void sm::AbilityContainer::Clear()
+{
+	for (auto& [tagId, abilityInstance] : m_Scripts)
+	{
+		if (abilityInstance.is_null())
+		{
+			continue;
+		}
+
+		godot::Ref<AbilityData> data = abilityInstance->GetAbilityData();
+
+		if (IsActive(data))
+		{
+			abilityInstance->TryEnd(true);
+		}
+	}
+
+	m_gdAbilities.clear();
+	m_Scripts.clear();
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
+
+	emit_signal("_on_abilities_cleared", m_Owner);
+}
+
+bool sm::AbilityContainer::IsActive(const godot::Ref<AbilityData>& ability) const
+{
+	godot::Ref<GameplayAbility> abilityInstance = ability->GetAbilityInstance();
+	return abilityInstance->IsActive();
+}
+
+bool sm::AbilityContainer::IsOnCooldown(const godot::Ref<AbilityData>& ability) const
+{
+	godot::Ref<GameplayAbility> abilityInstance = ability->GetAbilityInstance();
+	return abilityInstance->IsOnCooldown();
+}
+
+int sm::AbilityContainer::GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const
+{
+	if (auto itr = m_Scripts.find(ability->GetAbilityID());
+		itr != m_Scripts.end())
+	{
+
+	}
+
+	return -1;
+}
+
+bool sm::AbilityContainer::Has(const godot::Ref<AbilityData>& ability) const
+{
+	return m_Scripts.find(ability->GetAbilityID()) != m_Scripts.end();
 }

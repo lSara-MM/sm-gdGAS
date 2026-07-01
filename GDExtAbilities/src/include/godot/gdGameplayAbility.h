@@ -1,11 +1,13 @@
 #pragma once
-#include "godot/gdAbilityData.h"
 #include "godot/gdGASEntity.h"
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/gdvirtual.gen.inc>
 
 namespace sm
 {
+	class AbilityData;
+	class GAS_World;
+
 	enum AbilityState
 	{
 		Idle,
@@ -25,38 +27,43 @@ namespace sm
 		godot::Ref<AbilityData> GetAbilityData() const { return abilityData; }
 		void SetAbilityData(const godot::Ref<AbilityData> data) { return abilityData = data; }
 
+		void SetOwner(GAS_Entity* entity);
+
 #pragma region GDScript API
 
 		GDVIRTUAL0R(bool, _check_availability)
-			GDVIRTUAL0(_try_activate)
+			GDVIRTUAL0(_activate_ability)
 			GDVIRTUAL1(_end_ability, bool)
+			GDVIRTUAL0R(godot::TypedArray<GAS_Entity>, _calculate_targets)
 
 #pragma endregion
-
-			void Grant();
-		void Revoke();
-		void CleanUp();
+			void CleanUp();
 
 		bool TryActivate();
+		bool TryEnd(bool wasCancelled = false);
 
 		bool CheckCost();
 		bool CheckTags();
-		bool CheckCooldown() const;
 		bool CommitAbility();
+		void EndAbility();
 		bool ApplyCost();
 		bool ApplyCooldown();
+		void ApplyEffectsToTarget(GAS_Entity* entity);
 
 		bool CanActivate();
 		bool IsActive() const;
+		bool IsOnCooldown() const;
 
 	public:
 		godot::Ref<AbilityData> abilityData;
 		AbilityState state;
 
 	private:
-		float m_CurrentCooldownRemaining = 0.0f;
+		EffectInstanceID m_CooldownEffect;
+		EffectInstanceID m_CostEffect;
 		bool  m_IsActive;
 
 		GAS_Entity* m_Entity;
+		GAS_World* m_World;
 	};
 }

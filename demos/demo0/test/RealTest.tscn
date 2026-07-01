@@ -9,6 +9,8 @@ entity_count = 3
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity3"]
 
+[node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity3"]
+
 [node name="GAS_Entity2" type="GAS_Entity" parent="."]
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity2"]

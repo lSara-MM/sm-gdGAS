@@ -155,26 +155,26 @@ void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)
 	tagContainerNodePath = path;
 }
 
-void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
+EffectInstanceID sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 {
 	sm::GAS_World* world = m_WorldBound.GetWorld(this);
 
-	ERR_FAIL_NULL_MSG(world,
+	ERR_FAIL_NULL_V_MSG(world, 0,
 		godot::vformat("AddEffect: Could not add '%s'. The EffectSystem was not found.",
 			gdEffect->GetName()));
 
 	if (!HandleTags(gdEffect))
 	{
-		return;
+		return 0;
 	}
 
 	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
 	if (modifiers.is_empty())
 	{
-		return;
+		return 0;
 	}
 
-	ERR_FAIL_NULL_MSG(m_AttrContainer,
+	ERR_FAIL_NULL_V_MSG(m_AttrContainer, 0,
 		godot::vformat("AddEffect: Could not add '%s'. The AttributeContainer was not found.",
 			gdEffect->GetName()));
 
@@ -187,7 +187,7 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 			m_AttrContainer->AddBaseModifier(modifier->GetTargetID(), modifier);
 		}
 
-		return;
+		return 1;
 	}
 
 	GameplayEffect effect(
@@ -214,7 +214,7 @@ void sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 		effect.AddModifier(handle);
 	}
 
-	world->GetEffectSystem()->AddActiveEffect(effect);
+	return world->GetEffectSystem()->AddActiveEffect(effect);
 }
 
 bool sm::GAS_Entity::HandleTags(const godot::Ref<EffectData>& gdEffect)

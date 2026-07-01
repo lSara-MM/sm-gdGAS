@@ -40,9 +40,23 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectID effectID)
 	return (it != m_ActiveEffects.end()) ? &(*it) : nullptr;
 }
 
-void sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
+sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectInstanceID effectID)
 {
-	m_ActiveEffects.push_back(std::move(effect));
+	if (auto itr = m_Effects.find(effectID); itr != m_Effects.end())
+	{
+		return itr->second;
+	}
+
+	return nullptr;
+}
+
+EffectInstanceID sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
+{
+	auto id = effect.GetInstanceID();
+	GameplayEffect* ptr = &m_ActiveEffects.emplace_back(std::move(effect));
+	m_Effects[id] = ptr;
+
+	return id;
 }
 
 //void sm::EffectSystem::RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect)

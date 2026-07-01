@@ -11,6 +11,7 @@ namespace sm
 {
 	class AttributeContainer;
 	class TagContainer;
+	class GAS_World;
 
 	class GAS_Entity : public GameplayAbilitySystem
 	{
@@ -28,6 +29,8 @@ namespace sm
 		EntityID GetID() const { return m_ID; }
 		void SetID(EntityID id);
 
+		GAS_World* GetWorld() { return m_WorldBound.GetWorld(this); }
+
 		AttributeContainer* GetAttributeContainer() const { return m_AttrContainer; }
 		void SetAttributeContainer(AttributeContainer* node) { m_AttrContainer = node; };
 		godot::NodePath GetAttributeContainerNodePath() const { return attrContainerNodePath; }
@@ -38,7 +41,7 @@ namespace sm
 		godot::NodePath GetTagContainerNodePath() const { return tagContainerNodePath; }
 		void SetTagContainerNodePath(godot::NodePath path);
 
-		void AddEffect(const godot::Ref<EffectData> gdEffect);
+		EffectInstanceID AddEffect(const godot::Ref<EffectData> gdEffect);
 
 		bool HandleTags(const godot::Ref<sm::EffectData>& gdEffect);
 		void AddTags(const BitSet<MAX_TAGS> tags);

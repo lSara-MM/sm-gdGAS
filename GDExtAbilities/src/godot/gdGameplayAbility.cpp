@@ -1,6 +1,9 @@
 #include "godot/gdGameplayAbility.h"
 
 #include "godot/gdAttributeContainer.h"
+#include "godot/gdAbilityData.h"
+#include "godot/gdGASWorld.h"
+#include "core/EffectSystem.h"
 #include "godot/gdTagContainer.h"
 
 void sm::GameplayAbility::_bind_methods()
@@ -8,19 +11,17 @@ void sm::GameplayAbility::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &GetAbilityData);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_data", "data"), &SetAbilityData);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &TryActivate);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &TryActivate);
-
 	GDVIRTUAL_BIND(_check_availability);
-	GDVIRTUAL_BIND(_try_activate);
+	GDVIRTUAL_BIND(_activate_ability);
 	GDVIRTUAL_BIND(_end_ability, "was_cancelled");
+	GDVIRTUAL_BIND(_calculate_targets);
 }
 
-void sm::GameplayAbility::Grant()
-{}
-
-void sm::GameplayAbility::Revoke()
-{}
+void sm::GameplayAbility::SetOwner(GAS_Entity* entity)
+{
+	m_Entity = entity;
+	m_World = entity->GetWorld();
+}
 
 void sm::GameplayAbility::CleanUp()
 {}
@@ -32,14 +33,25 @@ bool sm::GameplayAbility::TryActivate()
 		return false;
 	}
 
-	if (!CommitAbility())
-	{
+	state = AbilityState::Active;
 
+	if (GDVIRTUAL_IS_OVERRIDDEN(_activate_ability))
+	{
+		GDVIRTUAL_CALL(_activate_ability);
+		return true;
 	}
 
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_activate))
+	return false;
+}
+
+bool sm::GameplayAbility::TryEnd(bool wasCancelled)
+{
+	if (IsActive())
 	{
-		GDVIRTUAL_CALL(_try_activate);
+		if (GDVIRTUAL_IS_OVERRIDDEN(_end_ability))
+		{
+			GDVIRTUAL_CALL(_end_ability, wasCancelled);
+		}
 	}
 
 	return true;
@@ -50,7 +62,10 @@ bool sm::GameplayAbility::CheckCost()
 	const AttributeContainer* attrContainer = m_Entity->GetAttributeContainer();
 	GameplayAttribute* attr = attrContainer->FindAttribute(abilityData->GetCostAttributeID());
 
-	return attr->GetCurrent() >= abilityData->GetCost();
+	godot::Ref<EffectData> effect = abilityData->GetCostData();
+	auto modifiers = effect->GetModifiers();
+	godot::Ref<ModifierData> m = modifiers[0];
+	return attr->GetCurrent() >= m->GetValue();
 }
 
 bool sm::GameplayAbility::CheckTags()
@@ -71,12 +86,18 @@ bool sm::GameplayAbility::CheckTags()
 		ret = false;
 	}
 
-	return false;
+	return ret;
 }
 
-bool sm::GameplayAbility::CheckCooldown() const
+bool sm::GameplayAbility::IsOnCooldown() const
 {
-	return m_CurrentCooldownRemaining > abilityData->GetCooldown();
+	EffectSystem* es = m_World->GetEffectSystem();
+	ERR_FAIL_COND_V_MSG(!es, false, "EffectSystem is null");
+
+	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
+	ERR_FAIL_COND_V_MSG(!effect, false, "GameplayEffect not found");
+
+	return !effect->HasExpired();
 }
 
 bool sm::GameplayAbility::CommitAbility()
@@ -91,21 +112,48 @@ bool sm::GameplayAbility::CommitAbility()
 	return true;
 }
 
+void sm::GameplayAbility::EndAbility()
+{
+	state = AbilityState::Idle;
+
+	if (GDVIRTUAL_IS_OVERRIDDEN(_end_ability))
+	{
+		GDVIRTUAL_CALL(_end_ability, false);
+	}
+}
+
 bool sm::GameplayAbility::ApplyCost()
 {
+	godot::Ref<EffectData> effect = abilityData->GetCostData();
+
+	if (effect.is_valid())
+	{
+		m_Entity->AddEffect(effect);
+		return true;
+	}
+
 	return false;
 }
 
 bool sm::GameplayAbility::ApplyCooldown()
 {
-	m_CurrentCooldownRemaining = abilityData->GetCooldown();
-	return true;
+	godot::Ref<EffectData> effect = abilityData->GetCooldonwData();
+	if (effect.is_valid())
+	{
+		m_Entity->AddEffect(effect);
+		return true;
+	}
+
+	return false;
 }
+
+void sm::GameplayAbility::ApplyEffectsToTarget(GAS_Entity* entity)
+{}
 
 bool sm::GameplayAbility::CanActivate()
 {
-	bool ret = false;
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_activate))
+	bool ret = true;
+	if (GDVIRTUAL_IS_OVERRIDDEN(_check_availability))
 	{
 		GDVIRTUAL_CALL(_check_availability, ret);
 	}
@@ -113,11 +161,11 @@ bool sm::GameplayAbility::CanActivate()
 	return (state == AbilityState::Idle) &&
 		CheckCost() &&
 		CheckTags() &&
-		CheckCooldown() &&
+		!IsOnCooldown() &&
 		ret;
 }
 
 bool sm::GameplayAbility::IsActive() const
 {
-	return false;
+	return state == AbilityState::Active;
 }

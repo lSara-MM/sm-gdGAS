@@ -10,6 +10,11 @@ bool sm::GameplayEffect::HasExpired() const
 	return m_RemainingTime <= 0 && m_EffectType == GameplayEffect::Type::Temporary;
 }
 
+float sm::GameplayEffect::GetCurrentCooldown() const
+{
+	return m_RemainingTime;
+}
+
 void sm::GameplayEffect::Tick(float dt)
 {
 	if (m_EffectType == GameplayEffect::Type::Temporary)

@@ -17,10 +17,11 @@ namespace sm
 			Max
 		};
 
-		GameplayEffect(EffectID name, EffectInstanceID id, 
+		GameplayEffect(EffectID name, EffectInstanceID id,
 			GameplayEffect::Type type, EntityID target, EntityID source, float time = 0);
 
 		EffectID GetID() const { return m_Name; }
+		EffectInstanceID GetInstanceID() const { return m_ID; }
 		EntityID GetTargetID() const { return m_TargetID; }
 		EntityID GetSourceUID() const { return m_SourceID; }
 
@@ -28,6 +29,7 @@ namespace sm
 		BitSet<MAX_TAGS> GetTagsToRemove() const { return m_TagsToRemove; }
 
 		bool HasExpired() const;
+		float GetCurrentCooldown() const;
 
 		void Tick(float dt);
 

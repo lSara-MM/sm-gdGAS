@@ -16,8 +16,9 @@ namespace sm
 		void Update(float dt) override;
 
 		GameplayEffect* FindEffect(EffectID effectID);
+		GameplayEffect* FindEffect(EffectInstanceID effectID);
 
-		void AddActiveEffect(GameplayEffect& effect);
+		EffectInstanceID AddActiveEffect(GameplayEffect& effect);
 		//void RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect);
 
 		//void RemoveEffect(EffectID effectID);
@@ -30,5 +31,6 @@ namespace sm
 
 	private:
 		std::vector<GameplayEffect> m_ActiveEffects;
+		std::unordered_map<EffectInstanceID, GameplayEffect*> m_Effects;
 	};
 }

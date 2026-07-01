@@ -1,8 +1,10 @@
 #pragma once
 #include "godot/gdEffectData.h"
+#include "godot/gdGameplayAbility.h"
 #include "godot/gdGameplayAbilitySystemResource.h"
 #include "internal/Types.h"
 
+#include <godot_cpp/classes/script.hpp>
 #include <vector>
 
 namespace sm
@@ -17,17 +19,23 @@ namespace sm
 	public:
 
 #pragma region Godot public
-		AbilityID GetAbilityID() const { return m_ID; };
-		void SetAbilityID(godot::StringName name);
+		TagID GetAbilityID() const { return m_AbilityTag; };
+		void SetAbilityID(TagID id);
 
-		TagID GetAbilityTag() const { return m_AbilityTag; };
-		void SetAbilityTag(TagID id);
+		godot::Ref<godot::Script> GetAbilityScript() const { return m_AbilityScript; };
+		void SetAbilityScript(const godot::Ref<godot::Script>& script);
+
+		godot::Ref<GameplayAbility> GetAbilityInstance() const { return m_AbilityInstance; };
+		void SetAbilityInstance(const godot::Ref<GameplayAbility>& script);
 
 		float GetCooldown() const { return m_Cooldown; };
 		void SetCooldown(float value);
+		godot::Ref<EffectData> GetCooldonwData() const { return m_CooldownData; };
 
 		float GetCost() const { return m_Cost; };
-		void SetCost(float value) { m_Cost = value; };
+		void SetCost(float value);
+		godot::Ref<EffectData> GetCostData() const { return m_CostData; };
+		void SetCostData(godot::Ref<EffectData> value) { m_CostData = value; };
 
 		AttributeID GetCostAttributeID() const { return m_CostAttributeID; };
 		void SetCostAttributeID(AttributeID value) { m_CostAttributeID = value; };
@@ -45,6 +53,9 @@ namespace sm
 
 		godot::PackedInt32Array GetActivationBlockedTags() const { return m_ActivationBlocked; };
 		void SetActivationBlockedTags(godot::PackedInt32Array arr);
+
+		godot::TypedArray<EffectData> GetEffects();
+		void SetEffects(const godot::TypedArray<EffectData>& effects);
 #pragma endregion Godot public 
 
 	private:
@@ -53,7 +64,8 @@ namespace sm
 		//void _OnAbilityName(godot::StringName newName);
 
 	private:
-		TagID m_AbilityTag;
+		godot::Ref<godot::Script> m_AbilityScript;
+		godot::Ref<GameplayAbility> m_AbilityInstance;
 
 		// GameplayTags that the GameplayAbility owns.
 		// These are just GameplayTags to describe the GameplayAbility.
@@ -89,10 +101,12 @@ namespace sm
 		The Target GameplayTags are only set if the GameplayAbility is triggered by an event.
 		*/
 
-		godot::Ref<EffectData> m_CooldownData;
+		godot::TypedArray<EffectData> m_Effects;
 
-		AbilityID m_ID;
+		godot::Ref<EffectData> m_CooldownData;
+		godot::Ref<EffectData> m_CostData;
 		AttributeID m_CostAttributeID;
+		TagID m_AbilityTag;
 		float m_Cooldown = 0.0f;
 		float m_Cost = 0.0f;
 	};

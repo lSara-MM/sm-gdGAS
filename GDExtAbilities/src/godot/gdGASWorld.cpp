@@ -208,8 +208,10 @@ EntityID sm::GAS_World::RegisterEntity(GAS_Entity* entity)
 	entity->SetID(id);
 	m_Entities.emplace(entity);
 	m_EntitiesRegistry.emplace(id, entity);
-	notify_property_list_changed();
 
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
 	return id;
 }
 
@@ -217,7 +219,10 @@ void sm::GAS_World::UnregisterEntity(GAS_Entity* entity)
 {
 	m_Entities.erase(entity);
 	m_EntitiesRegistry.erase(entity->GetID());
+
+#ifdef TOOLS_ENABLED
 	notify_property_list_changed();
+#endif // TOOLS_ENABLED
 }
 
 void sm::GAS_World::RegisterTagContainer(TagContainer* container)

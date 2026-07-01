@@ -30,6 +30,8 @@ namespace sm
 
 		godot::TypedArray<ModifierData> GetModifiers() const { return m_Modifiers; };
 		void SetModifiers(const godot::TypedArray<ModifierData>& modifiers);
+		void AddModifier(const godot::Ref<ModifierData>& modifier);
+		void ClearModifiers();
 
 		godot::PackedInt32Array GetTagsToAdd() const { return m_TagsToAdd; };
 		void SetTagsToAdd(const godot::PackedInt32Array& tags) { m_TagsToAdd = tags; };
