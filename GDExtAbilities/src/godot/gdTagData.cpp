@@ -106,11 +106,6 @@ void sm::TagData::RemoveChild(const godot::Ref<TagData>& child)
 void sm::TagData::SetTagFullPath(godot::String value)
 {
 	m_TagFullPath = value;
-
-#ifdef DEBUG_ENABLED
-	m_DebugPath = ToStdString(m_TagFullPath);
-	ERR_PRINT(m_TagFullPath);
-#endif // DEBUG_ENABLED
 }
 
 void sm::TagData::SetChildren(const godot::TypedArray<TagData>& value)

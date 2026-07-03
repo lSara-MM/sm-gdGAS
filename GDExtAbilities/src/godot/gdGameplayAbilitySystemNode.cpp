@@ -1,4 +1,4 @@
-#include "gdGameplayAbilitySystemNode.h"
+#include "godot/gdGameplayAbilitySystemNode.h"
 
 #include "godot/gdGASWorld.h"
 #include <godot_cpp/classes/window.hpp>

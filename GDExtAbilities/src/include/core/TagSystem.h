@@ -39,7 +39,7 @@ namespace sm
 		struct TagCache
 		{
 			std::vector<TagContainer*> iterable;
-			std::unordered_map<TagContainer*, int> unique;
+			std::unordered_map<TagContainer*, size_t> unique;
 
 			void Add(TagContainer* node)
 			{

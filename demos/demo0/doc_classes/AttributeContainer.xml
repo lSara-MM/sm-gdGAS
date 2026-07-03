@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AttributeContainer" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="add_modifier">
+			<return type="int" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<param index="1" name="modifier" type="ModifierData" />
+			<description>
+			</description>
+		</method>
+		<method name="get_attribute_base_value">
+			<return type="float" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="get_attribute_current_value">
+			<return type="float" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="is_attribute_dirty">
+			<return type="bool" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="is_attribute_max">
+			<return type="bool" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="is_attribute_min">
+			<return type="bool" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="remove_modifier">
+			<return type="void" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<param index="1" name="modifier" type="ModifierData" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="attribute_set" type="AttributeSetData" setter="set_attributes_set" getter="get_attributes_set">
+		</member>
+	</members>
+	<signals>
+		<signal name="attribute_modified">
+			<param index="0" name="owner" type="Object" />
+			<param index="1" name="attribute_name" type="StringName" />
+			<param index="2" name="old_value" type="float" />
+			<param index="3" name="new_value" type="float" />
+			<description>
+			</description>
+		</signal>
+		<signal name="effect_added">
+			<param index="0" name="owner" type="Object" />
+			<param index="1" name="attribute_name" type="StringName" />
+			<param index="2" name="effect_data" type="Object" />
+			<description>
+			</description>
+		</signal>
+		<signal name="effect_removed">
+			<param index="0" name="owner" type="Object" />
+			<param index="1" name="attribute_name" type="StringName" />
+			<param index="2" name="effect_data" type="Object" />
+			<description>
+			</description>
+		</signal>
+		<signal name="modifier_added">
+			<param index="0" name="owner" type="Object" />
+			<param index="1" name="attribute_name" type="StringName" />
+			<param index="2" name="modifier_data" type="Object" />
+			<description>
+			</description>
+		</signal>
+		<signal name="modifier_removed">
+			<param index="0" name="owner" type="Object" />
+			<param index="1" name="attribute_name" type="StringName" />
+			<param index="2" name="modifier_data" type="Object" />
+			<description>
+			</description>
+		</signal>
+	</signals>
+</class>

@@ -42,7 +42,7 @@ using EffectInstanceID = uint32;
 using ModifierID = uint16;
 using TagID = uint32;
 
-inline constexpr size_t MAX_TAGS = 1024;
+inline constexpr size_t MAX_TAGS = 2048;
 
 inline std::string ToStdString(const godot::StringName& sn)
 {

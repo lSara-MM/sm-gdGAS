@@ -41,10 +41,15 @@ namespace sm
 
 		bool IsActive(const godot::Ref<AbilityData>& ability) const;
 		bool IsOnCooldown(const godot::Ref<AbilityData>& ability) const;
-		int GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const;
+		float GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const;
+
+		bool TryActivate(const godot::Ref<AbilityData>& ability);
+
+		bool TryActivateAbilitiesWithTag(godot::PackedInt32Array tags);
 
 		GDVIRTUAL1R(bool, _can_be_granted, godot::Ref<AbilityData>)
 			GDVIRTUAL1R(bool, _can_activate, godot::Ref<AbilityData>)
+			GDVIRTUAL1R(bool, _on_ability_already_granted, godot::Ref<AbilityData>)
 #pragma endregion
 
 	private:

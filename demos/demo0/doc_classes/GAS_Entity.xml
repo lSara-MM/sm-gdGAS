@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GAS_Entity" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="add_effect">
+			<return type="int" />
+			<param index="0" name="effect" type="EffectData" />
+			<description>
+			</description>
+		</method>
+		<method name="get_attribute_container" qualifiers="const">
+			<return type="AttributeContainer" />
+			<description>
+			</description>
+		</method>
+		<method name="get_tag_node_path" qualifiers="const">
+			<return type="NodePath" />
+			<description>
+			</description>
+		</method>
+		<method name="set_attribute_container">
+			<return type="void" />
+			<param index="0" name="node" type="AttributeContainer" />
+			<description>
+			</description>
+		</method>
+		<method name="set_tag_container">
+			<return type="void" />
+			<param index="0" name="node" type="TagContainer" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="attribute_container" type="NodePath" setter="" getter="get_attribute_node_path" default="NodePath(&quot;&quot;)">
+		</member>
+		<member name="tag_container_node" type="TagContainer" setter="" getter="get_tag_container">
+		</member>
+	</members>
+</class>

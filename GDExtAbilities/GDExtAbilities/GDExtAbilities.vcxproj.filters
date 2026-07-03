@@ -87,9 +87,6 @@
     <ClCompile Include="..\src\godot\gdGameplayAbility.cpp">
       <Filter>Source Files\abilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\godot\gdAttribute.cpp">
-      <Filter>Source Files\attributes</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\godot\gdAttributeContainer.cpp">
       <Filter>Source Files\attributes</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
     <ClCompile Include="..\src\godot\GASWorldBound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\include\godot\gdGameplayAbilitySystemNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\core\GameplayTag.cpp">
       <Filter>Source Files\tags</Filter>
     </ClCompile>
@@ -128,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp">
       <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\gdGameplayAbilitySystemNode.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="..\src\include\godot\gdGameplayAbility.h">
       <Filter>Header Files\abilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\godot\gdAttribute.h">
-      <Filter>Header Files\attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\godot\gdAttributeContainer.h">
       <Filter>Header Files\attributes</Filter>

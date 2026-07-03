@@ -355,7 +355,6 @@
     <ClInclude Include="..\src\include\godot\GASWorldBound.h" />
     <ClInclude Include="..\src\include\godot\gdAbilityContainer.h" />
     <ClInclude Include="..\src\include\godot\gdAbilityData.h" />
-    <ClInclude Include="..\src\include\godot\gdAttribute.h" />
     <ClInclude Include="..\src\include\godot\gdAttributeContainer.h" />
     <ClInclude Include="..\src\include\godot\gdAttributeData.h" />
     <ClInclude Include="..\src\include\godot\gdAttributeSetData.h" />
@@ -390,12 +389,12 @@
     <ClCompile Include="..\src\godot\GASWorldBound.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityContainer.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityData.cpp" />
-    <ClCompile Include="..\src\godot\gdAttribute.cpp" />
     <ClCompile Include="..\src\godot\gdAttributeContainer.cpp" />
     <ClCompile Include="..\src\godot\gdAttributeData.cpp" />
     <ClCompile Include="..\src\godot\gdAttributeSetData.cpp" />
     <ClCompile Include="..\src\godot\gdEffectData.cpp" />
     <ClCompile Include="..\src\godot\gdGameplayAbility.cpp" />
+    <ClCompile Include="..\src\godot\gdGameplayAbilitySystemNode.cpp" />
     <ClCompile Include="..\src\godot\gdGASEntity.cpp" />
     <ClCompile Include="..\src\godot\gdGASWorld.cpp" />
     <ClCompile Include="..\src\godot\gdModifierData.cpp" />
@@ -404,7 +403,6 @@
     <ClCompile Include="..\src\godot\gdTagRegistry.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp" />
-    <ClCompile Include="..\src\include\godot\gdGameplayAbilitySystemNode.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

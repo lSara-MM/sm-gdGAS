@@ -53,6 +53,7 @@ namespace sm
 		bool CanActivate();
 		bool IsActive() const;
 		bool IsOnCooldown() const;
+		float GetCooldown() const;
 
 	public:
 		godot::Ref<AbilityData> abilityData;

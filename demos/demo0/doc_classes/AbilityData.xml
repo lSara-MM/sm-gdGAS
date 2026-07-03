@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AbilityData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_ability_id" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="set_ability_id">
+			<return type="void" />
+			<param index="0" name="id" type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="Tag_ID" type="int" setter="set_ability_tag_id" getter="get_ability_tag_id" default="792477231">
+		</member>
+		<member name="ability" type="Script" setter="set_ability" getter="get_ability">
+		</member>
+		<member name="activation_blocked" type="PackedInt32Array" setter="set_ability_activation_blocked" getter="get_ability_activation_blocked" default="PackedInt32Array()">
+		</member>
+		<member name="activation_tags" type="PackedInt32Array" setter="set_activation_tags" getter="get_activation_tags" default="PackedInt32Array()">
+		</member>
+		<member name="block_tags" type="PackedInt32Array" setter="set_block_ability_tags" getter="get_block_ability_tags" default="PackedInt32Array()">
+		</member>
+		<member name="cooldown" type="float" setter="set_cooldown" getter="get_cooldown" default="0.0">
+		</member>
+		<member name="cost" type="float" setter="set_cost" getter="get_cost" default="0.0">
+		</member>
+		<member name="effect" type="EffectData[]" setter="set_effects" getter="get_effects" default="[]">
+		</member>
+		<member name="tags" type="PackedInt32Array" setter="set_ability_tags" getter="get_ability_tags" default="PackedInt32Array()">
+		</member>
+	</members>
+</class>

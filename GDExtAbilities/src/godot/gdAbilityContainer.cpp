@@ -11,8 +11,12 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities"), &GetAbilities);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities", "abilities"), &SetAbilities);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("get_current_cooldown", "ability"), &GetCurrentCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("clear"), &Clear);
+
 	GDVIRTUAL_BIND(_can_be_granted, "ability");
 	GDVIRTUAL_BIND(_can_activate, "ability");
+	GDVIRTUAL_BIND(_on_ability_already_granted, "ability");
 
 	//
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -128,7 +132,8 @@ void sm::AbilityContainer::RemoveAbility(const godot::Ref<AbilityData>& ability)
 
 bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
 {
-	ERR_FAIL_COND_V_MSG(ability.is_null(), false, "Grant failed. AbilityData is null."); bool ret = true;
+	ERR_FAIL_COND_V_MSG(ability.is_null(), false, "Grant failed. AbilityData is null.");
+	bool ret = true;
 
 	if (GDVIRTUAL_IS_OVERRIDDEN(_can_be_granted))
 	{
@@ -141,6 +146,19 @@ bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
 		return false;
 	}
 
+	if (m_gdAbilities.has(ability) && GDVIRTUAL_IS_OVERRIDDEN(_on_ability_already_granted))
+	{
+		GDVIRTUAL_CALL(_on_ability_already_granted, ability, ret);
+	}
+
+	if (!ret)
+	{
+		WARN_PRINT("Ability already granted");
+		return false;
+	}
+
+	AddAbility(ability);
+
 	godot::Ref<godot::Script> script = ability->GetAbilityScript();
 	ERR_FAIL_COND_V_MSG(script.is_null(), false, "Grant failed. AbilityData has no valid script.");
 
@@ -149,9 +167,9 @@ bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
 	abilityInstance->SetOwner(m_Owner);
 	abilityInstance->SetAbilityData(ability);
 
-	m_Scripts.emplace(ability->GetAbilityID(), abilityInstance);
+	//ability->SetAbilityInstance(abilityInstance);
 
-	AddAbility(ability);
+	m_Scripts.emplace(ability->GetAbilityID(), abilityInstance);
 
 	emit_signal("_on_ability_granted", ability, m_Owner);
 	return ret;
@@ -219,15 +237,58 @@ bool sm::AbilityContainer::IsOnCooldown(const godot::Ref<AbilityData>& ability) 
 	return abilityInstance->IsOnCooldown();
 }
 
-int sm::AbilityContainer::GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const
+float sm::AbilityContainer::GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const
 {
 	if (auto itr = m_Scripts.find(ability->GetAbilityID());
 		itr != m_Scripts.end())
 	{
-
+		return itr->second->GetCooldown();
 	}
 
 	return -1;
+}
+
+bool sm::AbilityContainer::TryActivate(const godot::Ref<AbilityData>& ability)
+{
+	if (auto itr = m_Scripts.find(ability->GetAbilityID());
+		itr != m_Scripts.end())
+	{
+		return itr->second->TryActivate();
+	}
+
+	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not find", ability->GetAbilityID()));
+
+	return false;
+}
+
+bool sm::AbilityContainer::TryActivateAbilitiesWithTag(godot::PackedInt32Array tags)
+{
+	for (size_t i = 0; i < m_gdAbilities.size(); i++)
+	{
+		godot::Ref<AbilityData> ability = m_gdAbilities[i];
+		auto tagsInAbility = ability->GetAbilityTags();
+		bool hasMatchingTag = false;
+
+		for (size_t j = 0; j < tags.size(); j++)
+		{
+			if (tagsInAbility.has(tags[j]))
+			{
+				hasMatchingTag = true;
+				break;
+			}
+		}
+
+		if (hasMatchingTag)
+		{
+			auto itr = m_Scripts.find(ability->GetAbilityID());
+			if (itr != m_Scripts.end())
+			{
+				itr->second->TryActivate();
+			}
+		}
+	}
+
+	return true;
 }
 
 bool sm::AbilityContainer::Has(const godot::Ref<AbilityData>& ability) const

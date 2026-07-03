@@ -1,6 +1,5 @@
 #include "core/EffectSystem.h"
 
-#include "godot/gdAttribute.h"
 #include "godot/gdAttributeContainer.h"
 #include "godot/gdGASEntity.h"
 #include "godot/gdGASWorld.h"

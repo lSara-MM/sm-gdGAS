@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GameplayAbility" inherits="RefCounted">
+    <brief_description>
+        Test.
+    </brief_description>
+    <description>
+        Hello.
+    </description>
+</class>

@@ -24,9 +24,9 @@ void sm::GAS_World::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities_availability", "value"), &SetAbilitiesAvailability);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("all_with_tags"), &AllTags);
-	godot::ClassDB::bind_method(godot::D_METHOD("any_with_tags"), &AnyTags);
-	godot::ClassDB::bind_method(godot::D_METHOD("none_with_tags"), &NoneTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("all_with_tags", "tags"), &AllTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("any_with_tags", "tags"), &AnyTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("none_with_tags", "tags"), &NoneTags);
 
 	// Tags
 	//godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);

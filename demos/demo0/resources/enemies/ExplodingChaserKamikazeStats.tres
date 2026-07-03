@@ -7,6 +7,7 @@ script = ExtResource("1_amq3u")
 m_ExpDropped = 1.0
 m_MaxHealth = 100.0
 m_MovementSpeed = 100.0
+m_EffectSpeed = 2.0
 m_CurrentLvl = 0
 m_MinLvl = 0
 m_MaxLvl = 0

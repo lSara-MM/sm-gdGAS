@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="EffectData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="duration" type="float" setter="set_duration" getter="get_duration" default="0.0">
+		</member>
+		<member name="effect_type" type="int" setter="set_effect_type" getter="get_effect_type" enum="EffectData.Type" default="0">
+		</member>
+		<member name="modifiers" type="ModifierData[]" setter="set_modifiers" getter="get_modifiers" default="[]">
+		</member>
+		<member name="name" type="StringName" setter="set_name" getter="get_name" default="&amp;&quot;&quot;">
+		</member>
+		<member name="tags_to_add" type="PackedInt32Array" setter="set_tags_to_add" getter="get_tags_to_add" default="PackedInt32Array()">
+		</member>
+		<member name="tags_to_remove" type="PackedInt32Array" setter="set_tags_to_remove" getter="get_tags_to_remove" default="PackedInt32Array()">
+		</member>
+	</members>
+	<constants>
+		<constant name="Permanent" value="0" enum="Type">
+		</constant>
+		<constant name="Temporary" value="1" enum="Type">
+		</constant>
+		<constant name="Persistent" value="2" enum="Type">
+		</constant>
+	</constants>
+</class>

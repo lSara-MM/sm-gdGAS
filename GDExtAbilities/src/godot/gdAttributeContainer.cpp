@@ -3,7 +3,6 @@
 #include "core/GameplayAttribute.h"
 #include "core/GameplayAttributeSet.h"
 #include "core/GameplayModifier.h"
-#include "godot/gdAttribute.h"
 #include "godot/gdGASWorld.h"
 
 #include <godot_cpp/variant/signal.hpp>

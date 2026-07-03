@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvr6b6vf7f7kl"]
+
+[ext_resource type="Script" path="res://test/node.gd" id="1_7e28b"]
+[ext_resource type="Script" path="res://test/gas_world.gd" id="2_kehov"]
+
+[node name="Test2" type="Node2D"]
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("1_7e28b")
+
+[node name="GAS_World" type="GAS_World" parent="."]
+entity_count = 1
+script = ExtResource("2_kehov")
+
+[node name="GAS_Entity" type="GAS_Entity" parent="."]
+
+[node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
+tags = PackedInt32Array(10)

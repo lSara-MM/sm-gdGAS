@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="TagContainer" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="tags" type="PackedInt32Array" setter="set_tags" getter="get_tags" default="PackedInt32Array()">
+		</member>
+	</members>
+	<signals>
+		<signal name="tag_added">
+			<param index="0" name="id" type="int" />
+			<param index="1" name="owner" type="Object" />
+			<description>
+			</description>
+		</signal>
+		<signal name="tag_removed">
+			<param index="0" name="id" type="int" />
+			<param index="1" name="owner" type="Object" />
+			<description>
+			</description>
+		</signal>
+	</signals>
+</class>

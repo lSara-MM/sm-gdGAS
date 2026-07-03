@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GAS_World" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="all_with_tags">
+			<return type="Node[]" />
+			<param index="0" name="tags" type="PackedInt32Array" />
+			<description>
+			</description>
+		</method>
+		<method name="any_with_tags">
+			<return type="Node[]" />
+			<param index="0" name="tags" type="PackedInt32Array" />
+			<description>
+			</description>
+		</method>
+		<method name="none_with_tags">
+			<return type="Node[]" />
+			<param index="0" name="tags" type="PackedInt32Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="enable_abilities" type="bool" setter="set_abilities_availability" getter="get_abilities_availability" default="true">
+		</member>
+		<member name="enable_effects" type="bool" setter="set_effects_availability" getter="get_effects_availability" default="true">
+		</member>
+		<member name="entity_count" type="int" setter="" getter="get_entity_count" default="-1">
+		</member>
+	</members>
+</class>
