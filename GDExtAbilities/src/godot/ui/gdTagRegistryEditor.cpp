@@ -76,10 +76,10 @@ void sm::TagRegistryEditor::_enter_tree()
 void sm::TagRegistryEditor::_exit_tree()
 {
 	//
-	for (auto& ref : m_InspectorRefs)
+	/*for (auto& ref : m_InspectorRefs)
 	{
 		remove_inspector_plugin(ref);
-	}
+	}*/
 
 	//
 	if (m_FileSystemDock)

@@ -1,7 +1,7 @@
 #pragma once
 #ifdef TOOLS_ENABLED
-//#include "godot/ui/gdTagContainerInspector.h"
-#include "godot/ui/gdTagsInInspector.h"
+#include "godot/ui/gdTagContainerInspector.h"
+//#include "godot/ui/gdTagsInInspector.h"
 #include "godot/gdTagData.h"
 #include "internal/Event.h"
 
