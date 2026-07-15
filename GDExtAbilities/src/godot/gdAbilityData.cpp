@@ -3,19 +3,18 @@
 #include "core/TagRegistry.h"
 #include "godot/gdGameplayAbility.h"
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/resource_saver.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
+#include <regex>
 
-sm::AbilityData::AbilityData()
-{
-	if (m_CooldownData.is_null())
-	{
-		m_CooldownData.instantiate();
-	}
-
-	m_CooldownData->SetDuration(m_Cooldown);
-}
+sm::AbilityData::AbilityData() : m_AbilityTag(0)
+{}
 
 void sm::AbilityData::_bind_methods()
 {
+	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_name"), &GetAbilityName);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_name", "name"), &SetAbilityName);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_id"), &GetAbilityID);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_id", "id"), &SetAbilityID);
 
@@ -29,9 +28,6 @@ void sm::AbilityData::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_cost", "value"), &SetCost);
 
 	//
-	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_tag_id"), &GetAbilityID);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_tag_id", "id"), &SetAbilityID);
-
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_tags"), &GetAbilityTags);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_tags", "ids"), &SetAbilityTags);
 
@@ -48,9 +44,14 @@ void sm::AbilityData::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_effects", "effects"), &SetEffects);
 
 	ADD_PROPERTY(godot::PropertyInfo(
+		godot::Variant::STRING_NAME, "Tag_Name"),
+		"set_ability_name", "get_ability_name"
+	);
+
+	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "Tag_ID", godot::PROPERTY_HINT_NONE, "",
-		godot::PROPERTY_USAGE_EDITOR | godot::PROPERTY_USAGE_READ_ONLY),
-		"set_ability_tag_id", "get_ability_tag_id"
+		godot::PROPERTY_USAGE_STORAGE | godot::PROPERTY_USAGE_NO_EDITOR),
+		"set_ability_id", "get_ability_id"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -156,6 +157,98 @@ void sm::AbilityData::SetAbilityInstance(const godot::Ref<GameplayAbility>& abil
 	m_AbilityInstance = ability;
 }
 
+void sm::AbilityData::SetAbilityName(AbilityID name)
+{
+
+	if (name.is_empty())
+	{
+		if (!get_path().is_empty())
+		{
+			const auto fileName = get_path().get_file().get_basename();
+			SetNameToFileName(fileName);
+		}
+		else
+		{
+			WARN_PRINT_ED(godot::vformat("Warning: ability name is <null>"));
+		}
+	}
+
+	if (m_AbilityName == name)
+	{
+		return;
+	}
+
+	SetNameToFileName(name);
+	m_AbilityName = name;
+}
+
+bool sm::AbilityData::IsNameValid(const godot::String& name)
+{
+	std::regex rgx(R"(^[a-zA-Z0-9]+$)");
+	ERR_FAIL_COND_V_MSG(!std::regex_match(ToStdString(name), rgx),
+		false, godot::vformat("Warning: Ability name cannot include special characters."));
+
+	return true;
+}
+
+void sm::AbilityData::SetNameToFileName(const godot::String& name)
+{
+	if (!IsNameValid(name))
+	{
+		return;
+	}
+
+	godot::String fullTagName = "Ability." + name;
+	godot::String registryPath = godot::ProjectSettings::get_singleton()->get_setting(SETTINGS_PATH);
+
+	const godot::Ref<TagData>& tagRegistry = godot::ResourceLoader::get_singleton()->load(registryPath);
+
+	if (tagRegistry.is_null())
+	{
+		return;
+	}
+
+	godot::Ref<TagData> abilityData = tagRegistry->FindChildByName("Ability");
+	if (abilityData.is_null())
+	{
+		abilityData.instantiate();
+		abilityData->SetName("Ability");
+		abilityData->SetPath(tagRegistry->GetTagFullPath());
+
+		tagRegistry->AddChild(abilityData);
+	}
+
+	godot::Ref<TagData> prev = abilityData->FindChildByName(name);
+	m_AbilityNameDupe = m_AbilityName;
+	if (prev.is_valid())
+	{
+		ERR_FAIL_MSG(godot::vformat("Error: Ability [%s] already exists.", name));
+	}
+
+	godot::Ref<TagData> data = abilityData->FindChildByName(m_AbilityNameDupe);
+	if (data.is_null())
+	{
+		data.instantiate();
+		abilityData->AddChild(data);
+	}
+
+	data->SetName(name);
+	data->SetPath(abilityData->GetTagFullPath());
+
+#ifdef DEBUG_ENABLED
+	auto a = ToStdString(name);
+	auto ae = ToStdString(m_AbilityNameDupe);
+	auto ab = ToStdString(abilityData->GetTagFullPath());
+	auto abd = ToStdString(tagRegistry->GetTagFullPath());
+	auto abc = ToStdString(fullTagName);
+#endif // DEBUG_ENABLED
+
+	tagRegistry->emit_changed();
+	godot::ResourceSaver::get_singleton()->save(tagRegistry, registryPath);
+
+	emit_changed();
+}
+
 void sm::AbilityData::SetAbilityID(TagID id)
 {
 	m_AbilityTag = id;
@@ -163,19 +256,23 @@ void sm::AbilityData::SetAbilityID(TagID id)
 
 void sm::AbilityData::SetCooldown(float value)
 {
+	if (m_CooldownData.is_null())
+	{
+		m_CooldownData.instantiate();
+	}
+
 	m_Cooldown = value;
 	m_CooldownData->SetDuration(m_Cooldown);
 }
 
 void sm::AbilityData::SetCost(float value)
 {
-	m_Cost = value;
-
 	if (m_CostData.is_null())
 	{
 		m_CostData.instantiate();
 	}
 
+	m_Cost = value;
 	m_CostData->ClearModifiers();
 
 	auto modifier = memnew(ModifierData);
@@ -213,4 +310,12 @@ godot::TypedArray<sm::EffectData> sm::AbilityData::GetEffects()
 void sm::AbilityData::SetEffects(const godot::TypedArray<EffectData>& effects)
 {
 	m_Effects = effects;
+}
+
+void sm::AbilityData::_validate_property(godot::PropertyInfo& property)
+{
+	/*if (m_AbilityTag == 0 && !get_path().is_empty())
+	{
+		SetNameToFileName();
+	}*/
 }

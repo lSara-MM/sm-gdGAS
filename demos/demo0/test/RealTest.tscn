@@ -1,14 +1,18 @@
-[gd_scene format=3 uid="uid://c1paa8dc7dn22"]
+[gd_scene load_steps=2 format=3 uid="uid://c1paa8dc7dn22"]
+
+[sub_resource type="AbilityData" id="AbilityData_l677y"]
 
 [node name="RealTest" type="Node2D"]
 
 [node name="GAS_World" type="GAS_World" parent="."]
+entity_count = 3
 
 [node name="GAS_Entity3" type="GAS_Entity" parent="."]
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity3"]
 
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity3"]
+abilities = Array[AbilityData]([SubResource("AbilityData_l677y")])
 
 [node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity3"]
 

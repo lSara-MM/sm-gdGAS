@@ -9,7 +9,7 @@ namespace sm
 {
 	struct TagSet
 	{
-		sm::BitSet<MAX_TAGS> tags;
+		BitSet<MAX_TAGS> tags;
 		uint16 stack[MAX_TAGS] = {};
 	};
 

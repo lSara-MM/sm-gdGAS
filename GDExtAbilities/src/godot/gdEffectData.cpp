@@ -148,13 +148,4 @@ void sm::EffectData::_validate_property(godot::PropertyInfo& property) const
 			property.usage = godot::PROPERTY_USAGE_NO_EDITOR;
 		}
 	}
-
-	/*if (property.name.match("m_Modifiers"))
-	{
-		if (m_EffectType != EffectData::Type::Permanent)
-		{
-
-			property.usage = godot::PROPERTY_USAGE_NO_EDITOR;
-		}
-	}*/
 }

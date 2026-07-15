@@ -39,6 +39,7 @@ namespace sm
 		void RemoveChild(const godot::Ref<TagData>& child);
 		void Reset();
 
+		godot::Ref<TagData> FindChildByName(godot::StringName name) const;
 	private:
 		void SetTagFullPath(godot::String value);
 

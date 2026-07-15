@@ -1,6 +1,7 @@
 #pragma once
 #ifdef TOOLS_ENABLED
-#include "godot/ui/gdTagContainerInspector.h"
+//#include "godot/ui/gdTagContainerInspector.h"
+#include "godot/ui/gdTagsInInspector.h"
 #include "godot/gdTagData.h"
 #include "internal/Event.h"
 
@@ -37,12 +38,12 @@ namespace sm
 	public:
 		enum class ButtonId : int
 		{
-			ADD = 0,
-			DELETE_ALL,
-			DELETE_SELF,
-			EDIT,
+			Add = 0,
+			DeleteAll,
+			DeleteSelf,
+			Edit,
 
-			MAX
+			Max
 		};
 
 		struct Icons
@@ -67,6 +68,8 @@ namespace sm
 		void GenerateConstants();
 		void _TagAddedToContainer(TagID id, const TagContainer* container);
 		void _TagRemovedFromContainer(TagID id, const TagContainer* container);
+
+		godot::TreeItem* GetRoot();
 
 	private:
 		void CreateTab();
@@ -93,6 +96,8 @@ namespace sm
 		void SetSetting(const char* settingPath, godot::String value);
 
 		void _OnRegistryResourceChanged(const godot::Ref<godot::Resource>& resource);
+
+		void _OnRegistryEdited();
 
 		void _OnRegistryResourceSelected(const godot::Ref<godot::Resource>& resource, bool inspect);
 
@@ -134,6 +139,7 @@ namespace sm
 	private:
 		//
 		godot::Ref<TagContainerInspector> m_Inspector;
+		//std::vector<godot::Ref<TagsInInspector>> m_InspectorRefs;
 
 		//
 		godot::VSplitContainer* m_MainSplit = nullptr;
@@ -142,6 +148,7 @@ namespace sm
 
 		// Tree
 		godot::Tree* m_Tree = nullptr;
+		godot::TreeItem* m_AbilityName = nullptr;
 		godot::EditorResourcePicker* m_Picker = nullptr;
 		godot::FileSystemDock* m_FileSystemDock = nullptr;
 		godot::ProjectSettings* m_ProjectSettings = nullptr;

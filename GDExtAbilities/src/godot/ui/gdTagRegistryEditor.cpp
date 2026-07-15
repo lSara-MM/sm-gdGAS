@@ -3,6 +3,9 @@
 
 #include "core/TagRegistry.h"
 #include "godot/gdTagContainer.h"
+//#include "godot/ui/gdTagsInContainer.h"
+//#include "godot/ui/gdTagsInEffect.h"
+//#include "godot/ui/gdTagsInAbility.h"
 #include <fstream>
 #include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/check_box.hpp>
@@ -45,6 +48,17 @@ void sm::TagRegistryEditor::_enter_tree()
 	add_inspector_plugin(m_Inspector);
 	m_Inspector->SetEditorPlugin(this);
 
+	/*m_InspectorRefs.emplace_back(memnew(TagsInContainer));
+	m_InspectorRefs.emplace_back(memnew(TagsInEffect));
+	m_InspectorRefs.emplace_back(memnew(TagsInEffect(false)));
+	m_InspectorRefs.emplace_back(memnew(TagsInAbility));
+
+	for (auto& ref : m_InspectorRefs)
+	{
+		add_inspector_plugin(ref);
+		ref->SetEditorPlugin(this);
+	}*/
+
 	CreateTab();
 
 	m_FileSystemDock = get_editor_interface()->get_file_system_dock();
@@ -56,14 +70,16 @@ void sm::TagRegistryEditor::_enter_tree()
 		m_FileSystemDock->connect("folder_moved", callable_mp(this, &TagRegistryEditor::_OnFolderMoved));
 	}
 
-	GenerateConstants();
 	_make_visible(false);
 }
 
 void sm::TagRegistryEditor::_exit_tree()
 {
 	//
-	remove_inspector_plugin(m_Inspector);
+	for (auto& ref : m_InspectorRefs)
+	{
+		remove_inspector_plugin(ref);
+	}
 
 	//
 	if (m_FileSystemDock)
@@ -141,11 +157,26 @@ void sm::TagRegistryEditor::CreateTreeBoxContainer()
 
 	m_TreeContainer->add_child(m_Picker);
 
+	auto* hbox = memnew(godot::HBoxContainer);
+	hbox->set_alignment(hbox->ALIGNMENT_CENTER);
+	m_TreeContainer->add_child(hbox);
+	auto gui = get_editor_interface()->get_base_control();
+
 	auto genConstantsButton = memnew(godot::Button);
 	genConstantsButton->set_text("Generate tags");
+	auto icon = gui->get_theme_icon("ShaderGlobalsOverride", "EditorIcons");
+	genConstantsButton->set_button_icon(icon);
 	genConstantsButton->connect("pressed", callable_mp(this, &TagRegistryEditor::GenerateConstants));
 	genConstantsButton->set_tooltip_text("Generate tags for use");
-	m_TreeContainer->add_child(genConstantsButton);
+	hbox->add_child(genConstantsButton);
+
+	auto refreshButton = memnew(godot::Button);
+	refreshButton->set_text("Refresh");
+	icon = gui->get_theme_icon("Reload", "EditorIcons");
+	refreshButton->set_button_icon(icon);
+	refreshButton->connect("pressed", callable_mp(this, &TagRegistryEditor::RefreshTreeFromEditorChanges));
+	refreshButton->set_tooltip_text("Changes made outside this editor may not appear in the tag tree automatically. Refresh to update it.");
+	hbox->add_child(refreshButton);
 
 	m_MainSplit->add_child(m_TreeContainer);
 
@@ -204,6 +235,12 @@ void sm::TagRegistryEditor::CreateTagRegistryData(const godot::Ref<TagData>& res
 {
 	m_TagRegistry = resource;
 	m_TagRegistryPath = resource->get_path();
+
+	auto cb = callable_mp(this, &TagRegistryEditor::_OnRegistryEdited);
+	if (m_TagRegistry->is_connected("changed", cb))
+	{
+		m_TagRegistry->connect("changed", cb);
+	}
 }
 
 void sm::TagRegistryEditor::CreateOrUpdateTree()
@@ -217,13 +254,6 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 #ifdef DEBUG_ENABLED
 		m_TagsCacheDebug.clear();
 #endif // DEBUG_ENABLED
-
-		auto children = m_TagRegistry->GetChildren();
-		auto root = CreateRootItem();
-		for (size_t i = 0; i < children.size(); i++)
-		{
-			CreateTag(children[i], root);
-		}
 	}
 	else
 	{
@@ -241,14 +271,16 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 
 		// Don't allow direct edit to avoid dupes
 		//m_Tree->connect("item_edited", callable_mp(this, &TagRegistryEditor::_OnItemEdited));
-
-		auto children = m_TagRegistry->GetChildren();
-		auto root = CreateRootItem();
-		for (size_t i = 0; i < children.size(); i++)
-		{
-			CreateTag(children[i], root);
-		}
 	}
+
+	auto children = m_TagRegistry->GetChildren();
+	auto root = CreateRootItem();
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		CreateTag(children[i], root);
+	}
+
+
 }
 
 godot::TreeItem* sm::TagRegistryEditor::CreateRootItem()
@@ -257,9 +289,8 @@ godot::TreeItem* sm::TagRegistryEditor::CreateRootItem()
 	root->set_text(0, "Tags");
 	root->set_tooltip_text(0, "Root tag");
 	root->set_metadata(0, m_TagRegistry);
-	root->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
-	root->add_button(0, m_Icons.removeInternal, static_cast<int>(ButtonId::DELETE_ALL), false, "Delete all tags");
-
+	root->add_button(0, m_Icons.add, static_cast<int>(ButtonId::Add), false, "Add child tag.");
+	root->add_button(0, m_Icons.removeInternal, static_cast<int>(ButtonId::DeleteAll), false, "Delete all tags");
 	return root;
 }
 
@@ -284,10 +315,11 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData>& resource, godot
 		treeTag->set_tooltip_text(0, tagPair.first->GetTagFullPath());
 		treeTag->set_editable(0, false);
 
-		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag.");
+		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::Add), false, "Add child tag.");
 
-		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::EDIT), false, "Rename tag.");
-		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children.");
+		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::Edit), false, "Rename tag.");
+
+		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DeleteSelf), false, "Delete tag. This will also delete its children.");
 
 		m_TagDatas.push_back(tagPair.first);
 
@@ -374,8 +406,13 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 	}
 
 	CreateTagRegistryData(resource);
-
 	CreateOrUpdateTree();
+	GenerateConstants();
+}
+
+void sm::TagRegistryEditor::_OnRegistryEdited()
+{
+	RefreshTreeFromEditorChanges();
 }
 
 void sm::TagRegistryEditor::_OnRegistryResourceSelected(const godot::Ref<godot::Resource>& resource, bool inspect)
@@ -390,12 +427,12 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 {
 	switch (static_cast<ButtonId>(id))
 	{
-	case ButtonId::ADD:
+	case ButtonId::Add:
 	{
 		AddTagButton(item);
 	}
 	break;
-	case ButtonId::DELETE_ALL:
+	case ButtonId::DeleteAll:
 	{
 		m_TagRegistry->Reset();
 
@@ -409,7 +446,7 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 		CreateRootItem();
 	}
 	break;
-	case ButtonId::DELETE_SELF:
+	case ButtonId::DeleteSelf:
 	{
 		if (m_DontShowAgain)
 		{
@@ -421,7 +458,7 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 		}
 	}
 	break;
-	case ButtonId::EDIT:
+	case ButtonId::Edit:
 	{
 
 	}
@@ -857,9 +894,6 @@ void sm::TagRegistryEditor::GenerateConstants()
 
 	outfile << "# This is a generated file.\n\nclass_name Tags\n\n";
 
-	TagRegistry& registry = TagRegistry::Instance();
-	registry.Reset();
-
 	if (m_TagRegistry.is_null())
 	{
 		WARN_PRINT_ED("Warning: Invalid Tag Registry.");
@@ -867,19 +901,8 @@ void sm::TagRegistryEditor::GenerateConstants()
 		return;
 	}
 
-	/*std::vector<godot::StringName> tagsAsConstants = registry.GetTagsAsConstants();
-
-	if (!tagsAsConstants.empty() &&
-		tagsAsConstants.size() == registry.GetTags().size())
-	{
-		for (size_t i = 0; i < tagsAsConstants.size(); i++)
-		{
-			outfile << "const " << ToStdString(tagsAsConstants[i]) << " = " << i << "\n";
-		}
-
-		return;
-	}*/
-
+	TagRegistry& registry = TagRegistry::Instance();
+	registry.Reset();
 	registry.RegisterTags(m_TagRegistry);
 
 	std::vector<GameplayTag> tags = registry.GetTags();
@@ -914,6 +937,41 @@ void sm::TagRegistryEditor::_TagRemovedFromContainer(TagID id, const TagContaine
 		std::erase(map->second, container->get_instance_id());
 	}
 }
+
+godot::TreeItem* sm::TagRegistryEditor::GetRoot()
+{
+	return 	m_Tree->get_root();
+}
+
+//godot::TreeItem* sm::TagRegistryEditor::GetAbilityRoot()
+//{
+//	if (!m_Ability)
+//	{
+//		auto root = m_Tree->get_root();
+//		godot::Ref<TagData> parentData = root->get_metadata(0);
+//		ERR_FAIL_COND_MSG(parentData.is_null(), nullptr, "CreateTag failed: Tag parent null");
+//
+//		godot::Ref<TagData> data;
+//		data.instantiate();
+//		data->SetName("Ability");
+//		data->SetFullPath(m_TagRegistry->GetTagFullPath());
+//
+//		m_Ability = m_Tree->create_item(root);
+//		m_Ability->set_text(0, "Ability");
+//		m_Ability->set_metadata(0, data);
+//		m_Ability->set_tooltip_text(0, data->GetTagFullPath());
+//		m_Ability->set_editable(0, false);
+//
+//		m_Ability->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag. WARNING: Ability tags are generated, creating them manually is not recommended.");
+//
+//		m_Ability->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children. WARNING: Ability tags are generated, deleting them manually is not recommended.");
+//
+//		m_TagRegistry->AddChild(data);
+//		SaveRegistryResource();
+//	}
+//
+//	return m_Ability;
+//}
 
 void sm::TagRegistryEditor::_OnFileMoved(const godot::String& oldFile, const godot::String& newFile)
 {

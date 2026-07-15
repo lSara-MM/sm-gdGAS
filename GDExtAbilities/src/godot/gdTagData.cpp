@@ -93,6 +93,11 @@ void sm::TagData::SetInternalID(TagID value)
 
 void sm::TagData::AddChild(const godot::Ref<TagData>& child)
 {
+	if (m_Children.has(child))
+	{
+		return;
+	}
+
 	m_Children.push_back(child);
 	UpdateChildrenParents();
 }
@@ -192,4 +197,18 @@ void sm::TagData::Reset()
 	m_Children.clear();
 
 	emit_changed();
+}
+
+godot::Ref<sm::TagData> sm::TagData::FindChildByName(godot::StringName name) const
+{
+	for (size_t i = 0; i < m_Children.size(); i++)
+	{
+		const godot::Ref<TagData>& child = m_Children[i];
+		if (child.is_valid() && child->GetName() == name)
+		{
+			return child;
+		}
+	}
+
+	return {};
 }

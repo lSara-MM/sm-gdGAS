@@ -19,6 +19,10 @@ namespace sm
 	public:
 
 #pragma region Godot public
+		AbilityID GetAbilityName() const { return m_AbilityName; };
+		void SetAbilityName(AbilityID id);
+		bool IsNameValid(const godot::String& name);
+		void SetNameToFileName(const godot::String& name);
 		TagID GetAbilityID() const { return m_AbilityTag; };
 		void SetAbilityID(TagID id);
 
@@ -61,7 +65,8 @@ namespace sm
 	private:
 		AbilityData();
 		~AbilityData() = default;
-		//void _OnAbilityName(godot::StringName newName);
+
+		void _validate_property(godot::PropertyInfo& property);
 
 	private:
 		godot::Ref<godot::Script> m_AbilityScript;
@@ -106,6 +111,8 @@ namespace sm
 		godot::Ref<EffectData> m_CooldownData;
 		godot::Ref<EffectData> m_CostData;
 		AttributeID m_CostAttributeID;
+		AbilityID m_AbilityName;
+		AbilityID m_AbilityNameDupe;
 		TagID m_AbilityTag;
 		float m_Cooldown = 0.0f;
 		float m_Cost = 0.0f;
