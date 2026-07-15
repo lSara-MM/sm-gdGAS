@@ -3,9 +3,9 @@
 
 #include "core/TagRegistry.h"
 #include "godot/gdTagContainer.h"
-//#include "godot/ui/gdTagsInContainer.h"
-//#include "godot/ui/gdTagsInEffect.h"
-//#include "godot/ui/gdTagsInAbility.h"
+#include "godot/ui/gdTagsInContainer.h"
+#include "godot/ui/gdTagsInEffect.h"
+#include "godot/ui/gdTagsInAbility.h"
 #include <fstream>
 #include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/check_box.hpp>
@@ -44,20 +44,20 @@ void sm::TagRegistryEditor::_enter_tree()
 	m_ProjectSettings = godot::ProjectSettings::get_singleton();
 
 	//
-	m_Inspector.instantiate();
-	add_inspector_plugin(m_Inspector);
-	m_Inspector->SetEditorPlugin(this);
+	//m_Inspector.instantiate();
+	//add_inspector_plugin(m_Inspector);
+	//m_Inspector->SetEditorPlugin(this);
 
-	/*m_InspectorRefs.emplace_back(memnew(TagsInContainer));
-	m_InspectorRefs.emplace_back(memnew(TagsInEffect));
+	m_InspectorRefs.emplace_back(memnew(TagsInContainer));
+	m_InspectorRefs.emplace_back(memnew(TagsInEffect()));
 	m_InspectorRefs.emplace_back(memnew(TagsInEffect(false)));
-	m_InspectorRefs.emplace_back(memnew(TagsInAbility));
+	//m_InspectorRefs.emplace_back(memnew(TagsInAbility));
 
 	for (auto& ref : m_InspectorRefs)
 	{
 		add_inspector_plugin(ref);
 		ref->SetEditorPlugin(this);
-	}*/
+	}
 
 	CreateTab();
 

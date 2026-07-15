@@ -138,8 +138,8 @@ namespace sm
 
 	private:
 		//
-		godot::Ref<TagContainerInspector> m_Inspector;
-		//std::vector<godot::Ref<TagsInInspector>> m_InspectorRefs;
+		//godot::Ref<TagContainerInspector> m_Inspector;
+		std::vector<godot::Ref<TagsInInspector>> m_InspectorRefs;
 
 		//
 		godot::VSplitContainer* m_MainSplit = nullptr;

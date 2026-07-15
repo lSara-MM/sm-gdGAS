@@ -126,17 +126,6 @@ void sm::TagContainer::AddTag(TagID id)
 	}
 }
 
-//void sm::TagContainer::AddTagFromPath(const godot::String& tag)
-//{
-//	TagRegistry& instance = TagRegistry::Instance();
-//	TagID id = instance.FindTagID(tag);
-//
-//	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag '%s'", tag));
-//
-//	SetTag(id);
-//	emit_signal("tag_added");
-//}
-
 void sm::TagContainer::RemoveTag(TagID id)
 {
 	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag"));
@@ -150,16 +139,6 @@ void sm::TagContainer::RemoveTag(TagID id)
 		}
 	}
 }
-
-//void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
-//{
-//	TagRegistry& instance = TagRegistry::Instance();
-//	TagID id = instance.FindTagID(tag);
-//
-//	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag '%s'", tag));
-//
-//	SetTag(id, false);
-//}
 
 sm::TagSet sm::TagContainer::GetTagSet() const
 {

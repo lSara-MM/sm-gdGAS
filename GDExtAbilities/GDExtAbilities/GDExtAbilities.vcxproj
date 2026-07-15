@@ -369,6 +369,10 @@
     <ClInclude Include="..\src\include\godot\gdTagData.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagContainerInspector.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagRegistryEditor.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInAbility.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInContainer.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInEffect.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInInspector.h" />
     <ClInclude Include="..\src\internal\Event.h" />
     <ClInclude Include="..\src\internal\smAssert.h" />
     <ClInclude Include="..\src\internal\smBitSet.h" />
@@ -403,6 +407,10 @@
     <ClCompile Include="..\src\godot\gdTagRegistry.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagsInAbility.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagsInContainer.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagsInEffect.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagsInInspector.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
