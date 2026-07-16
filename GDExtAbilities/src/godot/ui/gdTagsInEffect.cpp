@@ -11,9 +11,6 @@
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/v_split_container.hpp>
 
-sm::TagsInEffect::TagsInEffect(bool _isAdd) : isAdd(_isAdd)
-{}
-
 bool sm::TagsInEffect::_can_handle(godot::Object* object) const
 {
 	return godot::Object::cast_to<EffectData>(object);
@@ -42,19 +39,21 @@ bool sm::TagsInEffect::_parse_property(
 	godot::BitField<godot::PropertyUsageFlags> usageFlags,
 	bool wide)
 {
-	if (name == "tags_to_add" && isAdd && godot::Object::cast_to<EffectData>(object))
+	if (!godot::Object::cast_to<EffectData>(object))
+	{
+		return false;
+	}
+
+	if (name == "tags_to_add" && isAdd)
 	{
 		ShowTagTreeEditor(object, "Tags to Add");
-		return true;
 	}
-
-	if (name == "tags_to_remove" && godot::Object::cast_to<EffectData>(object))
+	else if (name == "tags_to_remove")
 	{
 		ShowTagTreeEditor(object, "Tags to Remove");
-		return true;
 	}
 
-	return false;
+	return true;
 }
 
 void sm::TagsInEffect::SetCustomProperties(godot::VBoxContainer* root, godot::Control* gui, godot::VSplitContainer* mainSplit, const int tagsSize)

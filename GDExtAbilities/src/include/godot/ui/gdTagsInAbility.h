@@ -13,17 +13,6 @@ namespace sm
 		static void _bind_methods() {};
 
 	public:
-		enum class Type
-		{
-			Ability,
-			Block,
-			ActivationRequirements,
-			ActivationBlocked
-		} type;
-
-	public:
-		TagsInAbility(Type t);
-
 		bool _can_handle(godot::Object* object) const override;
 		void _parse_begin(godot::Object* object) override;
 		bool _parse_property(Object* object,
@@ -41,9 +30,20 @@ namespace sm
 		void RemoveTag(TagID id) override;
 
 	private:
+		void ShowAbilityID();
 		void _OnCheckboxChanged() override;
 		void _OnItemActivated(godot::Tree* tree) override;
 		void _OnRemoveButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex);
+
+	public:
+		enum class Type
+		{
+			Ability,
+			Block,
+			ActivationRequirements,
+			ActivationBlocked,
+			None
+		} arrType;
 
 	private:
 		godot::Ref<AbilityData> m_Ability;

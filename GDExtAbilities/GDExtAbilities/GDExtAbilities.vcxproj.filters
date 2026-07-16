@@ -126,6 +126,18 @@
     <ClCompile Include="..\src\godot\gdGameplayAbilitySystemNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagsInAbility.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagsInContainer.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagsInEffect.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagsInInspector.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\gdExample.h">
@@ -222,6 +234,18 @@
       <Filter>Header Files\tags</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\godot\ui\gdTagContainerInspector.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInAbility.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInContainer.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInEffect.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagsInInspector.h">
       <Filter>Header Files\tags</Filter>
     </ClInclude>
   </ItemGroup>

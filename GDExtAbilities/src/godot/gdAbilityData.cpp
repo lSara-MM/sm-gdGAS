@@ -79,7 +79,7 @@ void sm::AbilityData::_bind_methods()
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::PACKED_INT32_ARRAY, "tags"),
+		godot::Variant::PACKED_INT32_ARRAY, "ability_tags"),
 		"set_ability_tags", "get_ability_tags"
 	);
 

@@ -13,8 +13,6 @@ namespace sm
 		static void _bind_methods() {};
 
 	public:
-		TagsInEffect(bool _isAdd = true);
-
 		bool _can_handle(godot::Object* object) const override;
 		void _parse_begin(godot::Object* object) override;
 		bool _parse_property(Object* object,

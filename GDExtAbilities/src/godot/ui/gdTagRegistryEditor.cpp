@@ -50,8 +50,7 @@ void sm::TagRegistryEditor::_enter_tree()
 
 	m_InspectorRefs.emplace_back(memnew(TagsInContainer));
 	m_InspectorRefs.emplace_back(memnew(TagsInEffect()));
-	m_InspectorRefs.emplace_back(memnew(TagsInEffect(false)));
-	//m_InspectorRefs.emplace_back(memnew(TagsInAbility));
+	m_InspectorRefs.emplace_back(memnew(TagsInAbility()));
 
 	for (auto& ref : m_InspectorRefs)
 	{

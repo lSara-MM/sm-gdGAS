@@ -129,13 +129,6 @@ void sm::TagsInInspector::AddSearchControls(godot::BoxContainer* root, godot::Co
 	disabledButton.button->set_button_icon(showDisabled ? visibleIcon : invisibleIcon);
 	root->add_child(disabledButton.button);
 
-	//auto* showDisabledButton = memnew(godot::Button);
-	//showDisabledButton->set_text("Disabled");
-	//showDisabledButton->set_toggle_mode(true);
-	//showDisabledButton->set_pressed_no_signal(showDisabled);
-	//showDisabledButton->set_button_icon(showDisabled ? visibleIcon : invisibleIcon);
-	//root->add_child(showDisabledButton);
-
 	search->connect("text_changed", callable_mp(this, &TagsInInspector::_OnSearchTextChanged));
 	enabledButton.button->connect("toggled", callable_mp(this, &TagsInInspector::_OnShowEnabledToggled));
 	disabledButton.button->connect("toggled", callable_mp(this, &TagsInInspector::_OnShowDisabledToggled));

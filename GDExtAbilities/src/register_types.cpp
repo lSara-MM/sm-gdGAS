@@ -68,7 +68,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 		ClassDB::register_class<sm::TagsInInspector>();
 		ClassDB::register_class<sm::TagsInContainer>();
 		ClassDB::register_class<sm::TagsInEffect>();
-		//ClassDB::register_class<sm::TagsInAbility>();
+		ClassDB::register_class<sm::TagsInAbility>();
 	}
 #endif //TOOLS_ENABLED
 }
