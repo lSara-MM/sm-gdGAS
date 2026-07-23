@@ -1,7 +1,6 @@
 #pragma once
 #ifdef TOOLS_ENABLED
-#include "godot/ui/gdTagContainerInspector.h"
-//#include "godot/ui/gdTagsInInspector.h"
+#include "godot/ui/gdTagInspector.h"
 #include "godot/gdTagData.h"
 #include "internal/Event.h"
 
@@ -138,8 +137,7 @@ namespace sm
 
 	private:
 		//
-		godot::Ref<TagContainerInspector> m_Inspector;
-		//std::vector<godot::Ref<TagsInInspector>> m_InspectorRefs;
+		godot::Ref<TagInspector> m_Inspector;
 
 		//
 		godot::VSplitContainer* m_MainSplit = nullptr;

@@ -5,6 +5,7 @@
 
 #include <godot_cpp/classes/node.hpp>
 #include <algorithm>
+#include <unordered_set>
 
 sm::TagSystem::TagSystem(GAS_World* w)
 {

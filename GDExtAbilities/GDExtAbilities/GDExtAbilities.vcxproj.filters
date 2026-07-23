@@ -45,9 +45,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\gdExample.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\core\GameplayAttribute.cpp">
       <Filter>Source Files\attributes</Filter>
     </ClCompile>
@@ -73,9 +70,6 @@
       <Filter>Source Files\tags</Filter>
     </ClCompile>
     <ClCompile Include="..\src\godot\gdTagData.cpp">
-      <Filter>Source Files\tags</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\godot\gdTagRegistry.cpp">
       <Filter>Source Files\tags</Filter>
     </ClCompile>
     <ClCompile Include="..\src\godot\gdAbilityContainer.cpp">
@@ -120,17 +114,20 @@
     <ClCompile Include="..\src\core\TagSystem.cpp">
       <Filter>Source Files\tags</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp">
-      <Filter>Source Files\tags</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\godot\gdGameplayAbilitySystemNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagArrayEditorProperty.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagContainerEditorProperty.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\godot\ui\gdTagInspector.cpp">
+      <Filter>Source Files\tags</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\gdExample.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\register_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -221,7 +218,10 @@
     <ClInclude Include="..\src\include\core\TagSystem.h">
       <Filter>Header Files\tags</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\godot\ui\gdTagContainerInspector.h">
+    <ClInclude Include="..\src\include\godot\ui\gdTagArrayEditorProperty.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagInspector.h">
       <Filter>Header Files\tags</Filter>
     </ClInclude>
   </ItemGroup>

@@ -343,7 +343,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\gdExample.h" />
     <ClInclude Include="..\src\include\core\EffectSystem.h" />
     <ClInclude Include="..\src\include\core\GameplayAttribute.h" />
     <ClInclude Include="..\src\include\core\GameplayAttributeSet.h" />
@@ -367,7 +366,8 @@
     <ClInclude Include="..\src\include\godot\gdModifierData.h" />
     <ClInclude Include="..\src\include\godot\gdTagContainer.h" />
     <ClInclude Include="..\src\include\godot\gdTagData.h" />
-    <ClInclude Include="..\src\include\godot\ui\gdTagContainerInspector.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagArrayEditorProperty.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagInspector.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagRegistryEditor.h" />
     <ClInclude Include="..\src\internal\Event.h" />
     <ClInclude Include="..\src\internal\smAssert.h" />
@@ -385,7 +385,6 @@
     <ClCompile Include="..\src\core\GameplayTag.cpp" />
     <ClCompile Include="..\src\core\TagRegistry.cpp" />
     <ClCompile Include="..\src\core\TagSystem.cpp" />
-    <ClCompile Include="..\src\gdExample.cpp" />
     <ClCompile Include="..\src\godot\GASWorldBound.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityContainer.cpp" />
     <ClCompile Include="..\src\godot\gdAbilityData.cpp" />
@@ -400,8 +399,9 @@
     <ClCompile Include="..\src\godot\gdModifierData.cpp" />
     <ClCompile Include="..\src\godot\gdTagContainer.cpp" />
     <ClCompile Include="..\src\godot\gdTagData.cpp" />
-    <ClCompile Include="..\src\godot\gdTagRegistry.cpp" />
-    <ClCompile Include="..\src\godot\ui\gdTagContainerInspector.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagArrayEditorProperty.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagContainerEditorProperty.cpp" />
+    <ClCompile Include="..\src\godot\ui\gdTagInspector.cpp" />
     <ClCompile Include="..\src\godot\ui\gdTagRegistryEditor.cpp" />
     <ClCompile Include="..\src\register_types.cpp" />
   </ItemGroup>

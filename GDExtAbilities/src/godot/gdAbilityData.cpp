@@ -94,7 +94,7 @@ void sm::AbilityData::_bind_methods()
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::PACKED_INT32_ARRAY, "activation_blocked"),
+		godot::Variant::PACKED_INT32_ARRAY, "activation_blocked_tags"),
 		"set_ability_activation_blocked", "get_ability_activation_blocked"
 	);
 }

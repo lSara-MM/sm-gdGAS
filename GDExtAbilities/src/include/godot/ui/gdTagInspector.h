@@ -3,10 +3,11 @@
 #include "godot/gdAbilityData.h"
 #include "godot/gdEffectData.h"
 #include "godot/gdTagData.h"
-
+#include "internal/Types.h"
 #include <godot_cpp/classes/editor_inspector_plugin.hpp>
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/core/object_id.hpp>
+#include <unordered_map>
 
 // TODO: Refactor inspector so its not a messy mix of data types
 
@@ -26,9 +27,9 @@ namespace sm
 	class TagContainer;
 	class TagRegistryEditor;
 
-	class TagContainerInspector : public godot::EditorInspectorPlugin
+	class TagInspector : public godot::EditorInspectorPlugin
 	{
-		GDCLASS(TagContainerInspector, godot::EditorInspectorPlugin)
+		GDCLASS(TagInspector, godot::EditorInspectorPlugin)
 
 	protected:
 		static void _bind_methods();

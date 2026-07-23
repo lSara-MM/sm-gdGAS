@@ -1,8 +1,9 @@
 #pragma once
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/variant/string_name.hpp>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
+#include <vector>
 
 // NOTES: ERR_PRINT("Error. No para ejecucion, no return. Solo escribe consola");
 // NOTES: ERR_FAIL_COND_MSG(cond, "Error. Return de la funcion actual.");

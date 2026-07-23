@@ -128,15 +128,7 @@ bool sm::EffectData::AddTagToRemove(TagID id)
 
 bool sm::EffectData::HasTag(TagID id, const godot::PackedInt32Array& arr) const
 {
-	for (size_t i = 0; i < arr.size(); i++)
-	{
-		if (id == arr[i])
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return arr.has(id);
 }
 
 void sm::EffectData::_validate_property(godot::PropertyInfo& property) const

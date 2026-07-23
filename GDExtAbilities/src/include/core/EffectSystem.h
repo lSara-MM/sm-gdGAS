@@ -2,6 +2,8 @@
 #include "core/GameplayEffect.h"
 #include "core/GameplaySystem.h"
 
+#include <unordered_map>
+
 namespace sm
 {
 	class GAS_Entity;

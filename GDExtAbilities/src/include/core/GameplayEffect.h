@@ -1,5 +1,4 @@
 #pragma once
-#include "internal/Types.h"
 #include "internal/smUID.h"
 #include "internal/smBitSet.h"
 #include "core/GameplayModifier.h"

@@ -7,6 +7,7 @@
 
 #include <godot_cpp/core/gdvirtual.gen.inc>
 #include <godot_cpp/variant/node_path.hpp>
+#include <unordered_map>
 
 namespace sm
 {

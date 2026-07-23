@@ -67,8 +67,6 @@ else:
         f"{folder}/libGDExtAbilities{env['suffix']}{env['SHLIBSUFFIX']}",
         source=sources
     )
-    print("holi")
-
 
 # ---------------------------------------------------
 CacheDir(".scons_cache/")

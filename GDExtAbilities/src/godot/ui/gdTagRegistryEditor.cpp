@@ -3,9 +3,6 @@
 
 #include "core/TagRegistry.h"
 #include "godot/gdTagContainer.h"
-//#include "godot/ui/gdTagsInContainer.h"
-//#include "godot/ui/gdTagsInEffect.h"
-//#include "godot/ui/gdTagsInAbility.h"
 #include <fstream>
 #include <godot_cpp/classes/accept_dialog.hpp>
 #include <godot_cpp/classes/check_box.hpp>
@@ -48,17 +45,6 @@ void sm::TagRegistryEditor::_enter_tree()
 	add_inspector_plugin(m_Inspector);
 	m_Inspector->SetEditorPlugin(this);
 
-	/*m_InspectorRefs.emplace_back(memnew(TagsInContainer));
-	m_InspectorRefs.emplace_back(memnew(TagsInEffect));
-	m_InspectorRefs.emplace_back(memnew(TagsInEffect(false)));
-	m_InspectorRefs.emplace_back(memnew(TagsInAbility));
-
-	for (auto& ref : m_InspectorRefs)
-	{
-		add_inspector_plugin(ref);
-		ref->SetEditorPlugin(this);
-	}*/
-
 	CreateTab();
 
 	m_FileSystemDock = get_editor_interface()->get_file_system_dock();
@@ -75,13 +61,6 @@ void sm::TagRegistryEditor::_enter_tree()
 
 void sm::TagRegistryEditor::_exit_tree()
 {
-	//
-	/*for (auto& ref : m_InspectorRefs)
-	{
-		remove_inspector_plugin(ref);
-	}*/
-
-	//
 	if (m_FileSystemDock)
 	{
 		godot::Callable filesMovedCb = callable_mp(this, &TagRegistryEditor::_OnFileMoved);
@@ -942,36 +921,6 @@ godot::TreeItem* sm::TagRegistryEditor::GetRoot()
 {
 	return 	m_Tree->get_root();
 }
-
-//godot::TreeItem* sm::TagRegistryEditor::GetAbilityRoot()
-//{
-//	if (!m_Ability)
-//	{
-//		auto root = m_Tree->get_root();
-//		godot::Ref<TagData> parentData = root->get_metadata(0);
-//		ERR_FAIL_COND_MSG(parentData.is_null(), nullptr, "CreateTag failed: Tag parent null");
-//
-//		godot::Ref<TagData> data;
-//		data.instantiate();
-//		data->SetName("Ability");
-//		data->SetFullPath(m_TagRegistry->GetTagFullPath());
-//
-//		m_Ability = m_Tree->create_item(root);
-//		m_Ability->set_text(0, "Ability");
-//		m_Ability->set_metadata(0, data);
-//		m_Ability->set_tooltip_text(0, data->GetTagFullPath());
-//		m_Ability->set_editable(0, false);
-//
-//		m_Ability->add_button(0, m_Icons.add, static_cast<int>(ButtonId::ADD), false, "Add child tag. WARNING: Ability tags are generated, creating them manually is not recommended.");
-//
-//		m_Ability->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DELETE_SELF), false, "Delete tag. This will also delete its children. WARNING: Ability tags are generated, deleting them manually is not recommended.");
-//
-//		m_TagRegistry->AddChild(data);
-//		SaveRegistryResource();
-//	}
-//
-//	return m_Ability;
-//}
 
 void sm::TagRegistryEditor::_OnFileMoved(const godot::String& oldFile, const godot::String& newFile)
 {

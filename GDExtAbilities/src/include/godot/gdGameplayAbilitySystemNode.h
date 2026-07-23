@@ -1,6 +1,7 @@
 #pragma once
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <vector>
 
 namespace sm
 {
