@@ -115,10 +115,10 @@ bool sm::TagRegistry::RegisterTags(const godot::Ref<TagData>& tagRoot)
 	return true;
 }
 
-sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& tagName, const godot::StringName& parentName)
+sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& fullName, const godot::StringName& parentName)
 {
 #ifdef DEBUG_ENABLED
-	auto tagDebug = ToStdString(tagName);
+	auto tagDebug = ToStdString(fullName);
 	auto parentDebug = ToStdString(parentName);
 #endif // DEBUG_ENABLED
 
@@ -132,7 +132,7 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& tagName, co
 
 	ERR_FAIL_COND_V_MSG(parentTagID == GameplayTag::INVALID_TAG, nullptr, godot::vformat("ParentTag does not exists: %s", parentName));
 
-	GameplayTag& newTag = m_Tags.emplace_back(m_IDs.GenerateUID(), tagName, parentTagID);
+	GameplayTag& newTag = m_Tags.emplace_back(m_IDs.GenerateUID(), fullName, parentTagID);
 	m_TagsSet.Set(newTag.GetUID());
 
 	GameplayTag& parent = m_Tags[parentTagID];
@@ -148,13 +148,26 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& tagName, co
 	// -- Tags (All children)
 	// basically, tags should have array of tags
 
-	m_TagsDictionary.emplace(tagName, newTag.GetUID());
+	m_TagsDictionary.emplace(fullName, newTag.GetUID());
 
 #ifdef DEBUG_ENABLED
-	m_TagsDictionaryDebug.emplace(ToStdString(tagName), newTag.GetUID());
+	m_TagsDictionaryDebug.emplace(ToStdString(fullName), newTag.GetUID());
 #endif // DEBUG_ENABLED
 
 	return &newTag;
+}
+
+void sm::TagRegistry::RenameTag(const godot::StringName& fullName, const godot::StringName& newName)
+{
+	auto tag = m_TagsDictionary.extract(fullName);
+	tag.key() = newName;
+	m_TagsDictionary.insert(std::move(tag));
+
+#ifdef DEBUG_ENABLED
+	auto tagDebug = m_TagsDictionaryDebug.extract(ToStdString(fullName));
+	tagDebug.key() = ToStdString(newName);
+	m_TagsDictionaryDebug.insert(std::move(tagDebug));
+#endif // DEBUG_ENABLED
 }
 
 std::vector<sm::GameplayTag> sm::TagRegistry::GetTags() const

@@ -42,7 +42,6 @@ namespace sm
 		godot::Ref<TagData> FindChildByName(godot::StringName name) const;
 	private:
 		void SetTagFullPath(godot::String value);
-
 		void UpdateChildrenParents();
 
 	private:

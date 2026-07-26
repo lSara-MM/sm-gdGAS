@@ -10,17 +10,14 @@
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/editor_resource_picker.hpp>
-#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/file_system_dock.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
-#include <godot_cpp/classes/item_list.hpp>
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/line_edit.hpp>
 #include <godot_cpp/classes/margin_container.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
-#include <godot_cpp/classes/script.hpp>
 #include <godot_cpp/classes/texture_rect.hpp>
 #include <godot_cpp/classes/tree.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
@@ -288,27 +285,32 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData>& resource, godot
 		std::pair<godot::Ref<TagData>, godot::TreeItem*> tagPair = stack.back();
 		stack.pop_back();
 
+		auto tag = tagPair.first;
+
 		godot::TreeItem* treeTag = m_Tree->create_item(tagPair.second);
-		treeTag->set_text(0, tagPair.first->GetName());
-		treeTag->set_metadata(0, tagPair.first);
-		treeTag->set_tooltip_text(0, tagPair.first->GetTagFullPath());
-		treeTag->set_editable(0, false);
+		treeTag->set_text(0, tag->GetName());
+		treeTag->set_metadata(0, tag);
 
-		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::Add), false, "Add child tag.");
-
-		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::Edit), false, "Rename tag.");
-
-		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DeleteSelf), false, "Delete tag. This will also delete its children.");
-
-		m_TagDatas.push_back(tagPair.first);
-
-#ifdef DEBUG_ENABLED
-		auto pathDebug = ToStdString(tagPair.first->GetTagFullPath());
+#ifndef DEBUG_ENABLED
+		treeTag->set_tooltip_text(0, tag->GetTagFullPath());
+#else
+		treeTag->set_tooltip_text(0, godot::vformat("%s: %d", tag->GetTagFullPath(), tag->GetInternalID()));
 #endif // DEBUG_ENABLED
 
-		AddToCache(tagPair.first->GetTagFullPath());
+		treeTag->set_editable(0, false);
+		treeTag->add_button(0, m_Icons.add, static_cast<int>(ButtonId::Add), false, "Add child tag.");
+		treeTag->add_button(0, m_Icons.edit, static_cast<int>(ButtonId::Edit), false, "Rename tag.");
+		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DeleteSelf), false, "Delete tag. This will also delete its children.");
 
-		godot::TypedArray<TagData> children = tagPair.first->GetChildren();
+		m_TagDatas.push_back(tag);
+
+#ifdef DEBUG_ENABLED
+		auto pathDebug = ToStdString(tag->GetTagFullPath());
+#endif // DEBUG_ENABLED
+
+		AddToCache(tag->GetTagFullPath());
+
+		godot::TypedArray<TagData> children = tag->GetChildren();
 		for (int i = children.size() - 1; i >= 0; --i)
 		{
 			stack.push_back({ children[i], treeTag });

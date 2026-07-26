@@ -27,6 +27,8 @@ namespace godot
 
 namespace sm
 {
+	class TagContainer;
+
 	class TagRegistryEditor : public godot::EditorPlugin
 	{
 		GDCLASS(TagRegistryEditor, godot::EditorPlugin)

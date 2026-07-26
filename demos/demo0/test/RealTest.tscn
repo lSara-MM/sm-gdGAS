@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1paa8dc7dn22"]
+[gd_scene load_steps=3 format=3 uid="uid://c1paa8dc7dn22"]
 
-[sub_resource type="AbilityData" id="AbilityData_l677y"]
+[sub_resource type="EffectData" id="EffectData_b5vxb"]
+name = &"a"
+duration = 5.98354e-43
+tags_to_add = PackedInt32Array(5, 2, 4, 3)
+tags_to_remove = PackedInt32Array(6, 2)
+
+[sub_resource type="AbilityData" id="AbilityData_t27bm"]
+effect = Array[EffectData]([SubResource("EffectData_b5vxb")])
+tags = PackedInt32Array(4, 3, 2)
+block_tags = PackedInt32Array(3, 2)
+activation_tags = PackedInt32Array(6, 2, 5)
 
 [node name="RealTest" type="Node2D"]
 
@@ -10,9 +20,10 @@ entity_count = 3
 [node name="GAS_Entity3" type="GAS_Entity" parent="."]
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity3"]
+tags = PackedInt32Array(2, 5)
 
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity3"]
-abilities = Array[AbilityData]([SubResource("AbilityData_l677y")])
+abilities = Array[AbilityData]([SubResource("AbilityData_t27bm")])
 
 [node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity3"]
 

@@ -44,7 +44,7 @@ void sm::EffectData::_bind_methods()
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::ARRAY,
 		"modifiers",
-		godot::PROPERTY_HINT_RESOURCE_TYPE,
+		godot::PROPERTY_HINT_ARRAY_TYPE,
 		"24/17:ModifierData"),
 		"set_modifiers", "get_modifiers"
 	);

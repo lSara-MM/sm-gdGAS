@@ -10,6 +10,7 @@ namespace godot
 {
 	class Control;
 	class BoxContainer;
+	class Button;
 	class Tree;
 	class TreeItem;
 }
@@ -28,7 +29,7 @@ namespace sm
 	public:
 		TagArrayEditorProperty(TagRegistryEditor* registry = nullptr);
 
-		virtual void ShowInspector(Object* object, const godot::String& title);
+		virtual void ShowInspector(godot::Object* object, const godot::String& title);
 
 		godot::Control* ShowTagTreeEditor(const godot::String& title);
 		void AddAvailableTagsTree(godot::Control* root);
@@ -38,7 +39,8 @@ namespace sm
 
 		godot::PackedInt32Array GetCurrentTags();
 		void SetCurrentTags();
-		bool HasTag(int32_t tagId);
+		bool HasTag(TagID tagId);
+		void DeleteTags(const std::vector<godot::Ref<TagData>>& tagsToDelete);
 
 		int GetTagsSize() const;
 
@@ -68,6 +70,9 @@ namespace sm
 		std::unordered_map<TagID, godot::StringName> idToResource;
 
 	private:
+		godot::Button* m_ShowEnabledButton = nullptr;
+		godot::Button* m_ShowDisabledButton = nullptr;
+
 		bool m_ShowEnabled = true;
 		bool m_ShowDisabled = true;
 	};

@@ -28,13 +28,13 @@ namespace sm
 		void Reset();
 
 		bool RegisterTags(const godot::Ref<sm::TagData>& tagRoot);
+		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
+		void RenameTag(const godot::StringName& fullName, const godot::StringName& newName);
 
 		std::vector<GameplayTag> GetTags() const;
 		TagID FindTagID(const godot::StringName& name) const;
 
 	private:
-		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
-
 		GameplayTag* FindGameplayTag(const godot::Ref<TagData>& tag);
 
 		/// Returns true if `tagID` is a direct child of `childID`.

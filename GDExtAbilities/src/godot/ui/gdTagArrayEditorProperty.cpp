@@ -16,7 +16,7 @@
 sm::TagArrayEditorProperty::TagArrayEditorProperty(TagRegistryEditor* registry) : editor(registry)
 {}
 
-void sm::TagArrayEditorProperty::ShowInspector(Object* object, const godot::String& title)
+void sm::TagArrayEditorProperty::ShowInspector(godot::Object* object, const godot::String& title)
 {
 	godot::StringName propName = get_edited_property();
 	tags = object->get(propName);
@@ -100,26 +100,25 @@ void sm::TagArrayEditorProperty::AddSearchControls(godot::BoxContainer* root, go
 	root->add_child(search);
 
 	auto visibleIcon = gui->get_theme_icon("GuiVisibilityVisible", "EditorIcons");
-
 	auto invisibleIcon = gui->get_theme_icon("GuiVisibilityHidden", "EditorIcons");
 
-	auto* showEnabled = memnew(godot::Button);
-	showEnabled->set_text("Enabled");
-	showEnabled->set_toggle_mode(true);
-	showEnabled->set_pressed_no_signal(m_ShowEnabled);
-	showEnabled->set_button_icon(m_ShowEnabled ? visibleIcon : invisibleIcon);
-	root->add_child(showEnabled);
+	m_ShowEnabledButton = memnew(godot::Button);
+	m_ShowEnabledButton->set_text("Enabled");
+	m_ShowEnabledButton->set_toggle_mode(true);
+	m_ShowEnabledButton->set_pressed_no_signal(m_ShowEnabled);
+	m_ShowEnabledButton->set_button_icon(m_ShowEnabled ? visibleIcon : invisibleIcon);
+	root->add_child(m_ShowEnabledButton);
 
-	auto* showDisabled = memnew(godot::Button);
-	showDisabled->set_text("Disabled");
-	showDisabled->set_toggle_mode(true);
-	showDisabled->set_pressed_no_signal(m_ShowDisabled);
-	showDisabled->set_button_icon(m_ShowDisabled ? visibleIcon : invisibleIcon);
-	root->add_child(showDisabled);
+	m_ShowDisabledButton = memnew(godot::Button);
+	m_ShowDisabledButton->set_text("Disabled");
+	m_ShowDisabledButton->set_toggle_mode(true);
+	m_ShowDisabledButton->set_pressed_no_signal(m_ShowDisabled);
+	m_ShowDisabledButton->set_button_icon(m_ShowDisabled ? visibleIcon : invisibleIcon);
+	root->add_child(m_ShowDisabledButton);
 
 	search->connect("text_changed", callable_mp(this, &TagArrayEditorProperty::_OnSearchTextChanged));
-	showEnabled->connect("toggled", callable_mp(this, &TagArrayEditorProperty::_OnShowEnabledToggled));
-	showDisabled->connect("toggled", callable_mp(this, &TagArrayEditorProperty::_OnShowDisabledToggled));
+	m_ShowEnabledButton->connect("toggled", callable_mp(this, &TagArrayEditorProperty::_OnShowEnabledToggled));
+	m_ShowDisabledButton->connect("toggled", callable_mp(this, &TagArrayEditorProperty::_OnShowDisabledToggled));
 }
 
 godot::PackedInt32Array sm::TagArrayEditorProperty::GetCurrentTags()
@@ -132,10 +131,27 @@ void sm::TagArrayEditorProperty::SetCurrentTags()
 	emit_changed(get_edited_property(), tags);
 }
 
-bool sm::TagArrayEditorProperty::HasTag(int32_t tagId)
+bool sm::TagArrayEditorProperty::HasTag(TagID tagId)
 {
 	godot::PackedInt32Array tags = GetCurrentTags();
 	return tags.has(tagId);
+}
+
+void sm::TagArrayEditorProperty::DeleteTags(const std::vector<godot::Ref<TagData>>& tagsToDelete)
+{
+	for (auto& tag : tagsToDelete)
+	{
+		int pos = tags.find(tag->GetInternalID());
+		if (pos == -1)
+		{
+			continue;
+		}
+
+		tags.remove_at(pos);
+		idToResource.erase(tag->GetInternalID());
+	}
+
+	SetCurrentTags();
 }
 
 int sm::TagArrayEditorProperty::GetTagsSize() const
@@ -264,12 +280,26 @@ void sm::TagArrayEditorProperty::_OnItemActivated(godot::Tree* tree)
 void sm::TagArrayEditorProperty::_OnShowEnabledToggled(bool toggled)
 {
 	m_ShowEnabled = toggled;
+
+	auto* gui = editor->get_editor_interface()->get_base_control();
+	auto visibleIcon = gui->get_theme_icon("GuiVisibilityVisible", "EditorIcons");
+	auto invisibleIcon = gui->get_theme_icon("GuiVisibilityHidden", "EditorIcons");
+
+	m_ShowEnabledButton->set_button_icon(m_ShowEnabled ? visibleIcon : invisibleIcon);
+
 	RefreshAvailableTree();
 }
 
 void sm::TagArrayEditorProperty::_OnShowDisabledToggled(bool toggled)
 {
 	m_ShowDisabled = toggled;
+
+	auto* gui = editor->get_editor_interface()->get_base_control();
+	auto visibleIcon = gui->get_theme_icon("GuiVisibilityVisible", "EditorIcons");
+	auto invisibleIcon = gui->get_theme_icon("GuiVisibilityHidden", "EditorIcons");
+
+	m_ShowDisabledButton->set_button_icon(m_ShowDisabled ? visibleIcon : invisibleIcon);
+
 	RefreshAvailableTree();
 }
 #endif // TOOLS_ENABLED

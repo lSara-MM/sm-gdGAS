@@ -164,7 +164,7 @@ void sm::TagData::UpdateChildrenParents()
 		}
 
 #ifdef DEBUG_ENABLED
-		auto pathDebug = ToStdString(tagEntry.hierarchy);
+		m_DebugPath = ToStdString(tagEntry.hierarchy);
 #endif // DEBUG_ENABLED
 
 		tag->SetFullPath(tagEntry.hierarchy);
@@ -180,9 +180,6 @@ void sm::TagData::UpdateChildrenParents()
 
 			godot::String root = tagEntry.hierarchy + "." + tagEntry.tag->GetName();
 			tagsStack.emplace_back(tagChild, root);
-#ifdef DEBUG_ENABLED
-			auto rootDebug = ToStdString(root);
-#endif // DEBUG_ENABLED
 		}
 	}
 }

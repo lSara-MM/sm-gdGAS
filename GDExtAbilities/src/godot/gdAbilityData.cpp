@@ -73,7 +73,7 @@ void sm::AbilityData::_bind_methods()
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::ARRAY,
-		"effect", godot::PROPERTY_HINT_RESOURCE_TYPE,
+		"effect", godot::PROPERTY_HINT_ARRAY_TYPE,
 		"24/17:EffectData"),
 		"set_effects", "get_effects"
 	);
@@ -159,7 +159,6 @@ void sm::AbilityData::SetAbilityInstance(const godot::Ref<GameplayAbility>& abil
 
 void sm::AbilityData::SetAbilityName(AbilityID name)
 {
-
 	if (name.is_empty())
 	{
 		if (!get_path().is_empty())
@@ -209,6 +208,8 @@ void sm::AbilityData::SetNameToFileName(const godot::String& name)
 	}
 
 	godot::Ref<TagData> abilityData = tagRegistry->FindChildByName("Ability");
+	TagRegistry& registry = TagRegistry::Instance();
+
 	if (abilityData.is_null())
 	{
 		abilityData.instantiate();
@@ -216,6 +217,7 @@ void sm::AbilityData::SetNameToFileName(const godot::String& name)
 		abilityData->SetPath(tagRegistry->GetTagFullPath());
 
 		tagRegistry->AddChild(abilityData);
+		registry.CreateTag(abilityData->GetName(), "");
 	}
 
 	godot::Ref<TagData> prev = abilityData->FindChildByName(name);
@@ -230,10 +232,17 @@ void sm::AbilityData::SetNameToFileName(const godot::String& name)
 	{
 		data.instantiate();
 		abilityData->AddChild(data);
-	}
 
-	data->SetName(name);
-	data->SetPath(abilityData->GetTagFullPath());
+		data->SetName(name);
+		data->SetPath(abilityData->GetTagFullPath());
+		registry.CreateTag(data->GetTagFullPath(), abilityData->GetTagFullPath());
+	}
+	else
+	{
+		registry.RenameTag(data->GetTagFullPath(), name);
+		data->SetName(name);
+		data->SetPath(abilityData->GetTagFullPath());
+	}
 
 #ifdef DEBUG_ENABLED
 	auto a = ToStdString(name);
