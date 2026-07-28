@@ -40,7 +40,12 @@ namespace sm
 		BitSet() = default;
 		~BitSet() = default;
 
-		T& operator[](unsigned int index)
+		T operator[](size_t index) const
+		{
+			return data[index];
+		}
+
+		T& operator[](size_t index)
 		{
 			return data[index];
 		}
@@ -81,7 +86,7 @@ namespace sm
 			return *this;
 		}
 
-		BitSet operator ~()
+		BitSet operator ~() const
 		{
 			BitSet tmp(*this);
 			tmp.Flip();

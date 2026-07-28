@@ -256,7 +256,7 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 		CreateTag(children[i], root);
 	}
 
-
+	GenerateConstants();
 }
 
 godot::TreeItem* sm::TagRegistryEditor::CreateRootItem()
@@ -388,7 +388,6 @@ void sm::TagRegistryEditor::_OnRegistryResourceChanged(const godot::Ref<godot::R
 
 	CreateTagRegistryData(resource);
 	CreateOrUpdateTree();
-	GenerateConstants();
 }
 
 void sm::TagRegistryEditor::_OnRegistryEdited()

@@ -36,15 +36,15 @@ namespace sm
 		bool IsAttributeMax(AttributeID id);
 		bool IsAttributeDirty(AttributeID id);
 
-		ModifierID AddModifier(AttributeID id, godot::Ref<ModifierData> mod);
+		ModifierID AddModifier(AttributeID id, const godot::Ref<ModifierData> mod);
 		void AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod);
 		void RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod);
 
 #pragma endregion
 
 		GameplayAttribute* FindAttribute(AttributeID id) const;
-		ModifierID AddModifier(GameplayAttribute* attr, godot::Ref<ModifierData> mod);
-		void AddAttribute(godot::StringName id, float baseValue);
+		ModifierID AddModifier(GameplayAttribute* attr, const godot::Ref<ModifierData> mod);
+		void AddAttribute(godot::StringName id, const godot::Ref<AttributeData> data);
 		void ModifyAttribute(AttributeID id, float newValue);
 
 	private:

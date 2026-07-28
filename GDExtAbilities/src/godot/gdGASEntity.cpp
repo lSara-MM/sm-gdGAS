@@ -246,10 +246,10 @@ bool sm::GAS_Entity::HandleTags(const godot::Ref<EffectData>& gdEffect)
 
 void sm::GAS_Entity::AddTags(const BitSet<MAX_TAGS> tags)
 {
-	m_TagContainer->AddTags(tags);
+	m_TagContainer->AddTagsBitset(tags);
 }
 
 void sm::GAS_Entity::RemoveTags(const BitSet<MAX_TAGS> tags)
 {
-	m_TagContainer->RemoveTags(tags);
+	m_TagContainer->RemoveTagsBitset(tags);
 }

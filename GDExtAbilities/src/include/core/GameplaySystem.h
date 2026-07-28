@@ -10,6 +10,6 @@ namespace sm
 		virtual void Update([[maybe_unused]] float dt) {};
 
 	public:
-		GAS_World* _world;
+		GAS_World* _world = nullptr;
 	};
 }

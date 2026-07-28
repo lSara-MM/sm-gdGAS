@@ -21,7 +21,6 @@ namespace sm
 		godot::TypedArray<AttributeData> GetAttributesSet() const { return m_gdAttributes; };
 		void SetAttributesSet(const godot::TypedArray<AttributeData>& attr);
 
-		void AddAttribute(float baseValue, const godot::StringName& name);
 		void AddAttribute(const godot::Ref<AttributeData>& attr);
 
 		//uint32 GetAttributeID(godot::StringName name) const;

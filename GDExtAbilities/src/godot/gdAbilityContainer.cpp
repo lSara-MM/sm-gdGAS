@@ -11,6 +11,15 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities"), &GetAbilities);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities", "abilities"), &SetAbilities);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("grant_ability", "ability"), &Grant);
+	godot::ClassDB::bind_method(godot::D_METHOD("revoke_ability", "ability"), &Revoke);
+	godot::ClassDB::bind_method(godot::D_METHOD("has_ability", "ability"), &Has);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("is_active", "ability"), &IsActive);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown", "ability"), &IsOnCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_activate", "ability"), &TryActivate);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_activate_abilities_with_tags", "ability"), &TryActivateAbilitiesWithTag);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_current_cooldown", "ability"), &GetCurrentCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("clear"), &Clear);
 

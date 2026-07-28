@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1paa8dc7dn22"]
+[gd_scene load_steps=4 format=3 uid="uid://c1paa8dc7dn22"]
 
 [sub_resource type="EffectData" id="EffectData_b5vxb"]
 name = &"a"
@@ -12,6 +12,8 @@ tags = PackedInt32Array(4, 3, 2)
 block_tags = PackedInt32Array(3, 2)
 activation_tags = PackedInt32Array(6, 2, 5)
 
+[sub_resource type="AbilityData" id="AbilityData_i5l53"]
+
 [node name="RealTest" type="Node2D"]
 
 [node name="GAS_World" type="GAS_World" parent="."]
@@ -23,7 +25,7 @@ entity_count = 3
 tags = PackedInt32Array(2, 5)
 
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity3"]
-abilities = Array[AbilityData]([SubResource("AbilityData_t27bm")])
+abilities = Array[AbilityData]([SubResource("AbilityData_t27bm"), SubResource("AbilityData_i5l53")])
 
 [node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity3"]
 

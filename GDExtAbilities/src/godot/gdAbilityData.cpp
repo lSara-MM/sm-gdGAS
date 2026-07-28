@@ -144,12 +144,9 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 	{
 		m_AbilityScript = script;
 	}
-
+#else
+	m_AbilityScript = script;
 #endif
-
-	//#ifndef TOOLS_ENABLED
-	//	m_AbilityScript = script;
-	//#endif
 }
 
 void sm::AbilityData::SetAbilityInstance(const godot::Ref<GameplayAbility>& ability)
@@ -159,6 +156,11 @@ void sm::AbilityData::SetAbilityInstance(const godot::Ref<GameplayAbility>& abil
 
 void sm::AbilityData::SetAbilityName(AbilityID name)
 {
+	if (m_AbilityName == name)
+	{
+		return;
+	}
+
 	if (name.is_empty())
 	{
 		if (!get_path().is_empty())
@@ -170,11 +172,6 @@ void sm::AbilityData::SetAbilityName(AbilityID name)
 		{
 			WARN_PRINT_ED(godot::vformat("Warning: ability name is <null>"));
 		}
-	}
-
-	if (m_AbilityName == name)
-	{
-		return;
 	}
 
 	SetNameToFileName(name);
@@ -197,9 +194,7 @@ void sm::AbilityData::SetNameToFileName(const godot::String& name)
 		return;
 	}
 
-	godot::String fullTagName = "Ability." + name;
 	godot::String registryPath = godot::ProjectSettings::get_singleton()->get_setting(SETTINGS_PATH);
-
 	const godot::Ref<TagData>& tagRegistry = godot::ResourceLoader::get_singleton()->load(registryPath);
 
 	if (tagRegistry.is_null())
@@ -217,11 +212,9 @@ void sm::AbilityData::SetNameToFileName(const godot::String& name)
 		abilityData->SetPath(tagRegistry->GetTagFullPath());
 
 		tagRegistry->AddChild(abilityData);
-		registry.CreateTag(abilityData->GetName(), "");
 	}
 
 	godot::Ref<TagData> prev = abilityData->FindChildByName(name);
-	m_AbilityNameDupe = m_AbilityName;
 	if (prev.is_valid())
 	{
 		ERR_FAIL_MSG(godot::vformat("Error: Ability [%s] already exists.", name));
@@ -235,22 +228,27 @@ void sm::AbilityData::SetNameToFileName(const godot::String& name)
 
 		data->SetName(name);
 		data->SetPath(abilityData->GetTagFullPath());
-		registry.CreateTag(data->GetTagFullPath(), abilityData->GetTagFullPath());
 	}
 	else
 	{
-		registry.RenameTag(data->GetTagFullPath(), name);
 		data->SetName(name);
 		data->SetPath(abilityData->GetTagFullPath());
+
+		const godot::StringName currentName = godot::String(abilityData->GetTagFullPath()) + "." + m_AbilityNameDupe;
+		const godot::StringName newName = data->GetTagFullPath();
 	}
 
-#ifdef DEBUG_ENABLED
-	auto a = ToStdString(name);
-	auto ae = ToStdString(m_AbilityNameDupe);
-	auto ab = ToStdString(abilityData->GetTagFullPath());
-	auto abd = ToStdString(tagRegistry->GetTagFullPath());
-	auto abc = ToStdString(fullTagName);
-#endif // DEBUG_ENABLED
+	godot::Ref<TagData> dataCD = data->FindChildByName("cd");
+	if (dataCD.is_null())
+	{
+		dataCD.instantiate();
+		data->AddChild(dataCD);
+
+		dataCD->SetName("cd");
+		dataCD->SetPath(data->GetTagFullPath());
+	}
+
+	m_AbilityNameDupe = name;
 
 	tagRegistry->emit_changed();
 	godot::ResourceSaver::get_singleton()->save(tagRegistry, registryPath);

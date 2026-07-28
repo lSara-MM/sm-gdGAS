@@ -16,7 +16,7 @@ void sm::AttributeSetData::_bind_methods()
 		"24/17:AttributeData"),
 		"set_attributes_set", "get_attributes_set");
 
-	godot::ClassDB::bind_method(godot::D_METHOD("add_attribute", "attr"), &SetAttributesSet);
+	godot::ClassDB::bind_method(godot::D_METHOD("add_attribute", "attr"), &AddAttribute);
 }
 
 void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeData>& attr)
@@ -52,22 +52,13 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 #endif // TOOLS_ENABLED
 }
 
-void sm::AttributeSetData::AddAttribute(float baseValue, const godot::StringName& name)
-{
-	/*godot::Ref<AttributeData> attr;
-	attr.instantiate();
-	attr->SetBaseValue(baseValue);
-	attr->SetName(name);
-	m_gdAttributes.append(attr);*/
-
-	emit_changed();
-}
-
 void sm::AttributeSetData::AddAttribute(const godot::Ref<AttributeData>& attr)
 {
-	m_gdAttributes.push_back(attr);
-
-	emit_changed();
+	if (!m_gdAttributes.has(attr))
+	{
+		m_gdAttributes.push_back(attr);
+		emit_changed();
+	}
 }
 
 godot::Ref<sm::AttributeData> sm::AttributeSetData::GetAttributeResource(const godot::StringName& name) const

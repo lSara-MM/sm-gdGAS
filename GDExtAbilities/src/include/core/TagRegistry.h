@@ -29,7 +29,6 @@ namespace sm
 
 		bool RegisterTags(const godot::Ref<sm::TagData>& tagRoot);
 		GameplayTag* CreateTag(const godot::StringName& fullName, const godot::StringName& parentName);
-		void RenameTag(const godot::StringName& fullName, const godot::StringName& newName);
 
 		std::vector<GameplayTag> GetTags() const;
 		TagID FindTagID(const godot::StringName& name) const;

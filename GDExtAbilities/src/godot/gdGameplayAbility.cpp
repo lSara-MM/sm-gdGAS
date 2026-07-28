@@ -11,7 +11,10 @@ void sm::GameplayAbility::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &GetAbilityData);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_data", "data"), &SetAbilityData);
 
+	//godot::ClassDB::bind_method(godot::D_METHOD("try_activate"), &TryActivate);
+	//godot::ClassDB::bind_method(godot::D_METHOD("try_end", "wasCancelled"), &TryEnd);
 	godot::ClassDB::bind_method(godot::D_METHOD("commit_ability"), &CommitAbility);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown"), &IsOnCooldown);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_effects_to_target", "entity"), &ApplyEffectsToTarget);
 

@@ -157,19 +157,6 @@ sm::GameplayTag* sm::TagRegistry::CreateTag(const godot::StringName& fullName, c
 	return &newTag;
 }
 
-void sm::TagRegistry::RenameTag(const godot::StringName& fullName, const godot::StringName& newName)
-{
-	auto tag = m_TagsDictionary.extract(fullName);
-	tag.key() = newName;
-	m_TagsDictionary.insert(std::move(tag));
-
-#ifdef DEBUG_ENABLED
-	auto tagDebug = m_TagsDictionaryDebug.extract(ToStdString(fullName));
-	tagDebug.key() = ToStdString(newName);
-	m_TagsDictionaryDebug.insert(std::move(tagDebug));
-#endif // DEBUG_ENABLED
-}
-
 std::vector<sm::GameplayTag> sm::TagRegistry::GetTags() const
 {
 	return m_Tags;

@@ -106,7 +106,7 @@ namespace sm
 
 		void _OnItemSelected();
 
-		void _OnItemEdited();
+		//void _OnItemEdited();
 
 		void _OnCreateTagClicked(godot::LineEdit* newText, godot::TreeItem* parentItem, godot::AcceptDialog* menu);
 
@@ -121,7 +121,6 @@ namespace sm
 		void _OnReferenceActivated();
 
 		void DeleteFromVector(const godot::Ref<TagData> resource);
-		void _DeleteContainer(TagContainer* node);
 
 		void AddToCache(const godot::StringName& tag);
 		bool HasTagInCache(const godot::StringName& tag);

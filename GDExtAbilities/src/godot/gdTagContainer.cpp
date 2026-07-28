@@ -18,7 +18,15 @@ sm::TagContainer::~TagContainer()
 void sm::TagContainer::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tags"), &GetTags);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_tags"), &SetTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_tags", "tags"), &SetTags);
+
+	godot::ClassDB::bind_method(godot::D_METHOD("add_tag", "tag_id"), &AddTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("remove_tag", "tag_id"), &RemoveTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("has_tag", "tag_id"), &HasTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("has_all_tags", "tags"), &HasAllTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("has_any_tags", "tags"), &HasAnyTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("add_tags", "tags"), &AddTags);
+	godot::ClassDB::bind_method(godot::D_METHOD("remove_tags", "tags"), &RemoveTags);
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::PACKED_INT32_ARRAY, "tags"),
@@ -321,42 +329,80 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 	return ret;
 }
 
-void sm::TagContainer::AddTags(BitSet<MAX_TAGS> tags)
+void sm::TagContainer::AddTags(const godot::PackedInt32Array& tags)
 {
-	for (size_t block = 0; block < tags.GetSize(); ++block)
+	for (size_t i = 0; i < tags.size(); ++i)
 	{
-		// Get bits per block
-		auto bits = tags[block];
-
-		while (bits)
+		TagID tag = tags[i];
+		if (tag >= 0 && static_cast<size_t>(tag) < MAX_TAGS)
 		{
-			int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
-			int index = block * 64 + bit;
-
-			ERR_CONTINUE_MSG(index >= MAX_TAGS, godot::vformat("AddTags skipped: index %d out of range (MAX_TAGS=%d)", index, MAX_TAGS));
-
-			SetTag(index);
-
-			bits &= bits - 1;
+			m_TagsSet.tags.Set(tag);
 		}
 	}
 }
 
-void sm::TagContainer::RemoveTags(BitSet<MAX_TAGS> tags)
+void sm::TagContainer::RemoveTags(const godot::PackedInt32Array& tags)
 {
-	for (size_t block = 0; block < tags.GetSize(); ++block)
+	for (size_t i = 0; i < tags.size(); ++i)
 	{
-		// Get bits per block
-		auto bits = tags[block];
-
-		while (bits)
+		TagID tag = tags[i];
+		if (tag >= 0 && static_cast<size_t>(tag) < MAX_TAGS)
 		{
-			int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
-			int index = block * 64 + bit;
-
-			SetTag(index, false);
-
-			bits &= bits - 1;
+			m_TagsSet.tags.Set(tag, false);
 		}
 	}
+}
+
+void sm::TagContainer::AddTagsBitset(BitSet<MAX_TAGS> tags)
+{
+	m_TagsSet.tags |= tags;
+	//emit_signal("tags_added", this);
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
+
+	//for (size_t block = 0; block < tags.GetSize(); ++block)
+	//{
+	//	// Get bits per block
+	//	auto bits = tags[block];
+
+	//	while (bits)
+	//	{
+	//		int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
+	//		int index = block * 64 + bit;
+
+	//		ERR_CONTINUE_MSG(index >= MAX_TAGS, godot::vformat("AddTags skipped: index %d out of range (MAX_TAGS=%d)", index, MAX_TAGS));
+
+	//		SetTag(index);
+
+	//		bits &= bits - 1;
+	//	}
+	//}
+}
+
+void sm::TagContainer::RemoveTagsBitset(BitSet<MAX_TAGS> tags)
+{
+	m_TagsSet.tags &= ~tags;
+	//emit_signal("tags_added", this);
+
+#ifdef TOOLS_ENABLED
+	notify_property_list_changed();
+#endif // TOOLS_ENABLED
+
+	//for (size_t block = 0; block < tags.GetSize(); ++block)
+	//{
+	//	// Get bits per block
+	//	auto bits = tags[block];
+
+	//	while (bits)
+	//	{
+	//		int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
+	//		int index = block * 64 + bit;
+
+	//		SetTag(index, false);
+
+	//		bits &= bits - 1;
+	//	}
+	//}
 }

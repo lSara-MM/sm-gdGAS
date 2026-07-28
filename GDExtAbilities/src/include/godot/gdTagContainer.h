@@ -43,10 +43,12 @@ namespace sm
 
 		//
 		bool SetTag(TagID id, bool value = true);
-		void AddTags(BitSet<MAX_TAGS> tags);
-		void RemoveTags(BitSet<MAX_TAGS> tags);
+		void AddTags(const godot::PackedInt32Array& tags);
+		void RemoveTags(const godot::PackedInt32Array& tags);
 
 		// non godot
+		void AddTagsBitset(BitSet<MAX_TAGS> tags);
+		void RemoveTagsBitset(BitSet<MAX_TAGS> tags);
 		TagSet GetTagSet() const;
 
 	private:
