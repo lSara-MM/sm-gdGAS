@@ -31,7 +31,7 @@ void sm::GAS_Entity::_bind_methods()
 	// Properties
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::OBJECT,
-		"attribute_container",
+		"attribute_container_node_path",
 		godot::PROPERTY_HINT_NODE_TYPE,
 		"AttributeContainer",
 		godot::PROPERTY_USAGE_EDITOR | godot::PROPERTY_USAGE_READ_ONLY),
@@ -40,11 +40,11 @@ void sm::GAS_Entity::_bind_methods()
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::OBJECT,
-		"tag_container_node",
+		"tag_container_node_path",
 		godot::PROPERTY_HINT_NODE_TYPE,
 		"TagContainer",
 		godot::PROPERTY_USAGE_EDITOR | godot::PROPERTY_USAGE_READ_ONLY),
-		"", "get_tag_container"
+		"", "get_tag_node_path"
 	);
 }
 
@@ -120,18 +120,17 @@ void sm::GAS_Entity::Init()
 		return;
 	}
 
-	/*if (godot::Engine::get_singleton()->is_editor_hint()
-		&& sceneRoot != get_tree()->get_edited_scene_root())
-	{
-		return;
-	}*/
-
 	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this, sceneRoot);
 
 	if (!world)
 	{
-		queue_free();
-		ERR_FAIL_MSG("Could not create Entity. GAS_World Node required.");
+		if (!godot::Engine::get_singleton()->is_editor_hint())
+		{
+			queue_free();
+			ERR_FAIL_MSG("Could not create Entity. GAS_World Node required.");
+		}
+
+		return;
 	}
 
 	m_ID = world->RegisterEntity(this);
@@ -143,6 +142,18 @@ void sm::GAS_Entity::SetID(EntityID id)
 	{
 		m_ID = id;
 	}
+}
+
+sm::GAS_World* sm::GAS_Entity::GetWorld()
+{
+	godot::Node* sceneRoot = NodeUtils::GetSceneRoot(this);
+
+	if (!is_inside_tree() || !get_tree())
+	{
+		return nullptr;
+	}
+
+	return m_WorldBound.GetOrInitWorld(this, sceneRoot);
 }
 
 void sm::GAS_Entity::SetAttributeContainerNodePath(godot::NodePath path)

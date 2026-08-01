@@ -23,8 +23,8 @@ namespace sm
 		void SetAbilityName(AbilityID id);
 		bool IsNameValid(const godot::String& name);
 		void SetNameToFileName(const godot::String& name);
-		TagID GetAbilityID() const { return m_AbilityTag; };
-		void SetAbilityID(TagID id);
+		TagID GetAbilityTagID() const { return m_AbilityTagID; };
+		void SetAbilityTagID(TagID id);
 
 		godot::Ref<godot::Script> GetAbilityScript() const { return m_AbilityScript; };
 		void SetAbilityScript(const godot::Ref<godot::Script>& script);
@@ -42,7 +42,7 @@ namespace sm
 		void SetCostData(godot::Ref<EffectData> value) { m_CostData = value; };
 
 		AttributeID GetCostAttributeID() const { return m_CostAttributeID; };
-		void SetCostAttributeID(AttributeID value) { m_CostAttributeID = value; };
+		void SetCostAttributeID(AttributeID value);
 
 		// Tags
 		godot::PackedInt32Array GetAbilityTags() const { return m_AbilityTags; };
@@ -65,8 +65,6 @@ namespace sm
 	private:
 		AbilityData();
 		~AbilityData() = default;
-
-		void _validate_property(godot::PropertyInfo& property);
 
 	private:
 		godot::Ref<godot::Script> m_AbilityScript;
@@ -113,7 +111,7 @@ namespace sm
 		AttributeID m_CostAttributeID;
 		AbilityID m_AbilityName;
 		AbilityID m_AbilityNameDupe;
-		TagID m_AbilityTag;
+		TagID m_AbilityTagID;
 		float m_Cooldown = 0.0f;
 		float m_Cost = 0.0f;
 	};

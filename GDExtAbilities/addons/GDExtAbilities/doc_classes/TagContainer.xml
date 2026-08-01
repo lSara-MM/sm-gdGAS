@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="TagContainer" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+    <brief_description>
+        A container node responsible for holding, tracking, and signaling changes to an entity's gameplay tags.
+    </brief_description>
+    <description>
+        [TagContainer] manages active gameplay tags for an entity at runtime. It stores tags as a collection of unique integer IDs [PackedInt32Array] and emits signals whenever tags are added or removed, allowing abilities, effects, and entities to respond dynamically to state changes.
+    </description>
+    <tutorials>
+    </tutorials>
+    <members>
+        <member name="tags" type="PackedInt32Array" setter="set_tags" getter="get_tags" default="PackedInt32Array()">
+            The array of unique tag IDs currently assigned to and active within this container.
+        </member>
+    </members>
+    <signals>
+        <signal name="tag_added">
+            <param index="0" name="id" type="int" />
+            <param index="1" name="owner" type="Object" />
+            <description>
+                Emitted when a new gameplay tag with the specified [param id] is granted or added to the [param owner].
+            </description>
+        </signal>
+        <signal name="tag_removed">
+            <param index="0" name="id" type="int" />
+            <param index="1" name="owner" type="Object" />
+            <description>
+                Emitted when an active gameplay tag with the specified [param id] is removed or cleared from the [param owner].
+            </description>
+        </signal>
+    </signals>
+</class>

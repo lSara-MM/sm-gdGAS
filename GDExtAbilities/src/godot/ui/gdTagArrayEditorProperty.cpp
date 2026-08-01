@@ -12,6 +12,7 @@
 #include <godot_cpp/classes/tree_item.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/v_split_container.hpp>
+#include <godot_cpp/variant/callable_method_pointer.hpp>
 
 sm::TagArrayEditorProperty::TagArrayEditorProperty(TagRegistryEditor* registry) : editor(registry)
 {}
@@ -42,10 +43,10 @@ godot::Control* sm::TagArrayEditorProperty::ShowTagTreeEditor(const godot::Strin
 	root->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 	root->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
 
-	auto* gui = editor->get_editor_interface()->get_base_control();
 	auto* hbox = memnew(godot::HBoxContainer);
 	root->add_child(hbox);
 	AddAvailableTagsTree(root);
+	auto* gui = editor->get_editor_interface()->get_base_control();
 	AddSearchControls(hbox, gui);
 
 	SetSize();
@@ -82,6 +83,10 @@ void sm::TagArrayEditorProperty::AddAvailableTagsTree(godot::Control* root)
 		item->set_editable(0, true);
 		item->set_checked(0, false);
 		item->set_text(0, gdName);
+
+#ifdef DEBUG_ENABLED
+		item->set_tooltip_text(0, godot::vformat("%d", tagId));
+#endif // DEBUG_ENABLED
 
 		idToResource[tagId] = gdName;
 		itemsByName[gdName] = item;
@@ -266,9 +271,9 @@ void sm::TagArrayEditorProperty::_OnSearchTextChanged(const godot::String& text)
 	RefreshAvailableTree();
 }
 
-void sm::TagArrayEditorProperty::_OnItemActivated(godot::Tree* tree)
+void sm::TagArrayEditorProperty::_OnItemActivated()
 {
-	godot::TreeItem* item = tree->get_selected();
+	godot::TreeItem* item = availableTree->get_selected();
 	if (!item)
 	{
 		return;

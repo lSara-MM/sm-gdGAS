@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="GAS_Entity" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Node representing an active character participating in the Gameplay Ability System.
 	</brief_description>
 	<description>
+		[GAS_Entity] serves as the main integration component for an actor in the Gameplay Ability System (GAS). 
+
+		It connects attribute management ([AttributeContainer]) and state/tag tracking ([TagContainer]) into a single interface. It provides capabilities to apply gameplay effects ([EffectData]), manage active modifiers, and query system stats or status tags on the attached node.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -11,35 +15,42 @@
 			<return type="int" />
 			<param index="0" name="effect" type="EffectData" />
 			<description>
+				Applies a [EffectData] to this entity. Returns an integer identifier representing the active effect instance.
 			</description>
 		</method>
 		<method name="get_attribute_container" qualifiers="const">
 			<return type="AttributeContainer" />
 			<description>
+				Returns the assigned [AttributeContainer] node associated with this entity.
 			</description>
 		</method>
 		<method name="get_tag_node_path" qualifiers="const">
 			<return type="NodePath" />
 			<description>
+				Returns the [NodePath] pointing to the assigned [TagContainer] node.
 			</description>
 		</method>
 		<method name="set_attribute_container">
 			<return type="void" />
 			<param index="0" name="node" type="AttributeContainer" />
 			<description>
+				Assigns the [AttributeContainer] node used by this entity to manage attribute sets and stats.
 			</description>
 		</method>
 		<method name="set_tag_container">
 			<return type="void" />
 			<param index="0" name="node" type="TagContainer" />
 			<description>
+				Assigns the [TagContainer] node used by this entity to track active gameplay tags.
 			</description>
 		</method>
 	</methods>
 	<members>
 		<member name="attribute_container" type="NodePath" setter="" getter="get_attribute_node_path" default="NodePath(&quot;&quot;)">
+			The [NodePath] referencing the [AttributeContainer] node attached to this entity in the scene tree.
 		</member>
 		<member name="tag_container_node" type="TagContainer" setter="" getter="get_tag_container">
+			Direct reference to the [TagContainer] node currently bound to this entity.
 		</member>
 	</members>
 </class>

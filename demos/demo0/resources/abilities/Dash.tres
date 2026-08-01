@@ -1,0 +1,24 @@
+[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dfikne8aaht4o"]
+
+[ext_resource type="Script" path="res://scripts/Abilities/dash.gd" id="1_igeuw"]
+
+[sub_resource type="ModifierData" id="ModifierData_0wd3u"]
+target_id = &"Speed"
+source_id = &"Dash"
+value = 100.0
+
+[sub_resource type="EffectData" id="EffectData_vf3d4"]
+name = &"Dash"
+effect_type = 1
+duration = 1.0
+modifiers = Array[ModifierData]([SubResource("ModifierData_0wd3u")])
+
+[resource]
+tag_name = &"Dash"
+ability = ExtResource("1_igeuw")
+cooldown = 3.0
+cost = 10.0
+cost_resource_attribute = &"CurrentStamina"
+effect = Array[EffectData]([SubResource("EffectData_vf3d4")])
+tags = PackedInt32Array(4, 3, 2)
+activation_blocked_tags = PackedInt32Array(6, 3)

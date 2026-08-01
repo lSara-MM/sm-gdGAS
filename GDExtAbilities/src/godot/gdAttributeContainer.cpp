@@ -44,32 +44,32 @@ void sm::AttributeContainer::_bind_methods()
 
 	// Signals
 	ADD_SIGNAL(godot::MethodInfo("attribute_modified",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
-		godot::PropertyInfo(godot::Variant::FLOAT, "old_value"),
-		godot::PropertyInfo(godot::Variant::FLOAT, "new_value")
+		godot::PropertyInfo(godot::Variant::FLOAT, "new_value"),
+		godot::PropertyInfo(godot::Variant::FLOAT, "old_value")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("modifier_added",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "modifier_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("modifier_removed",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "modifier_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("effect_added",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "effect_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("effect_removed",
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "effect_data")
 	));
@@ -178,6 +178,7 @@ ModifierID sm::AttributeContainer::AddModifier(AttributeID id, const godot::Ref<
 
 void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
+	auto a = ToStdString(id);
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	attr->AddBaseModifier(mod);

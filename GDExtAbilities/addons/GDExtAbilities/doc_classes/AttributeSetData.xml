@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="AttributeSetData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Resource container holding a collection of gameplay attributes.
 	</brief_description>
 	<description>
+		[AttributeSetData] is a custom resource used in the Gameplay Ability System to group multiple [AttributeData] resources together.
+
+		It allows developers to define reusable sets of attributes (such as basic character stats, combat attributes, or custom status attributes) that can be assigned or loaded into an attribute container as a single package.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -11,11 +15,13 @@
 			<return type="void" />
 			<param index="0" name="attr" type="AttributeData[]" />
 			<description>
+				Appends an array of [AttributeData] resources to this attribute set.
 			</description>
 		</method>
 	</methods>
 	<members>
 		<member name="attributes" type="AttributeData[]" setter="set_attributes_set" getter="get_attributes_set" default="[]">
+			An array of [AttributeData] resources contained within this attribute set.
 		</member>
 	</members>
 </class>

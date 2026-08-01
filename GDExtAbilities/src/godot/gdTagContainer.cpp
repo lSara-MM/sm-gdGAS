@@ -8,6 +8,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 sm::TagContainer::TagContainer()
 {}
@@ -208,12 +209,11 @@ bool sm::TagContainer::HasAllTags(const godot::Array& tags) const
 			}
 		} break;
 
-		//case godot::Variant::INT:
-		//{
-		//	id = v;
-		//}
-		//break;
-
+		case godot::Variant::INT:
+		{
+			id = v;
+		}
+		break;
 		default:
 			ERR_FAIL_V_MSG(false, godot::vformat("HasAllTags failed: Unsupported tag type '%s'", v));
 			break;
@@ -248,7 +248,6 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 			id = instance.FindTagID(v);
 		}
 		break;
-
 		case godot::Variant::OBJECT:
 		{
 			godot::Object* obj = v;
@@ -258,12 +257,11 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 				id = res->GetInternalID();
 			}
 		} break;
-
-		//case godot::Variant::INT:
-		//{
-		//	id = v;
-		//}
-		//break;
+		case godot::Variant::INT:
+		{
+			id = v;
+		}
+		break;
 
 		default:
 			break;
@@ -282,9 +280,7 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 
 bool sm::TagContainer::SetTag(TagID id, bool value)
 {
-	bool ret = false;
-
-	ERR_FAIL_COND_V_MSG(id >= MAX_TAGS, ret, godot::vformat("SetTag failed: id %d out of range (MAX_TAGS=%d)", id, MAX_TAGS));
+	ERR_FAIL_COND_V_MSG(id >= MAX_TAGS, false, godot::vformat("SetTag failed: id %d out of range (MAX_TAGS=%d)", id, MAX_TAGS));
 
 	uint16& count = m_TagsSet.stack[id];
 	if (value)
@@ -294,12 +290,7 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, true);
 		}
 
-		ret = true;
 		emit_signal("tag_added", id, this);
-
-#ifdef TOOLS_ENABLED
-		notify_property_list_changed();
-#endif // TOOLS_ENABLED
 
 		if (OnTagAdded)
 		{
@@ -313,12 +304,7 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, false);
 		}
 
-		ret = true;
 		emit_signal("tag_removed", id, this);
-
-#ifdef TOOLS_ENABLED
-		notify_property_list_changed();
-#endif // TOOLS_ENABLED
 
 		if (OnTagRemoved)
 		{
@@ -326,7 +312,12 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		}
 	}
 
-	return ret;
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
+
+	return true;
 }
 
 void sm::TagContainer::AddTags(const godot::PackedInt32Array& tags)
@@ -336,7 +327,7 @@ void sm::TagContainer::AddTags(const godot::PackedInt32Array& tags)
 		TagID tag = tags[i];
 		if (tag >= 0 && static_cast<size_t>(tag) < MAX_TAGS)
 		{
-			m_TagsSet.tags.Set(tag);
+			AddTag(tag);
 		}
 	}
 }
@@ -348,7 +339,7 @@ void sm::TagContainer::RemoveTags(const godot::PackedInt32Array& tags)
 		TagID tag = tags[i];
 		if (tag >= 0 && static_cast<size_t>(tag) < MAX_TAGS)
 		{
-			m_TagsSet.tags.Set(tag, false);
+			RemoveTag(tag);
 		}
 	}
 }
@@ -358,9 +349,10 @@ void sm::TagContainer::AddTagsBitset(BitSet<MAX_TAGS> tags)
 	m_TagsSet.tags |= tags;
 	//emit_signal("tags_added", this);
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 
 	//for (size_t block = 0; block < tags.GetSize(); ++block)
 	//{
@@ -386,9 +378,10 @@ void sm::TagContainer::RemoveTagsBitset(BitSet<MAX_TAGS> tags)
 	m_TagsSet.tags &= ~tags;
 	//emit_signal("tags_added", this);
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 
 	//for (size_t block = 0; block < tags.GetSize(); ++block)
 	//{

@@ -367,6 +367,7 @@
     <ClInclude Include="..\src\include\godot\gdTagContainer.h" />
     <ClInclude Include="..\src\include\godot\gdTagData.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagArrayEditorProperty.h" />
+    <ClInclude Include="..\src\include\godot\ui\gdTagContainerEditorProperty.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagInspector.h" />
     <ClInclude Include="..\src\include\godot\ui\gdTagRegistryEditor.h" />
     <ClInclude Include="..\src\internal\Event.h" />

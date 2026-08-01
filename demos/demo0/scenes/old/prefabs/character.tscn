@@ -1,33 +1,9 @@
-[gd_scene load_steps=39 format=3 uid="uid://3wktl0846ot2"]
+[gd_scene load_steps=32 format=3 uid="uid://doqb2qmliupm2"]
 
-[ext_resource type="Script" path="res://scripts/Player.gd" id="1_w41dn"]
-[ext_resource type="Script" path="res://scripts/PlayerEntity.gd" id="2_0q7k2"]
-[ext_resource type="AbilityData" uid="uid://dfikne8aaht4o" path="res://resources/abilities/Dash.tres" id="3_n1yh0"]
-[ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="3_y4cdn"]
-[ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="4_ed433"]
-
-[sub_resource type="AttributeData" id="AttributeData_edjgr"]
-name = &"CurrentStamina"
-base_value = 100.0
-
-[sub_resource type="AttributeData" id="AttributeData_jo5n6"]
-name = &"CurrentHealth"
-base_value = 50.0
-
-[sub_resource type="AttributeData" id="AttributeData_yc8ht"]
-name = &"MaxHealth"
-base_value = 100.0
-
-[sub_resource type="AttributeData" id="AttributeData_n1yh0"]
-name = &"Speed"
-base_value = 100.0
-
-[sub_resource type="AttributeData" id="AttributeData_1q7sq"]
-name = &"MaxStamina"
-base_value = 100.0
-
-[sub_resource type="AttributeSetData" id="AttributeSetData_sl3lt"]
-attributes = Array[AttributeData]([SubResource("AttributeData_edjgr"), SubResource("AttributeData_jo5n6"), SubResource("AttributeData_yc8ht"), SubResource("AttributeData_n1yh0"), SubResource("AttributeData_1q7sq")])
+[ext_resource type="Script" uid="uid://dx73ichqrwsov" path="res://scripts/Player.gd" id="1_o5qli"]
+[ext_resource type="Resource" uid="uid://boc12e1ivl4yg" path="res://resources/PlayerStats.tres" id="2_cuik1"]
+[ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="2_rkhd4"]
+[ext_resource type="Script" uid="uid://cgnqw24a5eb4w" path="res://scripts/AnimationTreeHandler.gd" id="3_lrhn5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrhn5"]
 radius = 13.0
@@ -312,16 +288,16 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_my7n2"]
 _data = {
-"Idle_Down": SubResource("Animation_2cgup"),
-"Idle_Left": SubResource("Animation_a5ia6"),
-"Idle_Right": SubResource("Animation_0dpix"),
-"Idle_Up": SubResource("Animation_2hyy3"),
-"RESET": SubResource("Animation_lrhn5"),
-"Walk_Down": SubResource("Animation_0lw5n"),
-"Walk_Left": SubResource("Animation_my7n2"),
-"Walk_Right": SubResource("Animation_dp8ca"),
-"Walk_Up": SubResource("Animation_rkhd4"),
-"Wobble_Up": SubResource("Animation_irmqu")
+&"Idle_Down": SubResource("Animation_2cgup"),
+&"Idle_Left": SubResource("Animation_a5ia6"),
+&"Idle_Right": SubResource("Animation_0dpix"),
+&"Idle_Up": SubResource("Animation_2hyy3"),
+&"RESET": SubResource("Animation_lrhn5"),
+&"Walk_Down": SubResource("Animation_0lw5n"),
+&"Walk_Left": SubResource("Animation_my7n2"),
+&"Walk_Right": SubResource("Animation_dp8ca"),
+&"Walk_Up": SubResource("Animation_rkhd4"),
+&"Wobble_Up": SubResource("Animation_irmqu")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rkhd4"]
@@ -395,18 +371,8 @@ collision_layer = 11
 collision_mask = 10
 floor_block_on_wall = false
 platform_floor_layers = 4294967232
-script = ExtResource("1_w41dn")
-
-[node name="GAS_Entity" type="GAS_Entity" parent="."]
-script = ExtResource("2_0q7k2")
-
-[node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
-abilities = Array[AbilityData]([ExtResource("3_n1yh0")])
-
-[node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity"]
-attribute_set = SubResource("AttributeSetData_sl3lt")
-
-[node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
+script = ExtResource("1_o5qli")
+m_Stats = ExtResource("2_cuik1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
@@ -414,7 +380,7 @@ shape = SubResource("CapsuleShape2D_lrhn5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1
-texture = ExtResource("3_y4cdn")
+texture = ExtResource("2_rkhd4")
 hframes = 3
 vframes = 6
 
@@ -432,4 +398,4 @@ tree_root = SubResource("AnimationNodeStateMachine_irmqu")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = Vector2(-0.00101525, 0.0125786)
 parameters/Walk/blend_position = 0.0266577
-script = ExtResource("4_ed433")
+script = ExtResource("3_lrhn5")

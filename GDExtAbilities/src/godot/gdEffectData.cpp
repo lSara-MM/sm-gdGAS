@@ -1,4 +1,5 @@
 #include "godot/gdEffectData.h"
+#include <godot_cpp/classes/engine.hpp>
 
 void sm::EffectData::_bind_methods()
 {
@@ -81,28 +82,31 @@ void sm::EffectData::AddModifier(const godot::Ref<ModifierData>& modifier)
 {
 	m_Modifiers.push_back(modifier);
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 void sm::EffectData::ClearModifiers()
 {
 	m_Modifiers.clear();
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 void sm::EffectData::SetEffectType(EffectData::Type lt)
 {
 	m_EffectType = lt;
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
-}
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
+	}
 
 bool sm::EffectData::AddTagToAdd(TagID id)
 {

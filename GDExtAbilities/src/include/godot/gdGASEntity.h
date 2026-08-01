@@ -29,7 +29,7 @@ namespace sm
 		EntityID GetID() const { return m_ID; }
 		void SetID(EntityID id);
 
-		GAS_World* GetWorld() { return m_WorldBound.GetWorld(this); }
+		GAS_World* GetWorld();
 
 		AttributeContainer* GetAttributeContainer() const { return m_AttrContainer; }
 		void SetAttributeContainer(AttributeContainer* node) { m_AttrContainer = node; };

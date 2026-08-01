@@ -184,7 +184,7 @@ void sm::TagContainerEditorProperty::_OnAddButtonClicked()
 			if (!tags.has(id))
 			{
 #ifdef DEBUG_ENABLED
-				WARN_PRINT_ED("Added: %d", id);
+				WARN_PRINT_ED(godot::vformat("Added: %d", id));
 #endif // DEBUG_ENABLED
 
 				tags.push_back(id);

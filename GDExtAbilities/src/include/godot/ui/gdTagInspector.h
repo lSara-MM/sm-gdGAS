@@ -2,6 +2,11 @@
 #ifdef TOOLS_ENABLED
 #include <godot_cpp/classes/editor_inspector_plugin.hpp>
 
+namespace godot
+{
+	class Object;
+}
+
 namespace sm
 {
 	class TagRegistryEditor;
@@ -15,7 +20,8 @@ namespace sm
 
 	public:
 		bool _can_handle(godot::Object* object) const override;
-		bool _parse_property(Object* object,
+		void _parse_begin(godot::Object* object) override;
+		bool _parse_property(godot::Object* object,
 			godot::Variant::Type type,
 			const godot::String& name,
 			godot::PropertyHint hintType,
@@ -24,10 +30,10 @@ namespace sm
 			bool wide) override;
 
 		void SetEditorPlugin(TagRegistryEditor* editor);
+		void RefreshInspector(godot::Object* object);
 
 	private:
 		TagRegistryEditor* m_Editor;
-
 	};
 }
 #endif // TOOLS_ENABLED

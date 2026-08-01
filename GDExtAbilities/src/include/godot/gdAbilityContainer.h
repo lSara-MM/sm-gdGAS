@@ -22,20 +22,20 @@ namespace sm
 
 	public:
 #pragma region Godot public 
-
-		godot::TypedArray<AbilityData> GetAbilities() const { return m_gdAbilities; };
+		godot::TypedArray<AbilityData> GetAbilities() const;
 		void SetAbilities(const godot::TypedArray<AbilityData>& ability);
 
 		godot::Ref<GameplayAbility> GetAbilityInstance(const godot::Ref<AbilityData>& ability);
 
 		godot::NodePath	GetEntityNodePath() const;
-		void SetEntityNodePath(godot::NodePath path);
+		bool SetEntityNodePath(godot::NodePath path);
 
 		void AddAbility(const godot::Ref<AbilityData>& ability);
 
 		void RemoveAbility(const godot::Ref<AbilityData>& ability);
 
 		bool Grant(const godot::Ref<AbilityData>& ability);
+		bool InitAbilityScript(const godot::Ref<sm::AbilityData>& ability);
 		bool Revoke(const godot::Ref<AbilityData>& ability);
 		void Clear();
 		bool Has(const godot::Ref<AbilityData>& ability) const;
@@ -44,7 +44,8 @@ namespace sm
 		bool IsOnCooldown(const godot::Ref<AbilityData>& ability) const;
 		float GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const;
 
-		bool TryActivate(const godot::Ref<AbilityData>& ability);
+		//bool TryActivate(const godot::Ref<AbilityData>& ability);
+		bool TryActivate(TagID abilityID);
 
 		bool TryActivateAbilitiesWithTag(godot::PackedInt32Array tags);
 
@@ -58,13 +59,12 @@ namespace sm
 		~AbilityContainer() = default;
 
 		void OnReady() override;
-		void OnExitTree() override;
 
 	private:
 		godot::TypedArray<AbilityData> m_gdAbilities;
 		std::unordered_map<TagID, godot::Ref<GameplayAbility>> m_Scripts;
+
 		godot::NodePath m_EntityNodePath = "";
 		GAS_Entity* m_Owner = nullptr;
-		WorldBound m_WorldBound;
 	};
 }

@@ -224,5 +224,8 @@
     <ClInclude Include="..\src\include\godot\ui\gdTagInspector.h">
       <Filter>Header Files\tags</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\godot\ui\gdTagContainerEditorProperty.h">
+      <Filter>Header Files\tags</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

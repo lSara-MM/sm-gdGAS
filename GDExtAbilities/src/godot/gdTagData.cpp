@@ -25,13 +25,13 @@ void sm::TagData::_bind_methods()
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::STRING_NAME, "path", godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
-		"set_path", "get_path"
+		godot::Variant::INT, "id", godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_STORAGE),
+		"set_internal_id", "get_internal_id"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(
-		godot::Variant::INT, "id", godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_STORAGE),
-		"set_internal_id", "get_internal_id"
+		godot::Variant::STRING_NAME, "path", godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_DEFAULT | godot::PROPERTY_USAGE_READ_ONLY),
+		"set_path", "get_path"
 	);
 
 	ADD_PROPERTY(godot::PropertyInfo(

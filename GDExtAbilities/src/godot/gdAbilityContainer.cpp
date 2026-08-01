@@ -1,6 +1,6 @@
 #include "godot/gdAbilityContainer.h"
 
-#include "godot/gdGASWorld.h"
+#include "core/TagRegistry.h"
 #include <godot_cpp/classes/engine.hpp>
 
 void sm::AbilityContainer::_bind_methods()
@@ -40,7 +40,7 @@ void sm::AbilityContainer::_bind_methods()
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::ARRAY,
 		"abilities",
-		godot::PROPERTY_HINT_RESOURCE_TYPE,
+		godot::PROPERTY_HINT_ARRAY_TYPE,
 		"24/17:AbilityData"),
 		"set_abilities", "get_abilities"
 	);
@@ -80,6 +80,11 @@ void sm::AbilityContainer::_bind_methods()
 	));
 }
 
+godot::TypedArray<sm::AbilityData> sm::AbilityContainer::GetAbilities() const
+{
+	return m_gdAbilities;
+}
+
 void sm::AbilityContainer::SetAbilities(const godot::TypedArray<AbilityData>& ability)
 {
 	m_gdAbilities = ability;
@@ -87,8 +92,15 @@ void sm::AbilityContainer::SetAbilities(const godot::TypedArray<AbilityData>& ab
 
 godot::Ref<sm::GameplayAbility> sm::AbilityContainer::GetAbilityInstance(const godot::Ref<AbilityData>& ability)
 {
+	ERR_FAIL_COND_V_MSG(ability.is_null(), nullptr, "GetAbilityInstance failed: Ability is null.");
 
-	return godot::Ref<GameplayAbility>();
+	auto itr = m_Scripts.find(ability->GetAbilityTagID());
+	if (itr != m_Scripts.end())
+	{
+		return itr->second;
+	}
+
+	return nullptr;
 }
 
 void sm::AbilityContainer::OnReady()
@@ -102,11 +114,16 @@ void sm::AbilityContainer::OnReady()
 	}
 
 	SetEntityNodePath(m_Owner->get_path());
-}
 
-void sm::AbilityContainer::OnExitTree()
-{
-	m_WorldBound.CleanUp();
+	TagRegistry& registry = TagRegistry::Instance();
+	for (int i = 0; i < m_gdAbilities.size(); i++)
+	{
+		godot::Ref<AbilityData> ability = m_gdAbilities[i];
+		if (ability.is_valid())
+		{
+			InitAbilityScript(ability);
+		}
+	}
 }
 
 godot::NodePath sm::AbilityContainer::GetEntityNodePath() const
@@ -114,29 +131,32 @@ godot::NodePath sm::AbilityContainer::GetEntityNodePath() const
 	return m_EntityNodePath;
 }
 
-void sm::AbilityContainer::SetEntityNodePath(godot::NodePath path)
+bool sm::AbilityContainer::SetEntityNodePath(godot::NodePath path)
 {
-	ERR_FAIL_COND_MSG(path.is_empty(), "Could not set node path. Node must be in a GAS_Entity node hierarchy.");
+	ERR_FAIL_COND_V_MSG(path.is_empty(), false, "Could not set node path. Node must be in a GAS_Entity node hierarchy.");
 
 	m_EntityNodePath = path;
+	return true;
 }
 
 void sm::AbilityContainer::AddAbility(const godot::Ref<AbilityData>& ability)
 {
 	m_gdAbilities.push_back(ability);
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 void sm::AbilityContainer::RemoveAbility(const godot::Ref<AbilityData>& ability)
 {
 	m_gdAbilities.erase(ability);
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED}
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
@@ -168,26 +188,35 @@ bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
 
 	AddAbility(ability);
 
+	bool retVal = InitAbilityScript(ability);
+	if (!retVal)
+	{
+		return retVal;
+	}
+
+	emit_signal("_on_ability_granted", ability, m_Owner);
+	return ret;
+}
+
+bool sm::AbilityContainer::InitAbilityScript(const godot::Ref<sm::AbilityData>& ability)
+{
 	godot::Ref<godot::Script> script = ability->GetAbilityScript();
 	ERR_FAIL_COND_V_MSG(script.is_null(), false, "Grant failed. AbilityData has no valid script.");
 
 	godot::Ref<GameplayAbility> abilityInstance = memnew(GameplayAbility);
 	abilityInstance->set_script(script);
 	abilityInstance->SetOwner(m_Owner);
+	abilityInstance->SetWorld(m_Owner->GetWorld());
 	abilityInstance->SetAbilityData(ability);
 
-	//ability->SetAbilityInstance(abilityInstance);
-
-	m_Scripts.emplace(ability->GetAbilityID(), abilityInstance);
-
-	emit_signal("_on_ability_granted", ability, m_Owner);
-	return ret;
+	m_Scripts.emplace(ability->GetAbilityTagID(), abilityInstance);
+	return true;
 }
 
 bool sm::AbilityContainer::Revoke(const godot::Ref<AbilityData>& ability)
 {
 	ERR_FAIL_COND_V_MSG(ability.is_null(), false, "Revoke failed. AbilityData is null.");
-	auto itr = m_Scripts.find(ability->GetAbilityID());
+	auto itr = m_Scripts.find(ability->GetAbilityTagID());
 
 	if (itr == m_Scripts.end())
 	{
@@ -204,7 +233,8 @@ bool sm::AbilityContainer::Revoke(const godot::Ref<AbilityData>& ability)
 
 	RemoveAbility(ability);
 	emit_signal("_on_ability_revoked", ability, m_Owner);
-	return false;
+
+	return true;
 }
 
 void sm::AbilityContainer::Clear()
@@ -227,9 +257,10 @@ void sm::AbilityContainer::Clear()
 	m_gdAbilities.clear();
 	m_Scripts.clear();
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 
 	emit_signal("_on_abilities_cleared", m_Owner);
 }
@@ -248,7 +279,7 @@ bool sm::AbilityContainer::IsOnCooldown(const godot::Ref<AbilityData>& ability) 
 
 float sm::AbilityContainer::GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const
 {
-	if (auto itr = m_Scripts.find(ability->GetAbilityID());
+	if (auto itr = m_Scripts.find(ability->GetAbilityTagID());
 		itr != m_Scripts.end())
 	{
 		return itr->second->GetCooldown();
@@ -257,15 +288,28 @@ float sm::AbilityContainer::GetCurrentCooldown(const godot::Ref<AbilityData>& ab
 	return -1;
 }
 
-bool sm::AbilityContainer::TryActivate(const godot::Ref<AbilityData>& ability)
+//bool sm::AbilityContainer::TryActivate(const godot::Ref<AbilityData>& ability)
+//{
+//	if (auto itr = m_Scripts.find(ability->GetAbilityTagID());
+//		itr != m_Scripts.end())
+//	{
+//		return itr->second->TryActivate();
+//	}
+//
+//	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not find", ability->GetAbilityTagID()));
+//
+//	return false;
+//}
+
+bool sm::AbilityContainer::TryActivate(TagID abilityID)
 {
-	if (auto itr = m_Scripts.find(ability->GetAbilityID());
+	if (auto itr = m_Scripts.find(abilityID);
 		itr != m_Scripts.end())
 	{
 		return itr->second->TryActivate();
 	}
 
-	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not find", ability->GetAbilityID()));
+	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not found", abilityID));
 
 	return false;
 }
@@ -289,7 +333,7 @@ bool sm::AbilityContainer::TryActivateAbilitiesWithTag(godot::PackedInt32Array t
 
 		if (hasMatchingTag)
 		{
-			auto itr = m_Scripts.find(ability->GetAbilityID());
+			auto itr = m_Scripts.find(ability->GetAbilityTagID());
 			if (itr != m_Scripts.end())
 			{
 				itr->second->TryActivate();
@@ -302,5 +346,5 @@ bool sm::AbilityContainer::TryActivateAbilitiesWithTag(godot::PackedInt32Array t
 
 bool sm::AbilityContainer::Has(const godot::Ref<AbilityData>& ability) const
 {
-	return m_Scripts.find(ability->GetAbilityID()) != m_Scripts.end();
+	return m_Scripts.find(ability->GetAbilityTagID()) != m_Scripts.end();
 }

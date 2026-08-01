@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GameplayAbility" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="_activate_ability" qualifiers="virtual">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="_calculate_targets" qualifiers="virtual">
+			<return type="GAS_Entity[]" />
+			<description>
+			</description>
+		</method>
+		<method name="_check_availability" qualifiers="virtual">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="_end_ability" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="was_cancelled" type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="apply_effects_to_target">
+			<return type="void" />
+			<param index="0" name="entity" type="GAS_Entity" />
+			<description>
+			</description>
+		</method>
+		<method name="can_activate">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="commit_ability">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="get_ability_data" qualifiers="const">
+			<return type="AbilityData" />
+			<description>
+			</description>
+		</method>
+		<method name="is_on_cooldown" qualifiers="const">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="set_ability_data">
+			<return type="void" />
+			<param index="0" name="data" type="AbilityData" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

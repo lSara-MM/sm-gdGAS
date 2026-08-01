@@ -27,16 +27,21 @@ namespace sm
 		godot::Ref<AbilityData> GetAbilityData() const { return abilityData; }
 		void SetAbilityData(const godot::Ref<AbilityData> data) { return abilityData = data; }
 
+		GAS_Entity* GetOwner() const;
 		void SetOwner(GAS_Entity* entity);
+
+		GAS_World* GetWorld() const;
+		void SetWorld(GAS_World* world);
 
 #pragma region GDScript API
 
 		GDVIRTUAL0R(bool, _check_availability)
-			GDVIRTUAL0(_activate_ability)
+			GDVIRTUAL0R(bool, _activate_ability)
 			GDVIRTUAL1(_end_ability, bool)
 			GDVIRTUAL0R(godot::TypedArray<GAS_Entity>, _calculate_targets)
 
 #pragma endregion
+
 			void CleanUp();
 
 		bool TryActivate();
@@ -48,7 +53,7 @@ namespace sm
 		void EndAbility();
 		bool ApplyCost();
 		bool ApplyCooldown();
-		void ApplyEffectsToTarget(GAS_Entity* entity);
+		void ApplyEffectsToTarget(GAS_Entity* entity = nullptr);
 
 		bool CanActivate();
 		bool IsActive() const;

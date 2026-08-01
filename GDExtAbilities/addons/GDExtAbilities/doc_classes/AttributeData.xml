@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AttributeData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Resource defining a numerical gameplay attribute along with its default values and clamping limits.
+	</brief_description>
+	<description>
+		[AttributeData] is a custom resource used in the Gameplay Ability System to represent individual numerical stats (ex. Health, Mana, Attack Power, or Movement Speed).
+
+		It defines the attribute's unique identifier name, initial base value, and the minimum/maximum clamping bounds applied to the attribute when modified by gameplay effects.
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="name" type="StringName" setter="set_name" getter="get_name" default="&amp;&quot;&quot;">
+			The unique [StringName] identifier used to reference this attribute in containers and modifier calculations (e.g., [code]&amp;"Health"[/code]).
+		</member>
+		<member name="base_value" type="float" setter="set_base_value" getter="get_base_value" default="0.0">
+			The initial base value of this attribute before any gameplay effects or modifiers are applied.
+		</member>
+		<member name="max_value" type="float" setter="set_max_value" getter="get_max_value" default="3.40282e+38">
+			The maximum allowed upper bound for this attribute's current value. 
+			
+			[b]Note:[/b] This is a strict architectural clamp boundary for the raw attribute value, not a dynamic gameplay stat like "Max HP". Conceptually, stats like "Max Health" or "Max Mana" should be created as separate [AttributeData] resources (ex. an [code]Health[/code] attribute and a [code]MaxHealth[/code] attribute), whereas [code]max_value[/code] acts as the absolute upper ceiling allowed for this specific attribute.
+		</member>
+		<member name="min_value" type="float" setter="set_min_value" getter="get_min_value" default="0.0">
+			The minimum allowed lower bound for this attribute's current value (ex. preventing health or stats from dropping below [code]0.0[/code]).
+		</member>
+	</members>
+</class>

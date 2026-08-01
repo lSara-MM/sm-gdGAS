@@ -9,7 +9,6 @@
 script = ExtResource("1_7e28b")
 
 [node name="GAS_World" type="GAS_World" parent="."]
-entity_count = 1
 script = ExtResource("2_kehov")
 
 [node name="GAS_Entity" type="GAS_Entity" parent="."]

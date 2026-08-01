@@ -55,7 +55,7 @@ namespace sm
 
 	private:
 		virtual void _OnCheckboxChanged();
-		virtual void _OnItemActivated(godot::Tree* tree);
+		virtual void _OnItemActivated();
 		void _OnShowEnabledToggled(bool toggled);
 		void _OnShowDisabledToggled(bool toggled);
 

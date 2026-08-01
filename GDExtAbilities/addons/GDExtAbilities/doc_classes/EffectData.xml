@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="EffectData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A data resource that defines a gameplay effect, including stat modifiers, durations, and tag alterations.
+	</brief_description>
+	<description>
+		[EffectData] is a configuration resource used to define buffs, debuffs, or instant changes (like healing or damage) applied to a target. It allows you to modify attributes using [ModifierData] and manipulate a character's gameplay tags for a specified duration type.
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="duration" type="float" setter="set_duration" getter="get_duration" default="0.0">
+			The active lifetime of the effect in seconds. This is only used if [code]effect_type[/code] is set to [constant Temporary].
+		</member>
+		<member name="effect_type" type="int" setter="set_effect_type" getter="get_effect_type" enum="EffectData.Type" default="0">
+			Determines how the effect's lifetime is treated (Ex: whether it is instant/permanent, lasts for a countdown, or persists until manually removed).
+		</member>
+		<member name="modifiers" type="ModifierData[]" setter="set_modifiers" getter="get_modifiers" default="[]">
+			A list of attribute modifiers (like "+10 Strength" or "-15% Movement Speed") applied to the target by this effect.
+		</member>
+		<member name="name" type="StringName" setter="set_name" getter="get_name" default="&amp;&quot;&quot;">
+			The unique identifier for this effect, useful for debugging, UI displays, or searching for active effects on an entity.
+		</member>
+		<member name="tags_to_add" type="PackedInt32Array" setter="set_tags_to_add" getter="get_tags_to_add" default="PackedInt32Array()">
+			A collection of gameplay tags granted to the target while this effect is active (Ex: adding a [code]Stunned[/code] or [code]Poisoned[/code] tag).
+
+			These are removed automatically when the effect is removed.
+		</member>
+		<member name="tags_to_remove" type="PackedInt32Array" setter="set_tags_to_remove" getter="get_tags_to_remove" default="PackedInt32Array()">
+			A collection of gameplay tags stripped from the target when this effect is applied (e.g., removing a [code]Stealth[/code] tag upon taking damage).
+
+			These are added back automatically when the effect is removed.
+		</member>
+	</members>
+	<constants>
+		<constant name="Permanent" value="0" enum="Type">
+			The effect applies instantly and its changes are baked permanently into the base attributes. It does not look at [code]duration[/code] and cannot be naturally reverted.
+		</constant>
+		<constant name="Temporary" value="1" enum="Type">
+			The effect behaves like a traditional buff or debuff. Its changes persist only for the amount of seconds specified in [code]duration[/code], after which it is automatically removed and its changes are reverted.
+		</constant>
+		<constant name="Persistent" value="2" enum="Type">
+			The effect stays active indefinitely until explicitly removed by a gameplay mechanic, script, or ability (Ex: a toggled stance or a curse that requires a specific cure).
+		</constant>
+	</constants>
+</class>

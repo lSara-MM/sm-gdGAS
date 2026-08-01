@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GAS_World" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+    <brief_description>
+        A global manager used to control system-wide settings and query entities within the Gameplay Ability System.
+    </brief_description>
+    <description>
+        [GAS_World] acts as a central control node for global GAS operations. It provides master switches to freeze ability execution or status effects across the entire game (useful for pausing gameplay, managing UI overlays, or staging cutscenes) and offers query methods for tag-based node filtering.
+    </description>
+    <tutorials>
+    </tutorials>
+    <methods>
+        <method name="all_with_tags">
+            <return type="Node[]" />
+            <param index="0" name="tags" type="PackedInt32Array" />
+            <description>
+                Returns an array of registered entities that possess [b]all[/b] of the gameplay tags specified in the [param tags] array (AND logic match).
+            </description>
+        </method>
+        <method name="any_with_tags">
+            <return type="Node[]" />
+            <param index="0" name="tags" type="PackedInt32Array" />
+            <description>
+                Returns an array of registered entities that possess [b]at least one[/b] of the gameplay tags specified in the [param tags] array (OR logic match).
+            </description>
+        </method>
+        <method name="none_with_tags">
+            <return type="Node[]" />
+            <param index="0" name="tags" type="PackedInt32Array" />
+            <description>
+                Returns an array of registered entities that do [b]not[/b] possess any of the gameplay tags specified in the [param tags] array (NOT logic match).
+            </description>
+        </method>
+    </methods>
+    <members>
+        <member name="enable_abilities" type="bool" setter="set_abilities_availability" getter="get_abilities_availability" default="true">
+            If [code]true[/code], ability activations are processed normally. If toggled to [code]false[/code], all ability execution requests are globally blocked.
+        </member>
+        <member name="enable_effects" type="bool" setter="set_effects_availability" getter="get_effects_availability" default="true">
+            If [code]true[/code], gameplay effects tick and apply normally. If toggled to [code]false[/code], effect processing is globally paused or ignored.
+        </member>
+        <member name="entity_count" type="int" setter="" getter="get_entity_count" default="-1">
+            (ReadOnly) The total number of GAS-compatible entities currently tracked by this world manager instance.
+        </member>
+    </members>
+</class>

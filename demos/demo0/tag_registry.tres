@@ -1,0 +1,39 @@
+[gd_resource type="TagData" load_steps=8 format=3 uid="uid://ca3k5a5xr30u6"]
+
+[sub_resource type="TagData" id="TagData_f1l0m"]
+name = "cd"
+id = 4
+path = ".Ability.Dash"
+
+[sub_resource type="TagData" id="TagData_1fdvu"]
+name = "Dash"
+id = 3
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_f1l0m")])
+
+[sub_resource type="TagData" id="TagData_l2sj2"]
+name = "Ability"
+id = 2
+path = "."
+children = Array[TagData]([SubResource("TagData_1fdvu")])
+
+[sub_resource type="TagData" id="TagData_up218"]
+name = "Stun"
+path = ".Debuff.cc"
+
+[sub_resource type="TagData" id="TagData_ccylp"]
+name = "Freeze"
+path = ".Debuff.cc"
+
+[sub_resource type="TagData" id="TagData_xakx3"]
+name = "cc"
+path = ".Debuff"
+children = Array[TagData]([SubResource("TagData_up218"), SubResource("TagData_ccylp")])
+
+[sub_resource type="TagData" id="TagData_58c4a"]
+name = "Debuff"
+path = "."
+children = Array[TagData]([SubResource("TagData_xakx3")])
+
+[resource]
+children = Array[TagData]([SubResource("TagData_l2sj2"), SubResource("TagData_58c4a")])

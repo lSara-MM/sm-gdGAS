@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="TagData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Resource representing a hierarchical [Gameplay Tag] node in the Gameplay Ability System.
+	</brief_description>
+	<description>
+		[TagData] is a custom resource used to define, organise, and store metadata for individual Gameplay Tags within the Gameplay Ability System (GAS). 
+
+		Gameplay Tags are dot-separated identifiers (such as [code]Effect.Status.Stunned[/code] or [code]Ability.Skill.Fireball[/code]) used throughout the system to categorise entity states, query capabilities, trigger effects, and apply conditional requirements. [TagData] objects form a tree structure where parent tags contain nested child tags.
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="id" type="int" setter="set_internal_id" getter="get_internal_id" default="0">
+			The unique internal integer identifier assigned to this tag within the tag registry system.
+		</member>
+		<member name="name" type="String" setter="set_name" getter="get_name" default="&quot;&quot;">
+			The local segment name of this specific tag node (e.g., [code]"Stunned"[/code] in [code]State.Status.Stunned[/code]).
+		</member>
+		<member name="path" type="String" setter="set_path" getter="get_path" default="&quot;&quot;">
+			The full dot-separated hierarchical path string representing the complete tag (e.g., [code]"State.Status.Stunned"[/code]).
+		</member>
+		<member name="children" type="TagData[]" setter="set_children" getter="get_children" default="[]">
+			An array of child [TagData] resources nested directly beneath this tag node in the hierarchy.
+		</member>
+	</members>
+</class>

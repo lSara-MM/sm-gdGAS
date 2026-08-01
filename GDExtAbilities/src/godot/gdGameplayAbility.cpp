@@ -11,12 +11,14 @@ void sm::GameplayAbility::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_data"), &GetAbilityData);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability_data", "data"), &SetAbilityData);
 
-	//godot::ClassDB::bind_method(godot::D_METHOD("try_activate"), &TryActivate);
-	//godot::ClassDB::bind_method(godot::D_METHOD("try_end", "wasCancelled"), &TryEnd);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_activate"), &TryActivate);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_end", "wasCancelled"), &TryEnd);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_entity_owner"), &GetOwner);
 	godot::ClassDB::bind_method(godot::D_METHOD("commit_ability"), &CommitAbility);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown"), &IsOnCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("can_activate"), &CanActivate);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("apply_effects_to_target", "entity"), &ApplyEffectsToTarget);
+	godot::ClassDB::bind_method(godot::D_METHOD("apply_effects_to_target", "entity"), &ApplyEffectsToTarget, DEFVAL(nullptr));
 
 	GDVIRTUAL_BIND(_check_availability);
 	GDVIRTUAL_BIND(_activate_ability);
@@ -24,10 +26,25 @@ void sm::GameplayAbility::_bind_methods()
 	GDVIRTUAL_BIND(_calculate_targets);
 }
 
+sm::GAS_Entity* sm::GameplayAbility::GetOwner() const
+{
+	return m_Entity;
+}
+
 void sm::GameplayAbility::SetOwner(GAS_Entity* entity)
 {
 	m_Entity = entity;
 	m_World = entity->GetWorld();
+}
+
+sm::GAS_World* sm::GameplayAbility::GetWorld() const
+{
+	return m_World;
+}
+
+void sm::GameplayAbility::SetWorld(GAS_World* world)
+{
+	m_World = world;
 }
 
 void sm::GameplayAbility::CleanUp()
@@ -40,25 +57,38 @@ bool sm::GameplayAbility::TryActivate()
 		return false;
 	}
 
-	state = AbilityState::Active;
+	bool ret = false;
 
 	if (GDVIRTUAL_IS_OVERRIDDEN(_activate_ability))
 	{
-		GDVIRTUAL_CALL(_activate_ability);
-		return true;
+		GDVIRTUAL_CALL(_activate_ability, ret);
+
+		if (ret)
+		{
+			state = AbilityState::Active;
+		}
+	}
+	else if (ret = CommitAbility())
+	{
+		ApplyEffectsToTarget();
+		state = AbilityState::Active;
 	}
 
-	return false;
+	return ret;
 }
 
 bool sm::GameplayAbility::TryEnd(bool wasCancelled)
 {
 	if (IsActive())
 	{
+		state = AbilityState::Ending;
+
 		if (GDVIRTUAL_IS_OVERRIDDEN(_end_ability))
 		{
 			GDVIRTUAL_CALL(_end_ability, wasCancelled);
 		}
+
+		state = AbilityState::Idle;
 	}
 
 	return true;
@@ -82,7 +112,7 @@ bool sm::GameplayAbility::CheckTags()
 
 	godot::PackedInt32Array required = abilityData->GetActivationTags();
 
-	if (ret && !tagContainer->HasAllTags(required))
+	if (!tagContainer->HasAllTags(required))
 	{
 		ret = false;
 	}
@@ -118,15 +148,18 @@ float sm::GameplayAbility::GetCooldown() const
 	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
 	ERR_FAIL_COND_V_MSG(!effect, false, "GameplayEffect not found");
 
-	return !effect->GetCurrentCooldown();
+	return effect->GetCurrentCooldown();
 }
 
 bool sm::GameplayAbility::CommitAbility()
 {
-	if (!ApplyCost() || !ApplyCooldown())
+	if (!CanActivate())
 	{
 		return false;
 	}
+
+	ApplyCost();
+	ApplyCooldown();
 
 	return true;
 }
@@ -168,6 +201,11 @@ bool sm::GameplayAbility::ApplyCooldown()
 
 void sm::GameplayAbility::ApplyEffectsToTarget(GAS_Entity* entity)
 {
+	if (!entity)
+	{
+		entity = m_Entity;
+	}
+
 	ERR_FAIL_NULL_MSG(entity, "ApplyEffects failed. Target was <null>");
 
 	godot::TypedArray<EffectData> effectsToApply = abilityData->GetEffects();

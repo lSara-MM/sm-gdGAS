@@ -26,13 +26,14 @@ build_dir = f"build/{env['platform']}/{env['target']}"
 src_dir = "src"
 
 env.VariantDir(build_dir, src_dir, duplicate=0)
+folder = "addons/GDExtAbilities/bin"
 
 doc_sources = []
 if env["target"] in ["editor", "template_debug"]:
     try:
         doc_data = env.GodotCPPDocData(
             f"{build_dir}/gen/doc_data.gen.cpp", 
-            source=Glob("../demos/demo0/doc_classes/*.xml")
+            source=Glob("addons/GDExtAbilities/bin/doc_classes/*.xml")
         )
         doc_sources.append(doc_data)
         print("--- Generating documentation XML ---")
@@ -53,7 +54,6 @@ for root, dirs, files in os.walk(src_dir):
 sources.extend(doc_sources)
 
 # ---------------------------------------------------
-folder = "addons/GDExtAbilities/bin"
 
 if env["platform"] == "macos":
     file_name = f"libGDExtAbilities.{env['platform']}.{env['target']}"

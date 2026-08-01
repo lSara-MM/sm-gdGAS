@@ -122,11 +122,6 @@ void sm::GAS_World::OnExitTree()
 	}
 
 	m_Entities.clear();
-
-	if (entityNum > 1)
-	{
-		WARN_PRINT(godot::vformat("%d entities were also deleted.", entityNum - 1));
-	}
 }
 
 void sm::GAS_World::OnReady()
