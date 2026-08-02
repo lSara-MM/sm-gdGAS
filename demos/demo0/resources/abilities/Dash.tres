@@ -1,22 +1,39 @@
 [gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dfikne8aaht4o"]
 
-[ext_resource type="Script" path="res://scripts/Abilities/dash.gd" id="1_igeuw"]
+[sub_resource type="GDScript" id="GDScript_oguy4"]
+script/source = "extends GameplayAbility
+
+func _activate_ability():
+	pass
+
+func _end_ability(_was_cancelled : bool):
+	pass
+
+# opt
+#func _check_availability(): -> bool
+	#pass
+
+#func _calculate_targets() -> TypedArray<GAS_Entity>:
+	#pass
+
+"
 
 [sub_resource type="ModifierData" id="ModifierData_0wd3u"]
 target_id = &"Speed"
 source_id = &"Dash"
-value = 100.0
+value = 200.0
 
 [sub_resource type="EffectData" id="EffectData_vf3d4"]
 name = &"Dash"
 effect_type = 1
-duration = 1.0
+duration = 0.3
 modifiers = Array[ModifierData]([SubResource("ModifierData_0wd3u")])
+tags_to_add = PackedInt32Array(3, 2)
 
 [resource]
 tag_name = &"Dash"
-ability = ExtResource("1_igeuw")
-cooldown = 3.0
+ability = SubResource("GDScript_oguy4")
+cooldown = 30.0
 cost = 10.0
 cost_resource_attribute = &"CurrentStamina"
 effect = Array[EffectData]([SubResource("EffectData_vf3d4")])

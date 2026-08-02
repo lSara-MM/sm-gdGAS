@@ -23,7 +23,6 @@ corner_radius_bottom_left = 7
 script = ExtResource("1_d1of3")
 
 [node name="GAS_World" type="GAS_World" parent="."]
-entity_count = 1
 
 [node name="Background" parent="." instance=ExtResource("1_q4spy")]
 
@@ -41,8 +40,6 @@ step = 1.0
 value = 50.0
 show_percentage = false
 script = ExtResource("3_dvvas")
-current_attr = &"CurrentHealth"
-max_attr = &"MaxHealth"
 
 [node name="StaminaBar" type="ProgressBar" parent="CanvasLayer"]
 offset_left = 47.0

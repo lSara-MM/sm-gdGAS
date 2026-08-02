@@ -6,10 +6,23 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <regex>
 
 sm::AbilityData::AbilityData() : m_AbilityTagID(0)
 {}
+
+void sm::AbilityData::OnPostInit()
+{
+	if (m_AbilityScript.is_null())
+	{
+		m_AbilityScript.instantiate();
+	}
+
+	godot::Ref<godot::GDScript> script;
+
+	SetAbilityScript(m_AbilityScript);
+}
 
 void sm::AbilityData::_bind_methods()
 {
@@ -101,12 +114,13 @@ void sm::AbilityData::_bind_methods()
 
 void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 {
-#ifdef TOOLS_ENABLED
 	if (!godot::Engine::get_singleton()->is_editor_hint())
 	{
 		m_AbilityScript = script;
 		return;
 	}
+
+#ifdef TOOLS_ENABLED
 
 	if (script.is_valid())
 	{
@@ -116,11 +130,10 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 		{
 			godot::String templateCode =
 				"extends GameplayAbility\n\n"
-				"func _activate_ability():\n"
+				"#func _activate_ability():\n"
 				"\tpass\n\n"
-				"func _end_ability(_was_cancelled : bool):\n"
-				"\tpass\n\n"
-				"# opt\n"
+				"#func _end_ability(_was_cancelled : bool):\n"
+				"\t#pass\n\n"
 				"#func _check_availability(): -> bool\n"
 				"\t#pass\n\n"
 				"#func _calculate_targets() -> TypedArray<GAS_Entity>:\n"
@@ -145,8 +158,6 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 	{
 		m_AbilityScript = script;
 	}
-#else
-	m_AbilityScript = script;
 #endif
 }
 

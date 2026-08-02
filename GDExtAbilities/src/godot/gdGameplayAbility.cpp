@@ -72,6 +72,7 @@ bool sm::GameplayAbility::TryActivate()
 	{
 		ApplyEffectsToTarget();
 		state = AbilityState::Active;
+		TryEnd(false);
 	}
 
 	return ret;

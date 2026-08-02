@@ -66,6 +66,8 @@ namespace sm
 		AbilityData();
 		~AbilityData() = default;
 
+		void OnPostInit() override;
+
 	private:
 		godot::Ref<godot::Script> m_AbilityScript;
 		godot::Ref<GameplayAbility> m_AbilityInstance;

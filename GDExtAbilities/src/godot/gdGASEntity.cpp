@@ -210,6 +210,9 @@ EffectInstanceID sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect
 		gdEffect->GetDuration()
 	);
 
+	effect.SetTagsToAdd(gdEffect->GetTagsToAdd());
+	effect.SetTagsToRemove(gdEffect->GetTagsToRemove());
+
 	for (int64_t i = 0; i < modifiers.size(); i++)
 	{
 		godot::Ref<ModifierData> modifier = modifiers[i];

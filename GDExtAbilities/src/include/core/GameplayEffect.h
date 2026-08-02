@@ -35,6 +35,9 @@ namespace sm
 		void AddModifier(ModifierHandle id);
 		std::vector<ModifierHandle>& GetModifierHandles() { return m_Modifiers; };
 
+		void SetTagsToAdd(godot::PackedInt32Array arr);
+		void SetTagsToRemove(godot::PackedInt32Array arr);
+
 	private:
 		/*const*/ EffectID m_Name;
 		/*const*/ EffectInstanceID m_ID;

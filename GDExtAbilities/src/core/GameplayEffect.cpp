@@ -27,3 +27,19 @@ void sm::GameplayEffect::AddModifier(ModifierHandle handle)
 {
 	m_Modifiers.push_back(handle);
 }
+
+void sm::GameplayEffect::SetTagsToAdd(godot::PackedInt32Array arr)
+{
+	for (size_t i = 0; i < arr.size(); i++)
+	{
+		m_TagsToAdd.Set(arr[i]);
+	}
+}
+
+void sm::GameplayEffect::SetTagsToRemove(godot::PackedInt32Array arr)
+{
+	for (size_t i = 0; i < arr.size(); i++)
+	{
+		m_TagsToAdd.Set(arr[i], false);
+	}
+}
