@@ -177,18 +177,18 @@ void sm::GameplayAttribute::AddBaseModifier(const godot::Ref<sm::ModifierData>& 
 	switch (mod->GetOperationType())
 	{
 	case ModifierData::OperationType::Override:
-		m_BaseValue = std::clamp(mod->GetValue(), m_MinValue, m_MaxValue);
+		SetBase(mod->GetValue());
 		break;
 	case ModifierData::OperationType::Add:
-		m_BaseValue += mod->GetValue();
+		SetBase(m_BaseValue + mod->GetValue());
 		break;
 
 	case ModifierData::OperationType::Multiply:
-		m_BaseValue *= mod->GetValue();
+		SetBase(m_BaseValue * mod->GetValue());
 		break;
 
 	case ModifierData::OperationType::PercentAdd:
-		m_BaseValue += m_BaseValue * mod->GetValue() * 0.01f;
+		SetBase(m_BaseValue + m_BaseValue * mod->GetValue() * 0.01f);
 		break;
 
 	default:

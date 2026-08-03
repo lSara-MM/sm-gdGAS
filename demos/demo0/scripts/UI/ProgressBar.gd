@@ -1,15 +1,18 @@
 extends ProgressBar
-#
-#@export var current_attr : StringName
-#@export var max_attr : StringName
-#
-#func setup(entity: Node) -> void:
-	#var attr_container = entity.get_node("AttributeContainer")
-	##attr_container._on_attribute_modified.connect(_on_attribute_changed)
-#
-#func _on_attribute_changed(entity_owner: Object, attr_name: String, new_val: float, old_val: float) -> void:
-	#if attr_name == current_attr:
-		#value = new_val
-		#
-	#if attr_name == max_attr:
-		#max_value = new_val
+
+@export var current_attr : StringName
+@export var max_attr : StringName
+@export var attr_container : AttributeContainer
+
+func setup(entity: Node) -> void:
+	attr_container = entity.get_node("AttributeContainer")
+	attr_container.modifier_added.connect(_on_attribute_changed)
+	value = attr_container.get_attribute_current_value(current_attr)
+	max_value = attr_container.get_attribute_current_value(max_attr)
+
+func _on_attribute_changed(_entity_owner: AttributeContainer, attr_name: StringName, _mod: ModifierData) -> void:
+	match attr_name:
+			current_attr:
+				value = attr_container.get_attribute_current_value(attr_name)
+			max_attr:
+				max_value = attr_container.get_attribute_current_value(attr_name)

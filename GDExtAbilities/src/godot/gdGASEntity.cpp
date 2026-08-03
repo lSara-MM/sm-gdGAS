@@ -179,18 +179,13 @@ EffectInstanceID sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect
 		return 0;
 	}
 
-	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
-	if (modifiers.is_empty())
-	{
-		return 0;
-	}
-
 	ERR_FAIL_NULL_V_MSG(m_AttrContainer, 0,
 		godot::vformat("AddEffect: Could not add '%s'. The AttributeContainer was not found.",
 			gdEffect->GetName()));
 
+	godot::TypedArray<ModifierData> modifiers = gdEffect->GetModifiers();
 	EffectData::Type type = gdEffect->GetEffectType();
-	if (type == EffectData::Type::Permanent)
+	if (type == EffectData::Type::Instant)
 	{
 		for (int64_t i = 0; i < modifiers.size(); i++)
 		{

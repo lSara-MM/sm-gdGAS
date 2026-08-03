@@ -10,7 +10,7 @@ namespace sm
 	public:
 		enum class Type : uint8_t
 		{
-			Permanent,	// Modify BaseValue. (Level ups, instant dmg/heal...)
+			Instant,	// Modify BaseValue. (Level ups, instant dmg/heal...)
 			Temporary,	// Remove when expires. (Buffs/debuffs) 
 			Persistent,	// Must be removed manually (Equipment, status effects...)
 			Max
@@ -31,6 +31,7 @@ namespace sm
 		float GetCurrentCooldown() const;
 
 		void Tick(float dt);
+		void ResetCooldown();
 
 		void AddModifier(ModifierHandle id);
 		std::vector<ModifierHandle>& GetModifierHandles() { return m_Modifiers; };
@@ -45,6 +46,7 @@ namespace sm
 		EntityID m_TargetID;
 		EntityID m_SourceID;
 		float m_RemainingTime;
+		float m_Time;
 
 		DumbUID m_ModifiersUID;
 		GameplayEffect::Type m_EffectType;

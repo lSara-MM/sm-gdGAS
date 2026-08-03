@@ -406,3 +406,4 @@ FodyWeavers.xsd
 *.sln.iml
 /demos/demo0/gen/
 /GDExtAbilities/godot-cpp/
+*.zip

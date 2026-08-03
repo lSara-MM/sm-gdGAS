@@ -18,6 +18,7 @@ void sm::EffectSystem::Update(float dt)
 		if (effect->HasExpired())
 		{
 			pendingToDelete.push_back({ effect,  i });
+			effect->ResetCooldown();
 		}
 	}
 

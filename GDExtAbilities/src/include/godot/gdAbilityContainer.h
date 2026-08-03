@@ -35,14 +35,13 @@ namespace sm
 		void RemoveAbility(const godot::Ref<AbilityData>& ability);
 
 		bool Grant(const godot::Ref<AbilityData>& ability);
-		bool InitAbilityScript(const godot::Ref<sm::AbilityData>& ability);
 		bool Revoke(const godot::Ref<AbilityData>& ability);
 		void Clear();
 		bool Has(const godot::Ref<AbilityData>& ability) const;
 
-		bool IsActive(const godot::Ref<AbilityData>& ability) const;
-		bool IsOnCooldown(const godot::Ref<AbilityData>& ability) const;
-		float GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const;
+		bool IsActive(TagID id) const;
+		bool IsOnCooldown(TagID id) const;
+		float GetCurrentCooldown(TagID id) const;
 
 		//bool TryActivate(const godot::Ref<AbilityData>& ability);
 		bool TryActivate(TagID abilityID);
@@ -53,6 +52,8 @@ namespace sm
 			GDVIRTUAL1R(bool, _can_activate, godot::Ref<AbilityData>)
 			GDVIRTUAL1R(bool, _on_ability_already_granted, godot::Ref<AbilityData>)
 #pragma endregion
+
+			bool InitAbilityScript(const godot::Ref<AbilityData>& ability);
 
 	private:
 		AbilityContainer() = default;

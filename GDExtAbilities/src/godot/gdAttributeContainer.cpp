@@ -178,7 +178,6 @@ ModifierID sm::AttributeContainer::AddModifier(AttributeID id, const godot::Ref<
 
 void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
-	auto a = ToStdString(id);
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	attr->AddBaseModifier(mod);
@@ -208,5 +207,5 @@ void sm::AttributeContainer::ModifyAttribute(AttributeID id, float newValue)
 	float oldValue = attr->GetBase();
 	attr->SetBase(newValue);
 
-	emit_signal("attribute_modified", this, id, oldValue, newValue);
+	emit_signal("attribute_modified", this, id, newValue, oldValue);
 }

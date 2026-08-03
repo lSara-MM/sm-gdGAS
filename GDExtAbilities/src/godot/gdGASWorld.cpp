@@ -204,9 +204,10 @@ EntityID sm::GAS_World::RegisterEntity(GAS_Entity* entity)
 	m_Entities.emplace(entity);
 	m_EntitiesRegistry.emplace(id, entity);
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 	return id;
 }
 
@@ -215,9 +216,10 @@ void sm::GAS_World::UnregisterEntity(GAS_Entity* entity)
 	m_Entities.erase(entity);
 	m_EntitiesRegistry.erase(entity->GetID());
 
-#ifdef TOOLS_ENABLED
-	notify_property_list_changed();
-#endif // TOOLS_ENABLED
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 void sm::GAS_World::RegisterTagContainer(TagContainer* container)

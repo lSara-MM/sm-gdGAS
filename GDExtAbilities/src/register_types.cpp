@@ -1,6 +1,7 @@
 #include "register_types.h"
 
 #include <gdextension_interface.h>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
@@ -21,8 +22,10 @@
 #include "godot/ui/gdTagArrayEditorProperty.h"
 #include "godot/ui/gdTagContainerEditorProperty.h"
 #include "godot/ui/gdTagRegistryEditor.h"
-#include <godot_cpp/classes/editor_script.hpp>
-#include <godot_cpp/classes/engine.hpp>
+
+//#ifndef TOOLS_ENABLED
+//#error "¡ATENCIÓN! TOOLS_ENABLED NO está definido durante la compilación."
+//#endif
 
 using namespace godot;
 

@@ -4,7 +4,7 @@
 void sm::EffectData::_bind_methods()
 {
 	// Type
-	BIND_ENUM_CONSTANT(Permanent);
+	BIND_ENUM_CONSTANT(Instant);
 	BIND_ENUM_CONSTANT(Temporary);
 	BIND_ENUM_CONSTANT(Persistent);
 
@@ -33,7 +33,7 @@ void sm::EffectData::_bind_methods()
 
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::INT, "effect_type",
-		godot::PROPERTY_HINT_ENUM, "Permanent, Temporary, Persistent"),
+		godot::PROPERTY_HINT_ENUM, "Instant, Temporary, Persistent"),
 		"set_effect_type", "get_effect_type"
 	);
 
@@ -106,7 +106,7 @@ void sm::EffectData::SetEffectType(EffectData::Type lt)
 	{
 		notify_property_list_changed();
 	}
-	}
+}
 
 bool sm::EffectData::AddTagToAdd(TagID id)
 {

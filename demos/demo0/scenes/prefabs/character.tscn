@@ -1,33 +1,34 @@
-[gd_scene load_steps=39 format=3 uid="uid://3wktl0846ot2"]
+[gd_scene load_steps=40 format=3 uid="uid://3wktl0846ot2"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_w41dn"]
 [ext_resource type="Script" path="res://scripts/PlayerEntity.gd" id="2_0q7k2"]
 [ext_resource type="AbilityData" uid="uid://dfikne8aaht4o" path="res://resources/abilities/Dash.tres" id="3_n1yh0"]
 [ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="3_y4cdn"]
+[ext_resource type="AbilityData" uid="uid://cru4hwrlo7pm2" path="res://resources/abilities/StaminaRegen.tres" id="4_1h4cq"]
 [ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="4_ed433"]
-
-[sub_resource type="AttributeData" id="AttributeData_edjgr"]
-name = &"CurrentStamina"
-base_value = 100.0
 
 [sub_resource type="AttributeData" id="AttributeData_jo5n6"]
 name = &"CurrentHealth"
-base_value = 50.0
+base_value = 70.0
 
 [sub_resource type="AttributeData" id="AttributeData_yc8ht"]
 name = &"MaxHealth"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_edjgr"]
+name = &"CurrentStamina"
+base_value = 12.0
+
+[sub_resource type="AttributeData" id="AttributeData_1q7sq"]
+name = &"MaxStamina"
 base_value = 100.0
 
 [sub_resource type="AttributeData" id="AttributeData_n1yh0"]
 name = &"Speed"
 base_value = 100.0
 
-[sub_resource type="AttributeData" id="AttributeData_1q7sq"]
-name = &"MaxStamina"
-base_value = 100.0
-
 [sub_resource type="AttributeSetData" id="AttributeSetData_sl3lt"]
-attributes = Array[AttributeData]([SubResource("AttributeData_edjgr"), SubResource("AttributeData_jo5n6"), SubResource("AttributeData_yc8ht"), SubResource("AttributeData_n1yh0"), SubResource("AttributeData_1q7sq")])
+attributes = Array[AttributeData]([SubResource("AttributeData_jo5n6"), SubResource("AttributeData_yc8ht"), SubResource("AttributeData_edjgr"), SubResource("AttributeData_1q7sq"), SubResource("AttributeData_n1yh0")])
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrhn5"]
 radius = 13.0
@@ -401,7 +402,7 @@ script = ExtResource("1_w41dn")
 script = ExtResource("2_0q7k2")
 
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
-abilities = Array[AbilityData]([ExtResource("3_n1yh0")])
+abilities = Array[AbilityData]([ExtResource("3_n1yh0"), ExtResource("4_1h4cq")])
 
 [node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity"]
 attribute_set = SubResource("AttributeSetData_sl3lt")

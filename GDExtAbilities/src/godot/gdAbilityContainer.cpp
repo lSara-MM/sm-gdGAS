@@ -2,6 +2,7 @@
 
 #include "core/TagRegistry.h"
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 
 void sm::AbilityContainer::_bind_methods()
 {
@@ -15,12 +16,12 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("revoke_ability", "ability"), &Revoke);
 	godot::ClassDB::bind_method(godot::D_METHOD("has_ability", "ability"), &Has);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("is_active", "ability"), &IsActive);
-	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown", "ability"), &IsOnCooldown);
-	godot::ClassDB::bind_method(godot::D_METHOD("try_activate", "ability"), &TryActivate);
-	godot::ClassDB::bind_method(godot::D_METHOD("try_activate_abilities_with_tags", "ability"), &TryActivateAbilitiesWithTag);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_active", "id"), &IsActive);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown", "id"), &IsOnCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_activate", "id"), &TryActivate);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_activate_abilities_with_tags", "ids"), &TryActivateAbilitiesWithTag);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("get_current_cooldown", "ability"), &GetCurrentCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_current_cooldown", "id"), &GetCurrentCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("clear"), &Clear);
 
 	GDVIRTUAL_BIND(_can_be_granted, "ability");
@@ -46,35 +47,35 @@ void sm::AbilityContainer::_bind_methods()
 	);
 
 	//
-	ADD_SIGNAL(godot::MethodInfo("_on_ability_granted",
+	ADD_SIGNAL(godot::MethodInfo("ability_granted",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
 			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
 	));
 
-	ADD_SIGNAL(godot::MethodInfo("_on_ability_revoked",
+	ADD_SIGNAL(godot::MethodInfo("ability_revoked",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
 			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
 	));
 
-	ADD_SIGNAL(godot::MethodInfo("_on_ability_activated",
+	ADD_SIGNAL(godot::MethodInfo("ability_activated",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
 			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
 	));
 
-	ADD_SIGNAL(godot::MethodInfo("_on_ability_ended",
+	ADD_SIGNAL(godot::MethodInfo("ability_ended",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
 			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
 	));
 
-	ADD_SIGNAL(godot::MethodInfo("_on_abilities_cleared",
+	ADD_SIGNAL(godot::MethodInfo("abilities_cleared",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity")
 	));
@@ -188,20 +189,25 @@ bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
 
 	AddAbility(ability);
 
-	bool retVal = InitAbilityScript(ability);
-	if (!retVal)
+	if (!InitAbilityScript(ability))
 	{
-		return retVal;
+		return false;
 	}
 
 	emit_signal("_on_ability_granted", ability, m_Owner);
 	return ret;
 }
 
-bool sm::AbilityContainer::InitAbilityScript(const godot::Ref<sm::AbilityData>& ability)
+bool sm::AbilityContainer::InitAbilityScript(const godot::Ref<AbilityData>& ability)
 {
 	godot::Ref<godot::Script> script = ability->GetAbilityScript();
-	ERR_FAIL_COND_V_MSG(script.is_null(), false, "Grant failed. AbilityData has no valid script.");
+	if (script.is_null())
+	{
+		godot::Ref<godot::GDScript> gdScript;
+		gdScript.instantiate();
+		script = gdScript;
+		ability->SetAbilityScript(script);
+	}
 
 	godot::Ref<GameplayAbility> abilityInstance = memnew(GameplayAbility);
 	abilityInstance->set_script(script);
@@ -248,7 +254,7 @@ void sm::AbilityContainer::Clear()
 
 		godot::Ref<AbilityData> data = abilityInstance->GetAbilityData();
 
-		if (IsActive(data))
+		if (IsActive(data->GetAbilityTagID()))
 		{
 			abilityInstance->TryEnd(true);
 		}
@@ -265,41 +271,41 @@ void sm::AbilityContainer::Clear()
 	emit_signal("_on_abilities_cleared", m_Owner);
 }
 
-bool sm::AbilityContainer::IsActive(const godot::Ref<AbilityData>& ability) const
+bool sm::AbilityContainer::Has(const godot::Ref<AbilityData>& ability) const
 {
-	godot::Ref<GameplayAbility> abilityInstance = ability->GetAbilityInstance();
-	return abilityInstance->IsActive();
+	return m_Scripts.find(ability->GetAbilityTagID()) != m_Scripts.end();
 }
 
-bool sm::AbilityContainer::IsOnCooldown(const godot::Ref<AbilityData>& ability) const
+bool sm::AbilityContainer::IsActive(TagID id) const
 {
-	godot::Ref<GameplayAbility> abilityInstance = ability->GetAbilityInstance();
-	return abilityInstance->IsOnCooldown();
+	if (auto abilityInstance = m_Scripts.find(id); abilityInstance != m_Scripts.end())
+	{
+		return abilityInstance->second->IsActive();
+	}
+
+	return false;
 }
 
-float sm::AbilityContainer::GetCurrentCooldown(const godot::Ref<AbilityData>& ability) const
+bool sm::AbilityContainer::IsOnCooldown(TagID id) const
 {
-	if (auto itr = m_Scripts.find(ability->GetAbilityTagID());
+	if (auto abilityInstance = m_Scripts.find(id); abilityInstance != m_Scripts.end())
+	{
+		return abilityInstance->second->IsOnCooldown();
+	}
+
+	return false;
+}
+
+float sm::AbilityContainer::GetCurrentCooldown(TagID id) const
+{
+	if (auto itr = m_Scripts.find(id);
 		itr != m_Scripts.end())
 	{
 		return itr->second->GetCooldown();
 	}
 
-	return -1;
+	return 0;
 }
-
-//bool sm::AbilityContainer::TryActivate(const godot::Ref<AbilityData>& ability)
-//{
-//	if (auto itr = m_Scripts.find(ability->GetAbilityTagID());
-//		itr != m_Scripts.end())
-//	{
-//		return itr->second->TryActivate();
-//	}
-//
-//	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not find", ability->GetAbilityTagID()));
-//
-//	return false;
-//}
 
 bool sm::AbilityContainer::TryActivate(TagID abilityID)
 {
@@ -342,9 +348,4 @@ bool sm::AbilityContainer::TryActivateAbilitiesWithTag(godot::PackedInt32Array t
 	}
 
 	return true;
-}
-
-bool sm::AbilityContainer::Has(const godot::Ref<AbilityData>& ability) const
-{
-	return m_Scripts.find(ability->GetAbilityTagID()) != m_Scripts.end();
 }

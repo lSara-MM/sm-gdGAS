@@ -1,0 +1,9 @@
+[gd_resource type="AbilityData" format=3 uid="uid://cru4hwrlo7pm2"]
+
+[resource]
+tag_name = &"StaminaRegen"
+cooldown = 1.0
+cost = -20.0
+cost_resource_attribute = &"CurrentStamina"
+tags = PackedInt32Array(5, 2)
+activation_blocked_tags = PackedInt32Array(11, 12, 10, 9)

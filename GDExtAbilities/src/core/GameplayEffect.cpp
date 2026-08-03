@@ -2,7 +2,7 @@
 
 sm::GameplayEffect::GameplayEffect(EffectID name, EffectInstanceID id,
 	GameplayEffect::Type type, EntityID target, EntityID source, float time)
-	: m_Name(name), m_ID(id), m_TargetID(target), m_SourceID(source), m_EffectType(type), m_RemainingTime(time)
+	: m_Name(name), m_ID(id), m_TargetID(target), m_SourceID(source), m_EffectType(type), m_RemainingTime(time), m_Time(time)
 {}
 
 bool sm::GameplayEffect::HasExpired() const
@@ -21,6 +21,11 @@ void sm::GameplayEffect::Tick(float dt)
 	{
 		m_RemainingTime -= dt;
 	}
+}
+
+void sm::GameplayEffect::ResetCooldown()
+{
+	m_RemainingTime = m_Time;
 }
 
 void sm::GameplayEffect::AddModifier(ModifierHandle handle)

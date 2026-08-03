@@ -70,7 +70,23 @@ bool sm::GameplayAbility::TryActivate()
 	}
 	else if (ret = CommitAbility())
 	{
-		ApplyEffectsToTarget();
+		godot::TypedArray<GAS_Entity> targets;
+		if (GDVIRTUAL_IS_OVERRIDDEN(_calculate_targets))
+		{
+			GDVIRTUAL_CALL(_calculate_targets, targets);
+
+			for (size_t i = 0; i < targets.size(); i++)
+			{
+				godot::Object* obj = targets[i];
+				GAS_Entity* entity = godot::Object::cast_to<GAS_Entity>(obj);
+				ApplyEffectsToTarget(entity);
+			}
+		}
+		else
+		{
+			ApplyEffectsToTarget();
+		}
+
 		state = AbilityState::Active;
 		TryEnd(false);
 	}
@@ -100,10 +116,14 @@ bool sm::GameplayAbility::CheckCost()
 	const AttributeContainer* attrContainer = m_Entity->GetAttributeContainer();
 	GameplayAttribute* attr = attrContainer->FindAttribute(abilityData->GetCostAttributeID());
 
-	godot::Ref<EffectData> effect = abilityData->GetCostData();
-	auto modifiers = effect->GetModifiers();
-	godot::Ref<ModifierData> m = modifiers[0];
-	return attr->GetCurrent() >= m->GetValue();
+#ifdef DEBUG_ENABLED
+	if (!(attr->GetCurrent() >= abilityData->GetCost()))
+	{
+		WARN_PRINT_ED("Ability cost too high. Not enough resources.");
+	}
+#endif // DEBUG_ENABLED
+
+	return attr->GetCurrent() >= abilityData->GetCost();
 }
 
 bool sm::GameplayAbility::CheckTags()
@@ -116,12 +136,20 @@ bool sm::GameplayAbility::CheckTags()
 	if (!tagContainer->HasAllTags(required))
 	{
 		ret = false;
+
+#ifdef DEBUG_ENABLED
+		WARN_PRINT_ED("Ability does not have all required tags.");
+#endif // DEBUG_ENABLED
 	}
 
 	godot::PackedInt32Array blocking = abilityData->GetActivationBlockedTags();
 	if (ret && tagContainer->HasAnyTag(blocking))
 	{
 		ret = false;
+
+#ifdef DEBUG_ENABLED
+		WARN_PRINT_ED("Ability has one of the blocking tags.");
+#endif // DEBUG_ENABLED
 	}
 
 	return ret;
@@ -131,12 +159,26 @@ bool sm::GameplayAbility::IsOnCooldown() const
 {
 	EffectSystem* es = m_World->GetEffectSystem();
 	ERR_FAIL_COND_V_MSG(!es, false, "EffectSystem is null");
-
 	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
 	if (effect)
 	{
-		return !effect->HasExpired();
+		TagID tag = effect->GetTagsToAdd()[0];
+		auto* container = m_Entity->GetTagContainer();
+		return container->HasTag(tag);
 	}
+
+
+	//	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
+	//	if (effect)
+	//	{
+	//#ifdef DEBUG_ENABLED
+	//		if (!effect->HasExpired())
+	//		{
+	//			WARN_PRINT_ED("Ability is on cooldown.");
+	//		}
+	//#endif // DEBUG_ENABLED
+	//		return !effect->HasExpired();
+	//	}
 
 	return false;
 }

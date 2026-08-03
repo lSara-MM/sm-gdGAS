@@ -128,11 +128,7 @@ void sm::TagContainer::AddTag(TagID id)
 		return;
 	}
 
-	bool ret = SetTag(id);
-	if (ret)
-	{
-		m_gdTags.push_back(id);
-	}
+	SetTag(id);
 }
 
 //void sm::TagContainer::AddTagFromPath(const godot::String& tag)
@@ -271,6 +267,9 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 
 		if (m_TagsSet.tags.Has(id))
 		{
+#ifdef DEBUG_ENABLED
+			WARN_PRINT_ED(godot::vformat("Entity has %d blocking tag.", id));
+#endif // DEBUG_ENABLED
 			return true;
 		}
 	}
@@ -288,6 +287,10 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		if (++count == 1)
 		{
 			m_TagsSet.tags.Set(id, true);
+
+#ifdef TOOLS_ENABLED
+			m_gdTags.push_back(id);
+#endif // TOOLS_ENABLED
 		}
 
 		emit_signal("tag_added", id, this);
@@ -302,6 +305,11 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		if (count > 0 && --count == 0)
 		{
 			m_TagsSet.tags.Set(id, false);
+
+#ifdef TOOLS_ENABLED
+			auto pos = m_gdTags.find(id);
+			m_gdTags.remove_at(pos);
+#endif // TOOLS_ENABLED
 		}
 
 		emit_signal("tag_removed", id, this);
@@ -346,56 +354,52 @@ void sm::TagContainer::RemoveTags(const godot::PackedInt32Array& tags)
 
 void sm::TagContainer::AddTagsBitset(BitSet<MAX_TAGS> tags)
 {
-	m_TagsSet.tags |= tags;
-	//emit_signal("tags_added", this);
+	//m_TagsSet.tags |= tags;
+	////emit_signal("tags_added", this);
 
-	if (godot::Engine::get_singleton()->is_editor_hint())
-	{
-		notify_property_list_changed();
-	}
-
-	//for (size_t block = 0; block < tags.GetSize(); ++block)
+	//if (godot::Engine::get_singleton()->is_editor_hint())
 	//{
-	//	// Get bits per block
-	//	auto bits = tags[block];
-
-	//	while (bits)
-	//	{
-	//		int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
-	//		int index = block * 64 + bit;
-
-	//		ERR_CONTINUE_MSG(index >= MAX_TAGS, godot::vformat("AddTags skipped: index %d out of range (MAX_TAGS=%d)", index, MAX_TAGS));
-
-	//		SetTag(index);
-
-	//		bits &= bits - 1;
-	//	}
+	//	notify_property_list_changed();
 	//}
+
+	for (size_t block = 0; block < tags.GetSize(); ++block)
+	{
+		auto bits = tags[block];
+
+		while (bits)
+		{
+			int bit = std::countr_zero(bits);
+			int index = block * 64 + bit;
+
+			SetTag(index);
+
+			bits &= bits - 1;
+		}
+	}
 }
 
 void sm::TagContainer::RemoveTagsBitset(BitSet<MAX_TAGS> tags)
 {
-	m_TagsSet.tags &= ~tags;
-	//emit_signal("tags_added", this);
+	//m_TagsSet.tags &= ~tags;
+	////emit_signal("tags_added", this);
 
-	if (godot::Engine::get_singleton()->is_editor_hint())
-	{
-		notify_property_list_changed();
-	}
-
-	//for (size_t block = 0; block < tags.GetSize(); ++block)
+	//if (godot::Engine::get_singleton()->is_editor_hint())
 	//{
-	//	// Get bits per block
-	//	auto bits = tags[block];
-
-	//	while (bits)
-	//	{
-	//		int bit = std::countr_zero(bits);	// Returns the number of consecutive 0 bits in the value of x (right)
-	//		int index = block * 64 + bit;
-
-	//		SetTag(index, false);
-
-	//		bits &= bits - 1;
-	//	}
+	//	notify_property_list_changed();
 	//}
+
+	for (size_t block = 0; block < tags.GetSize(); ++block)
+	{
+		auto bits = tags[block];
+
+		while (bits)
+		{
+			int bit = std::countr_zero(bits);
+			int index = block * 64 + bit;
+
+			SetTag(index, false);
+
+			bits &= bits - 1;
+		}
+	}
 }

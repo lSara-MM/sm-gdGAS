@@ -12,18 +12,6 @@
 sm::AbilityData::AbilityData() : m_AbilityTagID(0)
 {}
 
-void sm::AbilityData::OnPostInit()
-{
-	if (m_AbilityScript.is_null())
-	{
-		m_AbilityScript.instantiate();
-	}
-
-	godot::Ref<godot::GDScript> script;
-
-	SetAbilityScript(m_AbilityScript);
-}
-
 void sm::AbilityData::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_name"), &GetAbilityName);
@@ -121,42 +109,42 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 	}
 
 #ifdef TOOLS_ENABLED
-
-	if (script.is_valid())
+	if (script.is_null())
 	{
-		auto code = script->get_source_code().strip_edges();
+		return;
+	}
 
-		if (code.is_empty())
-		{
-			godot::String templateCode =
-				"extends GameplayAbility\n\n"
-				"#func _activate_ability():\n"
-				"\tpass\n\n"
-				"#func _end_ability(_was_cancelled : bool):\n"
-				"\t#pass\n\n"
-				"#func _check_availability(): -> bool\n"
-				"\t#pass\n\n"
-				"#func _calculate_targets() -> TypedArray<GAS_Entity>:\n"
-				"\t#pass\n\n"
-				;
+	auto code = script->get_source_code().strip_edges();
 
-			script->set_source_code(templateCode);
-			script->reload();
+	if (code.is_empty())
+	{
+		godot::String templateCode =
+			"extends GameplayAbility\n\n"
+			"## Default: On activate ability, effects are applied to self or if overriden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.\n"
+			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.\n"
+			"#func _activate_ability():\n"
+			"\t#pass\n\n"
+			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.\n"
+			"#func _end_ability(_was_cancelled: bool):\n"
+			"\t#pass\n\n"
+			"#func _check_availability() -> bool:\n"
+			"\t#return true\n\n"
+			"#func _calculate_targets() -> Array[GAS_Entity]:\n"
+			"\t#return []\n\n"
+			;
 
-			m_AbilityScript = script;
-		}
-		else if (code.contains("extends GameplayAbility"))
-		{
-			m_AbilityScript = script;
-		}
-		else
-		{
-			ERR_FAIL_MSG("Script must inherit from GameplayAbility.");
-		}
+		script->set_source_code(templateCode);
+		script->reload();
+
+		m_AbilityScript = script;
+	}
+	else if (code.contains("extends GameplayAbility"))
+	{
+		m_AbilityScript = script;
 	}
 	else
 	{
-		m_AbilityScript = script;
+		ERR_FAIL_MSG("Script must inherit from GameplayAbility.");
 	}
 #endif
 }
@@ -294,7 +282,17 @@ void sm::AbilityData::SetCooldown(float value)
 	}
 
 	m_Cooldown = value;
+
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		return;
+	}
+
 	m_CooldownData->SetDuration(m_Cooldown);
+	m_CooldownData->SetEffectType(EffectData::Type::Temporary);
+
+	TagRegistry& registry = TagRegistry::Instance();
+	m_CooldownData->AddTagToAdd(registry.FindTagID(".Ability." + m_AbilityName + ".cd"));
 }
 
 void sm::AbilityData::SetCost(float value)
@@ -304,6 +302,11 @@ void sm::AbilityData::SetCost(float value)
 	if (m_CostData.is_null())
 	{
 		m_CostData.instantiate();
+	}
+
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		return;
 	}
 
 	godot::Ref<ModifierData> modifier;

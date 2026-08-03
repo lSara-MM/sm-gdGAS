@@ -15,7 +15,7 @@ namespace sm
 	public:
 		enum Type : uint8_t
 		{
-			Permanent,	// Modify BaseValue. (Level ups, instant dmg/heal...)
+			Instant,	// Modify BaseValue. (Level ups, instant dmg/heal...)
 			Temporary,	// Remove when expires. (Buffs/debuffs) 
 			Persistent,	// Must be removed manually (Equipment, status effects...)
 			Max
@@ -59,7 +59,7 @@ namespace sm
 		godot::TypedArray<ModifierData> m_Modifiers;
 		godot::PackedInt32Array m_TagsToAdd;
 		godot::PackedInt32Array m_TagsToRemove;
-		Type m_EffectType = Type::Permanent;
+		Type m_EffectType = Type::Instant;
 		float m_Duration;
 	};
 }
