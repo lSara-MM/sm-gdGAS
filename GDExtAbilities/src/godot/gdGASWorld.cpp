@@ -24,6 +24,7 @@ void sm::GAS_World::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_abilities_availability"), &GetAbilitiesAvailability);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_abilities_availability", "value"), &SetAbilitiesAvailability);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("find_tag", "tag"), &FindTag);
 	godot::ClassDB::bind_method(godot::D_METHOD("all_with_tags", "tags"), &AllTags);
 	godot::ClassDB::bind_method(godot::D_METHOD("any_with_tags", "tags"), &AnyTags);
 	godot::ClassDB::bind_method(godot::D_METHOD("none_with_tags", "tags"), &NoneTags);
@@ -96,6 +97,7 @@ void sm::GAS_World::InitTagSystem(godot::Node* globalRoot)
 	}
 
 	m_TagSystem->Update(get_process_delta_time());
+	m_TagRegistry = &TagRegistry::Instance();
 }
 
 void sm::GAS_World::OnExitTree()
@@ -230,6 +232,16 @@ void sm::GAS_World::RegisterTagContainer(TagContainer* container)
 void sm::GAS_World::UnregisterTagContainer(TagContainer* container)
 {
 	m_TagSystem->UnregisterTagContainer(container);
+}
+
+TagID sm::GAS_World::FindTag(const godot::StringName& tag) const
+{
+	if (!m_TagRegistry)
+	{
+		return GameplayTag::INVALID_TAG;
+	}
+
+	return m_TagRegistry->FindTagID(tag);
 }
 
 godot::TypedArray<godot::Node> sm::GAS_World::AllTags(const godot::PackedInt32Array tags)

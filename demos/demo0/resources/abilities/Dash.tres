@@ -1,6 +1,6 @@
 [gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dfikne8aaht4o"]
 
-[sub_resource type="GDScript" id="GDScript_3ltlc"]
+[sub_resource type="GDScript" id="GDScript_xr2j0"]
 script/source = "extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overriden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
@@ -34,7 +34,7 @@ tags_to_add = PackedInt32Array(3, 2)
 
 [resource]
 tag_name = &"Dash"
-ability = SubResource("GDScript_3ltlc")
+ability = SubResource("GDScript_xr2j0")
 cooldown = 3.0
 cost = 10.0
 cost_resource_attribute = &"CurrentStamina"

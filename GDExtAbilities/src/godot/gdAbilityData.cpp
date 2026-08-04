@@ -276,16 +276,17 @@ void sm::AbilityData::SetAbilityTagID(TagID id)
 
 void sm::AbilityData::SetCooldown(float value)
 {
-	if (m_CooldownData.is_null())
-	{
-		m_CooldownData.instantiate();
-	}
-
 	m_Cooldown = value;
 
 	if (godot::Engine::get_singleton()->is_editor_hint())
 	{
 		return;
+	}
+
+	if (m_CooldownData.is_null())
+	{
+		m_CooldownData.instantiate();
+		m_CooldownData->SetName("cd");
 	}
 
 	m_CooldownData->SetDuration(m_Cooldown);
@@ -302,6 +303,7 @@ void sm::AbilityData::SetCost(float value)
 	if (m_CostData.is_null())
 	{
 		m_CostData.instantiate();
+		m_CostData->SetName("cost");
 	}
 
 	if (godot::Engine::get_singleton()->is_editor_hint())

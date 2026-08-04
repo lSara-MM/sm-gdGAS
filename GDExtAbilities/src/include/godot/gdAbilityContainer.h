@@ -42,6 +42,8 @@ namespace sm
 		bool IsActive(TagID id) const;
 		bool IsOnCooldown(TagID id) const;
 		float GetCurrentCooldown(TagID id) const;
+		float GetCooldown(TagID id) const;
+		float GetCost(TagID id) const;
 
 		//bool TryActivate(const godot::Ref<AbilityData>& ability);
 		bool TryActivate(TagID abilityID);

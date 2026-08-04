@@ -19,9 +19,13 @@
 #include "godot/gdGASWorld.h"
 #include "godot/gdTagContainer.h"
 #include "godot/gdTagData.h"
+
+#ifdef TOOLS_ENABLED
 #include "godot/ui/gdTagArrayEditorProperty.h"
 #include "godot/ui/gdTagContainerEditorProperty.h"
 #include "godot/ui/gdTagRegistryEditor.h"
+#endif // TOOLS_ENABLED
+
 
 //#ifndef TOOLS_ENABLED
 //#error "¡ATENCIÓN! TOOLS_ENABLED NO está definido durante la compilación."

@@ -51,6 +51,10 @@ namespace sm
 		DumbUID m_ModifiersUID;
 		GameplayEffect::Type m_EffectType;
 
+#ifdef DEBUG_ENABLED
+		std::string m_NameDebug;
+#endif // DEBUG_ENABLED
+
 		BitSet<MAX_TAGS> m_TagsToAdd;
 		BitSet<MAX_TAGS> m_TagsToRemove;
 	};

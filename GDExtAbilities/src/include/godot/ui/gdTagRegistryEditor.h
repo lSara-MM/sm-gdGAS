@@ -97,14 +97,12 @@ namespace sm
 		void SetSetting(const char* settingPath, godot::String value);
 
 		void _OnRegistryResourceChanged(const godot::Ref<godot::Resource>& resource);
-
 		void _OnRegistryEdited();
-
 		void _OnRegistryResourceSelected(const godot::Ref<godot::Resource>& resource, bool inspect);
-
 		void _OnButtonClicked(godot::TreeItem* item, int column, int id, int mouseButtonIndex);
-
 		void _OnItemSelected();
+		void _OnRMBClicked(const godot::Vector2& pos, int mouseButtonIndex);
+		void _OnPopupMenuItemSelected(int id, const godot::StringName tag);
 
 		//void _OnItemEdited();
 

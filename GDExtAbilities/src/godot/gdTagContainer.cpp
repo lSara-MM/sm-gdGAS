@@ -35,13 +35,13 @@ void sm::TagContainer::_bind_methods()
 	);
 
 	ADD_SIGNAL(godot::MethodInfo("tag_added",
-		godot::PropertyInfo(godot::Variant::INT, "id"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer")
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer"),
+		godot::PropertyInfo(godot::Variant::INT, "id")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("tag_removed",
-		godot::PropertyInfo(godot::Variant::INT, "id"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer")
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer"),
+		godot::PropertyInfo(godot::Variant::INT, "id")
 	));
 }
 
@@ -268,7 +268,7 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 		if (m_TagsSet.tags.Has(id))
 		{
 #ifdef DEBUG_ENABLED
-			WARN_PRINT_ED(godot::vformat("Entity has %d blocking tag.", id));
+			WARN_PRINT_ED(godot::vformat("Entity has blocking tag [%d].", id));
 #endif // DEBUG_ENABLED
 			return true;
 		}
@@ -293,7 +293,7 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 #endif // TOOLS_ENABLED
 		}
 
-		emit_signal("tag_added", id, this);
+		emit_signal("tag_added", this, id);
 
 		if (OnTagAdded)
 		{
@@ -312,7 +312,7 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 #endif // TOOLS_ENABLED
 		}
 
-		emit_signal("tag_removed", id, this);
+		emit_signal("tag_removed", this, id);
 
 		if (OnTagRemoved)
 		{

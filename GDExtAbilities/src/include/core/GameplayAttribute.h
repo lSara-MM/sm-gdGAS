@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <queue>
+#include <functional>
 
 namespace sm
 {
@@ -46,6 +47,8 @@ namespace sm
 		bool IsMax() const { return m_CurrentValue >= m_MaxValue; }
 		bool IsDirty() const { return m_dirty; }
 
+		void SetPreAttributeChange(std::function<float(float)> delegate);
+
 		size_t GetModifiersCount(ModifierOperationType op) const;
 		GameplayModifier* FindModifier(const godot::Ref<ModifierData>& mod);
 		GameplayModifier* FindModifier(const ModifierHandle& handle);
@@ -60,7 +63,7 @@ namespace sm
 		void Reset();
 
 	private:
-		void Calculate();
+		float Calculate();
 
 	private:
 		std::queue<GameplayModifier> m_BaseModifiers;
@@ -73,6 +76,8 @@ namespace sm
 		float m_CurrentValue;
 		float m_MinValue;
 		float m_MaxValue;
+
+		std::function<float(float)> m_PreAttrChange = nullptr;
 
 		bool m_dirty;
 	};

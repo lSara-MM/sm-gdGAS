@@ -35,6 +35,8 @@ void sm::AttributeContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("is_attribute_max", "attribute_id"), &IsAttributeMax);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_attribute_dirty", "attribute_id"), &IsAttributeDirty);
 
+	GDVIRTUAL_BIND(_pre_attribute_change, "attribute_id", "calculated_value");
+
 	// Properties
 	ADD_PROPERTY(godot::PropertyInfo(
 		godot::Variant::OBJECT,
@@ -90,6 +92,18 @@ void sm::AttributeContainer::OnReady()
 	{
 		AddAttribute(attrs[i]->GetName(), attrs[i]);
 	}
+}
+
+float sm::AttributeContainer::PreAttributeChange(AttributeID id, float calculated)
+{
+	float ret = calculated;
+
+	if (GDVIRTUAL_IS_OVERRIDDEN(_pre_attribute_change))
+	{
+		GDVIRTUAL_CALL(_pre_attribute_change, id, calculated, ret);
+	}
+
+	return ret;
 }
 
 //godot::Ref<sm::Attribute> sm::AttributeContainer::GetAttribute(AttributeID id) const
@@ -198,6 +212,18 @@ void sm::AttributeContainer::AddAttribute(godot::StringName id, const godot::Ref
 {
 	GameplayAttribute* addedAttr = &m_AttributeSetPtr->AddAttribute(id, data->GetBaseValue(), data->GetMinValue(), data->GetMaxValue());
 	m_AttributesByName.try_emplace(id, addedAttr);
+
+	addedAttr->SetPreAttributeChange([this, id](float calculated)
+		{
+			float ret = calculated;
+
+			if (GDVIRTUAL_IS_OVERRIDDEN(_pre_attribute_change))
+			{
+				GDVIRTUAL_CALL(_pre_attribute_change, id, calculated, ret);
+			}
+
+			return ret;
+		});
 }
 
 void sm::AttributeContainer::ModifyAttribute(AttributeID id, float newValue)

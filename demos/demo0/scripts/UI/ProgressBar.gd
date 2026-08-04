@@ -2,9 +2,9 @@ extends ProgressBar
 
 @export var current_attr : StringName
 @export var max_attr : StringName
-@export var attr_container : AttributeContainer
+var attr_container : AttributeContainer
 
-func setup(entity: Node) -> void:
+func setup(entity: Node, _world = null) -> void:
 	attr_container = entity.get_node("AttributeContainer")
 	attr_container.modifier_added.connect(_on_attribute_changed)
 	value = attr_container.get_attribute_current_value(current_attr)

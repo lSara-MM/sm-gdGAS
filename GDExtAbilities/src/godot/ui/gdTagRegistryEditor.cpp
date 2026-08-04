@@ -22,7 +22,9 @@
 #include <godot_cpp/classes/tree.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/v_split_container.hpp>
+#include <godot_cpp/classes/popup_menu.hpp>
 #include <regex>
+#include <godot_cpp/classes/display_server.hpp>
 
 sm::TagRegistryEditor::TagRegistryEditor()
 {
@@ -239,11 +241,12 @@ void sm::TagRegistryEditor::CreateOrUpdateTree()
 		m_Tree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
 		m_Tree->set_custom_minimum_size(godot::Size2(200, 200));
 		m_Tree->set_columns(1);
+		m_Tree->set_allow_rmb_select(true);
 
 		m_TreeContainer->add_child(m_Tree);
 		m_Tree->connect("button_clicked", callable_mp(this, &TagRegistryEditor::_OnButtonClicked));
-
 		m_Tree->connect("item_selected", callable_mp(this, &TagRegistryEditor::_OnItemSelected));
+		m_Tree->connect("item_mouse_selected", callable_mp(this, &TagRegistryEditor::_OnRMBClicked));
 
 		// Don't allow direct edit to avoid dupes
 		//m_Tree->connect("item_edited", callable_mp(this, &TagRegistryEditor::_OnItemEdited));
@@ -303,11 +306,6 @@ void sm::TagRegistryEditor::CreateTag(const godot::Ref<TagData>& resource, godot
 		treeTag->add_button(0, m_Icons.remove, static_cast<int>(ButtonId::DeleteSelf), false, "Delete tag. This will also delete its children.");
 
 		m_TagDatas.push_back(tag);
-
-#ifdef DEBUG_ENABLED
-		auto pathDebug = ToStdString(tag->GetTagFullPath());
-#endif // DEBUG_ENABLED
-
 		AddToCache(tag->GetTagFullPath());
 
 		godot::TypedArray<TagData> children = tag->GetChildren();
@@ -512,6 +510,41 @@ void sm::TagRegistryEditor::_OnItemSelected()
 	}
 
 	m_ReferencesSize->set_text(godot::vformat("References: %d", vec.size()));
+}
+
+void sm::TagRegistryEditor::_OnRMBClicked(const godot::Vector2& pos, int mouseButtonIndex)
+{
+	if (mouseButtonIndex != godot::MOUSE_BUTTON_RIGHT)
+	{
+		return;
+	}
+
+	godot::TreeItem* item = m_Tree->get_item_at_position(pos);
+	if (!item)
+	{
+		return;
+	}
+
+	godot::Ref<TagData> tag = item->get_metadata(0);
+	if (tag.is_null())
+	{
+		return;
+	}
+
+	auto* popup = memnew(godot::PopupMenu);
+	popup->add_item("Copy");
+	popup->connect("id_pressed", callable_mp(this, &TagRegistryEditor::_OnPopupMenuItemSelected).bind(tag->GetTagFullPath()));
+	popup->connect("popup_hide", godot::Callable(popup, "queue_free"));
+	add_child(popup);
+	popup->reset_size();
+	popup->set_position(m_Tree->get_screen_position() + pos);
+	popup->popup();
+}
+
+void sm::TagRegistryEditor::_OnPopupMenuItemSelected(int id, const godot::StringName tag)
+{
+	godot::DisplayServer::get_singleton()->clipboard_set(tag);
+	godot::UtilityFunctions::print("Tag path copied to clipboard: ", tag);
 }
 
 void sm::TagRegistryEditor::BindContainersSignals()

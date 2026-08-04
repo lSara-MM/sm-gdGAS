@@ -17,11 +17,13 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("has_ability", "ability"), &Has);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("is_active", "id"), &IsActive);
-	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown", "id"), &IsOnCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("iscooldown", "id"), &IsOnCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("try_activate", "id"), &TryActivate);
 	godot::ClassDB::bind_method(godot::D_METHOD("try_activate_abilities_with_tags", "ids"), &TryActivateAbilitiesWithTag);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_current_cooldown", "id"), &GetCurrentCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_cooldown", "id"), &GetCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_cost", "id"), &GetCost);
 	godot::ClassDB::bind_method(godot::D_METHOD("clear"), &Clear);
 
 	GDVIRTUAL_BIND(_can_be_granted, "ability");
@@ -194,7 +196,7 @@ bool sm::AbilityContainer::Grant(const godot::Ref<AbilityData>& ability)
 		return false;
 	}
 
-	emit_signal("_on_ability_granted", ability, m_Owner);
+	emit_signal("ability_granted", ability, m_Owner);
 	return ret;
 }
 
@@ -234,11 +236,11 @@ bool sm::AbilityContainer::Revoke(const godot::Ref<AbilityData>& ability)
 
 	if (abilityInstance->TryEnd(true))
 	{
-		emit_signal("_on_ability_ended", ability, m_Owner);
+		emit_signal("ability_ended", ability, m_Owner);
 	}
 
 	RemoveAbility(ability);
-	emit_signal("_on_ability_revoked", ability, m_Owner);
+	emit_signal("ability_revoked", ability, m_Owner);
 
 	return true;
 }
@@ -268,7 +270,7 @@ void sm::AbilityContainer::Clear()
 		notify_property_list_changed();
 	}
 
-	emit_signal("_on_abilities_cleared", m_Owner);
+	emit_signal("abilities_cleared", m_Owner);
 }
 
 bool sm::AbilityContainer::Has(const godot::Ref<AbilityData>& ability) const
@@ -305,6 +307,28 @@ float sm::AbilityContainer::GetCurrentCooldown(TagID id) const
 	}
 
 	return 0;
+}
+
+float sm::AbilityContainer::GetCooldown(TagID id) const
+{
+	if (auto itr = m_Scripts.find(id);
+		itr != m_Scripts.end())
+	{
+		return itr->second->GetAbilityData()->GetCooldown();
+	}
+
+	return 0.0f;
+}
+
+float sm::AbilityContainer::GetCost(TagID id) const
+{
+	if (auto itr = m_Scripts.find(id);
+		itr != m_Scripts.end())
+	{
+		return itr->second->GetAbilityData()->GetCost();
+	}
+
+	return 0.0f;
 }
 
 bool sm::AbilityContainer::TryActivate(TagID abilityID)

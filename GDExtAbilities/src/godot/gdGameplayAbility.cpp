@@ -61,6 +61,8 @@ bool sm::GameplayAbility::TryActivate()
 
 	if (GDVIRTUAL_IS_OVERRIDDEN(_activate_ability))
 	{
+		state = AbilityState::Activating;
+
 		GDVIRTUAL_CALL(_activate_ability, ret);
 
 		if (ret)
@@ -159,26 +161,25 @@ bool sm::GameplayAbility::IsOnCooldown() const
 {
 	EffectSystem* es = m_World->GetEffectSystem();
 	ERR_FAIL_COND_V_MSG(!es, false, "EffectSystem is null");
+	//GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
+	//if (effect)
+	//{
+	//	TagID tag = effect->GetTagsToAdd()[0];
+	//	auto* container = m_Entity->GetTagContainer();
+	//	return container->HasTag(tag);
+	//}
+
 	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
 	if (effect)
 	{
-		TagID tag = effect->GetTagsToAdd()[0];
-		auto* container = m_Entity->GetTagContainer();
-		return container->HasTag(tag);
+#ifdef DEBUG_ENABLED
+		if (!effect->HasExpired())
+		{
+			WARN_PRINT_ED("Ability is on cooldown.");
+		}
+#endif // DEBUG_ENABLED
+		return !effect->HasExpired();
 	}
-
-
-	//	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
-	//	if (effect)
-	//	{
-	//#ifdef DEBUG_ENABLED
-	//		if (!effect->HasExpired())
-	//		{
-	//			WARN_PRINT_ED("Ability is on cooldown.");
-	//		}
-	//#endif // DEBUG_ENABLED
-	//		return !effect->HasExpired();
-	//	}
 
 	return false;
 }
@@ -186,10 +187,14 @@ bool sm::GameplayAbility::IsOnCooldown() const
 float sm::GameplayAbility::GetCooldown() const
 {
 	EffectSystem* es = m_World->GetEffectSystem();
-	ERR_FAIL_COND_V_MSG(!es, false, "EffectSystem is null");
+	ERR_FAIL_COND_V_MSG(!es, 0.0f, "EffectSystem is null");
 
 	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
-	ERR_FAIL_COND_V_MSG(!effect, false, "GameplayEffect not found");
+	if (!effect)
+	{
+		return 0.0f;
+	}
+	//ERR_FAIL_COND_V_MSG(!effect, 0.0f, "GameplayEffect not found");
 
 	return effect->GetCurrentCooldown();
 }
@@ -200,6 +205,8 @@ bool sm::GameplayAbility::CommitAbility()
 	{
 		return false;
 	}
+
+	state = AbilityState::Activating;
 
 	ApplyCost();
 	ApplyCooldown();

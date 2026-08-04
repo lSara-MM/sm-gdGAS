@@ -62,12 +62,11 @@ namespace sm
 
 	public:
 		godot::Ref<AbilityData> abilityData;
-		AbilityState state;
+		AbilityState state = AbilityState::Idle;
 
 	private:
 		EffectInstanceID m_CooldownEffect;
 		EffectInstanceID m_CostEffect;
-		bool  m_IsActive;
 
 		GAS_Entity* m_Entity;
 		GAS_World* m_World;

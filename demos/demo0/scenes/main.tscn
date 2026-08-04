@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://c4ykauqw02l74"]
+[gd_scene load_steps=9 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
 [ext_resource type="PackedScene" uid="uid://c4e22aq37wggi" path="res://scenes/old/background.tscn" id="1_q4spy"]
 [ext_resource type="Script" path="res://scripts/UI/ProgressBar.gd" id="3_dvvas"]
+[ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pt05u"]
 bg_color = Color(0.341176, 0.741176, 0.682353, 1)
@@ -18,6 +19,9 @@ corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_j32p5"]
+font_size = 10
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_d1of3")
@@ -54,3 +58,24 @@ show_percentage = false
 script = ExtResource("3_dvvas")
 current_attr = &"CurrentStamina"
 max_attr = &"MaxStamina"
+
+[node name="DashBar" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 47.0
+offset_top = 99.0
+offset_right = 75.0
+offset_bottom = 126.0
+max_value = 1.0
+step = 0.2
+fill_mode = 3
+show_percentage = false
+script = ExtResource("5_wv863")
+ability_tag = &".Ability.Dash"
+
+[node name="Label" type="Label" parent="CanvasLayer/DashBar"]
+layout_mode = 0
+offset_right = 28.0
+offset_bottom = 27.0
+text = "Dash"
+label_settings = SubResource("LabelSettings_j32p5")
+horizontal_alignment = 1
+vertical_alignment = 1

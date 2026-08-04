@@ -9,8 +9,6 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		EditorDebug_Godot|x64 = EditorDebug_Godot|x64
 		EditorDebug_Godot|x86 = EditorDebug_Godot|x86
-		EditorRelease_Godot|x64 = EditorRelease_Godot|x64
-		EditorRelease_Godot|x86 = EditorRelease_Godot|x86
 		GameDebug_Godot|x64 = GameDebug_Godot|x64
 		GameDebug_Godot|x86 = GameDebug_Godot|x86
 	EndGlobalSection
@@ -19,10 +17,6 @@ Global
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x64.Build.0 = EditorDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x86.ActiveCfg = EditorDebug_Godot|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x86.Build.0 = EditorDebug_Godot|Win32
-		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x64.ActiveCfg = EditorRelease_Godot|x64
-		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x64.Build.0 = EditorRelease_Godot|x64
-		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x86.ActiveCfg = EditorRelease_Godot|Win32
-		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x86.Build.0 = EditorRelease_Godot|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x64.ActiveCfg = GameDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x64.Build.0 = GameDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x86.ActiveCfg = GameDebug_Godot|Win32

@@ -174,6 +174,9 @@ EffectInstanceID sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect
 		godot::vformat("AddEffect: Could not add '%s'. The EffectSystem was not found.",
 			gdEffect->GetName()));
 
+	auto a = ToStdString(gdEffect->GetName());
+	auto b = world->GetEffectSystem();
+
 	if (!HandleTags(gdEffect))
 	{
 		return 0;

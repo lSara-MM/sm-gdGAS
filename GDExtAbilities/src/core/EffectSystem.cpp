@@ -18,7 +18,6 @@ void sm::EffectSystem::Update(float dt)
 		if (effect->HasExpired())
 		{
 			pendingToDelete.push_back({ effect,  i });
-			effect->ResetCooldown();
 		}
 	}
 
@@ -93,6 +92,7 @@ void sm::EffectSystem::RemoveEffect(GameplayEffect* effect, size_t index)
 	entity->AddTags(effect->GetTagsToRemove());
 	entity->RemoveTags(effect->GetTagsToAdd());
 
+	m_Effects.erase(effect->GetInstanceID());
 	m_ActiveEffects.erase(m_ActiveEffects.begin() + index);
 }
 

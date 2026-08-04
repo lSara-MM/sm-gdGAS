@@ -3,7 +3,11 @@
 sm::GameplayEffect::GameplayEffect(EffectID name, EffectInstanceID id,
 	GameplayEffect::Type type, EntityID target, EntityID source, float time)
 	: m_Name(name), m_ID(id), m_TargetID(target), m_SourceID(source), m_EffectType(type), m_RemainingTime(time), m_Time(time)
-{}
+{
+#ifdef DEBUG_ENABLED
+	m_NameDebug = ToStdString(name);
+#endif // DEBUG_ENABLED
+}
 
 bool sm::GameplayEffect::HasExpired() const
 {

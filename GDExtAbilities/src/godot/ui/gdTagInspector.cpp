@@ -54,7 +54,7 @@ bool sm::TagInspector::_parse_property(
 		editor->ShowInspector(object, title);
 		return true;
 	}
-	else if (type == godot::Variant::PACKED_INT32_ARRAY && name.contains("tag"))
+	else if (type == godot::Variant::PACKED_INT32_ARRAY && name.contains("tags"))
 	{
 		godot::String title = name.capitalize();
 

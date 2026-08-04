@@ -6,6 +6,7 @@
 #include "internal/Types.h"
 
 #include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/core/gdvirtual.gen.inc>
 #include <unordered_map>
 
 namespace sm
@@ -40,9 +41,11 @@ namespace sm
 		void AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod);
 		void RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod);
 
+		GDVIRTUAL2R(float, _pre_attribute_change, AttributeID, float)
+
 #pragma endregion
 
-		GameplayAttribute* FindAttribute(AttributeID id) const;
+			GameplayAttribute* FindAttribute(AttributeID id) const;
 		ModifierID AddModifier(GameplayAttribute* attr, const godot::Ref<ModifierData> mod);
 		void AddAttribute(godot::StringName id, const godot::Ref<AttributeData> data);
 		void ModifyAttribute(AttributeID id, float newValue);
@@ -53,6 +56,7 @@ namespace sm
 
 		// When node container is loaded, get editor changes and apply them to the C++ AttributeData Set
 		void OnReady() override;
+		float PreAttributeChange(AttributeID id, float calculated = 0.0f);
 
 	private:
 		std::unique_ptr<GameplayAttributeSet> m_AttributeSetPtr;

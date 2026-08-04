@@ -4,12 +4,14 @@
 
 #include <algorithm>
 
-void sm::GameplayAttribute::Calculate()
+float sm::GameplayAttribute::Calculate()
 {
 	if (!m_dirty)
 	{
-		return;
+		return m_CurrentValue;
 	}
+
+	float current = 0;
 
 	// Ignore all modifiers if there is an Override
 	if (!m_Modifiers[static_cast<size_t>(ModifierOperationType::Override)].empty())
@@ -17,11 +19,11 @@ void sm::GameplayAttribute::Calculate()
 		// If there are more than one, apply last
 		auto& modifier = m_Modifiers[static_cast<size_t>(ModifierOperationType::Override)];
 
-		m_CurrentValue = modifier[modifier.size() - 1].value;
-		m_CurrentValue = std::clamp(m_CurrentValue, m_MinValue, m_MaxValue);
+		current = modifier[modifier.size() - 1].value;
+		current = std::clamp(current, m_MinValue, m_MaxValue);
 
 		m_dirty = false;
-		return;
+		return current;
 	}
 
 	float sum = 0;
@@ -52,11 +54,12 @@ void sm::GameplayAttribute::Calculate()
 	//m_CurrentValue *= mult;
 	//m_CurrentValue += m_BaseValue * perAdd * 0.01f;
 	//m_CurrentValue *= perStack;
-	m_CurrentValue = ((m_BaseValue + sum) * mult + m_BaseValue * perAdd * 0.01f) * perStack;
-
-	m_CurrentValue = std::clamp(m_CurrentValue, m_MinValue, m_MaxValue);
+	current = ((m_BaseValue + sum) * mult + m_BaseValue * perAdd * 0.01f) * perStack;
+	current = std::clamp(current, m_MinValue, m_MaxValue);
 
 	m_dirty = false;
+
+	return current;
 }
 
 void sm::GameplayAttribute::SetBase(float newValue)
@@ -68,10 +71,16 @@ float sm::GameplayAttribute::GetCurrent()
 {
 	if (m_dirty)
 	{
-		Calculate();
+		float rawValue = Calculate();
+		m_CurrentValue = m_PreAttrChange ? m_PreAttrChange(rawValue) : rawValue;
 	}
 
 	return m_CurrentValue;
+}
+
+void sm::GameplayAttribute::SetPreAttributeChange(std::function<float(float)> delegate)
+{
+	m_PreAttrChange = delegate;
 }
 
 size_t sm::GameplayAttribute::GetModifiersCount(ModifierOperationType op) const
@@ -98,16 +107,6 @@ sm::GameplayModifier* sm::GameplayAttribute::FindModifier(const ModifierHandle& 
 {
 	std::vector<GameplayModifier>& mods = m_Modifiers[static_cast<size_t>(handle.op)];
 	return &mods[handle.index];
-
-	/*for (auto& modifier : *mods)
-	{
-		if (handle.id == modifier->ID)
-		{
-			return modifier.get();
-		}
-	}
-
-	return nullptr;*/
 }
 
 std::optional<size_t> sm::GameplayAttribute::FindModifierIndex(const godot::Ref<sm::ModifierData>& mod) const
@@ -174,28 +173,34 @@ void sm::GameplayAttribute::RemoveModifier(ModifierHandle& handle)
 
 void sm::GameplayAttribute::AddBaseModifier(const godot::Ref<sm::ModifierData>& mod)
 {
+	float rawValue = m_BaseValue;
+
 	switch (mod->GetOperationType())
 	{
 	case ModifierData::OperationType::Override:
-		SetBase(mod->GetValue());
+		rawValue = mod->GetValue();
 		break;
 	case ModifierData::OperationType::Add:
-		SetBase(m_BaseValue + mod->GetValue());
+		rawValue = m_BaseValue + mod->GetValue();
 		break;
 
 	case ModifierData::OperationType::Multiply:
-		SetBase(m_BaseValue * mod->GetValue());
+		rawValue = m_BaseValue * mod->GetValue();
 		break;
 
 	case ModifierData::OperationType::PercentAdd:
-		SetBase(m_BaseValue + m_BaseValue * mod->GetValue() * 0.01f);
+		rawValue = m_BaseValue + m_BaseValue * mod->GetValue() * 0.01f;
 		break;
 
 	default:
 		break;
 	}
 
-	m_dirty = true;
+	if (m_PreAttrChange)
+	{
+		SetBase(m_PreAttrChange(rawValue));
+		m_dirty = true;
+	}
 }
 
 void sm::GameplayAttribute::ClearModifiers()
