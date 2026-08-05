@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://c4ykauqw02l74"]
+[gd_scene load_steps=11 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
 [ext_resource type="PackedScene" uid="uid://c4e22aq37wggi" path="res://scenes/old/background.tscn" id="1_q4spy"]
 [ext_resource type="Script" path="res://scripts/UI/ProgressBar.gd" id="3_dvvas"]
+[ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/old/enemySpawner.tscn" id="4_gd0il"]
+[ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/old/prefabs/enemies/eChaser.tscn" id="5_2nmdp"]
 [ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pt05u"]
@@ -27,11 +29,16 @@ font_size = 10
 script = ExtResource("1_d1of3")
 
 [node name="GAS_World" type="GAS_World" parent="."]
-entity_count = 1
 
 [node name="Background" parent="." instance=ExtResource("1_q4spy")]
 
-[node name="Player" parent="." instance=ExtResource("1_14uck")]
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("1_14uck")]
+
+[node name="EnemySpawner" parent="." instance=ExtResource("4_gd0il")]
+objects = Array[PackedScene]([ExtResource("5_2nmdp")])
+
+[node name="Enemy" parent="EnemySpawner" instance=ExtResource("5_2nmdp")]
+position = Vector2(-27, 125)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

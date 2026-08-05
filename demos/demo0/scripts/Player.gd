@@ -11,8 +11,6 @@ func _physics_process(_delta: float) -> void:
 func GetInput() -> void:
 	if Input.is_action_just_pressed("lshift"):
 		print(entity.TryDash())
-	if Input.is_action_just_pressed("left"):
-		print("entity.TryDash()")
 	
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	velocity = input_direction * entity.GetAttributeCurrentValue(&"Speed")

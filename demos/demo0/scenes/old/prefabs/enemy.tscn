@@ -1,11 +1,10 @@
-[gd_scene load_steps=34 format=3 uid="uid://q6m7shdb3sbo"]
+[gd_scene load_steps=33 format=3 uid="uid://q6m7shdb3sbo"]
 
-[ext_resource type="Script" uid="uid://brrvtxqenf1fl" path="res://scripts/Enemy.gd" id="1_oiceh"]
-[ext_resource type="Resource" uid="uid://cdi4dwq7dbdw7" path="res://resources/enemies/ChaserKamikazeStats.tres" id="2_0netx"]
-[ext_resource type="Script" uid="uid://cfqal1tej470c" path="res://scripts/ChaseTarget.gd" id="3_hw223"]
-[ext_resource type="Script" uid="uid://d0tsq2prfvgxf" path="res://scripts/ChaserOnCollision.gd" id="4_bqt74"]
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_oiceh"]
+[ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="3_hw223"]
+[ext_resource type="Script" path="res://scripts/ChaserOnCollision.gd" id="4_bqt74"]
 [ext_resource type="Texture2D" uid="uid://k1ehcrgwoj6f" path="res://assets/enemies/owl/SpriteSheet.png" id="5_44pch"]
-[ext_resource type="Script" uid="uid://cgnqw24a5eb4w" path="res://scripts/AnimationTreeHandler.gd" id="6_rdxhq"]
+[ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="6_rdxhq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xwavj"]
 radius = 12.0416
@@ -293,16 +292,16 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_my7n2"]
 _data = {
-&"Idle_Down": SubResource("Animation_2cgup"),
-&"Idle_Left": SubResource("Animation_a5ia6"),
-&"Idle_Right": SubResource("Animation_0dpix"),
-&"Idle_Up": SubResource("Animation_2hyy3"),
-&"RESET": SubResource("Animation_lrhn5"),
-&"Walk_Down": SubResource("Animation_0lw5n"),
-&"Walk_Left": SubResource("Animation_my7n2"),
-&"Walk_Right": SubResource("Animation_dp8ca"),
-&"Walk_Up": SubResource("Animation_rkhd4"),
-&"Wobble_Up": SubResource("Animation_irmqu")
+"Idle_Down": SubResource("Animation_2cgup"),
+"Idle_Left": SubResource("Animation_a5ia6"),
+"Idle_Right": SubResource("Animation_0dpix"),
+"Idle_Up": SubResource("Animation_2hyy3"),
+"RESET": SubResource("Animation_lrhn5"),
+"Walk_Down": SubResource("Animation_0lw5n"),
+"Walk_Left": SubResource("Animation_my7n2"),
+"Walk_Right": SubResource("Animation_dp8ca"),
+"Walk_Up": SubResource("Animation_rkhd4"),
+"Wobble_Up": SubResource("Animation_irmqu")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rkhd4"]
@@ -373,7 +372,14 @@ collision_mask = 5
 floor_snap_length = 0.0
 platform_floor_layers = 4294967232
 script = ExtResource("1_oiceh")
-m_Stats = ExtResource("2_0netx")
+
+[node name="GAS_Entity" type="GAS_Entity" parent="."]
+
+[node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity"]
+
+[node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
+
+[node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
 
 [node name="Behaviour" type="Node2D" parent="."]
 
@@ -405,7 +411,7 @@ vframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_my7n2")
+"": SubResource("AnimationLibrary_my7n2")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]

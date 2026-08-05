@@ -1,23 +1,10 @@
-[gd_scene load_steps=35 format=3 uid="uid://mkchjb68qtwk"]
+[gd_scene load_steps=33 format=3 uid="uid://mkchjb68qtwk"]
 
-[ext_resource type="Script" uid="uid://brrvtxqenf1fl" path="res://scripts/Enemy.gd" id="1_1i5lx"]
-[ext_resource type="Script" uid="uid://57jjeeow3ck0" path="res://scripts/resources/REnemyStats.gd" id="2_echt2"]
-[ext_resource type="Script" uid="uid://cfqal1tej470c" path="res://scripts/ChaseTarget.gd" id="3_1gqvf"]
-[ext_resource type="Script" uid="uid://d0tsq2prfvgxf" path="res://scripts/ChaserOnCollision.gd" id="4_1tqjc"]
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_1i5lx"]
+[ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="3_1gqvf"]
+[ext_resource type="Script" path="res://scripts/ChaserOnCollision.gd" id="4_1tqjc"]
 [ext_resource type="Texture2D" uid="uid://cdtrjn5w640pq" path="res://assets/enemies/octopus/SpriteSheet.png" id="5_echt2"]
-[ext_resource type="Script" uid="uid://cgnqw24a5eb4w" path="res://scripts/AnimationTreeHandler.gd" id="6_7ufrw"]
-
-[sub_resource type="Resource" id="Resource_q8ne0"]
-resource_local_to_scene = true
-script = ExtResource("2_echt2")
-m_ExpDropped = 50.0
-m_MaxHealth = 100.0
-m_MovementSpeed = 50.0
-m_EffectSpeed = 2.0
-m_CurrentLvl = 0
-m_MinLvl = 0
-m_MaxLvl = 0
-metadata/_custom_type_script = "uid://57jjeeow3ck0"
+[ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="6_7ufrw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xwavj"]
 radius = 12.0416
@@ -305,16 +292,16 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_my7n2"]
 _data = {
-&"Idle_Down": SubResource("Animation_2cgup"),
-&"Idle_Left": SubResource("Animation_a5ia6"),
-&"Idle_Right": SubResource("Animation_0dpix"),
-&"Idle_Up": SubResource("Animation_2hyy3"),
-&"RESET": SubResource("Animation_lrhn5"),
-&"Walk_Down": SubResource("Animation_0lw5n"),
-&"Walk_Left": SubResource("Animation_my7n2"),
-&"Walk_Right": SubResource("Animation_dp8ca"),
-&"Walk_Up": SubResource("Animation_rkhd4"),
-&"Wobble_Up": SubResource("Animation_irmqu")
+"Idle_Down": SubResource("Animation_2cgup"),
+"Idle_Left": SubResource("Animation_a5ia6"),
+"Idle_Right": SubResource("Animation_0dpix"),
+"Idle_Up": SubResource("Animation_2hyy3"),
+"RESET": SubResource("Animation_lrhn5"),
+"Walk_Down": SubResource("Animation_0lw5n"),
+"Walk_Left": SubResource("Animation_my7n2"),
+"Walk_Right": SubResource("Animation_dp8ca"),
+"Walk_Up": SubResource("Animation_rkhd4"),
+"Wobble_Up": SubResource("Animation_irmqu")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rkhd4"]
@@ -385,7 +372,6 @@ collision_mask = 5
 floor_snap_length = 0.0
 platform_floor_layers = 4294967232
 script = ExtResource("1_1i5lx")
-m_Stats = SubResource("Resource_q8ne0")
 
 [node name="Behaviour" type="Node2D" parent="."]
 

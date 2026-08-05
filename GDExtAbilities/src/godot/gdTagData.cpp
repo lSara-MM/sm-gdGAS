@@ -46,7 +46,9 @@ void sm::TagData::_bind_methods()
 void sm::TagData::SetName(const godot::String& value)
 {
 	m_Name = value;
+#ifdef DEBUG_ENABLED
 	m_DebugName = ToStdString(value);
+#endif DEBUG_ENABLED
 	UpdateChildrenParents();
 }
 

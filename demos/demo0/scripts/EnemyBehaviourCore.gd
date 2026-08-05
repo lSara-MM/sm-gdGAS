@@ -1,14 +1,12 @@
 extends Node2D
 class_name EnemyBehaviourCore
 
-var m_Owner: CharacterBody2D
-var m_Player : CharacterBody2D
-var m_Stats : RStats
+var node_owner: CharacterBody2D
+var player : CharacterBody2D
 
 func Init(own: Node2D) -> void:
-	m_Owner = own
-	m_Player = own.m_Player
-	m_Stats = own.m_Stats
+	node_owner = own
+	player = own.player
 	
 	InitSpecs(own)
 

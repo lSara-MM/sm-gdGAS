@@ -332,7 +332,7 @@ void sm::AbilityData::SetCostAttributeID(AttributeID value)
 	m_CostAttributeID = value;
 
 	godot::Ref<ModifierData> modifier;
-	if (!m_CostData->GetModifiers().is_empty())
+	if (m_CostData.is_valid() && !m_CostData->GetModifiers().is_empty())
 	{
 		modifier = m_CostData->GetModifiers()[0];
 		modifier->SetTargetID(m_CostAttributeID);

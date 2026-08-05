@@ -19,6 +19,7 @@ base_value = 100.0
 [sub_resource type="AttributeData" id="AttributeData_edjgr"]
 name = &"CurrentStamina"
 base_value = 12.0
+max_value = 9.22337e+18
 
 [sub_resource type="AttributeData" id="AttributeData_1q7sq"]
 name = &"MaxStamina"

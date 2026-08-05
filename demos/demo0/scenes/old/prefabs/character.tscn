@@ -1,9 +1,8 @@
-[gd_scene load_steps=32 format=3 uid="uid://doqb2qmliupm2"]
+[gd_scene load_steps=31 format=3 uid="uid://doqb2qmliupm2"]
 
-[ext_resource type="Script" uid="uid://dx73ichqrwsov" path="res://scripts/Player.gd" id="1_o5qli"]
-[ext_resource type="Resource" uid="uid://boc12e1ivl4yg" path="res://resources/PlayerStats.tres" id="2_cuik1"]
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_o5qli"]
 [ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="2_rkhd4"]
-[ext_resource type="Script" uid="uid://cgnqw24a5eb4w" path="res://scripts/AnimationTreeHandler.gd" id="3_lrhn5"]
+[ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="3_lrhn5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrhn5"]
 radius = 13.0
@@ -288,16 +287,16 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_my7n2"]
 _data = {
-&"Idle_Down": SubResource("Animation_2cgup"),
-&"Idle_Left": SubResource("Animation_a5ia6"),
-&"Idle_Right": SubResource("Animation_0dpix"),
-&"Idle_Up": SubResource("Animation_2hyy3"),
-&"RESET": SubResource("Animation_lrhn5"),
-&"Walk_Down": SubResource("Animation_0lw5n"),
-&"Walk_Left": SubResource("Animation_my7n2"),
-&"Walk_Right": SubResource("Animation_dp8ca"),
-&"Walk_Up": SubResource("Animation_rkhd4"),
-&"Wobble_Up": SubResource("Animation_irmqu")
+"Idle_Down": SubResource("Animation_2cgup"),
+"Idle_Left": SubResource("Animation_a5ia6"),
+"Idle_Right": SubResource("Animation_0dpix"),
+"Idle_Up": SubResource("Animation_2hyy3"),
+"RESET": SubResource("Animation_lrhn5"),
+"Walk_Down": SubResource("Animation_0lw5n"),
+"Walk_Left": SubResource("Animation_my7n2"),
+"Walk_Right": SubResource("Animation_dp8ca"),
+"Walk_Up": SubResource("Animation_rkhd4"),
+"Wobble_Up": SubResource("Animation_irmqu")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rkhd4"]
@@ -372,7 +371,6 @@ collision_mask = 10
 floor_block_on_wall = false
 platform_floor_layers = 4294967232
 script = ExtResource("1_o5qli")
-m_Stats = ExtResource("2_cuik1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

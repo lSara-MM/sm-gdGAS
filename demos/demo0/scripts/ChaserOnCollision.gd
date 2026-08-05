@@ -1,7 +1,8 @@
 extends EnemyBehaviourCore
 
+@onready var ability_container = $"../../GAS_Entity/AbilityContainer"
+
 func OnCollision(body: Node2D) -> void:
-	if	body == m_Player:
-		print(m_Owner)
-		m_Player.m_Stats.TakeDmg(m_Owner.m_Stats.m_ExpDropped)
-		m_Owner.queue_free()
+	if	body == player:
+		ability_container.try_activate(Tags._Ability_Damage)
+		#node_owner.queue_free()
