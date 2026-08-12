@@ -13,13 +13,13 @@ func InitSpecs(own: Node2D) -> void:
 func _physics_process(_delta):
 	character.velocity = GetVelocity(character)
 	
-	if	animation_tree:
+	if animation_tree:
 		animation_tree.SetAnim(character.velocity.normalized())
 		
 	character.move_and_slide()
 
 func GetVelocity(this: CharacterBody2D) -> Vector2:
-	if	target:
+	if target:
 		var speed = attribute_container.get_attribute_current_value(&"Speed")
 		return (target.global_position - this.global_position).normalized() * speed
 	

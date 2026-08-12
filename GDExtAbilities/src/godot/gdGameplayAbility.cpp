@@ -118,6 +118,11 @@ bool sm::GameplayAbility::CheckCost()
 	const AttributeContainer* attrContainer = m_Entity->GetAttributeContainer();
 	GameplayAttribute* attr = attrContainer->FindAttribute(abilityData->GetCostAttributeID());
 
+	if (!attr)
+	{
+		return true;
+	}
+
 #ifdef DEBUG_ENABLED
 	if (!(attr->GetCurrent() >= abilityData->GetCost()))
 	{

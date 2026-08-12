@@ -1,6 +1,7 @@
 extends CharacterBody2D
 class_name Enemy
 
+@onready var entity = $"GAS_Entity"
 @onready var player : CharacterBody2D = get_tree().get_first_node_in_group("Player")
 @onready var on_collision = $Behaviour/OnCollision
 
