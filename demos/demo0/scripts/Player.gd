@@ -17,3 +17,11 @@ func GetInput() -> void:
 	
 	if animation_tree:
 		animation_tree.SetAnim(input_direction)
+
+func _on_attribute_changed(attribute_name: StringName, new_value: float, _old_value: float) -> void:
+	match attribute_name:
+		"CurrentHealth":
+			if new_value == 0:
+				print("You died")
+				queue_free()
+	pass

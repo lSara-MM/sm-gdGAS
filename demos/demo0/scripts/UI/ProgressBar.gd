@@ -6,13 +6,13 @@ var attr_container : AttributeContainer
 
 func setup(entity: Node, _world = null) -> void:
 	attr_container = entity.get_node("AttributeContainer")
-	attr_container.modifier_added.connect(_on_attribute_changed)
+	attr_container.attribute_changed.connect(_on_attribute_changed)
 	value = attr_container.get_attribute_current_value(current_attr)
 	max_value = attr_container.get_attribute_current_value(max_attr)
 
-func _on_attribute_changed(_entity_owner: AttributeContainer, attr_name: StringName, _mod: ModifierData) -> void:
+func _on_attribute_changed(attr_name: StringName, new_val: float, _old_val: float) -> void:
 	match attr_name:
 			current_attr:
-				value = attr_container.get_attribute_current_value(attr_name)
+				value = new_val
 			max_attr:
-				max_value = attr_container.get_attribute_current_value(attr_name)
+				max_value = new_val

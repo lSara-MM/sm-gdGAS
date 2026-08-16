@@ -47,7 +47,7 @@ namespace sm
 
 			GameplayAttribute* FindAttribute(AttributeID id) const;
 		ModifierID AddModifier(GameplayAttribute* attr, const godot::Ref<ModifierData> mod);
-		void AddAttribute(godot::StringName id, const godot::Ref<AttributeData> data);
+		void AddAttribute(AttributeID id, const godot::Ref<AttributeData> data);
 		void ModifyAttribute(AttributeID id, float newValue);
 
 	private:

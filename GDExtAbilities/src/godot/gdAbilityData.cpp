@@ -116,6 +116,11 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 
 	auto code = script->get_source_code().strip_edges();
 
+#ifdef DEBUG_ENABLED
+	auto debug = ToStdString(code);
+#endif // DEBUG_ENABLED
+
+
 	if (code.is_empty())
 	{
 		godot::String templateCode =

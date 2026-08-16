@@ -1,8 +1,7 @@
 [gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://d2ydgaxyn7b0o"]
 
-[sub_resource type="GDScript" id="GDScript_12c8i"]
+[sub_resource type="GDScript" id="GDScript_ojbfm"]
 script/source = "extends GameplayAbility
-class_name BasicDamageAbility
 
 ## Default: On activate ability, effects are applied to self or if overriden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
 ## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.
@@ -32,6 +31,6 @@ modifiers = Array[ModifierData]([SubResource("ModifierData_jso6a")])
 
 [resource]
 tag_name = &"EnemyBasicDamage"
-ability = SubResource("GDScript_12c8i")
+ability = SubResource("GDScript_ojbfm")
 effect = Array[EffectData]([SubResource("EffectData_6k0b2")])
 tags = PackedInt32Array(11, 2)

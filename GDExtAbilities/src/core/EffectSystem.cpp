@@ -85,12 +85,13 @@ void sm::EffectSystem::RemoveEffect(GameplayEffect* effect, size_t index)
 	SM_ASSERT(_world != nullptr, "Critical error: Could not remove effect. World not created.");
 
 	GAS_Entity* entity = _world->GetEntity(effect->GetTargetID());
-	SM_ASSERT(entity != nullptr, "Critical error: Could not remove effect. Entity %d was not found.", effect->GetTargetID());
+	if (entity)
+	{
+		RemoveEffectModifiers(entity, effect);
 
-	RemoveEffectModifiers(entity, effect);
-
-	entity->AddTags(effect->GetTagsToRemove());
-	entity->RemoveTags(effect->GetTagsToAdd());
+		entity->AddTags(effect->GetTagsToRemove());
+		entity->RemoveTags(effect->GetTagsToAdd());
+	}
 
 	m_Effects.erase(effect->GetInstanceID());
 	m_ActiveEffects.erase(m_ActiveEffects.begin() + index);

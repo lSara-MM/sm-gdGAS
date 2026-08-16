@@ -414,3 +414,5 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = Vector2(-0.00101525, 0.0125786)
 parameters/Walk/blend_position = 0.0266577
 script = ExtResource("4_ed433")
+
+[connection signal="attribute_changed" from="GAS_Entity/AttributeContainer" to="." method="_on_attribute_changed"]

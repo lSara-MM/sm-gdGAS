@@ -26,7 +26,9 @@ namespace sm
 		GameplayAttribute(AttributeID id, float base = 0.0f, float min = 0.0f, float max = FLT_MAX) :
 			m_ID(id), m_dirty(true), m_BaseValue(base), m_CurrentValue(base), m_MinValue(min), m_MaxValue(max)
 		{
-
+#ifdef DEBUG_ENABLED
+			m_DebugID = ToStdString(id);
+#endif // DEBUG_ENABLED
 		}
 
 		GameplayAttribute(const GameplayAttribute&) = delete;
@@ -48,6 +50,7 @@ namespace sm
 		bool IsDirty() const { return m_dirty; }
 
 		void SetPreAttributeChange(std::function<float(float)> delegate);
+		void SetAttributeChanged(std::function<void(float, float)> delegate);
 
 		size_t GetModifiersCount(ModifierOperationType op) const;
 		GameplayModifier* FindModifier(const godot::Ref<ModifierData>& mod);
@@ -70,6 +73,11 @@ namespace sm
 		ModifierBuckets m_Modifiers;
 
 		AttributeID m_ID;
+
+#ifdef DEBUG_ENABLED
+		std::string m_DebugID;
+#endif // DEBUG_ENABLED
+
 		DumbUID m_ModifiersUIDs;
 
 		float m_BaseValue;
@@ -78,6 +86,7 @@ namespace sm
 		float m_MaxValue;
 
 		std::function<float(float)> m_PreAttrChange = nullptr;
+		std::function<void(float, float)> m_AttrChange = nullptr;
 
 		bool m_dirty;
 	};

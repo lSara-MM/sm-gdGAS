@@ -45,33 +45,28 @@ void sm::AttributeContainer::_bind_methods()
 	);
 
 	// Signals
-	ADD_SIGNAL(godot::MethodInfo("attribute_modified",
-		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
+	ADD_SIGNAL(godot::MethodInfo("attribute_changed",
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::FLOAT, "new_value"),
 		godot::PropertyInfo(godot::Variant::FLOAT, "old_value")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("modifier_added",
-		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "modifier_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("modifier_removed",
-		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "modifier_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("effect_added",
-		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "effect_data")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("effect_removed",
-		godot::PropertyInfo(godot::Variant::OBJECT, "entity_owner", godot::PROPERTY_HINT_NODE_TYPE, "AttributeContainer"),
 		godot::PropertyInfo(godot::Variant::STRING_NAME, "attribute_name"),
 		godot::PropertyInfo(godot::Variant::OBJECT, "effect_data")
 	));
@@ -84,13 +79,12 @@ void sm::AttributeContainer::OnReady()
 		return;
 	}
 
-	m_gdAttributeSetData->ValidateSetData(m_gdAttributeSetData->GetAttributesSet());
-
-	std::vector<godot::Ref<AttributeData>> attrs = m_gdAttributeSetData->SortByName();
+	auto attrs = m_gdAttributeSetData->ValidateSetData(m_gdAttributeSetData->GetAttributesSet());
 
 	for (size_t i = 0; i < attrs.size(); ++i)
 	{
-		AddAttribute(attrs[i]->GetName(), attrs[i]);
+		godot::Ref<AttributeData> attr = attrs[i];
+		AddAttribute(attr->GetName(), attr);
 	}
 }
 
@@ -174,7 +168,7 @@ sm::GameplayAttribute* sm::AttributeContainer::FindAttribute(AttributeID id) con
 ModifierID sm::AttributeContainer::AddModifier(GameplayAttribute* attr, const godot::Ref<ModifierData> mod)
 {
 	ModifierID modID = attr->AddModifier(mod).id;
-	emit_signal("modifier_added", this, attr->GetUID(), mod);
+	emit_signal("modifier_added", attr->GetUID(), mod);
 
 	return modID;
 }
@@ -185,18 +179,22 @@ ModifierID sm::AttributeContainer::AddModifier(AttributeID id, const godot::Ref<
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
 	ModifierID modID = attr->AddModifier(mod).id;
-	emit_signal("modifier_added", this, id, mod);
+	emit_signal("modifier_added", id, mod);
 
 	return modID;
 }
 
 void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<ModifierData> mod)
 {
+#ifdef DEBUG_ENABLED
+	auto i = ToStdString(id);
+#endif // DEBUG_ENABLED
+
 	GameplayAttribute* attr = m_AttributeSetPtr->FindAttribute(id);
 	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	attr->AddBaseModifier(mod);
 
-	emit_signal("modifier_added", this, id, mod);
+	emit_signal("modifier_added", id, mod);
 }
 
 void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod)
@@ -205,10 +203,10 @@ void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierD
 	ERR_FAIL_NULL_MSG(attr, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 	attr->RemoveModifier(mod);
 
-	emit_signal("modifier_removed", this, id, mod);
+	emit_signal("modifier_removed", id, mod);
 }
 
-void sm::AttributeContainer::AddAttribute(godot::StringName id, const godot::Ref<AttributeData> data)
+void sm::AttributeContainer::AddAttribute(AttributeID id, const godot::Ref<AttributeData> data)
 {
 	GameplayAttribute* addedAttr = &m_AttributeSetPtr->AddAttribute(id, data->GetBaseValue(), data->GetMinValue(), data->GetMaxValue());
 	m_AttributesByName.try_emplace(id, addedAttr);
@@ -224,6 +222,11 @@ void sm::AttributeContainer::AddAttribute(godot::StringName id, const godot::Ref
 
 			return ret;
 		});
+
+	addedAttr->SetAttributeChanged([this, id](float newVal, float oldVal)
+		{
+			emit_signal("attribute_changed", id, newVal, oldVal);
+		});
 }
 
 void sm::AttributeContainer::ModifyAttribute(AttributeID id, float newValue)
@@ -233,5 +236,5 @@ void sm::AttributeContainer::ModifyAttribute(AttributeID id, float newValue)
 	float oldValue = attr->GetBase();
 	attr->SetBase(newValue);
 
-	emit_signal("attribute_modified", this, id, newValue, oldValue);
+	emit_signal("attribute_changed", id, newValue, oldValue);
 }

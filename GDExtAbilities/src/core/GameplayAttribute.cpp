@@ -64,15 +64,28 @@ float sm::GameplayAttribute::Calculate()
 
 void sm::GameplayAttribute::SetBase(float newValue)
 {
+	if (m_BaseValue == newValue)
+	{
+		return;
+	}
+
 	m_BaseValue = std::clamp(newValue, m_MinValue, m_MaxValue);
+	m_dirty = true;
+	GetCurrent();
 }
 
 float sm::GameplayAttribute::GetCurrent()
 {
 	if (m_dirty)
 	{
+		float oldVal = m_CurrentValue;
 		float rawValue = Calculate();
 		m_CurrentValue = m_PreAttrChange ? m_PreAttrChange(rawValue) : rawValue;
+
+		if (oldVal != m_CurrentValue)
+		{
+			m_AttrChange(m_CurrentValue, oldVal);
+		}
 	}
 
 	return m_CurrentValue;
@@ -81,6 +94,11 @@ float sm::GameplayAttribute::GetCurrent()
 void sm::GameplayAttribute::SetPreAttributeChange(std::function<float(float)> delegate)
 {
 	m_PreAttrChange = delegate;
+}
+
+void sm::GameplayAttribute::SetAttributeChanged(std::function<void(float, float)> delegate)
+{
+	m_AttrChange = delegate;
 }
 
 size_t sm::GameplayAttribute::GetModifiersCount(ModifierOperationType op) const
@@ -199,7 +217,6 @@ void sm::GameplayAttribute::AddBaseModifier(const godot::Ref<sm::ModifierData>& 
 	if (m_PreAttrChange)
 	{
 		SetBase(m_PreAttrChange(rawValue));
-		m_dirty = true;
 	}
 }
 
