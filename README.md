@@ -1,4 +1,4 @@
-**# Gameplay Ability System (GAS) for Godot - Documentation**
+# Gameplay Ability System (GAS) for Godot - Documentation
 
 
 
