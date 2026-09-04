@@ -37,13 +37,13 @@ A data resource that defines a specific mathematical operation to an attribute.
 ## Property Descriptions
 
 ### operation_type
-The mathematical operation used to apply `value` to the target attribute (ex. adding flat amounts, scaling, or overriding).
+The mathematical operation used to apply `value` to the target attribute (Ex. adding flat amounts, scaling, or overriding).
 
 ### source_id
 The identifier of the source attribute or tag backing this modifier calculation, if applicable.
 
 ### target_id
-The unique `StringName` of the attribute that this modifier will alter (ex. `&"Health"` or `&"Speed"`).
+The unique `StringName` of the attribute that this modifier will alter (Ex. `&"Health"` or `&"Speed"`).
 
 ### value
 The numerical value used in the calculation. Depending on `operation_type`, this can represent a flat value, multiplier, or percentage.

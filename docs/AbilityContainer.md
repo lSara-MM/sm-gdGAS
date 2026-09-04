@@ -96,7 +96,7 @@ Returns the cooldown of the specified `ability`.
 ```gdscript
 func get_cost(id: int) -> float
 ```
-*(No additional description provided)*
+Returns the cost of the specified `ability`.
 
 ### get_current_cooldown
 ```gdscript

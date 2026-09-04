@@ -41,11 +41,11 @@ Other `GameplayAbility`s that have these `GameplayTag`s in their Ability Tags ar
 By default 0, the duration in seconds that the entity must wait before this ability can be cast again.
 
 ### cost
-By default 0, the resource value (ex. Mana, Stamina, or Health) required and consumed upon successfully committing the ability.
+By default 0, the resource value (Ex. Mana, Stamina, or Health) required and consumed upon successfully committing the ability.
 It needs an existing attribute on the owner entity to deplete from.
 
 ### cost_resource_attribute
-StringName of the name of the attribute that contains the resource of the cost. (Ex. Mana, Stamina, etc.).
+`StringName` of the name of the attribute that contains the resource of the cost. (Ex. Mana, Stamina, etc.).
 
 ### effect
 The array of `EffectData` resources (buffs, debuffs, or instant modifications) applied to targets when this ability executes.
