@@ -1,63 +1,95 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="GameplayAbility" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Base class for runtime gameplay ability instances managing execution logic, costs, cooldowns, and targeting.
 	</brief_description>
 	<description>
+		[GameplayAbility] represents an active or ready instance of a gameplay ability bound to an owner [GAS_Entity]. It manages checking resource costs, applying cooldowns, validating tag conditions, resolving target entities, and applying gameplay effects.
+		Custom ability behaviors can be defined by extending this class and overriding virtual hook methods like [method _activate_ability], [method _calculate_targets], and [method _check_availability].
 	</description>
 	<tutorials>
 	</tutorials>
 	<methods>
 		<method name="_activate_ability" qualifiers="virtual">
-			<return type="void" />
+			<return type="bool" />
 			<description>
+				Virtual method called during [method try_activate] when custom activation logic is defined. Return [code]true[/code] if the ability successfully activated. Overriding this bypasses the default automatic effect application and auto-ending flow.
 			</description>
 		</method>
 		<method name="_calculate_targets" qualifiers="virtual">
 			<return type="GAS_Entity[]" />
 			<description>
+				Virtual method called during default ability execution to resolve target entities. Returns an array of [GAS_Entity] instances to which the ability's gameplay effects will be applied.
 			</description>
 		</method>
 		<method name="_check_availability" qualifiers="virtual">
 			<return type="bool" />
 			<description>
+				Virtual method called during [method can_activate] to evaluate custom availability conditions. Must return [code]true[/code] to allow ability activation.
 			</description>
 		</method>
 		<method name="_end_ability" qualifiers="virtual">
 			<return type="void" />
 			<param index="0" name="was_cancelled" type="bool" />
 			<description>
+				Virtual method called when the ability ends or is cancelled. Override this to perform cleanup or trigger termination logic. [param was_cancelled] is [code]true[/code] if execution was prematurely interrupted.
 			</description>
 		</method>
 		<method name="apply_effects_to_target">
 			<return type="void" />
-			<param index="0" name="entity" type="GAS_Entity" />
+			<param index="0" name="entity" type="GAS_Entity" default="null" />
 			<description>
+				Applies all configured [EffectData] resources from this ability to the specified target [param entity]. If [param entity] is [code]null[/code], effects are applied to the owner entity instead.
 			</description>
 		</method>
 		<method name="can_activate">
 			<return type="bool" />
 			<description>
+				Returns [code]true[/code] if the ability is currently in an idle state, meets resource costs, passes tag requirements, is not on cooldown, and satisfies [method _check_availability].
 			</description>
 		</method>
 		<method name="commit_ability">
 			<return type="bool" />
 			<description>
+				Commits the ability by validating availability, applying resource costs, and starting cooldown timers. Returns [code]true[/code] if the commit succeeded.
 			</description>
 		</method>
 		<method name="get_ability_data" qualifiers="const">
 			<return type="AbilityData" />
 			<description>
+				Returns the [AbilityData] resource configuration associated with this runtime ability instance.
+			</description>
+		</method>
+		<method name="get_entity_owner" qualifiers="const">
+			<return type="GAS_Entity" />
+			<description>
+				Returns the owner [GAS_Entity] that owns and executes this ability.
 			</description>
 		</method>
 		<method name="is_on_cooldown" qualifiers="const">
 			<return type="bool" />
 			<description>
+				Returns [code]true[/code] if this ability's applied cooldown effect is currently active and unexpired.
 			</description>
 		</method>
 		<method name="set_ability_data">
 			<return type="void" />
 			<param index="0" name="data" type="AbilityData" />
 			<description>
+				Sets the [AbilityData] resource configuration for this ability instance.
+			</description>
+		</method>
+		<method name="try_activate">
+			<return type="bool" />
+			<description>
+				Attempts to activate the ability. Checks [method can_activate] before executing custom logic in [method _activate_ability] or proceeding with default commit, targeting, and effect application routines. Returns [code]true[/code] if activation succeeded.
+			</description>
+		</method>
+		<method name="try_end">
+			<return type="bool" />
+			<param index="0" name="wasCancelled" type="bool" />
+			<description>
+				Attempts to end execution of this ability. If currently active, invokes [method _end_ability] and resets the state to idle.
 			</description>
 		</method>
 	</methods>

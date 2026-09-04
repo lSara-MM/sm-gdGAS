@@ -5,7 +5,6 @@
 	</brief_description>
 	<description>
 		[AttributeSetData] is a custom resource used in the Gameplay Ability System to group multiple [AttributeData] resources together.
-
 		It allows developers to define reusable sets of attributes (such as basic character stats, combat attributes, or custom status attributes) that can be assigned or loaded into an attribute container as a single package.
 	</description>
 	<tutorials>
@@ -13,7 +12,7 @@
 	<methods>
 		<method name="add_attribute">
 			<return type="void" />
-			<param index="0" name="attr" type="AttributeData[]" />
+			<param index="0" name="attr" type="AttributeData" />
 			<description>
 				Appends an array of [AttributeData] resources to this attribute set.
 			</description>

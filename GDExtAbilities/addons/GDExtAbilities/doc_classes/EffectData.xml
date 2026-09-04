@@ -23,17 +23,15 @@
 		</member>
 		<member name="tags_to_add" type="PackedInt32Array" setter="set_tags_to_add" getter="get_tags_to_add" default="PackedInt32Array()">
 			A collection of gameplay tags granted to the target while this effect is active (Ex: adding a [code]Stunned[/code] or [code]Poisoned[/code] tag).
-
 			These are removed automatically when the effect is removed.
 		</member>
 		<member name="tags_to_remove" type="PackedInt32Array" setter="set_tags_to_remove" getter="get_tags_to_remove" default="PackedInt32Array()">
 			A collection of gameplay tags stripped from the target when this effect is applied (e.g., removing a [code]Stealth[/code] tag upon taking damage).
-
 			These are added back automatically when the effect is removed.
 		</member>
 	</members>
 	<constants>
-		<constant name="Permanent" value="0" enum="Type">
+		<constant name="Instant" value="0" enum="Type">
 			The effect applies instantly and its changes are baked permanently into the base attributes. It does not look at [code]duration[/code] and cannot be naturally reverted.
 		</constant>
 		<constant name="Temporary" value="1" enum="Type">

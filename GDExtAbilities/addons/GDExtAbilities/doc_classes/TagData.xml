@@ -5,12 +5,14 @@
 	</brief_description>
 	<description>
 		[TagData] is a custom resource used to define, organise, and store metadata for individual Gameplay Tags within the Gameplay Ability System (GAS). 
-
 		Gameplay Tags are dot-separated identifiers (such as [code]Effect.Status.Stunned[/code] or [code]Ability.Skill.Fireball[/code]) used throughout the system to categorise entity states, query capabilities, trigger effects, and apply conditional requirements. [TagData] objects form a tree structure where parent tags contain nested child tags.
 	</description>
 	<tutorials>
 	</tutorials>
 	<members>
+		<member name="children" type="TagData[]" setter="set_children" getter="get_children" default="[]">
+			An array of child [TagData] resources nested directly beneath this tag node in the hierarchy.
+		</member>
 		<member name="id" type="int" setter="set_internal_id" getter="get_internal_id" default="0">
 			The unique internal integer identifier assigned to this tag within the tag registry system.
 		</member>
@@ -18,10 +20,7 @@
 			The local segment name of this specific tag node (e.g., [code]"Stunned"[/code] in [code]State.Status.Stunned[/code]).
 		</member>
 		<member name="path" type="String" setter="set_path" getter="get_path" default="&quot;&quot;">
-			The full dot-separated hierarchical path string representing the complete tag (e.g., [code]"State.Status.Stunned"[/code]).
-		</member>
-		<member name="children" type="TagData[]" setter="set_children" getter="get_children" default="[]">
-			An array of child [TagData] resources nested directly beneath this tag node in the hierarchy.
+			The full dot-separated hierarchical path string representing the complete tag (Ex. [code]"State.Status.Stunned"[/code]).
 		</member>
 	</members>
 </class>

@@ -24,10 +24,10 @@
 				Returns the assigned [AttributeContainer] node associated with this entity.
 			</description>
 		</method>
-		<method name="get_tag_node_path" qualifiers="const">
-			<return type="NodePath" />
+		<method name="get_tag_container" qualifiers="const">
+			<return type="TagContainer" />
 			<description>
-				Returns the [NodePath] pointing to the assigned [TagContainer] node.
+				Return current [TagContainer] associated to this entity.
 			</description>
 		</method>
 		<method name="set_attribute_container">
@@ -46,11 +46,9 @@
 		</method>
 	</methods>
 	<members>
-		<member name="attribute_container" type="NodePath" setter="" getter="get_attribute_node_path" default="NodePath(&quot;&quot;)">
-			The [NodePath] referencing the [AttributeContainer] node attached to this entity in the scene tree.
+		<member name="attribute_container_node_path" type="NodePath" setter="" getter="get_attribute_node_path" default="NodePath(&quot;&quot;)">
 		</member>
-		<member name="tag_container_node" type="TagContainer" setter="" getter="get_tag_container">
-			Direct reference to the [TagContainer] node currently bound to this entity.
+		<member name="tag_container_node_path" type="NodePath" setter="" getter="get_tag_node_path" default="NodePath(&quot;&quot;)">
 		</member>
 	</members>
 </class>

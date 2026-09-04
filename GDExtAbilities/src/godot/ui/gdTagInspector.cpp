@@ -51,7 +51,7 @@ bool sm::TagInspector::_parse_property(
 
 		auto* editor = memnew(TagContainerEditorProperty(m_Editor));
 		add_property_editor(name, editor);
-		editor->ShowInspector(object, title);
+		editor->ShowInspector(object);
 		return true;
 	}
 	else if (type == godot::Variant::PACKED_INT32_ARRAY && name.contains("tags"))
@@ -60,7 +60,7 @@ bool sm::TagInspector::_parse_property(
 
 		auto* editor = memnew(TagArrayEditorProperty(m_Editor));
 		add_property_editor(name, editor);
-		editor->ShowInspector(object, title);
+		editor->ShowInspector(object);
 		m_Editor->deleteTag.SubscribeEvent(editor, &TagArrayEditorProperty::DeleteTags);
 		return true;
 	}

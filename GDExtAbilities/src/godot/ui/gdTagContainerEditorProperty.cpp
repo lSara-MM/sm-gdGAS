@@ -17,14 +17,14 @@
 sm::TagContainerEditorProperty::TagContainerEditorProperty(TagRegistryEditor* registry) : TagArrayEditorProperty(registry)
 {}
 
-void sm::TagContainerEditorProperty::ShowInspector(Object* object, const godot::String& title)
+void sm::TagContainerEditorProperty::ShowInspector(Object* object)
 {
 	godot::StringName propName = get_edited_property();
 	tags = object->get(propName);
 
 	auto* split = memnew(godot::VSplitContainer);
 
-	root = TagArrayEditorProperty::ShowTagTreeEditor(title);
+	root = TagArrayEditorProperty::ShowTagTreeEditor();
 	TagArrayEditorProperty::SetSize();
 	split->add_child(root);
 
@@ -39,7 +39,7 @@ void sm::TagContainerEditorProperty::ShowInspector(Object* object, const godot::
 	hbox2->add_child(addButton);
 
 	auto* clearButton = memnew(godot::Button);
-	clearButton->set_text("Deselect");
+	clearButton->set_text("Deselect All");
 	clearButton->set_custom_minimum_size(godot::Vector2(100, 30));
 	clearButton->connect("pressed", callable_mp(this, &TagContainerEditorProperty::_OnDeselectButtonClicked));
 	hbox2->add_child(clearButton);
@@ -74,7 +74,7 @@ godot::Control* sm::TagContainerEditorProperty::AddSelectedTagsTree()
 	m_SelectedTree->set_columns(1);
 	m_SelectedTree->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);
 	m_SelectedTree->set_v_size_flags(godot::Control::SIZE_EXPAND_FILL);
-	m_SelectedTree->set_custom_minimum_size(godot::Vector2(100, tags.size() * 50 + 100));
+	m_SelectedTree->set_custom_minimum_size(godot::Vector2(100, tags.size() * 25 + 100));
 	m_SelectedTree->set_hide_root(true);
 	m_SelectedTree->set_hide_folding(true);
 
@@ -100,13 +100,22 @@ void sm::TagContainerEditorProperty::SelectedTree()
 	auto* gui = editor->get_editor_interface()->get_base_control();
 	auto remove = gui->get_theme_icon("Remove", "EditorIcons");
 
+	std::unordered_set<TagID> has;
+
 	for (size_t i = 0; i < tags.size(); i++)
 	{
 		TagID tagId = tags[i];
+		if (has.find(tagId) != has.end())
+		{
+			tags.remove_at(i);
+			continue;
+		}
+
 		godot::TreeItem* item = m_SelectedTree->create_item(rootItem);
 		item->set_metadata(0, tagId);
 		item->set_text(0, idToResource[tagId]);
 		item->add_button(0, remove);
+		has.emplace(tagId);
 	}
 }
 
@@ -163,7 +172,7 @@ void sm::TagContainerEditorProperty::SetSize()
 {
 	if (root)
 	{
-		root->set_custom_minimum_size(godot::Vector2(100, GetTagsSize() * 50 + 50));
+		root->set_custom_minimum_size(godot::Vector2(100, GetTagsSize() * 25 + 50));
 	}
 
 	if (m_SelectedTree)

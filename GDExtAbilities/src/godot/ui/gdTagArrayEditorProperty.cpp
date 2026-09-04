@@ -17,11 +17,12 @@
 sm::TagArrayEditorProperty::TagArrayEditorProperty(TagRegistryEditor* registry) : editor(registry)
 {}
 
-void sm::TagArrayEditorProperty::ShowInspector(godot::Object* object, const godot::String& title)
+void sm::TagArrayEditorProperty::ShowInspector(godot::Object* object)
 {
 	godot::StringName propName = get_edited_property();
 	tags = object->get(propName);
-	auto* root = ShowTagTreeEditor(title);
+
+	auto* root = ShowTagTreeEditor();
 
 	add_child(root);
 	set_bottom_editor(root);
@@ -37,7 +38,7 @@ void sm::TagArrayEditorProperty::_update_property()
 	Refresh();
 }
 
-godot::Control* sm::TagArrayEditorProperty::ShowTagTreeEditor(const godot::String& title)
+godot::Control* sm::TagArrayEditorProperty::ShowTagTreeEditor()
 {
 	root = memnew(godot::VBoxContainer);
 	root->set_h_size_flags(godot::Control::SIZE_EXPAND_FILL);

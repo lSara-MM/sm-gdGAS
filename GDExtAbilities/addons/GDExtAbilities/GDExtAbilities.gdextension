@@ -3,7 +3,7 @@
 entry_symbol = "gdextabilities_plugin_entry"
 compatibility_minimum = "4.3"
 reloadable = true
-doc_classes = "doc_classes"
+doc_classes = "GDExtAbilities/doc_classes"
 
 [libraries]
 

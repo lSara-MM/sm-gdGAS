@@ -675,6 +675,14 @@ void sm::TagRegistryEditor::DeleteTagButton(godot::TreeItem* item)
 	label->add_theme_font_size_override("font_size", 24);
 	vertical->add_child(label);
 
+	godot::Ref<TagData> tag = item->get_metadata(0);
+	godot::String path = tag->GetTagFullPath();
+	godot::Label* labelTag = memnew(godot::Label);
+	labelTag->set_text(godot::vformat("Tag: %s.", path));
+	labelTag->set_horizontal_alignment(godot::HorizontalAlignment::HORIZONTAL_ALIGNMENT_CENTER);
+	labelTag->add_theme_color_override("font_color", godot::Color(1, 0.5, 0));
+	vertical->add_child(labelTag);
+
 	godot::Label* labelDescription = memnew(godot::Label);
 	labelDescription->set_text("Your tag will be permanently deleted.\nThis includes unsaved tag children.");
 	labelDescription->set_horizontal_alignment(godot::HorizontalAlignment::HORIZONTAL_ALIGNMENT_CENTER);
@@ -940,11 +948,21 @@ void sm::TagRegistryEditor::GenerateConstants()
 
 void sm::TagRegistryEditor::_TagAddedToContainer(TagID id, const TagContainer* container)
 {
+	if (!container)
+	{
+		return;
+	}
+
 	m_CurrentReferences[id].push_back(container->get_instance_id());
 }
 
 void sm::TagRegistryEditor::_TagRemovedFromContainer(TagID id, const TagContainer* container)
 {
+	if (!container)
+	{
+		return;
+	}
+
 	if (auto map = m_CurrentReferences.find(id); map != m_CurrentReferences.end())
 	{
 		std::erase(map->second, container->get_instance_id());

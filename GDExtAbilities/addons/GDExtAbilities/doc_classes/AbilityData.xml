@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<class name="AbilityData" inherits="GameplayAbilitySystemResource"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AbilityData" inherits="GameplayAbilitySystemResource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
 		A configuration resource that defines the static properties, costs, cooldowns, and tag requirements of a gameplay ability.
 	</brief_description>
@@ -10,56 +8,36 @@
 	</description>
 	<tutorials>
 	</tutorials>
-	<methods>
-		<method name="get_ability_id" qualifiers="const">
-			<return type="int" />
-			<description>
-			Returns the unique numerical ID assigned to this ability configuration.
-			</description>
-		</method>
-		<method name="set_ability_id">
-			<return type="void" />
-			<param index="0" name="id" type="int" />
-			<description>
-			Sets a unique numerical ID to identify and register this ability configuration within the database.
-			</description>
-		</method>
-	</methods>
 	<members>
-		<member name="Tag_ID" type="int" setter="set_ability_tag_id" getter="get_ability_tag_id"
-			default="792477231">
-			The primary identification tag ID assigned to this ability itself.
-		</member>
 		<member name="ability" type="Script" setter="set_ability" getter="get_ability">
-			The [GameplayAbility] script containing the runtime execution logic (such as targets, animations, and behaviors) that this resource configures.
+			[Optional]. The [GameplayAbility] script containing the runtime execution logic (such as targeting, animations, and behavior) for this resource. If assigned, it uses a script template with virtual methods available for overriding.
 		</member>
-		<member name="activation_blocked" type="PackedInt32Array"
-			setter="set_ability_activation_blocked" getter="get_ability_activation_blocked"
-			default="PackedInt32Array()">
-			The ability cannot be cast if the executing entity currently possesses any of the gameplay tags listed here.
+		<member name="activation_blocked_tags" type="PackedInt32Array" setter="set_ability_activation_blocked" getter="get_ability_activation_blocked" default="PackedInt32Array()">
+			The [GameplayAbility] cannot be activated if the owner has any of these [GameplayTag]s.
 		</member>
-		<member name="activation_tags" type="PackedInt32Array" setter="set_activation_tags"
-			getter="get_activation_tags" default="PackedInt32Array()">
-			The required gameplay tags that the executing entity must possess to successfully activate this ability.
+		<member name="activation_tags" type="PackedInt32Array" setter="set_activation_tags" getter="get_activation_tags" default="PackedInt32Array()">
+			The required [GameplayTag]s that the executing entity must possess to successfully activate this [GameplayAbility].
 		</member>
-		<member name="block_tags" type="PackedInt32Array" setter="set_block_ability_tags"
-			getter="get_block_ability_tags" default="PackedInt32Array()">
-			A list of gameplay tags that will be blocked or prevented from activating on the entity while this ability is actively running.
+		<member name="block_abilities_with_tags" type="PackedInt32Array" setter="set_block_ability_tags" getter="get_block_ability_tags" default="PackedInt32Array()">
+			Other [GameplayAbility]s that have these [GameplayTag]s in their Ability Tags are blocked from activating while this [GameplayAbility] is active.
 		</member>
-		<member name="cooldown" type="float" setter="set_cooldown" getter="get_cooldown"
-			default="0.0">
-			The duration in seconds that the entity must wait before this ability can be cast again.
+		<member name="cooldown" type="float" setter="set_cooldown" getter="get_cooldown" default="0.0">
+			By default 0, the duration in seconds that the entity must wait before this ability can be cast again.
 		</member>
 		<member name="cost" type="float" setter="set_cost" getter="get_cost" default="0.0">
-			The resource value (ex. Mana, Stamina, or Health) required and consumed upon successfully committing the ability.
+			By default 0, the resource value (ex. Mana, Stamina, or Health) required and consumed upon successfully committing the ability.
+			It needs an existing attribute on the owner entity to deplete from.
 		</member>
-		<member name="effect" type="EffectData[]" setter="set_effects" getter="get_effects"
-			default="[]">
+		<member name="cost_resource_attribute" type="StringName" setter="set_cost_attribute" getter="get_cost_attribute" default="&amp;&quot;&quot;">
+			StringName of the name of the attribute that contains the resource of the cost. (Ex. Mana, Stamina, etc.).
+		</member>
+		<member name="effect" type="EffectData[]" setter="set_effects" getter="get_effects" default="[]">
 			The array of [EffectData] resources (buffs, debuffs, or instant modifications) applied to targets when this ability executes.
 		</member>
-		<member name="tags" type="PackedInt32Array" setter="set_ability_tags"
-			getter="get_ability_tags" default="PackedInt32Array()">
-			Gameplay tags granted to the executing entity temporarily while this ability is active.
+		<member name="tag_name" type="StringName" setter="set_ability_name" getter="get_ability_name" default="&amp;&quot;&quot;">
+		</member>
+		<member name="tags" type="PackedInt32Array" setter="set_ability_tags" getter="get_ability_tags" default="PackedInt32Array()">
+			[GameplayTag]s to describe the [GameplayAbility].
 		</member>
 	</members>
 </class>

@@ -122,12 +122,6 @@ void sm::TagContainer::SetTags(const godot::PackedInt32Array& tags)
 void sm::TagContainer::AddTag(TagID id)
 {
 	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("AddTag failed: Unknown tag"));
-
-	if (HasTag(id))
-	{
-		return;
-	}
-
 	SetTag(id);
 }
 

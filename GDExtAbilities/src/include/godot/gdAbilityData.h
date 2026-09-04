@@ -29,9 +29,6 @@ namespace sm
 		godot::Ref<godot::Script> GetAbilityScript() const { return m_AbilityScript; };
 		void SetAbilityScript(const godot::Ref<godot::Script>& script);
 
-		godot::Ref<GameplayAbility> GetAbilityInstance() const { return m_AbilityInstance; };
-		void SetAbilityInstance(const godot::Ref<GameplayAbility>& script);
-
 		float GetCooldown() const { return m_Cooldown; };
 		void SetCooldown(float value);
 		godot::Ref<EffectData> GetCooldonwData() const { return m_CooldownData; };
@@ -68,7 +65,6 @@ namespace sm
 
 	private:
 		godot::Ref<godot::Script> m_AbilityScript;
-		godot::Ref<GameplayAbility> m_AbilityInstance;
 
 		// GameplayTags that the GameplayAbility owns.
 		// These are just GameplayTags to describe the GameplayAbility.

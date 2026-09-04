@@ -33,7 +33,7 @@ if env["target"] in ["editor", "template_debug"]:
     try:
         doc_data = env.GodotCPPDocData(
             f"{build_dir}/gen/doc_data.gen.cpp", 
-            source=Glob("addons/GDExtAbilities/bin/doc_classes/*.xml")
+            source=Glob("addons/GDExtAbilities/doc_classes/*.xml")
         )
         doc_sources.append(doc_data)
         print("--- Generating documentation XML ---")

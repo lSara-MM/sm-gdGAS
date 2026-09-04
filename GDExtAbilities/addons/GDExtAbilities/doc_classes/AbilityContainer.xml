@@ -1,91 +1,160 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="AbilityContainer" inherits="GameplayAbilitySystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
-    <brief_description>
-        A container node that manages granting, executing, tracking, and revoking gameplay abilities for an entity.
-    </brief_description>
-    <description>
-        [AbilityContainer] serves as the runtime ability manager linked to a specific entity. It holds a list of granted [AbilityData] resources, evaluates activation constraints (such as checking tags, costs, and cooldowns), tracks ongoing ability cooldown timers, and provides virtual hook methods for custom logic when granting or executing abilities.
-    </description>
-    <tutorials>
-    </tutorials>
-    <methods>
-        <method name="_can_activate" qualifiers="virtual">
-            <return type="bool" />
-            <param index="0" name="ability" type="AbilityData" />
-            <description>
-                Virtual method called to evaluate whether the specified [param ability] can currently be activated. Can be overridden in scripts or inherited C++ classes to implement custom activation conditions.
-            </description>
-        </method>
-        <method name="_can_be_granted" qualifiers="virtual">
-            <return type="bool" />
-            <param index="0" name="ability" type="AbilityData" />
-            <description>
-                Virtual method called to check whether the specified [param ability] is allowed to be added to this container. Override this method to implement custom grant requirements.
-            </description>
-        </method>
-        <method name="_on_ability_already_granted" qualifiers="virtual">
-            <return type="bool" />
-            <param index="0" name="ability" type="AbilityData" />
-            <description>
-                Virtual method triggered when attempting to grant an [param ability] that is already present in this container. Override this to define duplicate ability behaviors (such as leveling up or ignoring duplicate grants).
-            </description>
-        </method>
-        <method name="clear">
-            <return type="void" />
-            <description>
-                Revokes all currently granted abilities from this container and clears active state tracking.
-            </description>
-        </method>
-        <method name="get_current_cooldown" qualifiers="const">
-            <return type="float" />
-            <param index="0" name="ability" type="AbilityData" />
-            <description>
-                Returns the remaining cooldown time in seconds for the specified [param ability]. Returns [code]0.0[/code] if the ability is off cooldown or not active.
-            </description>
-        </method>
-    </methods>
-    <members>
-        <member name="abilities" type="AbilityData[]" setter="set_abilities" getter="get_abilities" default="[]">
-            The collection of [AbilityData] resources currently granted to and usable by this container.
-        </member>
-        <member name="entity_node_path" type="NodePath" setter="set_entity_node_path" getter="get_entity_node_path" default="NodePath(&quot;&quot;)">
-            The [NodePath] pointing to the owning entity node (such as a [GAS_Entity]) that this container manages abilities for.
-        </member>
-    </members>
-    <signals>
-        <signal name="_on_abilities_cleared">
-            <param index="0" name="entity" type="Object" />
-            <description>
-                Emitted when all abilities are removed and cleared from this container on the target [param entity].
-            </description>
-        </signal>
-        <signal name="_on_ability_activated">
-            <param index="0" name="entity" type="Object" />
-            <param index="1" name="ability" type="AbilityData" />
-            <description>
-                Emitted when an [param ability] successfully begins activation on the target [param entity].
-            </description>
-        </signal>
-        <signal name="_on_ability_ended">
-            <param index="0" name="entity" type="Object" />
-            <param index="1" name="ability" type="AbilityData" />
-            <description>
-                Emitted when an active [param ability] finishes execution or is canceled on the target [param entity].
-            </description>
-        </signal>
-        <signal name="_on_ability_granted">
-            <param index="0" name="entity" type="Object" />
-            <param index="1" name="ability" type="AbilityData" />
-            <description>
-                Emitted when a new [param ability] is successfully added to this container for the target [param entity].
-            </description>
-        </signal>
-        <signal name="_on_ability_revoked">
-            <param index="0" name="entity" type="Object" />
-            <param index="1" name="ability" type="AbilityData" />
-            <description>
-                Emitted when an existing [param ability] is removed from this container for the target [param entity].
-            </description>
-        </signal>
-    </signals>
+	<brief_description>
+		A container node that manages granting, executing, tracking, and revoking gameplay abilities for an entity.
+	</brief_description>
+	<description>
+		[AbilityContainer] serves as the runtime ability manager linked to a specific entity. It holds a list of granted [AbilityData] resources, evaluates activation constraints (such as checking tags, costs, and cooldowns), tracks ongoing ability cooldown timers, and provides virtual hook methods for custom logic when granting or executing abilities.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="_can_activate" qualifiers="virtual">
+			<return type="bool" />
+			<param index="0" name="ability" type="AbilityData" />
+			<description>
+				Virtual method called to evaluate whether the specified [param ability] can currently be activated. Can be overridden in scripts or inherited C++ classes to implement custom activation conditions.
+			</description>
+		</method>
+		<method name="_can_be_granted" qualifiers="virtual">
+			<return type="bool" />
+			<param index="0" name="ability" type="AbilityData" />
+			<description>
+				Virtual method called to check whether the specified [param ability] is allowed to be added to this container. Override this method to implement custom grant requirements.
+			</description>
+		</method>
+		<method name="_on_ability_already_granted" qualifiers="virtual">
+			<return type="bool" />
+			<param index="0" name="ability" type="AbilityData" />
+			<description>
+				Virtual method triggered when attempting to grant an [param ability] that is already present in this container. Override this to define duplicate ability behaviors (such as leveling up or ignoring duplicate grants).
+			</description>
+		</method>
+		<method name="clear">
+			<return type="void" />
+			<description>
+				Revokes all currently granted abilities from this container and clears active state tracking.
+			</description>
+		</method>
+		<method name="get_cooldown" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="id" type="int" />
+			<description>
+				Returns the cooldown of the specified [param ability].
+			</description>
+		</method>
+		<method name="get_cost" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="id" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_current_cooldown" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="id" type="int" />
+			<description>
+				Returns the remaining cooldown time in seconds for the specified [param ability]. Returns [code]0.0[/code] if the ability is off cooldown or not active.
+			</description>
+		</method>
+		<method name="grant_ability">
+			<return type="bool" />
+			<param index="0" name="ability" type="AbilityData" />
+			<description>
+				Attempts to grant the specified [param ability] to this container. Returns [code]true[/code] if the ability was successfully granted, or [code]false[/code] if validation failed or the operation was rejected. Calls the ability_granted signal.
+			</description>
+		</method>
+		<method name="has_ability" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="ability" type="AbilityData" />
+			<description>
+				Returns [code]true[/code] if the specified [param ability] is currently granted to and present within this container.
+			</description>
+		</method>
+		<method name="is_active" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="id" type="int" />
+			<description>
+				Returns [code]true[/code] if the ability matching the specified [param id] is currently executing.
+			</description>
+		</method>
+		<method name="is_on_cooldown" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="id" type="int" />
+			<description>
+				Returns [code]true[/code] if the ability is currently on cooldown.
+			</description>
+		</method>
+		<method name="revoke_ability">
+			<return type="bool" />
+			<param index="0" name="ability" type="AbilityData" />
+			<description>
+				Ends the specified [param ability] if it's activa and removes it from this container. Returns [code]true[/code] if the ability was found and successfully removed.
+			</description>
+		</method>
+		<method name="set_entity_node_path">
+			<return type="bool" />
+			<param index="0" name="path" type="NodePath" />
+			<description>
+				Sets the [NodePath] pointing to the target entity node. Returns [code]true[/code] if the path was valid and successfully updated.
+			</description>
+		</method>
+		<method name="try_activate">
+			<return type="bool" />
+			<param index="0" name="id" type="int" />
+			<description>
+				Attempts to activate the [param id] ability after validating resource costs, cooldowns, and tag constraints. Returns [code]true[/code] if activation succeeded.
+			</description>
+		</method>
+		<method name="try_activate_abilities_with_tags">
+			<return type="bool" />
+			<param index="0" name="ids" type="PackedInt32Array" />
+			<description>
+				Attempts to activate all granted abilities that match the provided gameplay ability tag [param ids]. Returns [code]true[/code] if at least one ability was successfully activated.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="abilities" type="AbilityData[]" setter="set_abilities" getter="get_abilities" default="[]">
+			The collection of [AbilityData] resources currently granted to and usable by this container.
+		</member>
+		<member name="entity_node_path" type="NodePath" setter="set_entity_node_path" getter="get_entity_node_path" default="NodePath(&quot;&quot;)">
+			The [NodePath] pointing to the owning entity node (such as a [GAS_Entity]) that this container manages abilities for.
+		</member>
+	</members>
+	<signals>
+		<signal name="abilities_cleared">
+			<param index="0" name="entity" type="Object" />
+			<description>
+				Emitted when all granted abilities are cleared from this container via [method clear].
+			</description>
+		</signal>
+		<signal name="ability_activated">
+			<param index="0" name="entity" type="Object" />
+			<param index="1" name="ability" type="AbilityData" />
+			<description>
+				Emitted when [param ability] is successfully activated for the specified target [param entity].
+			</description>
+		</signal>
+		<signal name="ability_ended">
+			<param index="0" name="entity" type="Object" />
+			<param index="1" name="ability" type="AbilityData" />
+			<description>
+				Emitted when [param ability] finishes execution or is cancelled for the specified target [param entity].
+			</description>
+		</signal>
+		<signal name="ability_granted">
+			<param index="0" name="entity" type="Object" />
+			<param index="1" name="ability" type="AbilityData" />
+			<description>
+				Emitted when [param ability] is successfully granted to this container for the specified target [param entity].
+			</description>
+		</signal>
+		<signal name="ability_revoked">
+			<param index="0" name="entity" type="Object" />
+			<param index="1" name="ability" type="AbilityData" />
+			<description>
+				Emitted when [param ability] is removed from this container for the specified target [param entity]. Using [method clear] does not emit this signal.
+			</description>
+		</signal>
+	</signals>
 </class>

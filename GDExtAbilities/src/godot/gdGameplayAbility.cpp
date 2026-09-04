@@ -177,7 +177,7 @@ bool sm::GameplayAbility::IsOnCooldown() const
 	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
 	if (effect)
 	{
-#ifdef TOOLS_ENABLED && DEBUG_ENABLED
+#if defined(TOOLS_ENABLED) && defined(DEBUG_ENABLED)
 		if (!effect->HasExpired())
 		{
 			WARN_PRINT_ED("Ability is on cooldown.");

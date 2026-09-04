@@ -9,6 +9,14 @@
 	<tutorials>
 	</tutorials>
 	<methods>
+		<method name="_pre_attribute_change" qualifiers="virtual">
+			<return type="float" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<param index="1" name="calculated_value" type="float" />
+			<description>
+				Override this method to intercept attribute changes. This is useful to apply gameplay caps before the actual value changes. (Ex. [Attribute] "Health" cannot be higher than [Attribute] "MaxHealth". In this case, use this method to apply the limit instead of the calculated value if that is higher than allowed).
+			</description>
+		</method>
 		<method name="add_modifier">
 			<return type="int" />
 			<param index="0" name="attribute_id" type="StringName" />
@@ -67,43 +75,38 @@
 		</member>
 	</members>
 	<signals>
-		<signal name="attribute_modified">
-			<param index="0" name="owner" type="Object" />
-			<param index="1" name="attribute_name" type="StringName" />
+		<signal name="attribute_changed">
+			<param index="0" name="attribute_name" type="StringName" />
+			<param index="1" name="new_value" type="float" />
 			<param index="2" name="old_value" type="float" />
-			<param index="3" name="new_value" type="float" />
 			<description>
-				Emitted when an attribute's value changes, providing the target [param owner], the [param attribute_name], and its [param old_value] and [param new_value].
+				Emitted when an attribute in this container has been modified.
 			</description>
 		</signal>
 		<signal name="effect_added">
-			<param index="0" name="owner" type="Object" />
-			<param index="1" name="attribute_name" type="StringName" />
-			<param index="2" name="effect_data" type="Object" />
+			<param index="0" name="attribute_name" type="StringName" />
+			<param index="1" name="effect_data" type="Object" />
 			<description>
 				Emitted when a gameplay effect affecting [param attribute_name] is applied to the [param owner].
 			</description>
 		</signal>
 		<signal name="effect_removed">
-			<param index="0" name="owner" type="Object" />
-			<param index="1" name="attribute_name" type="StringName" />
-			<param index="2" name="effect_data" type="Object" />
+			<param index="0" name="attribute_name" type="StringName" />
+			<param index="1" name="effect_data" type="Object" />
 			<description>
 				Emitted when an active gameplay effect affecting [param attribute_name] is removed from the [param owner].
 			</description>
 		</signal>
 		<signal name="modifier_added">
-			<param index="0" name="owner" type="Object" />
-			<param index="1" name="attribute_name" type="StringName" />
-			<param index="2" name="modifier_data" type="Object" />
+			<param index="0" name="attribute_name" type="StringName" />
+			<param index="1" name="modifier_data" type="Object" />
 			<description>
 				Emitted when a new [ModifierData] instance is added to [param attribute_name] on the [param owner].
 			</description>
 		</signal>
 		<signal name="modifier_removed">
-			<param index="0" name="owner" type="Object" />
-			<param index="1" name="attribute_name" type="StringName" />
-			<param index="2" name="modifier_data" type="Object" />
+			<param index="0" name="attribute_name" type="StringName" />
+			<param index="1" name="modifier_data" type="Object" />
 			<description>
 				Emitted when an existing [ModifierData] instance is removed from [param attribute_name] on the [param owner].
 			</description>

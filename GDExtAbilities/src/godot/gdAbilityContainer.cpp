@@ -17,7 +17,7 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("has_ability", "ability"), &Has);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("is_active", "id"), &IsActive);
-	godot::ClassDB::bind_method(godot::D_METHOD("iscooldown", "id"), &IsOnCooldown);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown", "id"), &IsOnCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("try_activate", "id"), &TryActivate);
 	godot::ClassDB::bind_method(godot::D_METHOD("try_activate_abilities_with_tags", "ids"), &TryActivateAbilitiesWithTag);
 

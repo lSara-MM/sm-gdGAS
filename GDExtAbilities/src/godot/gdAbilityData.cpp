@@ -115,25 +115,21 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 	}
 
 	auto code = script->get_source_code().strip_edges();
-
-#ifdef DEBUG_ENABLED
-	auto debug = ToStdString(code);
-#endif // DEBUG_ENABLED
-
-
 	if (code.is_empty())
 	{
 		godot::String templateCode =
 			"extends GameplayAbility\n\n"
-			"## Default: On activate ability, effects are applied to self or if overriden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.\n"
+			"## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.\n"
 			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.\n"
 			"#func _activate_ability():\n"
 			"\t#pass\n\n"
 			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.\n"
 			"#func _end_ability(_was_cancelled: bool):\n"
 			"\t#pass\n\n"
+			"## ## Called in CanActivate(). Adds custom conditionals to ability activation. Default: Abilities check state, cost, cooldown and tags.\n"
 			"#func _check_availability() -> bool:\n"
 			"\t#return true\n\n"
+			"## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.\n"
 			"#func _calculate_targets() -> Array[GAS_Entity]:\n"
 			"\t#return []\n\n"
 			;
@@ -152,11 +148,6 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 		ERR_FAIL_MSG("Script must inherit from GameplayAbility.");
 	}
 #endif
-}
-
-void sm::AbilityData::SetAbilityInstance(const godot::Ref<GameplayAbility>& ability)
-{
-	m_AbilityInstance = ability;
 }
 
 void sm::AbilityData::SetAbilityName(AbilityID name)

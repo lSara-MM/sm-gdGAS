@@ -29,9 +29,9 @@ namespace sm
 	public:
 		TagArrayEditorProperty(TagRegistryEditor* registry = nullptr);
 
-		virtual void ShowInspector(godot::Object* object, const godot::String& title);
+		virtual void ShowInspector(godot::Object* object);
 
-		godot::Control* ShowTagTreeEditor(const godot::String& title);
+		godot::Control* ShowTagTreeEditor();
 		void AddAvailableTagsTree(godot::Control* root);
 		virtual void AddSearchControls(godot::BoxContainer* root, godot::Control* gui);
 

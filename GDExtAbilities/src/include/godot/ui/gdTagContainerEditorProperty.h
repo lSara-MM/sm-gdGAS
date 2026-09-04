@@ -28,7 +28,7 @@ namespace sm
 	public:
 		TagContainerEditorProperty(TagRegistryEditor* registry = nullptr);
 
-		void ShowInspector(Object* object, const godot::String& title) override;
+		void ShowInspector(Object* object) override;
 		void AddSearchControls(godot::BoxContainer* root, godot::Control* gui) override;
 		godot::Control* AddSelectedTagsTree();
 
