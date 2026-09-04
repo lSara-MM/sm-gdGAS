@@ -8,35 +8,35 @@ A Gameplay Ability System (GAS) is a framework for managing character attributes
 ## 📚 Class Index
 ### Core Nodes \& Entities
 
-\- \[`GAS_Entity`](GAS\_Entity.md) - Main integration component linking attributes and tags to an actor.
+- [`GAS_Entity`](docs/GAS\_Entity.md) - Main integration component linking attributes and tags to an actor.
 
-\- \[`GAS_World`](GAS\_World.md) - Global manager for GAS operations, pauses, and entity querying.
+- [`GAS_World`](docs/GAS\_World.md) - Global manager for GAS operations, pauses, and entity querying.
 
 ### Containers
 
-\- \[`AbilityContainer`](AbilityContainer.md) - Node managing granting, executing, tracking, and revoking gameplay abilities.
+- [`AbilityContainer`](docs/AbilityContainer.md) - Node managing granting, executing, tracking, and revoking gameplay abilities.
 
-\- \[`AttributeContainer`](AttributeContainer.md) - Node managing runtime attributes, calculation states, and active modifiers.
+- [`AttributeContainer`](docs/AttributeContainer.md) - Node managing runtime attributes, calculation states, and active modifiers.
 
-\- \[TagContainer](TagContainer.md) - Node managing runtime tags.
+- [TagContainer](docs/TagContainer.md) - Node managing runtime tags.
 
 ### Ability \& Effect Resources
 
-\- \[`AbilityData`](AbilityData.md) - Configuration resource defining costs, cooldowns, tags, and effects for abilities.
+- [`AbilityData`](docs/AbilityData.md) - Configuration resource defining costs, cooldowns, tags, and effects for abilities.
 
-\- \[`GameplayAbility`](GameplayAbility.md) - Base object representing the runtime logic of a gameplay ability.
+- [`GameplayAbility`](docs/GameplayAbility.md) - Base object representing the runtime logic of a gameplay ability.
 
-\- \[`EffectData`](EffectData.md) - Resource defining gameplay buffs, debuffs, stat modifications, and tag alterations.
+- [`EffectData`](docs/EffectData.md) - Resource defining gameplay buffs, debuffs, stat modifications, and tag alterations.
 
 ### Attributes \& Modifiers
 
-\- \[`AttributeData`](AttributeData.md) - Resource defining individual numerical stats, defaults, and min/max limits.
+- [`AttributeData`](docs/AttributeData.md) - Resource defining individual numerical stats, defaults, and min/max limits.
 
-\- \[`AttributeSetData`](AttributeSetData.md) - Resource grouping multiple attributes into reusable packages.
+- [`AttributeSetData`](docs/AttributeSetData.md) - Resource grouping multiple attributes into reusable packages.
 
-\- \[`ModifierData`](ModifierData.md) - Resource defining mathematical operations to alter attributes.
+- [`ModifierData`](docs/ModifierData.md) - Resource defining mathematical operations to alter attributes.
 
 ### Tags
 
-\- \[TagData](TagData.md)
+- [TagData](docs/TagData.md) - Resource that forms a hierarchy and defines tags, later converted to integers.
 
