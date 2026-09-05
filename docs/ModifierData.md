@@ -21,16 +21,16 @@ A data resource that defines a specific mathematical operation to an attribute.
 
 - **Add** = `0` (Enum: `OperationType`)
   - Adds a flat numerical value directly to the attribute's current value.
-*Formula: CurrentValue += ModifierValue*
+  - *Formula: CurrentValue += ModifierValue*
 - **Multiply** = `1` (Enum: `OperationType`)
   - Multiplies the attribute's current value by a raw scaling factor.
-*Formula: CurrentValue *= ModifierValue*
+  - *Formula: CurrentValue* **= ModifierValue*
 - **PercentAdd** = `2` (Enum: `OperationType`)
   - Calculates a percentage based strictly on the attribute's base value, then adds that calculated amount to the current value.
-*Formula: CurrentValue += (BaseValue * (ModifierValue / 100))*
+  - *Formula: CurrentValue += (BaseValue * (ModifierValue / 100))*
 - **PercentStack** = `3` (Enum: `OperationType`)
   - Multiplies the attribute's current value directly by a percentage factor.
-*Formula: CurrentValue *= (ModifierValue / 100)*
+  - *Formula: CurrentValue* *= (ModifierValue / 100)*
 - **Override** = `4` (Enum: `OperationType`)
   - Ignores all other active modifiers and forces the attribute's current value to match this exact value.
 
