@@ -29,6 +29,7 @@ font_size = 10
 script = ExtResource("1_d1of3")
 
 [node name="GAS_World" type="GAS_World" parent="."]
+entity_count = 2
 
 [node name="Background" parent="." instance=ExtResource("1_q4spy")]
 

@@ -26,4 +26,4 @@ attribute_set = SubResource("AttributeSetData_dx5k3")
 abilities = Array[AbilityData]([ExtResource("1_1vq0i")])
 
 [node name="TagContainer" type="TagContainer" parent="."]
-tags = PackedInt32Array(17, 17)
+tags = PackedInt32Array(17, 17, 17)
