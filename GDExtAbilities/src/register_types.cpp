@@ -23,18 +23,20 @@
 #ifdef TOOLS_ENABLED
 #include "godot/ui/gdTagArrayEditorProperty.h"
 #include "godot/ui/gdTagContainerEditorProperty.h"
+#include "godot/ui/gdTagInspector.h"
 #include "godot/ui/gdTagRegistryEditor.h"
 #endif // TOOLS_ENABLED
-
-
-//#ifndef TOOLS_ENABLED
-//#error "¡ATENCIÓN! TOOLS_ENABLED NO está definido durante la compilación."
-//#endif
 
 using namespace godot;
 
 void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 {
+#ifdef TOOLS_ENABLED
+	print_line("GDExtAbilities: TOOLS_ENABLED");
+#else
+	print_line("GDExtAbilities: NO TOOLS_ENABLED");
+#endif
+
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE)
 	{
 		ClassDB::register_abstract_class<sm::GameplayAbilitySystem>();

@@ -66,8 +66,7 @@ void sm::AbilityContainer::_bind_methods()
 	ADD_SIGNAL(godot::MethodInfo("ability_activated",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
-			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
+		godot::PropertyInfo(godot::Variant::INT, "ability")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("ability_ended",
@@ -336,7 +335,13 @@ bool sm::AbilityContainer::TryActivate(TagID abilityID)
 	if (auto itr = m_Scripts.find(abilityID);
 		itr != m_Scripts.end())
 	{
-		return itr->second->TryActivate();
+		bool ret = itr->second->TryActivate();
+		if (ret)
+		{
+			emit_signal("ability_activated", m_Owner, abilityID);
+		}
+
+		return ret;
 	}
 
 	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not found", abilityID));

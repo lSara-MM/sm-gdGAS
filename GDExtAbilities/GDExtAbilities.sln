@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GDExtAbilities", "GDExtAbil
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Editor|x64 = Editor|x64
+		Editor|x86 = Editor|x86
 		EditorDebug_Godot|x64 = EditorDebug_Godot|x64
 		EditorDebug_Godot|x86 = EditorDebug_Godot|x86
 		EditorRelease_Godot|x64 = EditorRelease_Godot|x64
@@ -15,6 +17,10 @@ Global
 		GameDebug_Godot|x86 = GameDebug_Godot|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x64.ActiveCfg = Editor|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x64.Build.0 = Editor|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x86.ActiveCfg = Editor|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x86.Build.0 = Editor|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x64.ActiveCfg = EditorDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x64.Build.0 = EditorDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorDebug_Godot|x86.ActiveCfg = EditorDebug_Godot|Win32

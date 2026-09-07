@@ -26,7 +26,6 @@ build_dir = f"build/{env['platform']}/{env['target']}"
 src_dir = "src"
 
 env.VariantDir(build_dir, src_dir, duplicate=0)
-folder = "addons/GDExtAbilities/bin"
 
 doc_sources = []
 if env["target"] in ["editor", "template_debug"]:
@@ -40,7 +39,7 @@ if env["target"] in ["editor", "template_debug"]:
     except AttributeError:
         print("Not including class reference as we're targeting a pre-4.3 baseline.")
 
-if env["target"] == "editor":
+if env["target"] == "editor" or  env["target"] == "template_debug":
     env.Append(CPPDEFINES=["TOOLS_ENABLED"])
 
 # ---------------------------------------------------
@@ -54,6 +53,7 @@ for root, dirs, files in os.walk(src_dir):
 sources.extend(doc_sources)
 
 # ---------------------------------------------------
+folder = "addons/GDExtAbilities/bin"
 
 if env["platform"] == "macos":
     file_name = f"libGDExtAbilities.{env['platform']}.{env['target']}"

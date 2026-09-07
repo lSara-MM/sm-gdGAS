@@ -1,6 +1,6 @@
-[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dfikne8aaht4o"]
+[gd_resource type="AbilityData" load_steps=5 format=3 uid="uid://cgnv5hv34paw6"]
 
-[sub_resource type="GDScript" id="GDScript_ixts2"]
+[sub_resource type="GDScript" id="GDScript_l6rrr"]
 script/source = "extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
@@ -18,26 +18,27 @@ script/source = "extends GameplayAbility
 
 ## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.
 #func _calculate_targets() -> Array[GAS_Entity]:
-	#return []"
+	#return []
 
-[sub_resource type="ModifierData" id="ModifierData_0wd3u"]
+"
+
+[sub_resource type="ModifierData" id="ModifierData_vatek"]
+target_id = &"MaxHp"
+source_id = &"Berserk"
+value = -10.0
+
+[sub_resource type="ModifierData" id="ModifierData_k02lc"]
+operation_type = 2
 target_id = &"Speed"
-source_id = &"Dash"
-value = 200.0
+source_id = &"Berserk"
+value = 6.17973e-43
 
-[sub_resource type="EffectData" id="EffectData_vf3d4"]
-name = &"Dash"
-effect_type = 1
-duration = 0.3
-modifiers = Array[ModifierData]([SubResource("ModifierData_0wd3u")])
-tags_to_add = PackedInt32Array(3, 2)
+[sub_resource type="EffectData" id="EffectData_l2mwp"]
+name = &"Berserk"
+duration = 7.48293e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_vatek"), SubResource("ModifierData_k02lc")])
 
 [resource]
-tag_name = &"Dash"
-ability = SubResource("GDScript_ixts2")
-cooldown = 3.0
-cost = 10.0
-cost_resource_attribute = &"CurrentStamina"
-effect = Array[EffectData]([SubResource("EffectData_vf3d4")])
-tags = PackedInt32Array(4, 3, 2)
-activation_blocked_tags = PackedInt32Array(3, 4, 12, 11)
+tag_name = &"Berserk"
+ability = SubResource("GDScript_l6rrr")
+effect = Array[EffectData]([SubResource("EffectData_l2mwp")])

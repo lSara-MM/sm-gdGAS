@@ -1,10 +1,10 @@
-[gd_scene load_steps=33 format=3 uid="uid://mkchjb68qtwk"]
+[gd_scene load_steps=33 format=3 uid="uid://q6m7shdb3sbo"]
 
-[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_1i5lx"]
-[ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="3_1gqvf"]
-[ext_resource type="Script" path="res://scripts/ChaserOnCollision.gd" id="4_1tqjc"]
-[ext_resource type="Texture2D" uid="uid://cdtrjn5w640pq" path="res://assets/enemies/octopus/SpriteSheet.png" id="5_echt2"]
-[ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="6_7ufrw"]
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_5u6pf"]
+[ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="2_4oll7"]
+[ext_resource type="Script" path="res://scripts/ChaserOnCollision.gd" id="3_0h27b"]
+[ext_resource type="Texture2D" uid="uid://k1ehcrgwoj6f" path="res://assets/enemies/owl/SpriteSheet.png" id="4_a1f18"]
+[ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="5_rps25"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xwavj"]
 radius = 12.0416
@@ -61,7 +61,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [2]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -159,7 +159,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1998, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [1, 5, 1, 5]
+"values": [1, 4, 1, 4]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -188,7 +188,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [2, 7, 2, 7]
+"values": [2, 5, 2, 5]
 }
 
 [sub_resource type="Animation" id="Animation_dp8ca"]
@@ -205,7 +205,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1998, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [3, 6, 3, 6]
+"values": [2, 5, 2, 5]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -234,7 +234,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1998, 0.4002, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0, 4, 0, 4]
+"values": [0, 3, 0, 3]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -367,21 +367,29 @@ transitions = ["Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_
 graph_offset = Vector2(4.24449, 0)
 
 [node name="Enemy" type="CharacterBody2D"]
-collision_layer = 5
+collision_layer = 7
 collision_mask = 5
 floor_snap_length = 0.0
 platform_floor_layers = 4294967232
-script = ExtResource("1_1i5lx")
+script = ExtResource("1_5u6pf")
+
+[node name="GAS_Entity" type="GAS_Entity" parent="."]
+
+[node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity"]
+
+[node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
+
+[node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
 
 [node name="Behaviour" type="Node2D" parent="."]
 
 [node name="Movement" type="Node2D" parent="Behaviour"]
-script = ExtResource("3_1gqvf")
+script = ExtResource("2_4oll7")
 
 [node name="Attack" type="Node2D" parent="Behaviour"]
 
 [node name="OnCollision" type="Node2D" parent="Behaviour"]
-script = ExtResource("4_1tqjc")
+script = ExtResource("3_0h27b")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_xwavj")
@@ -397,9 +405,9 @@ debug_color = Color(0.8, 0.380392, 0.478431, 0.0823529)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1
-texture = ExtResource("5_echt2")
-hframes = 4
-vframes = 4
+texture = ExtResource("4_a1f18")
+hframes = 3
+vframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -411,6 +419,6 @@ tree_root = SubResource("AnimationNodeStateMachine_irmqu")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = Vector2(0, 0)
 parameters/Walk/blend_position = 0.0266577
-script = ExtResource("6_7ufrw")
+script = ExtResource("5_rps25")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_enemy_area_2d_body_entered"]

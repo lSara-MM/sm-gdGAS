@@ -111,6 +111,7 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 #ifdef TOOLS_ENABLED
 	if (script.is_null())
 	{
+		m_AbilityScript = script;
 		return;
 	}
 
@@ -131,7 +132,7 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 			"\t#return true\n\n"
 			"## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.\n"
 			"#func _calculate_targets() -> Array[GAS_Entity]:\n"
-			"\t#return []\n\n"
+			"\t#return []"
 			;
 
 		script->set_source_code(templateCode);

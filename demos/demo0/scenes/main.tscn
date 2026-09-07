@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
-[ext_resource type="PackedScene" uid="uid://c4e22aq37wggi" path="res://scenes/old/background.tscn" id="1_q4spy"]
+[ext_resource type="PackedScene" uid="uid://c4e22aq37wggi" path="res://scenes/background.tscn" id="1_q4spy"]
 [ext_resource type="Script" path="res://scripts/UI/ProgressBar.gd" id="3_dvvas"]
-[ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/old/enemySpawner.tscn" id="4_gd0il"]
-[ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/old/prefabs/enemies/eChaser.tscn" id="5_2nmdp"]
+[ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/prefabs/enemySpawner.tscn" id="4_gd0il"]
+[ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/prefabs/eChaser.tscn" id="5_2nmdp"]
 [ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pt05u"]
