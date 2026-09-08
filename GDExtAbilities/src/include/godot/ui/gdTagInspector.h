@@ -1,5 +1,5 @@
 #pragma once
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include <godot_cpp/classes/editor_inspector_plugin.hpp>
 
 namespace godot
@@ -36,4 +36,4 @@ namespace sm
 		TagRegistryEditor* m_Editor;
 	};
 }
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD

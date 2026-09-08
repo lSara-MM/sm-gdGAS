@@ -286,9 +286,9 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		{
 			m_TagsSet.tags.Set(id, true);
 
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 			m_gdTags.push_back(id);
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD
 		}
 
 		emit_signal("tag_added", this, id);
@@ -304,10 +304,10 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		{
 			m_TagsSet.tags.Set(id, false);
 
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 			auto pos = m_gdTags.find(id);
 			m_gdTags.remove_at(pos);
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD
 		}
 
 		emit_signal("tag_removed", this, id);

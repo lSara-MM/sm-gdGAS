@@ -1,4 +1,4 @@
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/ui/gdTagArrayEditorProperty.h"
 
 #include "godot/ui/gdTagRegistryEditor.h"
@@ -308,4 +308,4 @@ void sm::TagArrayEditorProperty::_OnShowDisabledToggled(bool toggled)
 
 	RefreshAvailableTree();
 }
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD

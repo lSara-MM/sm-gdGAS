@@ -1,4 +1,4 @@
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/ui/gdTagInspector.h"
 
 #include "godot/gdAbilityData.h"
@@ -80,4 +80,4 @@ void sm::TagInspector::RefreshInspector(godot::Object* object)
 		object->notify_property_list_changed();
 	}
 }
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD

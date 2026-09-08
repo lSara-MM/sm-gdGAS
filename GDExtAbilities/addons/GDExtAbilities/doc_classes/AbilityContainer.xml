@@ -47,6 +47,7 @@
 			<return type="float" />
 			<param index="0" name="id" type="int" />
 			<description>
+				Returns the cost of the specified [param ability].
 			</description>
 		</method>
 		<method name="get_current_cooldown" qualifiers="const">
@@ -112,6 +113,14 @@
 				Attempts to activate all granted abilities that match the provided gameplay ability tag [param ids]. Returns [code]true[/code] if at least one ability was successfully activated.
 			</description>
 		</method>
+		<method name="try_end">
+			<return type="bool" />
+			<param index="0" name="id" type="int" />
+			<param index="1" name="was_cancelled" type="bool" default="false" />
+			<description>
+				Attempts to end the [param id] ability. Set [param was_cancelled] to true if the ability was terminated due to external factors. Returns [code]true[/code] if ending succeeded.
+			</description>
+		</method>
 	</methods>
 	<members>
 		<member name="abilities" type="AbilityData[]" setter="set_abilities" getter="get_abilities" default="[]">
@@ -137,7 +146,7 @@
 		</signal>
 		<signal name="ability_ended">
 			<param index="0" name="entity" type="Object" />
-			<param index="1" name="ability" type="AbilityData" />
+			<param index="1" name="ability" type="int" />
 			<description>
 				Emitted when [param ability] finishes execution or is cancelled for the specified target [param entity].
 			</description>

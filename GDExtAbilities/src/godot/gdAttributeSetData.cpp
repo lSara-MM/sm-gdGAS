@@ -23,7 +23,7 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 {
 	m_gdAttributes = attr;
 
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 	for (int64_t i = 0; i < attr.size(); i++)
 	{
 		const godot::Ref<AttributeData> attribute = attr[i];
@@ -49,7 +49,7 @@ void sm::AttributeSetData::SetAttributesSet(const godot::TypedArray<AttributeDat
 				this->_OnAttributeSetName(new_name);
 			});
 	}
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD
 }
 
 void sm::AttributeSetData::AddAttribute(const godot::Ref<AttributeData>& attr)

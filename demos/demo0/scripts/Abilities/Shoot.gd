@@ -27,4 +27,4 @@ func _activate_ability() -> bool:
 	
 func _on_bullet_collision(body: Node2D) -> void:
 	apply_effects_to_target(body.get_entity())
-	try_end(false)
+	try_end(Tags._Ability_Shoot)

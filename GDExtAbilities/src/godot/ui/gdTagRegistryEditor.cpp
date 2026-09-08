@@ -1,4 +1,4 @@
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/ui/gdTagRegistryEditor.h"
 
 #include "core/TagRegistry.h"
@@ -1105,4 +1105,4 @@ bool sm::TagRegistryEditor::IsNameValid(const godot::String& name) const
 	return std::regex_match(ToStdString(name), rgx);
 }
 
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD

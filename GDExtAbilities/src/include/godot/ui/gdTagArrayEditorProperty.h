@@ -1,5 +1,5 @@
 #pragma once
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/gdTagData.h"
 #include <godot_cpp/classes/editor_property.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>

@@ -30,6 +30,7 @@ env.VariantDir(build_dir, src_dir, duplicate=0)
 doc_sources = []
 if env["target"] in ["editor", "template_debug"]:
     try:
+        env.Append(CPPDEFINES=["DEV_BUILD"])
         doc_data = env.GodotCPPDocData(
             f"{build_dir}/gen/doc_data.gen.cpp", 
             source=Glob("addons/GDExtAbilities/doc_classes/*.xml")
@@ -38,9 +39,6 @@ if env["target"] in ["editor", "template_debug"]:
         print("--- Generating documentation XML ---")
     except AttributeError:
         print("Not including class reference as we're targeting a pre-4.3 baseline.")
-
-if env["target"] == "editor" or  env["target"] == "template_debug":
-    env.Append(CPPDEFINES=["TOOLS_ENABLED"])
 
 # ---------------------------------------------------
 sources = []

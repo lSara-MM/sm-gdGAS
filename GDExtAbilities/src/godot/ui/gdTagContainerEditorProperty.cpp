@@ -1,4 +1,4 @@
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/ui/gdTagContainerEditorProperty.h"
 
 #include "godot/gdTagContainer.h"
@@ -247,4 +247,4 @@ void sm::TagContainerEditorProperty::_OnItemActivated(godot::Tree* tree)
 
 	_OnCheckboxChanged();
 }
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD

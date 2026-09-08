@@ -50,7 +50,7 @@
 		</method>
 		<method name="apply_effects_to_target">
 			<return type="void" />
-			<param index="0" name="entity" type="GAS_Entity" default="null" />
+			<param index="0" name="entity" type="GAS_Entity" />
 			<description>
 				Applies all configured [EffectData] resources from this ability to the specified target [param entity]. If [param entity] is [code]null[/code], effects are applied to the owner entity instead.
 			</description>

@@ -108,7 +108,7 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 		return;
 	}
 
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 	if (script.is_null())
 	{
 		m_AbilityScript = script;

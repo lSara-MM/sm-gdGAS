@@ -1,5 +1,5 @@
 #pragma once
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/ui/gdTagInspector.h"
 #include "godot/gdTagData.h"
 #include "internal/Event.h"
@@ -173,4 +173,4 @@ namespace sm
 		bool m_CanBeCreated = false;
 	};
 }
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD

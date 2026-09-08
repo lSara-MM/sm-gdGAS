@@ -20,21 +20,21 @@
 #include "godot/gdTagContainer.h"
 #include "godot/gdTagData.h"
 
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 #include "godot/ui/gdTagArrayEditorProperty.h"
 #include "godot/ui/gdTagContainerEditorProperty.h"
 #include "godot/ui/gdTagInspector.h"
 #include "godot/ui/gdTagRegistryEditor.h"
-#endif // TOOLS_ENABLED
+#endif // DEV_BUILD
 
 using namespace godot;
 
 void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 {
-#ifdef TOOLS_ENABLED
-	print_line("GDExtAbilities: TOOLS_ENABLED");
+#ifdef DEV_BUILD
+	print_line("GDExtAbilities: DEV_BUILD");
 #else
-	print_line("GDExtAbilities: NO TOOLS_ENABLED");
+	print_line("GDExtAbilities: NO DEV_BUILD");
 #endif
 
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE)
@@ -64,7 +64,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 		}
 	}
 
-#ifdef TOOLS_ENABLED
+#ifdef DEV_BUILD
 	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR)
 	{
 		ClassDB::register_class<sm::TagRegistryEditor>();
@@ -74,7 +74,7 @@ void initialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
 		ClassDB::register_class<sm::TagArrayEditorProperty>();
 		ClassDB::register_class<sm::TagContainerEditorProperty>();
 	}
-#endif //TOOLS_ENABLED
+#endif //DEV_BUILD
 }
 
 void uninitialize_gdextabilities_plugin(ModuleInitializationLevel p_level)
