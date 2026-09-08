@@ -16,10 +16,11 @@ func IsAbilityActive(ability: int) -> bool:
 	
 func TryBerserk() -> bool:
 	if is_berserk:
-		is_berserk = ability_container.try_end(Tags._Ability_Berserk, false)
+		is_berserk = false
+		return ability_container.try_end(Tags._Ability_Berserk, false)
 	else:
-		is_berserk = ability_container.try_activate(Tags._Ability_Berserk)
-	return is_berserk
+		is_berserk = true
+		return ability_container.try_activate(Tags._Ability_Berserk)
 
 func GetAttributeCurrentValue(attr: StringName) -> float:
 	return attribute_container.get_attribute_current_value(attr)
@@ -27,10 +28,9 @@ func GetAttributeCurrentValue(attr: StringName) -> float:
 func _on_ability_activated(_entity: Object, ability: int) -> void:
 	if ability == Tags._Ability_Dash:
 		ability_container.try_activate(Tags._Ability_StaminaRegen)
-	pass
 	
 func Shoot() -> Node:
-	if bullet_prefab.is_empty():
+	if bullet_prefab == null:
 		return
 	
 	var player = get_parent()
@@ -38,5 +38,5 @@ func Shoot() -> Node:
 	player.add_child(object)
 	object.global_position = player.global_position
 	
-	object.dir = player.position - player.get_global_mouse_position()
+	object.dir = player.position - object.get_global_mouse_position()
 	return object

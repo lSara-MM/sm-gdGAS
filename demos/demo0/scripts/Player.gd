@@ -17,7 +17,6 @@ func GetInput() -> void:
 	
 	if Input.is_action_just_pressed("basic_attack"):
 		entity.TryAbility(Tags._Ability_Shoot)
-		pass
 	
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	velocity = input_direction * entity.GetAttributeCurrentValue(&"Speed")
@@ -31,7 +30,6 @@ func _on_attribute_changed(attribute_name: StringName, new_value: float, _old_va
 			if new_value == 0:
 				print("You died")
 				queue_free()
-	pass
 
 func get_entity() -> GAS_Entity:
 	return find_child("GAS_Entity") as GAS_Entity

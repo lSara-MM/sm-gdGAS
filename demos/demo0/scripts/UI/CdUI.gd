@@ -17,7 +17,6 @@ func setup(entity: Node, world = null) -> void:
 func _process(_delta: float) -> void:
 	if to_fill:
 		value = max_value - ability_container.get_current_cooldown(tag_id)
-	pass
 
 func _on_tag_added(_entity_owner: TagContainer, tag: int) -> void:
 	if tag == tag_id:

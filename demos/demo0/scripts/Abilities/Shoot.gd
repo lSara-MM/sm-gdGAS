@@ -5,7 +5,7 @@ extends GameplayAbility
 func _activate_ability() -> bool:
 	if commit_ability():
 		var object = get_entity_owner().Shoot()
-		object.connect("bullet_collision", _on_bullet_collision)
+		object.bullet_collision.connect(_on_bullet_collision)
 		return true
 	return false
 

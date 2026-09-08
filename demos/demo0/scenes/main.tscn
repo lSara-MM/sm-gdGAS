@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c4ykauqw02l74"]
+[gd_scene load_steps=12 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
@@ -7,6 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/prefabs/enemySpawner.tscn" id="4_gd0il"]
 [ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/prefabs/eChaser.tscn" id="5_2nmdp"]
 [ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_baqsj"]
+resource_local_to_scene = true
+radius = 18.0278
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pt05u"]
 bg_color = Color(0.341176, 0.741176, 0.682353, 1)
@@ -39,6 +43,12 @@ objects = Array[PackedScene]([ExtResource("5_2nmdp")])
 
 [node name="Enemy" parent="EnemySpawner" instance=ExtResource("5_2nmdp")]
 position = Vector2(-27, 125)
+
+[node name="TagContainer" parent="EnemySpawner/Enemy/GAS_Entity" index="2"]
+tags = PackedInt32Array(17, 17, 17, 17, 17, 0, 0, 13, 17, 0, 13)
+
+[node name="CollisionShape2D" parent="EnemySpawner/Enemy/Area2D" index="0"]
+shape = SubResource("CircleShape2D_baqsj")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -91,3 +101,5 @@ vertical_alignment = 1
 [connection signal="ability_activated" from="Player/GAS_Entity/AbilityContainer" to="CanvasLayer/DashBar" method="_on_ability_activated"]
 
 [editable path="Player"]
+[editable path="EnemySpawner/Enemy"]
+[editable path="EnemySpawner/Enemy/GAS_Entity"]

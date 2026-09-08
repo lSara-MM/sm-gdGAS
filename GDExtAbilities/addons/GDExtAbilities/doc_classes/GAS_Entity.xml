@@ -5,7 +5,6 @@
 	</brief_description>
 	<description>
 		[GAS_Entity] serves as the main integration component for an actor in the Gameplay Ability System (GAS). 
-
 		It connects attribute management ([AttributeContainer]) and state/tag tracking ([TagContainer]) into a single interface. It provides capabilities to apply gameplay effects ([EffectData]), manage active modifiers, and query system stats or status tags on the attached node.
 	</description>
 	<tutorials>
@@ -21,6 +20,7 @@
 		<method name="clear_effects">
 			<return type="void" />
 			<description>
+				Remove all effects from an entity. Revert the effects' changes as well. Does not work for [Instant] effects.
 			</description>
 		</method>
 		<method name="get_attribute_container" qualifiers="const">
@@ -39,6 +39,7 @@
 			<return type="void" />
 			<param index="0" name="effect_id" type="int" />
 			<description>
+				Removes specified effect with [param effect_id] id of this entity. This includes adding and removing all handled tags and revert attribute changes. Does not work for [Instant] effects.
 			</description>
 		</method>
 		<method name="set_attribute_container">

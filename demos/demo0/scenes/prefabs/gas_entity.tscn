@@ -3,11 +3,11 @@
 [ext_resource type="AbilityData" uid="uid://d2ydgaxyn7b0o" path="res://resources/abilities/EnemyBasicDamage.tres" id="1_1vq0i"]
 
 [sub_resource type="AttributeData" id="AttributeData_uvt43"]
-name = &"CurrentHp"
+name = &"CurrentHealth"
 base_value = 50.0
 
 [sub_resource type="AttributeData" id="AttributeData_l203a"]
-name = &"MaxHp"
+name = &"MaxHealth"
 base_value = 50.0
 
 [sub_resource type="AttributeData" id="AttributeData_8nqqc"]
@@ -26,4 +26,4 @@ attribute_set = SubResource("AttributeSetData_dx5k3")
 abilities = Array[AbilityData]([ExtResource("1_1vq0i")])
 
 [node name="TagContainer" type="TagContainer" parent="."]
-tags = PackedInt32Array(17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17)
+tags = PackedInt32Array(17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 0, 17, 0)

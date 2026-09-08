@@ -21,6 +21,8 @@ func SpawnObject():
 	var object_to_spawn = objects.pick_random()
 	var object = object_to_spawn.instantiate()
 	add_child(object)
+	
+	var a = object.get_entity().get_tag_container()
 
 	var angle = randf() * TAU
 	var distance = randf_range(min_distance, spawn_radius)
