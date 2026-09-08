@@ -35,6 +35,11 @@
 				Return current [TagContainer] associated to this entity.
 			</description>
 		</method>
+		<method name="get_world">
+			<return type="GAS_World" />
+			<description>
+			</description>
+		</method>
 		<method name="remove_effect">
 			<return type="void" />
 			<param index="0" name="effect_id" type="int" />

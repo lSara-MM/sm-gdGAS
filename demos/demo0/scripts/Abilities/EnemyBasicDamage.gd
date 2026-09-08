@@ -1,7 +1,4 @@
-[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dlowi5td3i2ub"]
-
-[sub_resource type="GDScript" id="GDScript_kcswx"]
-script/source = "extends GameplayAbility
+extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
 ## Return true if it was successfully activated.
@@ -18,27 +15,9 @@ script/source = "extends GameplayAbility
 	#return true
 
 ## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.
-#func _calculate_targets() -> Array[GAS_Entity]:
-	#return []
+func _calculate_targets() -> Array[GAS_Entity]:
+	return get_entity_owner().targets
 
 ## Called in AppllyEffectsToTarget(). Intercept effects to get their instance id if needed.
 #func _get_effect_id(effect: EffectData, instance_id: int) -> void:
-	#pass"
-
-[sub_resource type="ModifierData" id="ModifierData_cv2ey"]
-target_id = &"CurrentHealth"
-source_id = &"Damage"
-value = -50.0
-
-[sub_resource type="EffectData" id="EffectData_vatek"]
-name = &"Damage"
-duration = 7.48293e-43
-modifiers = Array[ModifierData]([SubResource("ModifierData_cv2ey")])
-
-[resource]
-tag_name = &"Shoot"
-ability = SubResource("GDScript_kcswx")
-cooldown = 0.5
-cost = 3.0
-cost_resource_attribute = &"CurrentStamina"
-effect = Array[EffectData]([SubResource("EffectData_vatek")])
+	#pass

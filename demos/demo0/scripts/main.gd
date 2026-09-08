@@ -9,5 +9,5 @@ extends Node
 func _ready() -> void:
 	var player_entity = player.get_node("GAS_Entity")
 	health_bar.setup(player_entity)
-	stamina_bar.setup(player_entity)
+	stamina_bar.setup(player_entity, world)
 	dash_bar.setup(player_entity, world)

@@ -7,6 +7,9 @@ void sm::GameplayAbilitySystem::_notification(int notification)
 {
 	switch (notification)
 	{
+	case NOTIFICATION_POSTINITIALIZE:
+		OnInit(); // Equivalent to _init()
+		break;
 	case NOTIFICATION_ENTER_TREE:
 		OnEnterTree();
 		break;

@@ -10,7 +10,7 @@ func Init(own: Node2D) -> void:
 	node_owner = own
 	entity = own.entity
 	player = own.player
-	player_entity = player.find_child("GAS_Entity")
+	player_entity = player.get_entity()
 	
 	InitSpecs(own)
 

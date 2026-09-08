@@ -19,6 +19,7 @@ namespace sm
 
 		virtual void OnEnterTree() {};
 		virtual void OnExitTree() {};
+		virtual void OnInit() {};
 		virtual void OnReady() {};
 		virtual void OnProcess() {};
 		virtual void OnParented() {};

@@ -22,8 +22,6 @@ func SpawnObject():
 	var object = object_to_spawn.instantiate()
 	add_child(object)
 	
-	var a = object.get_entity().get_tag_container()
-
 	var angle = randf() * TAU
 	var distance = randf_range(min_distance, spawn_radius)
 	var pos = player.global_position + Vector2(cos(angle), sin(angle)) * distance

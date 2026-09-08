@@ -62,7 +62,10 @@ void sm::TagContainer::OnEnterTree()
 
 		ERR_FAIL_MSG("Error: this node already has an existing TagContainer");
 	}
+}
 
+void sm::TagContainer::OnInit()
+{
 	SetIniTags();
 }
 
@@ -285,9 +288,10 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		if (++count == 1)
 		{
 			m_TagsSet.tags.Set(id, true);
+			m_gdTags.push_back(id);
 
 #ifdef DEV_BUILD
-			m_gdTags.push_back(id);
+			m_gdTagsDebug.push_back(id);
 #endif // DEV_BUILD
 		}
 
@@ -304,9 +308,10 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		{
 			m_TagsSet.tags.Set(id, false);
 
-#ifdef DEV_BUILD
 			auto pos = m_gdTags.find(id);
 			m_gdTags.remove_at(pos);
+#ifdef DEV_BUILD
+			m_gdTagsDebug.erase(m_gdTagsDebug.begin() + pos);
 #endif // DEV_BUILD
 		}
 

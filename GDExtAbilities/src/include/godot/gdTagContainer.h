@@ -25,6 +25,7 @@ namespace sm
 		~TagContainer();
 
 		void OnEnterTree() override;
+		void OnInit() override;
 		void OnExitTree() override;
 		void OnParented() override;
 		void OnUnparented() override;
@@ -61,6 +62,9 @@ namespace sm
 
 	private:
 		godot::PackedInt32Array m_gdTags;
+#ifdef DEV_BUILD
+		std::vector<int> m_gdTagsDebug;
+#endif // DEV_BUILD
 		godot::Node* prevParent = nullptr;
 		godot::StringName prevName;
 

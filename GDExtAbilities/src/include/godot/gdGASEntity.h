@@ -31,14 +31,14 @@ namespace sm
 
 		GAS_World* GetWorld();
 
-		AttributeContainer* GetAttributeContainer() const { return m_AttrContainer; }
-		void SetAttributeContainer(AttributeContainer* node) { m_AttrContainer = node; };
-		godot::NodePath GetAttributeContainerNodePath() const { return attrContainerNodePath; }
+		AttributeContainer* GetAttributeContainer() const;
+		void SetAttributeContainer(AttributeContainer* node);
+		godot::NodePath GetAttributeContainerNodePath() const;
 		void SetAttributeContainerNodePath(godot::NodePath path);
 
-		TagContainer* GetTagContainer() const { return m_TagContainer; }
-		void SetTagContainer(TagContainer* node) { m_TagContainer = node; };
-		godot::NodePath GetTagContainerNodePath() const { return tagContainerNodePath; }
+		TagContainer* GetTagContainer() const;
+		void SetTagContainer(TagContainer* node);
+		godot::NodePath GetTagContainerNodePath() const;
 		void SetTagContainerNodePath(godot::NodePath path);
 
 		EffectInstanceID AddEffect(const godot::Ref<EffectData> gdEffect);

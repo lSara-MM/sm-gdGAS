@@ -1,10 +1,10 @@
 [gd_scene load_steps=35 format=3 uid="uid://ditpij003hyj8"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_m5fce"]
-[ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="3_6s2r6"]
 [ext_resource type="Script" path="res://scripts/EnemyEntity.gd" id="3_ha7w3"]
 [ext_resource type="PackedScene" uid="uid://btnwjthngfysl" path="res://scenes/prefabs/gas_entity.tscn" id="3_v5tjf"]
 [ext_resource type="Script" path="res://scripts/ChaserOnCollision.gd" id="4_cx5ej"]
+[ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="4_h721p"]
 [ext_resource type="Texture2D" uid="uid://k1ehcrgwoj6f" path="res://assets/enemies/owl/SpriteSheet.png" id="5_qbauq"]
 [ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="6_uwui0"]
 
@@ -378,10 +378,13 @@ script = ExtResource("1_m5fce")
 [node name="GAS_Entity" parent="." instance=ExtResource("3_v5tjf")]
 script = ExtResource("3_ha7w3")
 
+[node name="TagContainer" parent="GAS_Entity" index="2"]
+tags = PackedInt32Array(13)
+
 [node name="Behaviour" type="Node2D" parent="."]
 
 [node name="Movement" type="Node2D" parent="Behaviour"]
-script = ExtResource("3_6s2r6")
+script = ExtResource("4_h721p")
 
 [node name="Attack" type="Node2D" parent="Behaviour"]
 
@@ -419,3 +422,5 @@ parameters/Walk/blend_position = 0.0266577
 script = ExtResource("6_uwui0")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_enemy_area_2d_body_entered"]
+
+[editable path="GAS_Entity"]

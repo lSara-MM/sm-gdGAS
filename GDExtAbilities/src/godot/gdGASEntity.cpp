@@ -22,6 +22,8 @@ void sm::GAS_Entity::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attribute_container", "node"), &SetAttributeContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_node_path"), &GetAttributeContainerNodePath);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("get_world"), &GetWorld);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tag_container"), &GetTagContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_tag_container", "node"), &SetTagContainer);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tag_node_path"), &GetTagContainerNodePath);
@@ -158,9 +160,39 @@ sm::GAS_World* sm::GAS_Entity::GetWorld()
 	return m_WorldBound.GetOrInitWorld(this, sceneRoot);
 }
 
+sm::AttributeContainer* sm::GAS_Entity::GetAttributeContainer() const
+{
+	return m_AttrContainer;
+}
+
+void sm::GAS_Entity::SetAttributeContainer(AttributeContainer* node)
+{
+	m_AttrContainer = node;
+}
+
+godot::NodePath sm::GAS_Entity::GetAttributeContainerNodePath() const
+{
+	return attrContainerNodePath;
+}
+
 void sm::GAS_Entity::SetAttributeContainerNodePath(godot::NodePath path)
 {
 	attrContainerNodePath = path;
+}
+
+sm::TagContainer* sm::GAS_Entity::GetTagContainer() const
+{
+	return m_TagContainer;
+}
+
+void sm::GAS_Entity::SetTagContainer(TagContainer* node)
+{
+	m_TagContainer = node;
+}
+
+godot::NodePath sm::GAS_Entity::GetTagContainerNodePath() const
+{
+	return tagContainerNodePath;
 }
 
 void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)

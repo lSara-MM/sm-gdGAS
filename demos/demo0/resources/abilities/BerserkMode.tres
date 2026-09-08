@@ -1,9 +1,7 @@
 [gd_resource type="AbilityData" load_steps=6 format=3 uid="uid://cgnv5hv34paw6"]
 
-[sub_resource type="GDScript" id="GDScript_3bo4d"]
+[sub_resource type="GDScript" id="GDScript_088et"]
 script/source = "extends GameplayAbility
-
-var speed_effect_id : int
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
 ## Return true if it was successfully activated.
@@ -24,11 +22,8 @@ var speed_effect_id : int
 	#return []
 
 ## Called in AppllyEffectsToTarget(). Intercept effects to get their instance id if needed.
-func _get_effect_id(effect: EffectData, instance_id: int) -> void:
-	if effect.name == \"BerserkSpeed\":
-		speed_effect_id = instance_id
-	pass
-"
+#func _get_effect_id(effect: EffectData, instance_id: int) -> void:
+	#pass"
 
 [sub_resource type="ModifierData" id="ModifierData_vatek"]
 target_id = &"MaxHealth"
@@ -54,5 +49,5 @@ modifiers = Array[ModifierData]([SubResource("ModifierData_7tddw")])
 
 [resource]
 tag_name = &"Berserk"
-ability = SubResource("GDScript_3bo4d")
+ability = SubResource("GDScript_088et")
 effect = Array[EffectData]([SubResource("EffectData_l2mwp"), SubResource("EffectData_kn2pr")])
