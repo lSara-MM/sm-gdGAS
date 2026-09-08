@@ -1,0 +1,27 @@
+[gd_resource type="AbilityData" load_steps=5 format=3 uid="uid://cgnv5hv34paw6"]
+
+[sub_resource type="ModifierData" id="ModifierData_vatek"]
+target_id = &"MaxHealth"
+source_id = &"BerserkHp"
+value = -10.0
+
+[sub_resource type="EffectData" id="EffectData_l2mwp"]
+name = &"BerserkHp"
+duration = 7.48293e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_vatek")])
+
+[sub_resource type="ModifierData" id="ModifierData_7tddw"]
+operation_type = 2
+target_id = &"Speed"
+source_id = &"BerserkSpeed"
+value = 50.0
+
+[sub_resource type="EffectData" id="EffectData_kn2pr"]
+name = &"BerserkSpeed"
+effect_type = 2
+duration = 3.63076e-42
+modifiers = Array[ModifierData]([SubResource("ModifierData_7tddw")])
+
+[resource]
+tag_name = &"Berserk"
+effect = Array[EffectData]([SubResource("EffectData_l2mwp"), SubResource("EffectData_kn2pr")])

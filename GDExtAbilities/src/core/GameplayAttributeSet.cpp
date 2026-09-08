@@ -10,6 +10,11 @@ sm::GameplayAttributeSet::~GameplayAttributeSet()
 
 sm::GameplayAttribute* sm::GameplayAttributeSet::FindAttribute(AttributeID id)
 {
+	if (id.is_empty())
+	{
+		return nullptr;
+	}
+
 	// AttributeSets are small (< 100 attributes), linear search is acceptable
 	for (sm::GameplayAttribute& attr : m_Attributes)
 	{

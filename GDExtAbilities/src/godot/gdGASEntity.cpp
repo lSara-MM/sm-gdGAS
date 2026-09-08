@@ -27,6 +27,8 @@ void sm::GAS_Entity::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_tag_node_path"), &GetTagContainerNodePath);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("add_effect", "effect"), &AddEffect);
+	godot::ClassDB::bind_method(godot::D_METHOD("remove_effect", "effect_id"), &RemoveEffect);
+	godot::ClassDB::bind_method(godot::D_METHOD("clear_effects"), &ClearEffects);
 
 	// Properties
 	ADD_PROPERTY(godot::PropertyInfo(
@@ -168,14 +170,11 @@ void sm::GAS_Entity::SetTagContainerNodePath(godot::NodePath path)
 
 EffectInstanceID sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect)
 {
-	sm::GAS_World* world = m_WorldBound.GetWorld(this);
+	GAS_World* world = m_WorldBound.GetWorld(this);
 
 	ERR_FAIL_NULL_V_MSG(world, 0,
 		godot::vformat("AddEffect: Could not add '%s'. The EffectSystem was not found.",
 			gdEffect->GetName()));
-
-	auto a = ToStdString(gdEffect->GetName());
-	auto b = world->GetEffectSystem();
 
 	if (!HandleTags(gdEffect))
 	{
@@ -227,6 +226,20 @@ EffectInstanceID sm::GAS_Entity::AddEffect(const godot::Ref<EffectData> gdEffect
 	}
 
 	return world->GetEffectSystem()->AddActiveEffect(effect);
+}
+
+void sm::GAS_Entity::RemoveEffect(EffectInstanceID effectID)
+{
+	GAS_World* world = m_WorldBound.GetWorld(this);
+	auto* es = world->GetEffectSystem();
+	es->RemoveEffect(effectID, this);
+}
+
+void sm::GAS_Entity::ClearEffects()
+{
+	GAS_World* world = m_WorldBound.GetWorld(this);
+	auto* es = world->GetEffectSystem();
+	es->ClearEffects(this);
 }
 
 bool sm::GAS_Entity::HandleTags(const godot::Ref<EffectData>& gdEffect)

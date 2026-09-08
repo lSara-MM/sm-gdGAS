@@ -42,10 +42,13 @@ namespace sm
 		void SetTagContainerNodePath(godot::NodePath path);
 
 		EffectInstanceID AddEffect(const godot::Ref<EffectData> gdEffect);
+		void RemoveEffect(EffectInstanceID effectID);
+		void ClearEffects();
 
 		bool HandleTags(const godot::Ref<sm::EffectData>& gdEffect);
 		void AddTags(const BitSet<MAX_TAGS> tags);
 		void RemoveTags(const BitSet<MAX_TAGS> tags);
+		void ClearTags();
 
 	private:
 		void OnEnterTree() override;

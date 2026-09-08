@@ -38,6 +38,8 @@ namespace sm
 		GDVIRTUAL0R(bool, _check_availability)
 			GDVIRTUAL0R(bool, _activate_ability)
 			GDVIRTUAL1(_end_ability, bool)
+			GDVIRTUAL1R(bool, _can_apply_effect, godot::Ref<EffectData>)
+			GDVIRTUAL2(_get_effect_id, godot::Ref<EffectData>, int)
 			GDVIRTUAL0R(godot::TypedArray<GAS_Entity>, _calculate_targets)
 
 #pragma endregion

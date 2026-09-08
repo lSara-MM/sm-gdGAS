@@ -130,7 +130,7 @@
 		</signal>
 		<signal name="ability_activated">
 			<param index="0" name="entity" type="Object" />
-			<param index="1" name="ability" type="AbilityData" />
+			<param index="1" name="ability" type="int" />
 			<description>
 				Emitted when [param ability] is successfully activated for the specified target [param entity].
 			</description>

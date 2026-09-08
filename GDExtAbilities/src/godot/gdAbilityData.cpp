@@ -121,8 +121,9 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 		godot::String templateCode =
 			"extends GameplayAbility\n\n"
 			"## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.\n"
+			"## Return true if it was successfully activated.\n"
 			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.\n"
-			"#func _activate_ability():\n"
+			"#func _activate_ability() -> bool:\n"
 			"\t#pass\n\n"
 			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.\n"
 			"#func _end_ability(_was_cancelled: bool):\n"
@@ -132,7 +133,10 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 			"\t#return true\n\n"
 			"## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.\n"
 			"#func _calculate_targets() -> Array[GAS_Entity]:\n"
-			"\t#return []"
+			"\t#return []\n\n"
+			"## Called in AppllyEffectsToTarget(). Intercept effects to get their instance id if needed.\n"
+			"#func _get_effect_id(effect: EffectData, instance_id: int) -> void:\n"
+			"\t#pass"
 			;
 
 		script->set_source_code(templateCode);

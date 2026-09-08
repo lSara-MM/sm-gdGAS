@@ -45,6 +45,7 @@ namespace sm
 		bool SetTag(TagID id, bool value = true);
 		void AddTags(const godot::PackedInt32Array& tags);
 		void RemoveTags(const godot::PackedInt32Array& tags);
+		void ClearTags();
 
 		// non godot
 		void AddTagsBitset(BitSet<MAX_TAGS> tags);

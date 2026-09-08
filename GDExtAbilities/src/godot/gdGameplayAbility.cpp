@@ -18,11 +18,13 @@ void sm::GameplayAbility::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown"), &IsOnCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("can_activate"), &CanActivate);
 
-	godot::ClassDB::bind_method(godot::D_METHOD("apply_effects_to_target", "entity"), &ApplyEffectsToTarget, DEFVAL(nullptr));
+	godot::ClassDB::bind_method(godot::D_METHOD("apply_effects_to_target", "entity"), &ApplyEffectsToTarget);
 
 	GDVIRTUAL_BIND(_check_availability);
 	GDVIRTUAL_BIND(_activate_ability);
 	GDVIRTUAL_BIND(_end_ability, "was_cancelled");
+	GDVIRTUAL_BIND(_can_apply_effect, "effect");
+	GDVIRTUAL_BIND(_get_effect_id, "effect", "instance_id");
 	GDVIRTUAL_BIND(_calculate_targets);
 }
 
@@ -58,16 +60,17 @@ bool sm::GameplayAbility::TryActivate()
 	}
 
 	bool ret = false;
+	auto script = abilityData->GetAbilityScript();
+	auto code = script->get_source_code().strip_edges();
+	auto debug = ToStdString(code);
 
 	if (GDVIRTUAL_IS_OVERRIDDEN(_activate_ability))
 	{
-		state = AbilityState::Activating;
-
 		GDVIRTUAL_CALL(_activate_ability, ret);
 
 		if (ret)
 		{
-			state = AbilityState::Active;
+			state = AbilityState::Activating;
 		}
 	}
 	else if (ret = CommitAbility())
@@ -177,12 +180,12 @@ bool sm::GameplayAbility::IsOnCooldown() const
 	GameplayEffect* effect = es->FindEffect(m_CooldownEffect);
 	if (effect)
 	{
-#if defined(TOOLS_ENABLED) && defined(DEBUG_ENABLED)
-		if (!effect->HasExpired())
-		{
-			WARN_PRINT_ED("Ability is on cooldown.");
-		}
-#endif // TOOLS_ENABLED && DEBUG_ENABLED
+		//#if defined(TOOLS_ENABLED) && defined(DEBUG_ENABLED)
+		//		if (!effect->HasExpired())
+		//		{
+		//			WARN_PRINT_ED("Ability is on cooldown.");
+		//		}
+		//#endif // TOOLS_ENABLED && DEBUG_ENABLED
 		return !effect->HasExpired();
 	}
 
@@ -199,7 +202,6 @@ float sm::GameplayAbility::GetCooldown() const
 	{
 		return 0.0f;
 	}
-	//ERR_FAIL_COND_V_MSG(!effect, 0.0f, "GameplayEffect not found");
 
 	return effect->GetCurrentCooldown();
 }
@@ -268,9 +270,24 @@ void sm::GameplayAbility::ApplyEffectsToTarget(GAS_Entity* entity)
 	for (int i = 0; i < effectsToApply.size(); i++)
 	{
 		godot::Ref<EffectData> effect = effectsToApply[i];
+		if (GDVIRTUAL_IS_OVERRIDDEN(_can_apply_effect))
+		{
+			bool ret = true;
+			GDVIRTUAL_CALL(_can_apply_effect, effect, ret);
+
+			if (!ret)
+			{
+				continue;
+			}
+		}
+
 		if (effect.is_valid())
 		{
-			entity->AddEffect(effect);
+			int idRet = entity->AddEffect(effect);
+			if (GDVIRTUAL_IS_OVERRIDDEN(_get_effect_id))
+			{
+				GDVIRTUAL_CALL(_get_effect_id, effect, idRet);
+			}
 		}
 	}
 }

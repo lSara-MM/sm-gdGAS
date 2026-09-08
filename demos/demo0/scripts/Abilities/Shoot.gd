@@ -1,12 +1,13 @@
-[gd_resource type="AbilityData" load_steps=5 format=3 uid="uid://cgnv5hv34paw6"]
-
-[sub_resource type="GDScript" id="GDScript_l6rrr"]
-script/source = "extends GameplayAbility
+extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
 ## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.
-#func _activate_ability():
-	#pass
+func _activate_ability() -> bool:
+	if commit_ability():
+		var object = get_entity_owner().Shoot()
+		object.connect("bullet_collision", _on_bullet_collision)
+		return true
+	return false
 
 ## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.
 #func _end_ability(_was_cancelled: bool):
@@ -18,27 +19,12 @@ script/source = "extends GameplayAbility
 
 ## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.
 #func _calculate_targets() -> Array[GAS_Entity]:
-	#return []
+	#return [target.get_entity()]
 
-"
-
-[sub_resource type="ModifierData" id="ModifierData_vatek"]
-target_id = &"MaxHp"
-source_id = &"Berserk"
-value = -10.0
-
-[sub_resource type="ModifierData" id="ModifierData_k02lc"]
-operation_type = 2
-target_id = &"Speed"
-source_id = &"Berserk"
-value = 6.17973e-43
-
-[sub_resource type="EffectData" id="EffectData_l2mwp"]
-name = &"Berserk"
-duration = 7.48293e-43
-modifiers = Array[ModifierData]([SubResource("ModifierData_vatek"), SubResource("ModifierData_k02lc")])
-
-[resource]
-tag_name = &"Berserk"
-ability = SubResource("GDScript_l6rrr")
-effect = Array[EffectData]([SubResource("EffectData_l2mwp")])
+## Called in AppllyEffectsToTarget(). Intercept effects to get their instance id if needed.
+#func _get_effect_id(effect: EffectData, instance_id: int) -> void:
+	#pass
+	
+func _on_bullet_collision(body: Node2D) -> void:
+	apply_effects_to_target(body.get_entity())
+	try_end(false)

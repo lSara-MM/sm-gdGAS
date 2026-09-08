@@ -1,25 +1,4 @@
-[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://d2ydgaxyn7b0o"]
-
-[sub_resource type="GDScript" id="GDScript_gj2cn"]
-script/source = "extends GameplayAbility
-
-## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
-## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.
-#func _activate_ability():
-	#pass
-
-## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.
-#func _end_ability(_was_cancelled: bool):
-	#pass
-
-## ## Called in CanActivate(). Adds custom conditionals to ability activation. Default: Abilities check state, cost, cooldown and tags.
-#func _check_availability() -> bool:
-	#return true
-
-# Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.
-func _calculate_targets() -> Array[GAS_Entity]:
-	return get_entity_owner().targets
-"
+[gd_resource type="AbilityData" load_steps=3 format=3 uid="uid://d2ydgaxyn7b0o"]
 
 [sub_resource type="ModifierData" id="ModifierData_jso6a"]
 target_id = &"CurrentHealth"
@@ -33,6 +12,5 @@ modifiers = Array[ModifierData]([SubResource("ModifierData_jso6a")])
 
 [resource]
 tag_name = &"EnemyBasicDamage"
-ability = SubResource("GDScript_gj2cn")
 effect = Array[EffectData]([SubResource("EffectData_6k0b2")])
 tags = PackedInt32Array(11, 2)

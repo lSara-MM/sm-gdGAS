@@ -22,6 +22,12 @@
 				Virtual method called during default ability execution to resolve target entities. Returns an array of [GAS_Entity] instances to which the ability's gameplay effects will be applied.
 			</description>
 		</method>
+		<method name="_can_apply_effect" qualifiers="virtual">
+			<return type="bool" />
+			<param index="0" name="effect" type="EffectData" />
+			<description>
+			</description>
+		</method>
 		<method name="_check_availability" qualifiers="virtual">
 			<return type="bool" />
 			<description>
@@ -33,6 +39,13 @@
 			<param index="0" name="was_cancelled" type="bool" />
 			<description>
 				Virtual method called when the ability ends or is cancelled. Override this to perform cleanup or trigger termination logic. [param was_cancelled] is [code]true[/code] if execution was prematurely interrupted.
+			</description>
+		</method>
+		<method name="_get_effect_id" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="effect" type="EffectData" />
+			<param index="1" name="instance_id" type="int" />
+			<description>
 			</description>
 		</method>
 		<method name="apply_effects_to_target">

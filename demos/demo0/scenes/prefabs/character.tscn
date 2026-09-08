@@ -1,53 +1,16 @@
-[gd_scene load_steps=41 format=3 uid="uid://3wktl0846ot2"]
+[gd_scene load_steps=39 format=3 uid="uid://3wktl0846ot2"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_w41dn"]
 [ext_resource type="Script" path="res://scripts/PlayerEntity.gd" id="2_0q7k2"]
 [ext_resource type="AbilityData" uid="uid://dfikne8aaht4o" path="res://resources/abilities/Dash.tres" id="3_n1yh0"]
+[ext_resource type="PackedScene" uid="uid://ps3rm7djtdqa" path="res://scenes/prefabs/bullet.tscn" id="3_qlw2w"]
 [ext_resource type="Texture2D" uid="uid://o1ms0wndw788" path="res://assets/characters/sorcerer-F/SpriteSheet.png" id="3_y4cdn"]
 [ext_resource type="AbilityData" uid="uid://cru4hwrlo7pm2" path="res://resources/abilities/StaminaRegen.tres" id="4_1h4cq"]
 [ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="4_ed433"]
+[ext_resource type="AbilityData" uid="uid://dlowi5td3i2ub" path="res://resources/abilities/Shoot.tres" id="5_7a203"]
 [ext_resource type="AttributeSetData" uid="uid://cahulontscqcs" path="res://resources/player/BasicStats.tres" id="5_cv2ey"]
 [ext_resource type="Script" path="res://scripts/player_attributes.gd" id="5_rj2bg"]
-[ext_resource type="AbilityData" uid="uid://cgnv5hv34paw6" path="res://resources/abilities/Berserk.tres" id="5_vatek"]
-
-[sub_resource type="GDScript" id="GDScript_k02lc"]
-script/source = "extends GameplayAbility
-
-## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
-## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.
-#func _activate_ability():
-	#pass
-
-## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.
-#func _end_ability(_was_cancelled: bool):
-	#pass
-
-## ## Called in CanActivate(). Adds custom conditionals to ability activation. Default: Abilities check state, cost, cooldown and tags.
-#func _check_availability() -> bool:
-	#return true
-
-## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.
-#func _calculate_targets() -> Array[GAS_Entity]:
-	#return []
-
-"
-
-[sub_resource type="ModifierData" id="ModifierData_cv2ey"]
-target_id = &"CurrentHealth"
-source_id = &"Damage"
-value = 50.0
-
-[sub_resource type="EffectData" id="EffectData_vatek"]
-name = &"Damage"
-duration = 7.48293e-43
-modifiers = Array[ModifierData]([SubResource("ModifierData_cv2ey")])
-
-[sub_resource type="AbilityData" id="AbilityData_k02lc"]
-tag_name = &"Shoot"
-ability = SubResource("GDScript_k02lc")
-cooldown = 0.5
-cost = 3.0
-effect = Array[EffectData]([SubResource("EffectData_vatek")])
+[ext_resource type="AbilityData" uid="uid://cgnv5hv34paw6" path="res://resources/abilities/BerserkMode.tres" id="5_vatek"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrhn5"]
 radius = 13.0
@@ -419,9 +382,10 @@ script = ExtResource("1_w41dn")
 
 [node name="GAS_Entity" type="GAS_Entity" parent="."]
 script = ExtResource("2_0q7k2")
+bullet_prefab = ExtResource("3_qlw2w")
 
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
-abilities = Array[AbilityData]([ExtResource("3_n1yh0"), ExtResource("4_1h4cq"), SubResource("AbilityData_k02lc"), ExtResource("5_vatek")])
+abilities = Array[AbilityData]([ExtResource("3_n1yh0"), ExtResource("4_1h4cq"), ExtResource("5_7a203"), ExtResource("5_vatek")])
 
 [node name="AttributeContainer" type="AttributeContainer" parent="GAS_Entity"]
 attribute_set = ExtResource("5_cv2ey")

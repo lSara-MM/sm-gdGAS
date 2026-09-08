@@ -18,6 +18,11 @@
 				Applies a [EffectData] to this entity. Returns an integer identifier representing the active effect instance.
 			</description>
 		</method>
+		<method name="clear_effects">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
 		<method name="get_attribute_container" qualifiers="const">
 			<return type="AttributeContainer" />
 			<description>
@@ -28,6 +33,12 @@
 			<return type="TagContainer" />
 			<description>
 				Return current [TagContainer] associated to this entity.
+			</description>
+		</method>
+		<method name="remove_effect">
+			<return type="void" />
+			<param index="0" name="effect_id" type="int" />
+			<description>
 			</description>
 		</method>
 		<method name="set_attribute_container">

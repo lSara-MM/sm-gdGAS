@@ -21,18 +21,18 @@ namespace sm
 		GameplayEffect* FindEffect(EffectInstanceID effectID);
 
 		EffectInstanceID AddActiveEffect(GameplayEffect& effect);
-		//void RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect);
-
-		//void RemoveEffect(EffectID effectID);
-		void RemoveEffect(GameplayEffect* effect, size_t index);
+		void RemoveEffect(GameplayEffect* effect);
+		void RemoveEffect(EffectInstanceID effectID, GAS_Entity* entity);
 
 		void RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect* effect);
+
+		void ClearEffects(GAS_Entity* entity);
 
 	public:
 		DumbUID m_EffectsID;
 
 	private:
 		std::vector<GameplayEffect> m_ActiveEffects;
-		std::unordered_map<EffectInstanceID, GameplayEffect*> m_Effects;
+		std::unordered_map<EffectInstanceID, size_t> m_EffectsIndex;
 	};
 }

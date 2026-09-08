@@ -47,6 +47,7 @@ namespace sm
 
 		//bool TryActivate(const godot::Ref<AbilityData>& ability);
 		bool TryActivate(TagID abilityID);
+		bool TryEnd(TagID abilityID, bool wasCancelled = false);
 
 		bool TryActivateAbilitiesWithTag(godot::PackedInt32Array tags);
 

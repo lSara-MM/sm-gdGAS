@@ -43,6 +43,10 @@ void sm::TagContainer::_bind_methods()
 		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer"),
 		godot::PropertyInfo(godot::Variant::INT, "id")
 	));
+
+	ADD_SIGNAL(godot::MethodInfo("tags_cleared",
+		godot::PropertyInfo(godot::Variant::OBJECT, "owner", godot::PROPERTY_HINT_NODE_TYPE, "TagContainer")
+	));
 }
 
 void sm::TagContainer::OnEnterTree()
@@ -344,6 +348,13 @@ void sm::TagContainer::RemoveTags(const godot::PackedInt32Array& tags)
 			RemoveTag(tag);
 		}
 	}
+}
+
+void sm::TagContainer::ClearTags()
+{
+	m_TagsSet.tags.Clear();
+	std::memset(m_TagsSet.stack, 0, sizeof(m_TagsSet.stack));
+	emit_signal("tags_cleared", this);
 }
 
 void sm::TagContainer::AddTagsBitset(BitSet<MAX_TAGS> tags)

@@ -29,7 +29,6 @@ font_size = 10
 script = ExtResource("1_d1of3")
 
 [node name="GAS_World" type="GAS_World" parent="."]
-entity_count = 2
 
 [node name="Background" parent="." instance=ExtResource("1_q4spy")]
 
@@ -87,3 +86,8 @@ text = "Dash"
 label_settings = SubResource("LabelSettings_j32p5")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[connection signal="ability_activated" from="Player/GAS_Entity/AbilityContainer" to="Player/GAS_Entity" method="_on_ability_activated"]
+[connection signal="ability_activated" from="Player/GAS_Entity/AbilityContainer" to="CanvasLayer/DashBar" method="_on_ability_activated"]
+
+[editable path="Player"]

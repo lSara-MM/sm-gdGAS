@@ -1,0 +1,17 @@
+[gd_resource type="AbilityData" load_steps=3 format=3 uid="uid://dlowi5td3i2ub"]
+
+[sub_resource type="ModifierData" id="ModifierData_cv2ey"]
+target_id = &"CurrentHealth"
+source_id = &"Damage"
+value = 50.0
+
+[sub_resource type="EffectData" id="EffectData_vatek"]
+name = &"Damage"
+duration = 7.48293e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_cv2ey")])
+
+[resource]
+tag_name = &"Shoot"
+cooldown = 0.5
+cost = 3.0
+effect = Array[EffectData]([SubResource("EffectData_vatek")])

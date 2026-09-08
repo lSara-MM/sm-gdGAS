@@ -81,5 +81,10 @@
 				Emitted when an active gameplay tag with the specified [param id] is removed or cleared from the [param owner].
 			</description>
 		</signal>
+		<signal name="tags_cleared">
+			<param index="0" name="owner" type="Object" />
+			<description>
+			</description>
+		</signal>
 	</signals>
 </class>

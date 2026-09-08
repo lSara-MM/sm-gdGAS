@@ -5,19 +5,38 @@ class_name PlayerEntity
 @onready var tag_container = get_tag_container()
 @onready var ability_container = $AbilityContainer
 
-func _process(_delta: float) -> void:
-	if ability_container.is_on_cooldown(Tags._Ability_Dash) && !ability_container.is_active(Tags._Ability_StaminaRegen) && attribute_container.get_attribute_current_value("CurrentStamina") < attribute_container.get_attribute_current_value("MaxStamina")  :
-		#if Input.is_action_just_pressed("lctrl"):
-			#ability_container.try_activate(Tags._Ability_StaminaRegen)
-		
-		ability_container.try_activate(Tags._Ability_StaminaRegen)
-	pass
+var is_berserk = false
+@export var bullet_prefab : PackedScene
 
-func IsDashing() -> bool:
-	return tag_container.has_tag(Tags._Ability_Dash)
-
-func TryDash() -> bool:
-	return ability_container.try_activate(Tags._Ability_Dash)
+func TryAbility(ability: int) -> bool:
+	return ability_container.try_activate(ability)
+	
+func IsAbilityActive(ability: int) -> bool:
+	return tag_container.has_tag(ability)
+	
+func TryBerserk() -> bool:
+	if is_berserk:
+		is_berserk = ability_container.try_end(Tags._Ability_Berserk, false)
+	else:
+		is_berserk = ability_container.try_activate(Tags._Ability_Berserk)
+	return is_berserk
 
 func GetAttributeCurrentValue(attr: StringName) -> float:
 	return attribute_container.get_attribute_current_value(attr)
+
+func _on_ability_activated(_entity: Object, ability: int) -> void:
+	if ability == Tags._Ability_Dash:
+		ability_container.try_activate(Tags._Ability_StaminaRegen)
+	pass
+	
+func Shoot() -> Node:
+	if bullet_prefab.is_empty():
+		return
+	
+	var player = get_parent()
+	var object = bullet_prefab.instantiate()
+	player.add_child(object)
+	object.global_position = player.global_position
+	
+	object.dir = player.position - player.get_global_mouse_position()
+	return object

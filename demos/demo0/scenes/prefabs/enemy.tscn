@@ -366,9 +366,10 @@ states/Walk/position = Vector2(544, 100)
 transitions = ["Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_2hyy3"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_irmqu"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_rkhd4")]
 graph_offset = Vector2(4.24449, 0)
 
-[node name="Enemy" type="CharacterBody2D"]
+[node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
 collision_layer = 7
 collision_mask = 5
+floor_block_on_wall = false
 floor_snap_length = 0.0
 platform_floor_layers = 4294967232
 script = ExtResource("1_5u6pf")

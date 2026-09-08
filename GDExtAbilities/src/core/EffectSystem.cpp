@@ -8,22 +8,18 @@
 
 void sm::EffectSystem::Update(float dt)
 {
-	std::vector<std::pair<GameplayEffect*, size_t>> pendingToDelete;
-
-	for (size_t i = 0; i < m_ActiveEffects.size(); ++i)
+	for (auto it = m_ActiveEffects.begin(); it != m_ActiveEffects.end(); )
 	{
-		GameplayEffect* effect = &m_ActiveEffects[i];
+		it->Tick(dt);
 
-		effect->Tick(dt);
-		if (effect->HasExpired())
+		if (it->HasExpired())
 		{
-			pendingToDelete.push_back({ effect,  i });
+			RemoveEffect(&(*it));
 		}
-	}
-
-	for (auto const [effect, index] : pendingToDelete)
-	{
-		RemoveEffect(effect, index);
+		else
+		{
+			++it;
+		}
 	}
 }
 
@@ -41,9 +37,9 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectID effectID)
 
 sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectInstanceID effectID)
 {
-	if (auto itr = m_Effects.find(effectID); itr != m_Effects.end())
+	if (auto itr = m_EffectsIndex.find(effectID); itr != m_EffectsIndex.end())
 	{
-		return itr->second;
+		return &m_ActiveEffects[itr->second];
 	}
 
 	return nullptr;
@@ -52,35 +48,13 @@ sm::GameplayEffect* sm::EffectSystem::FindEffect(EffectInstanceID effectID)
 EffectInstanceID sm::EffectSystem::AddActiveEffect(GameplayEffect& effect)
 {
 	auto id = effect.GetInstanceID();
-	GameplayEffect* ptr = &m_ActiveEffects.emplace_back(std::move(effect));
-	m_Effects[id] = ptr;
+	m_EffectsIndex[id] = m_ActiveEffects.size();
+	&m_ActiveEffects.emplace_back(std::move(effect));
 
 	return id;
 }
 
-//void sm::EffectSystem::RemoveEffect(EntityID id, const godot::Ref<EffectData> gdEffect)
-//{
-//	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
-//		[&](const std::unique_ptr<sm::GameplayEffect>& effect)
-//		{
-//			return effect->GetID() == gdEffect->GetName();
-//		});
-//
-//	RemoveEffectModifiers(id, itr);
-//}
-
-//void sm::EffectSystem::RemoveEffect(EffectID gdEffectID)
-//{
-//	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
-//		[&](const EffectPtr& effect)
-//		{
-//			return effect->GetID() == gdEffectID;
-//		});
-//
-//	RemoveEffectModifiers((*itr)->GetTargetID(), itr);
-//}
-
-void sm::EffectSystem::RemoveEffect(GameplayEffect* effect, size_t index)
+void sm::EffectSystem::RemoveEffect(GameplayEffect* effect)
 {
 	SM_ASSERT(_world != nullptr, "Critical error: Could not remove effect. World not created.");
 
@@ -93,8 +67,32 @@ void sm::EffectSystem::RemoveEffect(GameplayEffect* effect, size_t index)
 		entity->RemoveTags(effect->GetTagsToAdd());
 	}
 
-	m_Effects.erase(effect->GetInstanceID());
-	m_ActiveEffects.erase(m_ActiveEffects.begin() + index);
+	m_EffectsIndex.erase(effect->GetInstanceID());
+	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
+		[&](const GameplayEffect& activeEffect)
+		{
+			return activeEffect.GetInstanceID() == effect->GetInstanceID();
+		});
+
+	m_ActiveEffects.erase(itr, m_ActiveEffects.end());
+}
+
+void sm::EffectSystem::RemoveEffect(EffectInstanceID effectID, GAS_Entity* entity)
+{
+	auto* effect = FindEffect(effectID);
+	RemoveEffectModifiers(entity, effect);
+
+	entity->AddTags(effect->GetTagsToRemove());
+	entity->RemoveTags(effect->GetTagsToAdd());
+
+	m_EffectsIndex.erase(effect->GetInstanceID());
+	auto itr = std::remove_if(m_ActiveEffects.begin(), m_ActiveEffects.end(),
+		[&](const GameplayEffect& activeEffect)
+		{
+			return activeEffect.GetInstanceID() == effect->GetInstanceID();
+		});
+
+	m_ActiveEffects.erase(itr, m_ActiveEffects.end());
 }
 
 void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect* effect)
@@ -107,5 +105,23 @@ void sm::EffectSystem::RemoveEffectModifiers(GAS_Entity* entity, GameplayEffect*
 	{
 		GameplayAttribute* attr = attrContainer->FindAttribute(handle.targetID);
 		attr->RemoveModifier(handle);
+	}
+}
+
+void sm::EffectSystem::ClearEffects(GAS_Entity* entity)
+{
+	std::vector<GameplayEffect*> pendingToDelete;
+
+	for (auto& effect : m_ActiveEffects)
+	{
+		if (effect.GetTargetID() == entity->GetID())
+		{
+			pendingToDelete.push_back(&effect);
+		}
+	}
+
+	for (auto* effect : pendingToDelete)
+	{
+		RemoveEffect(effect->GetInstanceID(), entity);
 	}
 }

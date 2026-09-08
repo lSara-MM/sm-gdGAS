@@ -19,6 +19,7 @@ void sm::AbilityContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("is_active", "id"), &IsActive);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_on_cooldown", "id"), &IsOnCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("try_activate", "id"), &TryActivate);
+	godot::ClassDB::bind_method(godot::D_METHOD("try_end", "id", "was_cancelled"), &TryEnd, DEFVAL(false));
 	godot::ClassDB::bind_method(godot::D_METHOD("try_activate_abilities_with_tags", "ids"), &TryActivateAbilitiesWithTag);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_current_cooldown", "id"), &GetCurrentCooldown);
@@ -72,8 +73,7 @@ void sm::AbilityContainer::_bind_methods()
 	ADD_SIGNAL(godot::MethodInfo("ability_ended",
 		godot::PropertyInfo(godot::Variant::OBJECT, "entity",
 			godot::PROPERTY_HINT_NODE_TYPE, "GAS_Entity"),
-		godot::PropertyInfo(godot::Variant::OBJECT, "ability",
-			godot::PROPERTY_HINT_RESOURCE_TYPE, "AbilityData")
+		godot::PropertyInfo(godot::Variant::INT, "ability")
 	));
 
 	ADD_SIGNAL(godot::MethodInfo("abilities_cleared",
@@ -339,6 +339,25 @@ bool sm::AbilityContainer::TryActivate(TagID abilityID)
 		if (ret)
 		{
 			emit_signal("ability_activated", m_Owner, abilityID);
+		}
+
+		return ret;
+	}
+
+	ERR_PRINT(godot::vformat("TryActivate failed: ability %d not found", abilityID));
+
+	return false;
+}
+
+bool sm::AbilityContainer::TryEnd(TagID abilityID, bool wasCancelled)
+{
+	if (auto itr = m_Scripts.find(abilityID);
+		itr != m_Scripts.end())
+	{
+		bool ret = itr->second->TryEnd(wasCancelled);
+		if (ret)
+		{
+			emit_signal("ability_end", m_Owner, abilityID);
 		}
 
 		return ret;

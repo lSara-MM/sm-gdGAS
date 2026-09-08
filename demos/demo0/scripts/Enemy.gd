@@ -11,3 +11,7 @@ func _ready() -> void:
 	
 func _on_enemy_area_2d_body_entered(body: Node2D) -> void:
 	on_collision.OnCollision(body)
+
+func get_entity() -> GAS_Entity:
+	return find_child("GAS_Entity") as GAS_Entity
+	

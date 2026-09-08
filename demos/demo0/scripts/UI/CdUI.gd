@@ -4,6 +4,7 @@ extends ProgressBar
 var ability_container : AbilityContainer
 var tag_container : TagContainer
 var tag_id : int
+var to_fill : bool
 
 func setup(entity: Node, world = null) -> void:
 	ability_container = entity.get_node("AbilityContainer")
@@ -14,10 +15,14 @@ func setup(entity: Node, world = null) -> void:
 	max_value = ability_container.get_cooldown(tag_id)
 	
 func _process(_delta: float) -> void:
-	#if ability_container.get_current_cooldown(tag_id) != max_value:
-		#value = max_value - ability_container.get_current_cooldown(tag_id)
-		pass
+	if to_fill:
+		value = max_value - ability_container.get_current_cooldown(tag_id)
+	pass
 
 func _on_tag_added(_entity_owner: TagContainer, tag: int) -> void:
 	if tag == tag_id:
 		value =  max_value - ability_container.get_current_cooldown(tag_id)
+
+func _on_ability_activated(_entity: Object, ability: int) -> void:
+	if ability == tag_id: 
+		to_fill = true
