@@ -379,7 +379,7 @@ script = ExtResource("1_m5fce")
 script = ExtResource("3_ha7w3")
 
 [node name="TagContainer" parent="GAS_Entity" index="2"]
-tags = PackedInt32Array(13)
+tags = PackedInt32Array(13, 13)
 
 [node name="Behaviour" type="Node2D" parent="."]
 

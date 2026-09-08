@@ -1,6 +1,6 @@
 [gd_resource type="AbilityData" load_steps=6 format=3 uid="uid://cgnv5hv34paw6"]
 
-[sub_resource type="GDScript" id="GDScript_088et"]
+[sub_resource type="GDScript" id="GDScript_mehxm"]
 script/source = "extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
@@ -49,5 +49,5 @@ modifiers = Array[ModifierData]([SubResource("ModifierData_7tddw")])
 
 [resource]
 tag_name = &"Berserk"
-ability = SubResource("GDScript_088et")
+ability = SubResource("GDScript_mehxm")
 effect = Array[EffectData]([SubResource("EffectData_l2mwp"), SubResource("EffectData_kn2pr")])

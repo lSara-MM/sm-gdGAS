@@ -19,7 +19,7 @@ func _physics_process(_delta):
 	character.move_and_slide()
 
 func GetVelocity(this: CharacterBody2D) -> Vector2:
-	if target:
+	if is_instance_valid(target) && is_instance_valid(player_entity):
 		var speed = attribute_container.get_attribute_current_value(&"Speed")
 		return (target.global_position - this.global_position).normalized() * speed
 	

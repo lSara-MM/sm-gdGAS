@@ -17,10 +17,9 @@
 sm::TagArrayEditorProperty::TagArrayEditorProperty(TagRegistryEditor* registry) : editor(registry)
 {}
 
-void sm::TagArrayEditorProperty::ShowInspector(godot::Object* object)
+void sm::TagArrayEditorProperty::ShowInspector(godot::Object* object, godot::StringName name)
 {
-	godot::StringName propName = get_edited_property();
-	tags = object->get(propName);
+	tags = object->get(name);
 
 	auto* root = ShowTagTreeEditor();
 

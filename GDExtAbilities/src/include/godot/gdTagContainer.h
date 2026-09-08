@@ -25,7 +25,7 @@ namespace sm
 		~TagContainer();
 
 		void OnEnterTree() override;
-		void OnInit() override;
+		void OnReady() override;
 		void OnExitTree() override;
 		void OnParented() override;
 		void OnUnparented() override;

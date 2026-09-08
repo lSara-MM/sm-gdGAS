@@ -17,10 +17,9 @@
 sm::TagContainerEditorProperty::TagContainerEditorProperty(TagRegistryEditor* registry) : TagArrayEditorProperty(registry)
 {}
 
-void sm::TagContainerEditorProperty::ShowInspector(Object* object)
+void sm::TagContainerEditorProperty::ShowInspector(Object* object, godot::StringName name)
 {
-	godot::StringName propName = get_edited_property();
-	tags = object->get(propName);
+	tags = object->get(name);
 
 	auto* split = memnew(godot::VSplitContainer);
 
@@ -113,6 +112,7 @@ void sm::TagContainerEditorProperty::SelectedTree()
 
 		godot::TreeItem* item = m_SelectedTree->create_item(rootItem);
 		item->set_metadata(0, tagId);
+		auto A = ToStdString(idToResource[tagId]);
 		item->set_text(0, idToResource[tagId]);
 		item->add_button(0, remove);
 		has.emplace(tagId);

@@ -64,7 +64,7 @@ void sm::TagContainer::OnEnterTree()
 	}
 }
 
-void sm::TagContainer::OnInit()
+void sm::TagContainer::OnReady()
 {
 	SetIniTags();
 }

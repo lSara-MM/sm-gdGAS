@@ -59,11 +59,14 @@ bool sm::GameplayAbility::TryActivate()
 		return false;
 	}
 
-	bool ret = false;
+#ifdef DEV_BUILD
 	auto script = abilityData->GetAbilityScript();
 	auto code = script->get_source_code().strip_edges();
 	auto debug = ToStdString(code);
 
+#endif // DEV_BUILD
+
+	bool ret = false;
 	if (GDVIRTUAL_IS_OVERRIDDEN(_activate_ability))
 	{
 		GDVIRTUAL_CALL(_activate_ability, ret);
@@ -92,7 +95,6 @@ bool sm::GameplayAbility::TryActivate()
 			ApplyEffectsToTarget();
 		}
 
-		state = AbilityState::Active;
 		TryEnd(false);
 	}
 
@@ -111,9 +113,10 @@ bool sm::GameplayAbility::TryEnd(bool wasCancelled)
 		}
 
 		state = AbilityState::Idle;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 bool sm::GameplayAbility::CheckCost()
@@ -266,6 +269,7 @@ void sm::GameplayAbility::ApplyEffectsToTarget(GAS_Entity* entity)
 	ERR_FAIL_NULL_MSG(entity, "ApplyEffects failed. Target was <null>");
 
 	godot::TypedArray<EffectData> effectsToApply = abilityData->GetEffects();
+	state = AbilityState::Active;
 
 	for (int i = 0; i < effectsToApply.size(); i++)
 	{
@@ -309,5 +313,5 @@ bool sm::GameplayAbility::CanActivate()
 
 bool sm::GameplayAbility::IsActive() const
 {
-	return state == AbilityState::Active;
+	return state == AbilityState::Active || state == AbilityState::Activating;
 }

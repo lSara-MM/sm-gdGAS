@@ -6,11 +6,15 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_315b1"]
 
 [node name="Bullet" type="Area2D"]
+z_index = 110
+scale = Vector2(0.67, 0.27)
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("1_561j4")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(3.57628e-07, 9.53674e-07)
+scale = Vector2(0.0430108, 0.0401606)
 texture = ExtResource("1_kvxdp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
