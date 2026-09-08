@@ -14,4 +14,10 @@ func _on_enemy_area_2d_body_entered(body: Node2D) -> void:
 
 func get_entity() -> GAS_Entity:
 	return find_child("GAS_Entity") as GAS_Entity
-	
+
+func _on_attribute_changed(attribute_name: StringName, new_value: float, _old_value: float) -> void:
+	match attribute_name:
+		"CurrentHealth":
+			if new_value == 0:
+				print("Enemy died")
+				queue_free()

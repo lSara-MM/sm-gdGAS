@@ -407,3 +407,7 @@ FodyWeavers.xsd
 /demos/demo0/gen/
 /GDExtAbilities/godot-cpp/
 *.zip
+GDExtAbilities/addons/GDExtAbilities/doc_classes/TagArrayEditorProperty.xml
+GDExtAbilities/addons/GDExtAbilities/doc_classes/TagContainerEditorProperty.xml
+GDExtAbilities/addons/GDExtAbilities/doc_classes/TagInspector.xml
+GDExtAbilities/addons/GDExtAbilities/doc_classes/TagRegistryEditor.xml

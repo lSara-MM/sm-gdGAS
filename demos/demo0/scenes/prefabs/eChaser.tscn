@@ -379,7 +379,7 @@ script = ExtResource("1_m5fce")
 script = ExtResource("3_ha7w3")
 
 [node name="TagContainer" parent="GAS_Entity" index="2"]
-tags = PackedInt32Array(13, 13)
+tags = PackedInt32Array(13, 13, 13)
 
 [node name="Behaviour" type="Node2D" parent="."]
 
@@ -421,6 +421,7 @@ parameters/Idle/blend_position = Vector2(0, 0)
 parameters/Walk/blend_position = 0.0266577
 script = ExtResource("6_uwui0")
 
+[connection signal="attribute_changed" from="GAS_Entity/AttributeContainer" to="." method="_on_attribute_changed"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_enemy_area_2d_body_entered"]
 
 [editable path="GAS_Entity"]

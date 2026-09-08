@@ -19,8 +19,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if is_stamina_regen:
-		#ability_container.try_activate(Tags._Ability_StaminaRegen)
-		pass
+		ability_container.try_activate(Tags._Ability_StaminaRegen)
 
 func TryAbility(ability: int) -> bool:
 	return ability_container.try_activate(ability)
