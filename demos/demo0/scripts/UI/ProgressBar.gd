@@ -27,4 +27,6 @@ func _on_attribute_changed(attr_name: StringName, new_val: float, _old_val: floa
 					attr_maxed.emit(attr_name)
 			max_attr:
 				if value > new_val:
+					max_value = new_val
 					value = new_val
+					size.x = max_value * size_mult

@@ -17,6 +17,14 @@
 				Override this method to intercept attribute changes. This is useful to apply gameplay caps before the actual value changes. (Ex. [Attribute] "Health" cannot be higher than [Attribute] "MaxHealth". In this case, use this method to apply the limit instead of the calculated value if that is higher than allowed).
 			</description>
 		</method>
+		<method name="add_base_modifier">
+			<return type="void" />
+			<param index="0" name="attribute_id" type="StringName" />
+			<param index="1" name="modifier" type="ModifierData" />
+			<description>
+				Apply modifier to the base value of [param attribute_id]. It cannot be reversed unless the opposite operation is applied.
+			</description>
+		</method>
 		<method name="add_modifier">
 			<return type="int" />
 			<param index="0" name="attribute_id" type="StringName" />

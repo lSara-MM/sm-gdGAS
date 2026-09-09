@@ -55,6 +55,24 @@ func Shoot() -> Node:
 func GetAttributeCurrentValue(attr: StringName) -> float:
 	return attribute_container.get_attribute_current_value(attr)
 
+func CollectItem(item: int, value: int, operation: ModifierData.OperationType):
+	var modifier : ModifierData
+	modifier.value = value
+	modifier.operation_type = value
+	
+	var attr : StringName
+	match item:
+			Tags._Buff_hp:
+				attr = "CurrentHealth"
+			Tags._Buff_MaxHp:
+				attr = "MaxHealth"
+			Tags._Buff_MaxStamina:
+				attr = "MaxStamina"
+			Tags._Buff_xp:
+				attr = "Exp"
+	
+	attribute_container.add_modifier(attr, modifier)
+
 func _on_ability_activated(_entity: Object, ability: int) -> void:
 	if ability_tags.has(ability):
 		is_stamina_regen = true

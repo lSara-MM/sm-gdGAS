@@ -1,10 +1,11 @@
-[gd_scene load_steps=33 format=3 uid="uid://q6m7shdb3sbo"]
+[gd_scene load_steps=34 format=3 uid="uid://q6m7shdb3sbo"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_5u6pf"]
 [ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="2_4oll7"]
 [ext_resource type="Script" path="res://scripts/ChaserOnCollision.gd" id="3_0h27b"]
 [ext_resource type="Texture2D" uid="uid://k1ehcrgwoj6f" path="res://assets/enemies/owl/SpriteSheet.png" id="4_a1f18"]
 [ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="5_rps25"]
+[ext_resource type="Script" path="res://scripts/Spawner.gd" id="6_ga7yw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xwavj"]
 radius = 12.0416
@@ -381,7 +382,7 @@ script = ExtResource("1_5u6pf")
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
-tags = PackedInt32Array(13)
+tags = PackedInt32Array(13, 13)
 
 [node name="Behaviour" type="Node2D" parent="."]
 
@@ -422,5 +423,8 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = Vector2(0, 0)
 parameters/Walk/blend_position = 0.0266577
 script = ExtResource("5_rps25")
+
+[node name="Spawner" type="Node2D" parent="."]
+script = ExtResource("6_ga7yw")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_enemy_area_2d_body_entered"]

@@ -394,6 +394,7 @@ attribute_set = ExtResource("5_cv2ey")
 script = ExtResource("5_rj2bg")
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
+tags = PackedInt32Array(20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

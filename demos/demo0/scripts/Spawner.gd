@@ -5,14 +5,16 @@ class_name Spawn
 
 @export var spawn_radius : float = 600.0
 @export var min_distance : float = 300.0
-@export var spawn_interval : float = 2.0
+
+@export var timer : Timer
+@export var spawn_interval : float = 0
 
 @onready var player : CharacterBody2D = $"../Player"
-@onready var timer : Timer = $Timer
 
 func _ready():
-	timer.wait_time = spawn_interval
-	timer.timeout.connect(SpawnObject)
+	if timer:
+		timer.wait_time = spawn_interval
+		timer.timeout.connect(SpawnObject)
 
 func SpawnObject():
 	if objects.is_empty():

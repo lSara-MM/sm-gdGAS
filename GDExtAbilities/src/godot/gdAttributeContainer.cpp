@@ -25,6 +25,7 @@ void sm::AttributeContainer::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_attributes_set", "attr"), &SetAttributeSet);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("add_modifier", "attribute_id", "modifier"), static_cast<ModifierID(AttributeContainer::*)(AttributeID, godot::Ref<ModifierData>)>(&AddModifier));
+	godot::ClassDB::bind_method(godot::D_METHOD("add_base_modifier", "attribute_id", "modifier"), &AddBaseModifier);
 	godot::ClassDB::bind_method(godot::D_METHOD("remove_modifier", "attribute_id", "modifier"), &RemoveModifier);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_attribute_base_value", "attribute_id"), &GetAttributeBaseValue);
