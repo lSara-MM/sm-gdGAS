@@ -273,6 +273,11 @@ void sm::GameplayAbility::ApplyEffectsToTarget(GAS_Entity* entity)
 	for (int i = 0; i < effectsToApply.size(); i++)
 	{
 		godot::Ref<EffectData> effect = effectsToApply[i];
+		if (effect.is_null())
+		{
+			continue;
+		}
+
 		if (GDVIRTUAL_IS_OVERRIDDEN(_can_apply_effect))
 		{
 			bool ret = true;
@@ -284,13 +289,10 @@ void sm::GameplayAbility::ApplyEffectsToTarget(GAS_Entity* entity)
 			}
 		}
 
-		if (effect.is_valid())
+		int idRet = entity->AddEffect(effect);
+		if (GDVIRTUAL_IS_OVERRIDDEN(_get_effect_id))
 		{
-			int idRet = entity->AddEffect(effect);
-			if (GDVIRTUAL_IS_OVERRIDDEN(_get_effect_id))
-			{
-				GDVIRTUAL_CALL(_get_effect_id, effect, idRet);
-			}
+			GDVIRTUAL_CALL(_get_effect_id, effect, idRet);
 		}
 	}
 }

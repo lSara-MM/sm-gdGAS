@@ -3,6 +3,7 @@ class_name UI_Bar
 
 @export var current_attr : StringName
 @export var max_attr : StringName
+@export var size_mult : float = 2.5
 
 var player_entity : GAS_Entity
 signal attr_maxed(attr_name: StringName)
@@ -16,6 +17,7 @@ func setup(entity: Node, _world : GAS_World = null) -> void:
 	attr_container.attribute_changed.connect(_on_attribute_changed)
 	value = attr_container.get_attribute_current_value(current_attr)
 	max_value = attr_container.get_attribute_current_value(max_attr)
+	size.x = max_value * size_mult
 
 func _on_attribute_changed(attr_name: StringName, new_val: float, _old_val: float) -> void:
 	match attr_name:

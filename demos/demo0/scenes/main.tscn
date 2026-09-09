@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c4ykauqw02l74"]
+[gd_scene load_steps=15 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
@@ -38,6 +38,13 @@ corner_radius_bottom_left = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xbx4s"]
 bg_color = Color(0.952941, 0.568627, 0.117647, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xupyp"]
+bg_color = Color(0.67451, 0.517647, 0.168627, 0.733333)
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
@@ -120,12 +127,13 @@ offset_left = 47.0
 offset_top = 99.0
 offset_right = 75.0
 offset_bottom = 126.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_xupyp")
 max_value = 1.0
 step = 0.2
 fill_mode = 3
 show_percentage = false
 script = ExtResource("5_wv863")
-refill_ability_tag = &".Ability.StaminaRegen"
+ability_tag = &".Ability.Dash"
 
 [node name="Label" type="Label" parent="CanvasLayer/DashBar"]
 layout_mode = 0

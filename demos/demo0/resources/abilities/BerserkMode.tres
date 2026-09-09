@@ -23,7 +23,6 @@ name = &"BerserkSpeed"
 effect_type = 2
 duration = 3.63076e-42
 modifiers = Array[ModifierData]([SubResource("ModifierData_7tddw")])
-tags_to_add = PackedInt32Array(9, 2)
 
 [resource]
 tag_name = &"Berserk"

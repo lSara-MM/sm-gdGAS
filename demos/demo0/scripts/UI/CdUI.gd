@@ -1,26 +1,30 @@
 extends ProgressBar
 
 @export var ability_tag : StringName
-@export var refill_ability_tag : StringName
 var ability_container : AbilityContainer
 var tag_container : TagContainer
 var tag_id : int
-var refill_tag_id : int
 var to_fill : bool
 
 func setup(entity: Node, world = null) -> void:
 	ability_container = entity.get_node("AbilityContainer")
 	tag_container = entity.get_node("TagContainer")
 	tag_id = world.find_tag(ability_tag)
-	tag_id = world.find_tag(refill_ability_tag)
 	tag_container.tag_added.connect(_on_tag_added)
 	value = ability_container.get_cooldown(tag_id)
-	max_value = ability_container.get_cooldown(tag_id)
+	max_value = value
 	
 func _process(_delta: float) -> void:
 	if to_fill:
 		value = max_value - ability_container.get_current_cooldown(tag_id)
+		if value == max_value: 
+			to_fill = false
 
 func _on_tag_added(_entity_owner: TagContainer, tag: int) -> void:
 	if tag == tag_id:
-		value =  max_value - ability_container.get_current_cooldown(tag_id)
+		value = max_value - ability_container.get_current_cooldown(tag_id)
+
+func _on_ability_activated(entity: Object, ability: int) -> void:
+	match ability:
+		tag_id:
+			to_fill = true
