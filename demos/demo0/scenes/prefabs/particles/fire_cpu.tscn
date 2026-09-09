@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://d33m2fvcwslqs"]
+
+[sub_resource type="Curve" id="Curve_nl7jw"]
+max_value = 100.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 99.6029), 592.624, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_kt6kc"]
+min_value = -360.0
+max_value = 360.0
+_data = [Vector2(0, -100.281), 0.0, 0.0, 0, 0, Vector2(0.984925, 179.89), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_l0fvc"]
+_data = [Vector2(0, 0.722053), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_kdmvt"]
+offsets = PackedFloat32Array(0, 0.884309, 1)
+colors = PackedColorArray(1, 0.337255, 0.392157, 0.556863, 1, 0.513726, 0.0705882, 0.301961, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_l124y"]
+min_value = -1.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.940531), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Fire" type="CPUParticles2D"]
+amount = 90
+lifetime = 0.3
+speed_scale = 1.2
+randomness = 1.0
+lifetime_randomness = 0.15
+emission_shape = 1
+emission_sphere_radius = 23.0
+gravity = Vector2(0, -600)
+radial_accel_min = -350.0
+radial_accel_max = -100.0
+damping_max = 18.683
+damping_curve = SubResource("Curve_nl7jw")
+angle_max = 180.0
+angle_curve = SubResource("Curve_kt6kc")
+scale_amount_min = 0.5
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_l0fvc")
+color = Color(1, 0.337255, 0.392157, 1)
+color_ramp = SubResource("Gradient_kdmvt")
+hue_variation_min = -1.0
+hue_variation_max = -0.81
+hue_variation_curve = SubResource("Curve_l124y")

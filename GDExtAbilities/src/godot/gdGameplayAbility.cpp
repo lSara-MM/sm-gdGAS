@@ -63,7 +63,6 @@ bool sm::GameplayAbility::TryActivate()
 	auto script = abilityData->GetAbilityScript();
 	auto code = script->get_source_code().strip_edges();
 	auto debug = ToStdString(code);
-
 #endif // DEV_BUILD
 
 	bool ret = false;

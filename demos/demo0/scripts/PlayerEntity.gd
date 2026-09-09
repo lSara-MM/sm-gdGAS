@@ -1,16 +1,17 @@
 extends GAS_Entity
 class_name PlayerEntity
 
-@onready var attribute_container = get_attribute_container()
-@onready var tag_container = get_tag_container()
-@onready var ability_container = $AbilityContainer
-
 @export var ability_tag_names : Array[StringName]
 var ability_tags : Array[int]
 
-var is_berserk = false
+@export var berserk_particles : CPUParticles2D
+
 var is_stamina_regen = false
 @export var bullet_prefab : PackedScene
+
+@onready var attribute_container = get_attribute_container()
+@onready var tag_container = get_tag_container()
+@onready var ability_container = $AbilityContainer
 
 func _ready() -> void:
 	for tag_name in ability_tag_names:
@@ -28,12 +29,16 @@ func IsAbilityActive(ability: int) -> bool:
 	return tag_container.has_tag(ability)
 	
 func TryBerserk() -> bool:
-	if is_berserk:
-		is_berserk = false
-		return ability_container.try_end(Tags._Ability_Berserk, false)
+	var ret = false
+	if tag_container.has_tag(Tags._Ability_Berserk):
+		ret = ability_container.try_end(Tags._Ability_Berserk, false)
 	else:
-		is_berserk = true
-		return ability_container.try_activate(Tags._Ability_Berserk)
+		ret = ability_container.try_activate(Tags._Ability_Berserk)
+	
+	if ret:
+		berserk_particles.emitting = tag_container.has_tag(Tags._Ability_Berserk)
+
+	return ret
 
 func Shoot() -> Node:
 	if bullet_prefab == null:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://3wktl0846ot2"]
+[gd_scene load_steps=40 format=3 uid="uid://3wktl0846ot2"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_w41dn"]
 [ext_resource type="Script" path="res://scripts/PlayerEntity.gd" id="2_0q7k2"]
@@ -11,6 +11,7 @@
 [ext_resource type="AttributeSetData" uid="uid://cahulontscqcs" path="res://resources/player/BasicStats.tres" id="5_cv2ey"]
 [ext_resource type="Script" path="res://scripts/player_attributes.gd" id="5_rj2bg"]
 [ext_resource type="AbilityData" uid="uid://cgnv5hv34paw6" path="res://resources/abilities/BerserkMode.tres" id="5_vatek"]
+[ext_resource type="PackedScene" uid="uid://bqjh5ginci3xj" path="res://scenes/prefabs/basic_particles.tscn" id="12_2px7e"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lrhn5"]
 radius = 13.0
@@ -380,8 +381,9 @@ floor_block_on_wall = false
 platform_floor_layers = 4294967232
 script = ExtResource("1_w41dn")
 
-[node name="GAS_Entity" type="GAS_Entity" parent="."]
+[node name="GAS_Entity" type="GAS_Entity" parent="." node_paths=PackedStringArray("berserk_particles")]
 script = ExtResource("2_0q7k2")
+berserk_particles = NodePath("../BasicParticles/Fire")
 bullet_prefab = ExtResource("3_qlw2w")
 
 [node name="AbilityContainer" type="AbilityContainer" parent="GAS_Entity"]
@@ -419,4 +421,8 @@ parameters/Idle/blend_position = Vector2(-0.00101525, 0.0125786)
 parameters/Walk/blend_position = 0.0266577
 script = ExtResource("4_ed433")
 
+[node name="BasicParticles" parent="." instance=ExtResource("12_2px7e")]
+
 [connection signal="attribute_changed" from="GAS_Entity/AttributeContainer" to="." method="_on_attribute_changed"]
+
+[editable path="BasicParticles"]

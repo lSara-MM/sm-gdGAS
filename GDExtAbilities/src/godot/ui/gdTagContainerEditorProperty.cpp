@@ -112,7 +112,6 @@ void sm::TagContainerEditorProperty::SelectedTree()
 
 		godot::TreeItem* item = m_SelectedTree->create_item(rootItem);
 		item->set_metadata(0, tagId);
-		auto A = ToStdString(idToResource[tagId]);
 		item->set_text(0, idToResource[tagId]);
 		item->add_button(0, remove);
 		has.emplace(tagId);

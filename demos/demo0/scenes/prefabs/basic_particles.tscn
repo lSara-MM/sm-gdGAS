@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqjh5ginci3xj"]
+
+[ext_resource type="PackedScene" uid="uid://d33m2fvcwslqs" path="res://scenes/prefabs/particles/fire_cpu.tscn" id="1_vx3q5"]
+[ext_resource type="PackedScene" uid="uid://on8vh738lj1i" path="res://scenes/prefabs/particles/enemy_explosion_cpu.tscn" id="2_tr1vu"]
+[ext_resource type="PackedScene" uid="uid://cm7ds8p8gju1j" path="res://scenes/prefabs/particles/hurt_cpu.tscn" id="3_mt3an"]
+
+[node name="BasicParticles" type="Node2D"]
+
+[node name="EnemyExplosion" parent="." instance=ExtResource("2_tr1vu")]
+emitting = false
+one_shot = true
+
+[node name="Hurt" parent="." instance=ExtResource("3_mt3an")]
+emitting = false
+one_shot = true
+
+[node name="Fire" parent="." instance=ExtResource("1_vx3q5")]
+emitting = false

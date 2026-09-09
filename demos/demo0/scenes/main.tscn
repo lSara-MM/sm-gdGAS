@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c4ykauqw02l74"]
+[gd_scene load_steps=14 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
@@ -8,8 +8,29 @@
 [ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/prefabs/eChaser.tscn" id="5_2nmdp"]
 [ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bdjy"]
+bg_color = Color(0.366695, 0.170805, 0.184607, 0.784314)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flgou"]
+bg_color = Color(0.242531, 0.19484, 0.0939208, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pt05u"]
-bg_color = Color(0.341176, 0.741176, 0.682353, 1)
+bg_color = Color(0.225485, 0.733988, 0.553949, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a7qnc"]
+bg_color = Color(0.225485, 0.733988, 0.553949, 1)
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
@@ -29,6 +50,7 @@ font_size = 10
 script = ExtResource("1_d1of3")
 
 [node name="GAS_World" type="GAS_World" parent="."]
+entity_count = 1
 
 [node name="Background" parent="." instance=ExtResource("1_q4spy")]
 
@@ -42,12 +64,39 @@ objects = Array[PackedScene]([ExtResource("5_2nmdp")])
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+[node name="MaxHealthBar" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 47.0
+offset_top = 42.0
+offset_right = 431.0
+offset_bottom = 55.0
+theme_override_styles/background = SubResource("StyleBoxFlat_6bdjy")
+theme_override_styles/fill = SubResource("StyleBoxFlat_flgou")
+step = 1.0
+show_percentage = false
+script = ExtResource("3_dvvas")
+current_attr = &"MaxHealth"
+max_attr = &"MaxHealth"
+
+[node name="CurrentHealthBar" type="ProgressBar" parent="CanvasLayer"]
 offset_left = 47.0
 offset_top = 42.0
 offset_right = 431.0
 offset_bottom = 55.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_pt05u")
+step = 1.0
+show_percentage = false
+script = ExtResource("3_dvvas")
+current_attr = &"CurrentHealth"
+max_attr = &"MaxHealth"
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+visible = false
+offset_left = 47.0
+offset_top = 42.0
+offset_right = 431.0
+offset_bottom = 55.0
+theme_override_styles/background = SubResource("StyleBoxFlat_6bdjy")
+theme_override_styles/fill = SubResource("StyleBoxFlat_a7qnc")
 step = 1.0
 show_percentage = false
 script = ExtResource("3_dvvas")
@@ -91,3 +140,4 @@ vertical_alignment = 1
 [connection signal="ability_activated" from="Player/GAS_Entity/AbilityContainer" to="CanvasLayer/DashBar" method="_on_ability_activated"]
 
 [editable path="Player"]
+[editable path="Player/BasicParticles"]
