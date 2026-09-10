@@ -1,6 +1,6 @@
 [gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://d2ydgaxyn7b0o"]
 
-[ext_resource type="Script" path="res://scripts/Abilities/EnemyBasicDamage.gd" id="1_3ffcb"]
+[ext_resource type="Script" uid="uid://bwra8uljy31na" path="res://scripts/Abilities/EnemyBasicDamage.gd" id="1_s40av"]
 
 [sub_resource type="ModifierData" id="ModifierData_jso6a"]
 target_id = &"CurrentHealth"
@@ -14,6 +14,6 @@ modifiers = Array[ModifierData]([SubResource("ModifierData_jso6a")])
 
 [resource]
 tag_name = &"EnemyBasicDamage"
-ability = ExtResource("1_3ffcb")
+ability = ExtResource("1_s40av")
 effect = Array[EffectData]([SubResource("EffectData_6k0b2")])
 tags = PackedInt32Array(11, 2)

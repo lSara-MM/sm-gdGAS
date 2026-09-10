@@ -413,7 +413,6 @@ void sm::TagRegistryEditor::_OnButtonClicked(godot::TreeItem* item, int column, 
 	case ButtonId::DeleteAll:
 	{
 		m_TagRegistry->Reset();
-
 		m_TagsCache.clear();
 
 #ifdef DEBUG_ENABLED

@@ -124,7 +124,7 @@ void sm::GAS_Entity::Init()
 		return;
 	}
 
-	sm::GAS_World* world = m_WorldBound.GetOrInitWorld(this, sceneRoot);
+	GAS_World* world = m_WorldBound.GetOrInitWorld(this, sceneRoot);
 
 	if (!world)
 	{

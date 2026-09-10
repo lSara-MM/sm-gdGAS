@@ -17,13 +17,36 @@ void sm::TagInspector::_bind_methods()
 
 bool sm::TagInspector::_can_handle(godot::Object* object) const
 {
-	return godot::Object::cast_to<TagContainer>(object) ||
-		godot::Object::cast_to<EffectData>(object) ||
-		godot::Object::cast_to<AbilityData>(object);
+	return true;
 }
 
 void sm::TagInspector::_parse_begin(godot::Object* object)
 {
+	bool hasTagProperties = false;
+
+	godot::Array properties = object->get_property_list();
+
+	for (int i = 0; i < properties.size(); ++i)
+	{
+		godot::Dictionary property = properties[i];
+
+		auto type = static_cast<godot::Variant::Type>(static_cast<int64_t>(property["type"]));
+		godot::String name = property["name"];
+
+		if (type == godot::Variant::PACKED_INT32_ARRAY &&
+			name.contains("tags"))
+		{
+			hasTagProperties = true;
+			break;
+		}
+	}
+
+	if (!hasTagProperties)
+	{
+		return;
+	}
+
+
 	auto* gui = m_Editor->get_editor_interface()->get_base_control();
 	auto icon = gui->get_theme_icon("Reload", "EditorIcons");
 

@@ -28,8 +28,10 @@ func _on_attribute_changed(attribute_name: StringName, new_value: float, _old_va
 	match attribute_name:
 		"CurrentHealth":
 			if new_value == 0:
-				print("You died")
-				queue_free()
-
+				var def = func():
+					get_tree().change_scene_to_file("res://scenes/restart.tscn")
+					
+				def.call_deferred()
+				
 func get_entity() -> GAS_Entity:
 	return find_child("GAS_Entity") as GAS_Entity

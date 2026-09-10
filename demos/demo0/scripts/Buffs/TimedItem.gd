@@ -2,8 +2,7 @@ extends Area2D
 
 @export var life_time : float = 1
 @export var item_tag : int
-@export var value : int
-@export var operation : ModifierData.OperationType
+@export var effect : EffectData
 
 func _ready() -> void:
 	get_tree().create_timer(life_time).timeout.connect(queue_free)
@@ -18,6 +17,6 @@ func _on_body_entered(body: Node2D) -> void:
 	
 	var tags = entity.get_tag_container()
 	if is_instance_valid(tags) and tags.has_tag(Tags._Player):
-		if entity.has_method("collect_item"):
-			entity.collect_item(item_tag, value, operation)
+		if entity.has_method("CollectItem"):
+			entity.CollectItem(item_tag, effect)
 		queue_free()

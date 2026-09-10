@@ -92,7 +92,7 @@ void sm::GAS_World::InitTagSystem(godot::Node* globalRoot)
 
 	for (TagContainer* node : tagContainersInScene)
 	{
-		node->SetIniTags();
+		node->SetInitWorldTags();
 		RegisterTagContainer(node);
 	}
 

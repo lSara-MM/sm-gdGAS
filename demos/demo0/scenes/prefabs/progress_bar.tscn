@@ -16,17 +16,18 @@ corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 
-[sub_resource type="LabelSettings" id="LabelSettings_j32p5"]
-font_size = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pt05u"]
-bg_color = Color(0.225485, 0.733988, 0.553949, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qhpq5"]
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 
+[sub_resource type="LabelSettings" id="LabelSettings_j32p5"]
+font_size = 10
+
 [node name="Health" type="Node"]
+script = ExtResource("1_liiyd")
+size_mult = 1.0
 
 [node name="MaxBar" type="ProgressBar" parent="."]
 offset_left = 47.0
@@ -37,29 +38,19 @@ theme_override_styles/background = SubResource("StyleBoxFlat_6bdjy")
 theme_override_styles/fill = SubResource("StyleBoxFlat_flgou")
 step = 1.0
 show_percentage = false
-script = ExtResource("1_liiyd")
-current_attr = &"MaxHealth"
-max_attr = &"MaxHealth"
-size_mult = 3.0
-
-[node name="Label" type="Label" parent="MaxBar"]
-offset_top = 57.0
-offset_right = 28.0
-offset_bottom = 84.0
-text = "Dash"
-label_settings = SubResource("LabelSettings_j32p5")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="CurrentBar" type="ProgressBar" parent="."]
 offset_left = 47.0
 offset_top = 42.0
 offset_right = 431.0
 offset_bottom = 55.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_pt05u")
+theme_override_styles/fill = SubResource("StyleBoxFlat_qhpq5")
 step = 1.0
 show_percentage = false
-script = ExtResource("1_liiyd")
-current_attr = &"CurrentHealth"
-max_attr = &"MaxHealth"
-size_mult = 3.0
+
+[node name="Label" type="Label" parent="CurrentBar"]
+offset_left = 394.0
+offset_right = 465.0
+offset_bottom = 27.0
+text = "aaa"
+label_settings = SubResource("LabelSettings_j32p5")

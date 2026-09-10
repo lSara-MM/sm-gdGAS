@@ -24,7 +24,7 @@ func _on_tag_added(_entity_owner: TagContainer, tag: int) -> void:
 	if tag == tag_id:
 		value = max_value - ability_container.get_current_cooldown(tag_id)
 
-func _on_ability_activated(entity: Object, ability: int) -> void:
+func _on_ability_activated(_entity: Object, ability: int) -> void:
 	match ability:
 		tag_id:
 			to_fill = true

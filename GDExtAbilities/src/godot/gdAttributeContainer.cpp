@@ -118,7 +118,7 @@ void sm::AttributeContainer::SetAttributeSet(const godot::Ref<AttributeSetData>&
 
 float sm::AttributeContainer::GetAttributeBaseValue(AttributeID id)
 {
-	sm::GameplayAttribute* attr = FindAttribute(id);
+	GameplayAttribute* attr = FindAttribute(id);
 
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
@@ -127,7 +127,9 @@ float sm::AttributeContainer::GetAttributeBaseValue(AttributeID id)
 
 float sm::AttributeContainer::GetAttributeCurrentValue(AttributeID id)
 {
-	sm::GameplayAttribute* attr = FindAttribute(id);
+	GameplayAttribute* attr = FindAttribute(id);
+
+	auto a = attr->m_DebugID;
 
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
@@ -145,7 +147,7 @@ bool sm::AttributeContainer::IsAttributeMin(AttributeID id)
 
 bool sm::AttributeContainer::IsAttributeMax(AttributeID id)
 {
-	sm::GameplayAttribute* attr = FindAttribute(id);
+	GameplayAttribute* attr = FindAttribute(id);
 
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
@@ -154,7 +156,7 @@ bool sm::AttributeContainer::IsAttributeMax(AttributeID id)
 
 bool sm::AttributeContainer::IsAttributeDirty(AttributeID id)
 {
-	sm::GameplayAttribute* attr = FindAttribute(id);
+	GameplayAttribute* attr = FindAttribute(id);
 
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 

@@ -375,14 +375,15 @@ transitions = ["Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_
 graph_offset = Vector2(-4.75551, -55)
 
 [node name="Player" type="CharacterBody2D"]
-collision_layer = 11
-collision_mask = 10
+collision_layer = 3
+collision_mask = 266
 floor_block_on_wall = false
 platform_floor_layers = 4294967232
 script = ExtResource("1_w41dn")
 
 [node name="GAS_Entity" type="GAS_Entity" parent="." node_paths=PackedStringArray("berserk_particles")]
 script = ExtResource("2_0q7k2")
+ability_regen_tags = PackedInt32Array(3, 2, 7)
 berserk_particles = NodePath("../BasicParticles/Fire")
 bullet_prefab = ExtResource("3_qlw2w")
 
@@ -394,7 +395,7 @@ attribute_set = ExtResource("5_cv2ey")
 script = ExtResource("5_rj2bg")
 
 [node name="TagContainer" type="TagContainer" parent="GAS_Entity"]
-tags = PackedInt32Array(20)
+tags = PackedInt32Array(20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

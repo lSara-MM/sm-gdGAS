@@ -1,6 +1,6 @@
 [gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dlowi5td3i2ub"]
 
-[ext_resource type="Script" path="res://scripts/Abilities/Shoot.gd" id="1_d7ash"]
+[ext_resource type="Script" uid="uid://dej4e3v5gk84n" path="res://scripts/Abilities/Shoot.gd" id="1_d7ash"]
 
 [sub_resource type="ModifierData" id="ModifierData_cv2ey"]
 target_id = &"CurrentHealth"
@@ -11,11 +11,11 @@ value = -50.0
 name = &"Damage"
 duration = 7.48293e-43
 modifiers = Array[ModifierData]([SubResource("ModifierData_cv2ey")])
+tags_to_add = PackedInt32Array(7, 2)
 
 [resource]
 tag_name = &"Shoot"
 ability = ExtResource("1_d7ash")
-cooldown = 0.3
-cost = 2.0
+cost = 5.0
 cost_resource_attribute = &"CurrentStamina"
 effect = Array[EffectData]([SubResource("EffectData_vatek")])

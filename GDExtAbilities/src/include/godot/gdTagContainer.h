@@ -25,13 +25,14 @@ namespace sm
 		~TagContainer();
 
 		void OnEnterTree() override;
-		void OnReady() override;
 		void OnExitTree() override;
+		void OnReady() override;
 		void OnParented() override;
 		void OnUnparented() override;
 		void OnChildOrderChanged() override;
 
-		void SetIniTags();
+		void SetInitWorldTags();
+		void SetInitTags();
 		godot::PackedInt32Array GetTags() const;
 		void SetTags(const godot::PackedInt32Array& tags);
 
@@ -69,5 +70,8 @@ namespace sm
 		godot::StringName prevName;
 
 		TagSet m_TagsSet;
+
+		bool _dirty = true;
+		bool _worldDirty = true;
 	};
 }

@@ -1,10 +1,10 @@
 extends GAS_Entity
 class_name PlayerEntity
 
-@export var ability_tag_names : Array[StringName]
-var ability_tags : Array[int]
-
+@export var ability_regen_tags : PackedInt32Array
 @export var berserk_particles : CPUParticles2D
+@export var effect_particles : CPUParticles2D
+@export var hurt_particles : CPUParticles2D
 
 var is_stamina_regen = false
 @export var bullet_prefab : PackedScene
@@ -12,11 +12,6 @@ var is_stamina_regen = false
 @onready var attribute_container = get_attribute_container()
 @onready var tag_container = get_tag_container()
 @onready var ability_container = $AbilityContainer
-
-func _ready() -> void:
-	for tag_name in ability_tag_names:
-		var tag_id = get_world().find_tag(tag_name)
-		ability_tags.append(tag_id)
 
 func _process(_delta: float) -> void:
 	if is_stamina_regen:
@@ -30,13 +25,13 @@ func IsAbilityActive(ability: int) -> bool:
 	
 func TryBerserk() -> bool:
 	var ret = false
-	if tag_container.has_tag(Tags._Ability_Berserk):
+	if ability_container.is_active(Tags._Ability_Berserk):
 		ret = ability_container.try_end(Tags._Ability_Berserk, false)
 	else:
 		ret = ability_container.try_activate(Tags._Ability_Berserk)
 	
 	if ret:
-		berserk_particles.emitting = tag_container.has_tag(Tags._Ability_Berserk)
+		berserk_particles.emitting = ability_container.is_active(Tags._Ability_Berserk)
 
 	return ret
 
@@ -55,26 +50,22 @@ func Shoot() -> Node:
 func GetAttributeCurrentValue(attr: StringName) -> float:
 	return attribute_container.get_attribute_current_value(attr)
 
-func CollectItem(item: int, value: int, operation: ModifierData.OperationType):
-	var modifier : ModifierData
-	modifier.value = value
-	modifier.operation_type = value
+func CollectItem(_item: int, effect: EffectData):
+	add_effect(effect)
+	effect_particles.emitting = true
 	
-	var attr : StringName
-	match item:
-			Tags._Buff_hp:
-				attr = "CurrentHealth"
-			Tags._Buff_MaxHp:
-				attr = "MaxHealth"
-			Tags._Buff_MaxStamina:
-				attr = "MaxStamina"
-			Tags._Buff_xp:
-				attr = "Exp"
-	
-	attribute_container.add_modifier(attr, modifier)
+func _on_attribute_changed(attribute_name: StringName, new_value: float, old_value: float) -> void:
+	match attribute_name:
+		"CurrentHealth":
+			if new_value < old_value:
+				hurt_particles.emitting = true
+				
+			if new_value == 0:
+				print("You died")
+				get_parent().queue_free()
 
 func _on_ability_activated(_entity: Object, ability: int) -> void:
-	if ability_tags.has(ability):
+	if ability_regen_tags.has(ability):
 		is_stamina_regen = true
 
 func _on_attribute_maxed(attr_name: StringName):

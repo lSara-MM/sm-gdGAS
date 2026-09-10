@@ -1,6 +1,8 @@
 #include "godot/gdTagContainer.h"
 
 #include "core/TagRegistry.h"
+#include "godot/GASWorldBound.h"
+#include "godot/gdGASWorld.h"
 
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/editor_settings.hpp>
@@ -64,22 +66,86 @@ void sm::TagContainer::OnEnterTree()
 	}
 }
 
-void sm::TagContainer::OnReady()
+void sm::TagContainer::SetInitWorldTags()
 {
-	SetIniTags();
+	SetInitTags();
+	_worldDirty = false;
 }
 
-void sm::TagContainer::SetIniTags()
+void sm::TagContainer::SetInitTags()
 {
+	if (!_dirty)
+	{
+		return;
+	}
+
 	for (size_t i = 0; i < m_gdTags.size(); i++)
 	{
-		SetTag(m_gdTags[i]);
+		uint16& count = m_TagsSet.stack[m_gdTags[i]];
+		if (++count == 1)
+		{
+			m_TagsSet.tags.Set(m_gdTags[i], true);
+		}
 	}
+
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
+
+	_dirty = false;
 }
 
 void sm::TagContainer::OnExitTree()
 {
 	prevParent = nullptr;
+	_dirty = true;
+
+	godot::Node* sceneRoot = NodeUtils::GetSceneRoot(this);
+
+	if (!is_inside_tree() || !get_tree())
+	{
+		return;
+	}
+
+	WorldBound worldBound;
+	GAS_World* world = worldBound.GetOrInitWorld(this, sceneRoot);
+
+	if (!world)
+	{
+		return;
+	}
+
+	world->UnregisterTagContainer(this);
+	_worldDirty = true;
+}
+
+void sm::TagContainer::OnReady()
+{
+	SetInitTags();
+
+	if (!_worldDirty)
+	{
+		return;
+	}
+
+	godot::Node* sceneRoot = NodeUtils::GetSceneRoot(this);
+
+	if (!is_inside_tree() || !get_tree())
+	{
+		return;
+	}
+
+	WorldBound worldBound;
+	GAS_World* world = worldBound.GetOrInitWorld(this, sceneRoot);
+
+	if (!world)
+	{
+		return;
+	}
+
+	world->RegisterTagContainer(this);
+	_worldDirty = false;
 }
 
 void sm::TagContainer::OnParented()
@@ -146,15 +212,7 @@ void sm::TagContainer::AddTag(TagID id)
 void sm::TagContainer::RemoveTag(TagID id)
 {
 	ERR_FAIL_COND_MSG(id == GameplayTag::INVALID_TAG, godot::vformat("RemoveTag failed: Unknown tag"));
-
-	bool ret = SetTag(id, false);
-	if (ret)
-	{
-		if (int pos = m_gdTags.find(id); pos != -1)
-		{
-			m_gdTags.remove_at(pos);
-		}
-	}
+	SetTag(id, false);
 }
 
 //void sm::TagContainer::RemoveTagFromPath(const godot::String& tag)
@@ -290,16 +348,16 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 			m_TagsSet.tags.Set(id, true);
 			m_gdTags.push_back(id);
 
-#ifdef DEV_BUILD
-			m_gdTagsDebug.push_back(id);
-#endif // DEV_BUILD
-		}
+			//#ifdef DEV_BUILD
+			//			m_gdTagsDebug.push_back(id);
+			//#endif // DEV_BUILD
 
-		emit_signal("tag_added", this, id);
+			emit_signal("tag_added", this, id);
 
-		if (OnTagAdded)
-		{
-			OnTagAdded(id, this);
+			if (OnTagAdded)
+			{
+				OnTagAdded(id, this);
+			}
 		}
 	}
 	else
@@ -307,19 +365,23 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 		if (count > 0 && --count == 0)
 		{
 			m_TagsSet.tags.Set(id, false);
-
 			auto pos = m_gdTags.find(id);
-			m_gdTags.remove_at(pos);
-#ifdef DEV_BUILD
-			m_gdTagsDebug.erase(m_gdTagsDebug.begin() + pos);
-#endif // DEV_BUILD
-		}
 
-		emit_signal("tag_removed", this, id);
+			if (pos != -1)
+			{
+				m_gdTags.remove_at(pos);
 
-		if (OnTagRemoved)
-		{
-			OnTagRemoved(id, this);
+				//#ifdef DEV_BUILD
+				//				m_gdTagsDebug.erase(m_gdTagsDebug.begin() + pos);
+				//#endif // DEV_BUILD
+			}
+
+			emit_signal("tag_removed", this, id);
+
+			if (OnTagRemoved)
+			{
+				OnTagRemoved(id, this);
+			}
 		}
 	}
 
@@ -359,6 +421,11 @@ void sm::TagContainer::ClearTags()
 {
 	m_TagsSet.tags.Clear();
 	std::memset(m_TagsSet.stack, 0, sizeof(m_TagsSet.stack));
+	m_gdTags.clear();
+
+#ifdef DEV_BUILD
+	m_gdTagsDebug.clear();
+#endif
 	emit_signal("tags_cleared", this);
 }
 

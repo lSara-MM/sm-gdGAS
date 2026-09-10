@@ -10,6 +10,10 @@ func Init(own: Node2D) -> void:
 	node_owner = own
 	entity = own.entity
 	player = own.player
+	
+	if !is_instance_valid(player):
+		return
+		
 	player_entity = player.get_entity()
 	
 	InitSpecs(own)

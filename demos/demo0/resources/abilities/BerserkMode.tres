@@ -1,6 +1,6 @@
 [gd_resource type="AbilityData" load_steps=6 format=3 uid="uid://cgnv5hv34paw6"]
 
-[ext_resource type="Script" path="res://scripts/Abilities/BerserkMode.gd" id="1_bqatq"]
+[ext_resource type="Script" uid="uid://c5ae034go7l52" path="res://scripts/Abilities/BerserkMode.gd" id="1_bqatq"]
 
 [sub_resource type="ModifierData" id="ModifierData_vatek"]
 target_id = &"MaxHealth"
@@ -23,6 +23,7 @@ name = &"BerserkSpeed"
 effect_type = 2
 duration = 3.63076e-42
 modifiers = Array[ModifierData]([SubResource("ModifierData_7tddw")])
+tags_to_add = PackedInt32Array(9, 2)
 
 [resource]
 tag_name = &"Berserk"

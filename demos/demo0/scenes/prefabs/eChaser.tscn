@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://ditpij003hyj8"]
+[gd_scene load_steps=39 format=3 uid="uid://ditpij003hyj8"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_m5fce"]
 [ext_resource type="Script" path="res://scripts/EnemyEntity.gd" id="3_ha7w3"]
@@ -7,6 +7,10 @@
 [ext_resource type="Script" path="res://scripts/ChaseTarget.gd" id="4_h721p"]
 [ext_resource type="Texture2D" uid="uid://k1ehcrgwoj6f" path="res://assets/enemies/owl/SpriteSheet.png" id="5_qbauq"]
 [ext_resource type="Script" path="res://scripts/AnimationTreeHandler.gd" id="6_uwui0"]
+[ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/prefabs/spawner.tscn" id="8_34fdw"]
+[ext_resource type="PackedScene" uid="uid://ckcieormv110e" path="res://scenes/items/item_hp.tscn" id="9_fuors"]
+[ext_resource type="PackedScene" uid="uid://b0427nqbpd1v1" path="res://scenes/items/item_max_hp.tscn" id="10_eac8p"]
+[ext_resource type="PackedScene" uid="uid://bsq7u7n0hg3jm" path="res://scenes/items/item_max_stamina.tscn" id="11_gnyu3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xwavj"]
 radius = 12.0416
@@ -369,7 +373,7 @@ transitions = ["Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_
 graph_offset = Vector2(4.24449, 0)
 
 [node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
-collision_layer = 5
+collision_layer = 7
 collision_mask = 5
 floor_snap_length = 0.0
 platform_floor_layers = 4294967232
@@ -379,7 +383,7 @@ script = ExtResource("1_m5fce")
 script = ExtResource("3_ha7w3")
 
 [node name="TagContainer" parent="GAS_Entity" index="2"]
-tags = PackedInt32Array(13, 13, 13, 13, 13, 13)
+tags = PackedInt32Array(13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13)
 
 [node name="Behaviour" type="Node2D" parent="."]
 
@@ -421,6 +425,15 @@ parameters/Idle/blend_position = Vector2(0, 0)
 parameters/Walk/blend_position = 0.0266577
 script = ExtResource("6_uwui0")
 
+[node name="Spawner" parent="." node_paths=PackedStringArray("object_spawn_in_rad") instance=ExtResource("8_34fdw")]
+objects = Array[PackedScene]([ExtResource("9_fuors"), ExtResource("10_eac8p"), ExtResource("11_gnyu3"), null])
+objects_probs = PackedFloat32Array(20, 20, 20, 40)
+parent_name = "Main"
+object_spawn_in_rad = NodePath("..")
+spawn_radius = 20.0
+min_distance = 20.0
+
+[connection signal="on_death" from="." to="Spawner" method="_on_enemy_on_death"]
 [connection signal="attribute_changed" from="GAS_Entity/AttributeContainer" to="." method="_on_attribute_changed"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_enemy_area_2d_body_entered"]
 

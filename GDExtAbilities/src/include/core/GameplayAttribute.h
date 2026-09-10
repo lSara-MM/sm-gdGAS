@@ -68,15 +68,16 @@ namespace sm
 	private:
 		float Calculate();
 
+#ifdef DEBUG_ENABLED
+	public:
+		std::string m_DebugID;
+#endif // DEBUG_ENABLED
+
 	private:
 		std::queue<GameplayModifier> m_BaseModifiers;
 		ModifierBuckets m_Modifiers;
 
 		AttributeID m_ID;
-
-#ifdef DEBUG_ENABLED
-		std::string m_DebugID;
-#endif // DEBUG_ENABLED
 
 		DumbUID m_ModifiersUIDs;
 

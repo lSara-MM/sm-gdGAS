@@ -14,9 +14,17 @@ tag_registry_path="res://gen/tags/tag_registry.tres"
 
 [application]
 
-config/name="demo0"
+config/name="GDExtAbility_Showcase"
 run/main_scene="res://scenes/main.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/features=PackedStringArray("4.4", "Forward Plus")
+boot_splash/image="res://assets/GDExtAbilityIcon.png"
+config/icon="res://assets/GDExtAbilityIcon.png"
+boot_splash/minimum_display_time=3500
+
+[display]
+
+mouse_cursor/custom_image="res://assets/crosshair.png"
+mouse_cursor/tooltip_position_offset=Vector2(0, 0)
 
 [global_group]
 

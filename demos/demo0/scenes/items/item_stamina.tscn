@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdffrjsfevljr"]
+
+[ext_resource type="PackedScene" uid="uid://o0ow02mgwncp" path="res://scenes/items/item.tscn" id="1_d51ll"]
+
+[sub_resource type="ModifierData" id="ModifierData_b486m"]
+target_id = &"Stamina"
+source_id = &"IncStamina"
+value = 10.0
+
+[sub_resource type="EffectData" id="EffectData_k4qjc"]
+name = &"IncStamina"
+duration = 6.99248e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_b486m")])
+
+[node name="ItemStamina" instance=ExtResource("1_d51ll")]
+item_tag = 19
+effect = SubResource("EffectData_k4qjc")
+
+[node name="Polygon2D" parent="." index="1"]
+color = Color(0.952941, 0.568627, 0.117647, 1)
+
+[node name="TagContainer" parent="." index="2"]
+tags = PackedInt32Array(14, 19)
