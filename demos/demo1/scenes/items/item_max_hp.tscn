@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0427nqbpd1v1"]
+
+[ext_resource type="PackedScene" uid="uid://o0ow02mgwncp" path="res://scenes/items/item.tscn" id="1_vgvat"]
+
+[node name="ItemMaxHp" instance=ExtResource("1_vgvat")]
+item_tag = 17
+
+[node name="Polygon2D" parent="." index="1"]
+color = Color(0.113296, 0.406099, 0.301529, 1)

@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3 uid="uid://btrmlc7vjhssy"]
+
+[ext_resource type="Texture2D" uid="uid://cb2akokegl1cr" path="res://assets/denise-heeffer-grass2.png" id="1_7ty77"]
+[ext_resource type="Script" uid="uid://eqq34kfpy2dd" path="res://scripts/UI/RestartButton.gd" id="1_yf2cx"]
+[ext_resource type="Script" uid="uid://c2e5gh8lgpk6a" path="res://scripts/UI/ExitButton.gd" id="2_amoth"]
+
+[node name="Restart" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.999228)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1163.0
+offset_bottom = 718.0
+texture = ExtResource("1_7ty77")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 259.2
+offset_right = 426.0
+offset_bottom = 409.2
+theme_override_font_sizes/font_size = 50
+text = "Restart"
+script = ExtResource("1_yf2cx")
+
+[node name="Button2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 746.0
+offset_top = 264.204
+offset_right = 996.0
+offset_bottom = 414.204
+theme_override_font_sizes/font_size = 50
+text = "Exit"
+script = ExtResource("2_amoth")
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
+[connection signal="pressed" from="Button2" to="Button2" method="_on_pressed"]
