@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvlq08d1yfr5i"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nqysh"]
+radius = 18.0
+
+[node name="ItemMaxStamina" type="Area2D"]
+collision_layer = 257
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_nqysh")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+scale = Vector2(0.416667, 0.416667)
+color = Color(0.297353, 0.159747, 0.00447277, 1)
+polygon = PackedVector2Array(0, -18, 8, -16, 15, -10, 18, 0, 15, 10, 10, 15, 0, 18, -8, 16, -15, 10, -18, 0, -15, -10, -8, -16)
+
+[node name="TagContainer" type="TagContainer" parent="."]
+tags = PackedInt32Array(14, 18, 14, 18, 14, 18, 14, 18, 14, 18, 14, 18, 14, 18, 14, 18)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

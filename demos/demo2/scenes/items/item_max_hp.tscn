@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://b0427nqbpd1v1"]
+
+[ext_resource type="PackedScene" uid="uid://o0ow02mgwncp" path="res://scenes/items/item.tscn" id="1_vgvat"]
+
+[sub_resource type="ModifierData" id="ModifierData_02ivn"]
+target_id = &"MaxHealth"
+source_id = &"IncMaxHp"
+value = 10.0
+
+[sub_resource type="EffectData" id="EffectData_j81n1"]
+name = &"IncMaxHp"
+duration = 6.82432e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_02ivn")])
+
+[node name="ItemMaxHp" instance=ExtResource("1_vgvat")]
+item_tag = 17
+effect = SubResource("EffectData_j81n1")
+
+[node name="Polygon2D" parent="." index="1"]
+color = Color(0.113296, 0.406099, 0.301529, 1)
+
+[node name="TagContainer" parent="." index="2"]
+tags = PackedInt32Array(14, 17, 14, 17, 14, 17, 14, 17, 14, 17, 14, 17, 14, 17, 14, 17)

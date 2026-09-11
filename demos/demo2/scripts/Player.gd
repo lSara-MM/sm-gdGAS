@@ -1,0 +1,37 @@
+extends CharacterBody2D
+class_name Player
+
+@onready var entity = $GAS_Entity
+@onready var animation_tree = $AnimationTree
+
+func _physics_process(_delta: float) -> void:
+	GetInput()
+	move_and_slide()
+	
+func GetInput() -> void:
+	if Input.is_action_just_pressed("lshift"):
+		entity.TryAbility(Tags._Ability_Dash)
+	
+	if Input.is_action_just_pressed("ability1"):
+		entity.TryBerserk()
+	
+	if Input.is_action_just_pressed("basic_attack"):
+		entity.TryAbility(Tags._Ability_Shoot)
+	
+	var input_direction = Input.get_vector("left", "right", "up", "down")
+	velocity = input_direction * entity.GetAttributeCurrentValue(&"Speed")
+	
+	if animation_tree:
+		animation_tree.SetAnim(input_direction)
+
+func _on_attribute_changed(attribute_name: StringName, new_value: float, _old_value: float) -> void:
+	match attribute_name:
+		"CurrentHealth":
+			if new_value == 0:
+				var def = func():
+					get_tree().change_scene_to_file("res://scenes/restart.tscn")
+					
+				def.call_deferred()
+				
+func get_entity() -> GAS_Entity:
+	return find_child("GAS_Entity") as GAS_Entity

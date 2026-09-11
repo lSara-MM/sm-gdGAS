@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://btnwjthngfysl"]
+
+[ext_resource type="AbilityData" uid="uid://d2ydgaxyn7b0o" path="res://resources/abilities/EnemyBasicDamage.tres" id="1_1vq0i"]
+
+[sub_resource type="AttributeData" id="AttributeData_uvt43"]
+name = &"CurrentHealth"
+base_value = 50.0
+
+[sub_resource type="AttributeData" id="AttributeData_l203a"]
+name = &"MaxHealth"
+base_value = 50.0
+
+[sub_resource type="AttributeData" id="AttributeData_8nqqc"]
+name = &"Speed"
+base_value = 50.0
+
+[sub_resource type="AttributeSetData" id="AttributeSetData_dx5k3"]
+attributes = Array[AttributeData]([SubResource("AttributeData_uvt43"), SubResource("AttributeData_l203a"), SubResource("AttributeData_8nqqc")])
+
+[node name="GAS_Entity" type="GAS_Entity"]
+
+[node name="AttributeContainer" type="AttributeContainer" parent="."]
+attribute_set = SubResource("AttributeSetData_dx5k3")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[AbilityData]([ExtResource("1_1vq0i")])
+
+[node name="TagContainer" type="TagContainer" parent="."]

@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://js5gpspqcc4y"]
+
+[ext_resource type="Script" path="res://scripts/UI/ProgressBar.gd" id="1_liiyd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bdjy"]
+bg_color = Color(0.366695, 0.170805, 0.184607, 0.784314)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flgou"]
+bg_color = Color(0.242531, 0.19484, 0.0939208, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qhpq5"]
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="LabelSettings" id="LabelSettings_j32p5"]
+font_size = 10
+
+[node name="Health" type="Node"]
+script = ExtResource("1_liiyd")
+size_mult = 1.0
+
+[node name="MaxBar" type="ProgressBar" parent="."]
+offset_left = 47.0
+offset_top = 42.0
+offset_right = 431.0
+offset_bottom = 55.0
+theme_override_styles/background = SubResource("StyleBoxFlat_6bdjy")
+theme_override_styles/fill = SubResource("StyleBoxFlat_flgou")
+step = 1.0
+show_percentage = false
+
+[node name="CurrentBar" type="ProgressBar" parent="."]
+offset_left = 47.0
+offset_top = 42.0
+offset_right = 431.0
+offset_bottom = 55.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_qhpq5")
+step = 1.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="CurrentBar"]
+offset_left = 394.0
+offset_right = 465.0
+offset_bottom = 27.0
+text = "aaa"
+label_settings = SubResource("LabelSettings_j32p5")

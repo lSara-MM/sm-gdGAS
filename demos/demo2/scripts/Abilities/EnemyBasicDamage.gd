@@ -1,7 +1,4 @@
-[gd_resource type="AbilityData" load_steps=2 format=3 uid="uid://cru4hwrlo7pm2"]
-
-[sub_resource type="GDScript" id="GDScript_h6f5d"]
-script/source = "extends GameplayAbility
+extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
 ## Return true if it was successfully activated.
@@ -18,17 +15,9 @@ script/source = "extends GameplayAbility
 	#return true
 
 ## Called in TryActivate(). Must return the entities affected by the ability's effects. Default: Abilities apply effects to owner entity.
-#func _calculate_targets() -> Array[GAS_Entity]:
-	#return []
+func _calculate_targets() -> Array[GAS_Entity]:
+	return get_entity_owner().targets
 
 ## Called in AppllyEffectsToTarget(). Intercept effects to get their instance id if needed.
 #func _get_effect_id(effect: EffectData, instance_id: int) -> void:
-	#pass"
-
-[resource]
-tag_name = &"StaminaRegen"
-ability = SubResource("GDScript_h6f5d")
-cooldown = 1.0
-cost = -2.0
-cost_resource_attribute = &"CurrentStamina"
-activation_blocked_tags = PackedInt32Array(9, 2)
+	#pass

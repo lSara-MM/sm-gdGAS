@@ -1,0 +1,58 @@
+[gd_resource type="TagData" load_steps=11 format=3 uid="uid://c4rttncl7fpok"]
+
+[sub_resource type="TagData" id="TagData_1fdvu"]
+name = "Demon"
+id = 3
+path = ".Race"
+
+[sub_resource type="TagData" id="TagData_hxjvm"]
+name = "Water"
+id = 5
+path = ".Race.Fairy"
+
+[sub_resource type="TagData" id="TagData_ykpwv"]
+name = "Earth"
+id = 6
+path = ".Race.Fairy"
+
+[sub_resource type="TagData" id="TagData_cq6jo"]
+name = "Fire"
+id = 7
+path = ".Race.Fairy"
+
+[sub_resource type="TagData" id="TagData_l2sj2"]
+name = "Fairy"
+id = 4
+path = ".Race"
+children = Array[TagData]([SubResource("TagData_hxjvm"), SubResource("TagData_ykpwv"), SubResource("TagData_cq6jo")])
+
+[sub_resource type="TagData" id="TagData_f1l0m"]
+name = "Race"
+id = 2
+path = "."
+children = Array[TagData]([SubResource("TagData_1fdvu"), SubResource("TagData_l2sj2")])
+
+[sub_resource type="TagData" id="TagData_s1d31"]
+name = "Rank"
+id = 8
+path = "."
+
+[sub_resource type="TagData" id="TagData_vrl0m"]
+name = "cd"
+id = 11
+path = ".Ability.FireBall"
+
+[sub_resource type="TagData" id="TagData_ttbkx"]
+name = "FireBall"
+id = 10
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_vrl0m")])
+
+[sub_resource type="TagData" id="TagData_8ibhq"]
+name = "Ability"
+id = 9
+path = "."
+children = Array[TagData]([SubResource("TagData_ttbkx")])
+
+[resource]
+children = Array[TagData]([SubResource("TagData_f1l0m"), SubResource("TagData_s1d31"), SubResource("TagData_8ibhq")])

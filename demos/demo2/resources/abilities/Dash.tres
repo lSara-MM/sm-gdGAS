@@ -1,6 +1,6 @@
-[gd_resource type="AbilityData" load_steps=2 format=3 uid="uid://cru4hwrlo7pm2"]
+[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dfikne8aaht4o"]
 
-[sub_resource type="GDScript" id="GDScript_h6f5d"]
+[sub_resource type="GDScript" id="GDScript_jisi4"]
 script/source = "extends GameplayAbility
 
 ## Default: On activate ability, effects are applied to self or if overridden, to the return value of _calculate_targets(), automatically and then the ability ends instantly. To override, uncomment and call commit_ability(), apply_effects_to_target() and try_end(bool cancelled) manually.
@@ -25,10 +25,23 @@ script/source = "extends GameplayAbility
 #func _get_effect_id(effect: EffectData, instance_id: int) -> void:
 	#pass"
 
+[sub_resource type="ModifierData" id="ModifierData_0wd3u"]
+target_id = &"Speed"
+source_id = &"Dash"
+value = 200.0
+
+[sub_resource type="EffectData" id="EffectData_vf3d4"]
+name = &"Dash"
+effect_type = 1
+duration = 0.3
+modifiers = Array[ModifierData]([SubResource("ModifierData_0wd3u")])
+tags_to_add = PackedInt32Array(3, 2)
+
 [resource]
-tag_name = &"StaminaRegen"
-ability = SubResource("GDScript_h6f5d")
-cooldown = 1.0
-cost = -2.0
+tag_name = &"Dash"
+ability = SubResource("GDScript_jisi4")
+cooldown = 3.0
+cost = 10.0
 cost_resource_attribute = &"CurrentStamina"
-activation_blocked_tags = PackedInt32Array(9, 2)
+effect = Array[EffectData]([SubResource("EffectData_vf3d4")])
+activation_blocked_tags = PackedInt32Array(3, 4, 12, 11)

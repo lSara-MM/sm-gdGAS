@@ -31,4 +31,4 @@ ability = SubResource("GDScript_h6f5d")
 cooldown = 1.0
 cost = -2.0
 cost_resource_attribute = &"CurrentStamina"
-activation_blocked_tags = PackedInt32Array(9, 2)
+activation_blocked_tags = PackedInt32Array(11, 12, 10, 9)

@@ -1,0 +1,98 @@
+[gd_resource type="TagData" load_steps=20 format=3 uid="uid://c847wswvj7sb8"]
+
+[sub_resource type="TagData" id="TagData_qihdo"]
+name = "cd"
+id = 4
+path = ".Ability.Dash"
+
+[sub_resource type="TagData" id="TagData_k7t27"]
+name = "Dash"
+id = 3
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_qihdo")])
+
+[sub_resource type="TagData" id="TagData_fkchu"]
+name = "cd"
+id = 6
+path = ".Ability.StaminaRegen"
+
+[sub_resource type="TagData" id="TagData_fjcc2"]
+name = "StaminaRegen"
+id = 5
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_fkchu")])
+
+[sub_resource type="TagData" id="TagData_ouc2d"]
+name = "cd"
+id = 8
+path = ".Ability.Shoot"
+
+[sub_resource type="TagData" id="TagData_ipyiy"]
+name = "Shoot"
+id = 7
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_ouc2d")])
+
+[sub_resource type="TagData" id="TagData_kn6tl"]
+name = "cd"
+id = 10
+path = ".Ability.Berserk"
+
+[sub_resource type="TagData" id="TagData_0drqj"]
+name = "Berserk"
+id = 9
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_kn6tl")])
+
+[sub_resource type="TagData" id="TagData_b03j4"]
+name = "cd"
+id = 12
+path = ".Ability.EnemyBasicDamage"
+
+[sub_resource type="TagData" id="TagData_libxd"]
+name = "EnemyBasicDamage"
+id = 11
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_b03j4")])
+
+[sub_resource type="TagData" id="TagData_retsk"]
+name = "Ability"
+id = 2
+path = "."
+children = Array[TagData]([SubResource("TagData_k7t27"), SubResource("TagData_fjcc2"), SubResource("TagData_ipyiy"), SubResource("TagData_0drqj"), SubResource("TagData_libxd")])
+
+[sub_resource type="TagData" id="TagData_f1l0m"]
+name = "Enemy"
+path = "."
+
+[sub_resource type="TagData" id="TagData_l2sj2"]
+name = "xp"
+path = ".Buff"
+
+[sub_resource type="TagData" id="TagData_s1d31"]
+name = "hp"
+path = ".Buff"
+
+[sub_resource type="TagData" id="TagData_hxjvm"]
+name = "MaxHp"
+path = ".Buff"
+
+[sub_resource type="TagData" id="TagData_ykpwv"]
+name = "MaxStamina"
+path = ".Buff"
+
+[sub_resource type="TagData" id="TagData_1fdvu"]
+name = "Buff"
+path = "."
+children = Array[TagData]([SubResource("TagData_l2sj2"), SubResource("TagData_s1d31"), SubResource("TagData_hxjvm"), SubResource("TagData_ykpwv")])
+
+[sub_resource type="TagData" id="TagData_ln8ix"]
+name = "Debuff"
+path = "."
+
+[sub_resource type="TagData" id="TagData_of05a"]
+name = "Player"
+path = "."
+
+[resource]
+children = Array[TagData]([SubResource("TagData_retsk"), SubResource("TagData_f1l0m"), SubResource("TagData_1fdvu"), SubResource("TagData_ln8ix"), SubResource("TagData_of05a")])

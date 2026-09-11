@@ -1,0 +1,25 @@
+[gd_resource type="TagData" load_steps=6 format=3 uid="uid://cbdiu35r61yva"]
+
+[sub_resource type="TagData" id="TagData_lsbkb"]
+name = "Lesser"
+path = ".Rank"
+
+[sub_resource type="TagData" id="TagData_4jiqg"]
+name = "Base"
+path = ".Rank"
+
+[sub_resource type="TagData" id="TagData_d47qg"]
+name = "Elite"
+path = ".Rank"
+
+[sub_resource type="TagData" id="TagData_cyqh2"]
+name = "Rank"
+path = "."
+children = Array[TagData]([SubResource("TagData_lsbkb"), SubResource("TagData_4jiqg"), SubResource("TagData_d47qg")])
+
+[sub_resource type="TagData" id="TagData_bq3ar"]
+name = "Weak"
+path = "."
+
+[resource]
+children = Array[TagData]([SubResource("TagData_cyqh2"), SubResource("TagData_bq3ar")])

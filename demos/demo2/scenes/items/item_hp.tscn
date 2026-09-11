@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckcieormv110e"]
+
+[ext_resource type="PackedScene" uid="uid://o0ow02mgwncp" path="res://scenes/items/item.tscn" id="1_hki2s"]
+
+[sub_resource type="ModifierData" id="ModifierData_xeaxe"]
+target_id = &"CurrentHealth"
+source_id = &"Heal"
+value = 10.0
+
+[sub_resource type="EffectData" id="EffectData_h54ve"]
+name = &"Heal"
+duration = 6.82432e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_xeaxe")])
+
+[node name="ItemHp" instance=ExtResource("1_hki2s")]
+item_tag = 16
+effect = SubResource("EffectData_h54ve")
+
+[node name="Polygon2D" parent="." index="1"]
+color = Color(0.223529, 0.733333, 0.552941, 1)
+
+[node name="TagContainer" parent="." index="2"]
+tags = PackedInt32Array(14, 16, 14, 16, 14, 16, 14, 16, 14, 16, 14, 16, 14, 16, 14, 16, 14, 16)
