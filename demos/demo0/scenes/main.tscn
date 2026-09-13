@@ -1,12 +1,12 @@
 [gd_scene load_steps=12 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
-[ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/prefabs/spawner.tscn" id="4_gd0il"]
+[ext_resource type="Script" uid="uid://b81bbmgi3w6d3" path="res://scripts/main.gd" id="1_d1of3"]
+[ext_resource type="PackedScene" uid="uid://daey3n83qqsc1" path="res://scenes/prefabs/Spawner.tscn" id="4_gd0il"]
 [ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/eChaser.tscn" id="5_2nmdp"]
-[ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
+[ext_resource type="Script" uid="uid://xfdoj4i7srul" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
 [ext_resource type="PackedScene" uid="uid://js5gpspqcc4y" path="res://scenes/prefabs/progress_bar.tscn" id="6_2ji47"]
-[ext_resource type="Script" path="res://scripts/UI/berserk.gd" id="7_kbrqr"]
+[ext_resource type="Script" uid="uid://shl4sr2fjhk3" path="res://scripts/UI/berserk.gd" id="7_kbrqr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g33ur"]
 bg_color = Color(0.223529, 0.733333, 0.552941, 1)

@@ -11,8 +11,9 @@ func _activate_ability() -> bool:
 	return true
 
 ## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.
-func _end_ability(_was_cancelled: bool):
+func _end_ability(_was_cancelled: bool) -> bool:
 	get_entity_owner().remove_effect(speed_effect_id)
+	return true
 
 ## ## Called in CanActivate(). Adds custom conditionals to ability activation. Default: Abilities check state, cost, cooldown and tags.
 #func _check_availability() -> bool:

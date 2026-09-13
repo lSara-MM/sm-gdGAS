@@ -1,6 +1,6 @@
 [gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dlowi5td3i2ub"]
 
-[ext_resource type="Script" path="res://scripts/Abilities/Shoot.gd" id="1_d7ash"]
+[ext_resource type="Script" uid="uid://dej4e3v5gk84n" path="res://scripts/Abilities/Shoot.gd" id="1_d7ash"]
 
 [sub_resource type="ModifierData" id="ModifierData_cv2ey"]
 target_id = &"CurrentHealth"
