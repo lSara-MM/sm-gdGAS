@@ -326,9 +326,9 @@ bool sm::TagContainer::HasAnyTag(const godot::Array& tags) const
 
 		if (m_TagsSet.tags.Has(id))
 		{
-#ifdef DEBUG_ENABLED
-			WARN_PRINT_ED(godot::vformat("Entity has blocking tag [%d].", id));
-#endif // DEBUG_ENABLED
+			//#ifdef DEBUG_ENABLED
+			//			WARN_PRINT_ED(godot::vformat("Entity has blocking tag [%d].", id));
+			//#endif // DEBUG_ENABLED
 			return true;
 		}
 	}
@@ -376,7 +376,7 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 				//#endif // DEV_BUILD
 			}
 
-			emit_signal("tag_removed", this, id);
+			//emit_signal("tag_removed", this, id);
 
 			if (OnTagRemoved)
 			{

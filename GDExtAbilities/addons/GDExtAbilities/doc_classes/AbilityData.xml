@@ -8,6 +8,13 @@
 	</description>
 	<tutorials>
 	</tutorials>
+	<methods>
+		<method name="get_ability_id" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
 	<members>
 		<member name="ability" type="Script" setter="set_ability" getter="get_ability">
 			[Optional]. The [GameplayAbility] script containing the runtime execution logic (such as targeting, animations, and behavior) for this resource. If assigned, it uses a script template with virtual methods available for overriding.

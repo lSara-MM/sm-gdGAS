@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://ditpij003hyj8"]
+[gd_scene load_steps=41 format=3 uid="uid://ditpij003hyj8"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_m5fce"]
 [ext_resource type="Script" path="res://scripts/EnemyEntity.gd" id="3_ha7w3"]
@@ -11,13 +11,15 @@
 [ext_resource type="PackedScene" uid="uid://ckcieormv110e" path="res://scenes/items/item_hp.tscn" id="9_fuors"]
 [ext_resource type="PackedScene" uid="uid://b0427nqbpd1v1" path="res://scenes/items/item_max_hp.tscn" id="10_eac8p"]
 [ext_resource type="PackedScene" uid="uid://bsq7u7n0hg3jm" path="res://scenes/items/item_max_stamina.tscn" id="11_gnyu3"]
+[ext_resource type="PackedScene" uid="uid://cdffrjsfevljr" path="res://scenes/items/item_stamina.tscn" id="12_5wi8n"]
+[ext_resource type="PackedScene" uid="uid://d33m2fvcwslqs" path="res://scenes/prefabs/particles/fire_cpu.tscn" id="13_0qpuu"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xwavj"]
 radius = 12.0416
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n665k"]
 resource_local_to_scene = true
-radius = 18.0278
+radius = 19.0263
 
 [sub_resource type="Animation" id="Animation_2cgup"]
 resource_name = "Idle_Down"
@@ -426,12 +428,17 @@ parameters/Walk/blend_position = 0.0266577
 script = ExtResource("6_uwui0")
 
 [node name="Spawner" parent="." node_paths=PackedStringArray("object_spawn_in_rad") instance=ExtResource("8_34fdw")]
-objects = Array[PackedScene]([ExtResource("9_fuors"), ExtResource("10_eac8p"), ExtResource("11_gnyu3"), null])
+objects = Array[PackedScene]([ExtResource("9_fuors"), ExtResource("10_eac8p"), ExtResource("11_gnyu3"), ExtResource("12_5wi8n"), ExtResource("9_fuors"), null, null])
 objects_probs = PackedFloat32Array(20, 20, 20, 40)
 parent_name = "Main"
 object_spawn_in_rad = NodePath("..")
 spawn_radius = 20.0
 min_distance = 20.0
+
+[node name="Fire" parent="." instance=ExtResource("13_0qpuu")]
+emitting = false
+color = Color(0.966244, 0.00085692, 0.980032, 1)
+hue_variation_max = 0.39
 
 [connection signal="on_death" from="." to="Spawner" method="_on_enemy_on_death"]
 [connection signal="attribute_changed" from="GAS_Entity/AttributeContainer" to="." method="_on_attribute_changed"]

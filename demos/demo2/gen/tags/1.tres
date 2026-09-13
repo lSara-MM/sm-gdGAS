@@ -1,0 +1,126 @@
+[gd_resource type="TagData" load_steps=28 format=3 uid="uid://bf3hrg0pga6k6"]
+
+[sub_resource type="TagData" id="TagData_hyqx2"]
+name = "cd"
+path = ".Ability.BasicAttack"
+
+[sub_resource type="TagData" id="TagData_absww"]
+name = "BasicAttack"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_hyqx2")])
+
+[sub_resource type="TagData" id="TagData_ygm3k"]
+name = "cd"
+path = ".Ability.Haste"
+
+[sub_resource type="TagData" id="TagData_j6a2q"]
+name = "Haste"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_ygm3k")])
+
+[sub_resource type="TagData" id="TagData_hs8pm"]
+name = "cd"
+path = ".Ability.Taunt"
+
+[sub_resource type="TagData" id="TagData_kvehf"]
+name = "Taunt"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_hs8pm")])
+
+[sub_resource type="TagData" id="TagData_ggkpy"]
+name = "cd"
+path = ".Ability.Invulnerability"
+
+[sub_resource type="TagData" id="TagData_ljf3q"]
+name = "Invulnerability"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_ggkpy")])
+
+[sub_resource type="TagData" id="TagData_40n0w"]
+name = "cd"
+path = ".Ability.PoisonDart"
+
+[sub_resource type="TagData" id="TagData_kr8e1"]
+name = "PoisonDart"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_40n0w")])
+
+[sub_resource type="TagData" id="TagData_qarw3"]
+name = "cd"
+path = ".Ability.PoisonExplosion"
+
+[sub_resource type="TagData" id="TagData_mb42u"]
+name = "PoisonExplosion"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_qarw3")])
+
+[sub_resource type="TagData" id="TagData_esaa0"]
+name = "cd"
+path = ".Ability.FrostNova"
+
+[sub_resource type="TagData" id="TagData_td3xy"]
+name = "FrostNova"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_esaa0")])
+
+[sub_resource type="TagData" id="TagData_xxcnl"]
+name = "cd"
+path = ".Ability.MassPurge"
+
+[sub_resource type="TagData" id="TagData_duxqv"]
+name = "MassPurge"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_xxcnl")])
+
+[sub_resource type="TagData" id="TagData_02ito"]
+name = "cd"
+path = ".Ability.Freeze"
+
+[sub_resource type="TagData" id="TagData_s04x8"]
+name = "Freeze"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_02ito")])
+
+[sub_resource type="TagData" id="TagData_b60se"]
+name = "cd"
+path = ".Ability.Slow"
+
+[sub_resource type="TagData" id="TagData_x8d38"]
+name = "Slow"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_b60se")])
+
+[sub_resource type="TagData" id="TagData_8hri6"]
+name = "cd"
+path = ".Ability.MassHeal"
+
+[sub_resource type="TagData" id="TagData_5a1fj"]
+name = "MassHeal"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_8hri6")])
+
+[sub_resource type="TagData" id="TagData_fi5e8"]
+name = "cd"
+path = ".Ability.Regeneration"
+
+[sub_resource type="TagData" id="TagData_xe5rn"]
+name = "Regeneration"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_fi5e8")])
+
+[sub_resource type="TagData" id="TagData_h2it0"]
+name = "cd"
+path = ".Ability.Execution"
+
+[sub_resource type="TagData" id="TagData_3pp2o"]
+name = "Execution"
+path = ".Ability"
+children = Array[TagData]([SubResource("TagData_h2it0")])
+
+[sub_resource type="TagData" id="TagData_6l8dt"]
+name = "Ability"
+path = "."
+children = Array[TagData]([SubResource("TagData_absww"), SubResource("TagData_j6a2q"), SubResource("TagData_kvehf"), SubResource("TagData_ljf3q"), SubResource("TagData_kr8e1"), SubResource("TagData_mb42u"), SubResource("TagData_td3xy"), SubResource("TagData_duxqv"), SubResource("TagData_s04x8"), SubResource("TagData_x8d38"), SubResource("TagData_5a1fj"), SubResource("TagData_xe5rn"), SubResource("TagData_3pp2o")])
+
+[resource]
+children = Array[TagData]([SubResource("TagData_6l8dt")])

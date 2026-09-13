@@ -4,36 +4,44 @@
 [ext_resource type="Script" path="res://scripts/UI/RestartButton.gd" id="1_yf2cx"]
 [ext_resource type="Script" path="res://scripts/UI/ExitButton.gd" id="2_amoth"]
 
-[node name="Restart" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 0.999228)
+[node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 1163.0
-offset_bottom = 718.0
+offset_left = -51.0
+offset_top = -86.0
+offset_right = 849.0
+offset_bottom = 632.0
+scale = Vector2(1.4476, 1.25724)
 texture = ExtResource("1_7ty77")
 
 [node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_left = 176.0
-offset_top = 259.2
-offset_right = 426.0
-offset_bottom = 409.2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -385.0
+offset_top = -75.1922
+offset_right = -135.0
+offset_bottom = 74.8078
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_font_sizes/font_size = 50
 text = "Restart"
 script = ExtResource("1_yf2cx")
 
 [node name="Button2" type="Button" parent="."]
-offset_left = 746.0
-offset_top = 264.204
-offset_right = 996.0
-offset_bottom = 414.204
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 136.0
+offset_top = -75.1922
+offset_right = 386.0
+offset_bottom = 74.8078
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_font_sizes/font_size = 50
 text = "Exit"
 script = ExtResource("2_amoth")

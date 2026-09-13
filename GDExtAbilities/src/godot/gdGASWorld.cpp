@@ -16,6 +16,7 @@ sm::GAS_World::GAS_World()
 
 void sm::GAS_World::_bind_methods()
 {
+	godot::ClassDB::bind_method(godot::D_METHOD("get_entities"), &GetEntities);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_entity_count"), &GetEntitiesCount);
 
 	godot::ClassDB::bind_method(godot::D_METHOD("get_effects_availability"), &GetEffectsAvailability);
@@ -156,6 +157,11 @@ void sm::GAS_World::_DeferredUpdate()
 	m_TagSystem->Update(get_process_delta_time());
 }
 
+godot::TypedArray<sm::GAS_Entity> sm::GAS_World::GetEntities() const
+{
+	return m_EntitiesArray;
+}
+
 void sm::GAS_World::SetEffectsAvailability(bool value)
 {
 	enableEffects = value;
@@ -205,6 +211,8 @@ EntityID sm::GAS_World::RegisterEntity(GAS_Entity* entity)
 	entity->SetID(id);
 	m_Entities.emplace(entity);
 	m_EntitiesRegistry.emplace(id, entity);
+
+	m_EntitiesArray.append(entity);
 
 	if (godot::Engine::get_singleton()->is_editor_hint())
 	{

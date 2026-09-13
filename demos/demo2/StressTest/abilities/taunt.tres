@@ -1,0 +1,16 @@
+[gd_resource type="AbilityData" load_steps=3 format=3 uid="uid://dgtrd0d4twcte"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/basic_attack.gd" id="1_5xd6d"]
+
+[sub_resource type="EffectData" id="EffectData_cif8i"]
+name = &"Taunt"
+effect_type = 1
+duration = 4.0
+tags_to_add = PackedInt32Array(9, 4, 2)
+
+[resource]
+tag_name = &"Taunt"
+ability = ExtResource("1_5xd6d")
+cooldown = 6.0
+effect = Array[EffectData]([SubResource("EffectData_cif8i")])
+activation_blocked_tags = PackedInt32Array(5, 8)

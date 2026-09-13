@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4otybtr8l0ac"]
+
+[ext_resource type="Script" path="res://StressTest/Spawn.gd" id="1_42no4"]
+[ext_resource type="Script" path="res://StressTest/scripts/gas_world.gd" id="1_boxn6"]
+[ext_resource type="PackedScene" uid="uid://c8f4n3g6tj3nb" path="res://StressTest/entity.tscn" id="2_lo41m"]
+
+[node name="StressTest" type="Node2D"]
+
+[node name="GAS_World" type="GAS_World" parent="."]
+script = ExtResource("1_boxn6")
+
+[node name="GeneratedEntities" type="Node" parent="."]
+script = ExtResource("1_42no4")
+prefab = ExtResource("2_lo41m")

@@ -20,6 +20,8 @@ void sm::AbilityData::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_ability"), &GetAbilityScript);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_ability", "ability"), &SetAbilityScript);
 
+	godot::ClassDB::bind_method(godot::D_METHOD("get_ability_id"), &GetAbilityTagID);
+
 	godot::ClassDB::bind_method(godot::D_METHOD("get_cooldown"), &GetCooldown);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_cooldown", "value"), &SetCooldown);
 
@@ -124,10 +126,10 @@ void sm::AbilityData::SetAbilityScript(const godot::Ref<godot::Script>& script)
 			"## Return true if it was successfully activated.\n"
 			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_active() method.\n"
 			"#func _activate_ability() -> bool:\n"
-			"\t#pass\n\n"
+			"\t#return true\n\n"
 			"## Warning: This method shouldn't be called manually as it gets called automatically by the ability_container::try_end(bool cancelled) method.\n"
-			"#func _end_ability(_was_cancelled: bool):\n"
-			"\t#pass\n\n"
+			"#func _end_ability(_was_cancelled: bool) -> bool:\n"
+			"\t#return true\n\n"
 			"## ## Called in CanActivate(). Adds custom conditionals to ability activation. Default: Abilities check state, cost, cooldown and tags.\n"
 			"#func _check_availability() -> bool:\n"
 			"\t#return true\n\n"

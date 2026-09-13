@@ -24,6 +24,9 @@ boot_splash/minimum_display_time=3000
 
 [display]
 
+window/size/mode=2
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 mouse_cursor/custom_image="res://assets/crosshair.png"
 mouse_cursor/tooltip_position_offset=Vector2(0, 0)
 

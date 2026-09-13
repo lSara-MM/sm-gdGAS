@@ -10,17 +10,16 @@ config_version=5
 
 [GDExtAbilities]
 
-tag_registry_path="res://gen/tags/tag_registry.tres"
+tag_registry_path="res://gen/tags/1.tres"
 
 [application]
 
 config/name="GDExtAbility_Showcase"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://StressTest/stress_test.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/bg_color=Color(0.230315, 0.230315, 0.230315, 1)
 boot_splash/image="res://assets/GDExtAbilityIcon.png"
 config/icon="res://assets/GDExtAbilityIcon.png"
-boot_splash/minimum_display_time=3000
 
 [display]
 

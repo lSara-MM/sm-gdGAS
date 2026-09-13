@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://o0ow02mgwncp" path="res://scenes/items/item.tscn" id="1_d51ll"]
 
 [sub_resource type="ModifierData" id="ModifierData_b486m"]
-target_id = &"Stamina"
+target_id = &"CurrentStamina"
 source_id = &"IncStamina"
 value = 10.0
 

@@ -44,4 +44,3 @@ cooldown = 3.0
 cost = 10.0
 cost_resource_attribute = &"CurrentStamina"
 effect = Array[EffectData]([SubResource("EffectData_vf3d4")])
-activation_blocked_tags = PackedInt32Array(3, 4, 12, 11)

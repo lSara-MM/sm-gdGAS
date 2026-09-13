@@ -10,7 +10,7 @@
 
 sm::AttributeContainer::AttributeContainer()
 {
-	m_AttributeSetPtr = std::make_unique<sm::GameplayAttributeSet>();
+	m_AttributeSetPtr = std::make_unique<GameplayAttributeSet>();
 }
 
 sm::AttributeContainer::~AttributeContainer()
@@ -128,9 +128,6 @@ float sm::AttributeContainer::GetAttributeBaseValue(AttributeID id)
 float sm::AttributeContainer::GetAttributeCurrentValue(AttributeID id)
 {
 	GameplayAttribute* attr = FindAttribute(id);
-
-	auto a = attr->m_DebugID;
-
 	ERR_FAIL_NULL_V_MSG(attr, 0, godot::vformat("Attribute not found: %s", ToStdString(id).c_str()));
 
 	return attr->GetCurrent();
@@ -198,6 +195,11 @@ void sm::AttributeContainer::AddBaseModifier(AttributeID id, godot::Ref<Modifier
 	attr->AddBaseModifier(mod);
 
 	emit_signal("modifier_added", id, mod);
+
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierData> mod)
@@ -207,6 +209,11 @@ void sm::AttributeContainer::RemoveModifier(AttributeID id, godot::Ref<ModifierD
 	attr->RemoveModifier(mod);
 
 	emit_signal("modifier_removed", id, mod);
+
+	if (godot::Engine::get_singleton()->is_editor_hint())
+	{
+		notify_property_list_changed();
+	}
 }
 
 void sm::AttributeContainer::AddAttribute(AttributeID id, const godot::Ref<AttributeData> data)

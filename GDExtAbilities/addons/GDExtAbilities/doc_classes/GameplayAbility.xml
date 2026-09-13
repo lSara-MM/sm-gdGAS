@@ -35,7 +35,7 @@
 			</description>
 		</method>
 		<method name="_end_ability" qualifiers="virtual">
-			<return type="void" />
+			<return type="bool" />
 			<param index="0" name="was_cancelled" type="bool" />
 			<description>
 				Virtual method called when the ability ends or is cancelled. Override this to perform cleanup or trigger termination logic. [param was_cancelled] is [code]true[/code] if execution was prematurely interrupted.

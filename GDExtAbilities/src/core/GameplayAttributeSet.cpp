@@ -16,7 +16,7 @@ sm::GameplayAttribute* sm::GameplayAttributeSet::FindAttribute(AttributeID id)
 	}
 
 	// AttributeSets are small (< 100 attributes), linear search is acceptable
-	for (sm::GameplayAttribute& attr : m_Attributes)
+	for (GameplayAttribute& attr : m_Attributes)
 	{
 		if (attr.GetUID() == id)
 		{

@@ -106,13 +106,14 @@ bool sm::GameplayAbility::TryEnd(bool wasCancelled)
 	{
 		state = AbilityState::Ending;
 
+		bool ret = true;
 		if (GDVIRTUAL_IS_OVERRIDDEN(_end_ability))
 		{
-			GDVIRTUAL_CALL(_end_ability, wasCancelled);
+			GDVIRTUAL_CALL(_end_ability, wasCancelled, ret);
 		}
 
-		state = AbilityState::Idle;
-		return true;
+		if (ret) state = AbilityState::Idle;
+		return ret;
 	}
 
 	return false;
@@ -149,9 +150,9 @@ bool sm::GameplayAbility::CheckTags()
 	{
 		ret = false;
 
-#ifdef DEBUG_ENABLED
-		WARN_PRINT_ED("Ability does not have all required tags.");
-#endif // DEBUG_ENABLED
+//#ifdef DEBUG_ENABLED
+//		WARN_PRINT_ED("Ability %d does not have all required tags.", abilityData->GetAbilityTagID());
+//#endif // DEBUG_ENABLED
 	}
 
 	godot::PackedInt32Array blocking = abilityData->GetActivationBlockedTags();
@@ -159,9 +160,9 @@ bool sm::GameplayAbility::CheckTags()
 	{
 		ret = false;
 
-#ifdef DEBUG_ENABLED
-		WARN_PRINT_ED("Ability has one of the blocking tags.");
-#endif // DEBUG_ENABLED
+//#ifdef DEBUG_ENABLED
+//		WARN_PRINT_ED("Ability %d has one of the blocking tags.", abilityData->GetAbilityTagID());
+//#endif // DEBUG_ENABLED
 	}
 
 	return ret;
@@ -227,9 +228,10 @@ void sm::GameplayAbility::EndAbility()
 {
 	state = AbilityState::Idle;
 
+	bool ret = false;
 	if (GDVIRTUAL_IS_OVERRIDDEN(_end_ability))
 	{
-		GDVIRTUAL_CALL(_end_ability, false);
+		GDVIRTUAL_CALL(_end_ability, false, ret);
 	}
 }
 

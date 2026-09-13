@@ -1,0 +1,20 @@
+[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://dmv3gp0yhc2b0"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/basic_attack.gd" id="1_42k5m"]
+
+[sub_resource type="ModifierData" id="ModifierData_43xsn"]
+target_id = &"CurrentHp"
+source_id = &"Dmg"
+value = -10.0
+
+[sub_resource type="EffectData" id="EffectData_3wf2g"]
+name = &"Dmg"
+duration = 8.39378e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_43xsn")])
+
+[resource]
+tag_name = &"BasicAttack"
+ability = ExtResource("1_42k5m")
+cooldown = 0.5
+effect = Array[EffectData]([SubResource("EffectData_3wf2g")])
+activation_blocked_tags = PackedInt32Array(8)

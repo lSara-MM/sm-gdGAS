@@ -1,0 +1,28 @@
+[gd_resource type="AbilityData" load_steps=5 format=3 uid="uid://cm5tndfwa1bj0"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/frost_nova.gd" id="1_dm1p7"]
+
+[sub_resource type="EffectData" id="EffectData_676v5"]
+name = &"Frost"
+effect_type = 1
+duration = 3.0
+tags_to_add = PackedInt32Array(5, 4, 2)
+
+[sub_resource type="ModifierData" id="ModifierData_ibkou"]
+target_id = &"CurrentHp"
+source_id = &"FrostHp"
+value = -7.0
+
+[sub_resource type="EffectData" id="EffectData_bv4gc"]
+name = &"FrostHp"
+duration = 8.78614e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_ibkou")])
+
+[resource]
+tag_name = &"FrostNova"
+ability = ExtResource("1_dm1p7")
+cooldown = 7.0
+cost = 60.0
+cost_resource_attribute = &"CurrentMana"
+effect = Array[EffectData]([SubResource("EffectData_676v5"), SubResource("EffectData_bv4gc")])
+activation_blocked_tags = PackedInt32Array(8, 5)

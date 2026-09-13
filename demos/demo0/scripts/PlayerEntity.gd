@@ -27,6 +27,7 @@ func TryBerserk() -> bool:
 	var ret = false
 	if ability_container.is_active(Tags._Ability_Berserk):
 		ret = ability_container.try_end(Tags._Ability_Berserk, false)
+		is_stamina_regen = true
 	else:
 		ret = ability_container.try_activate(Tags._Ability_Berserk)
 	

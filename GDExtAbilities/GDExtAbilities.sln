@@ -7,16 +7,26 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GDExtAbilities", "GDExtAbil
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		DebugStress|x64 = DebugStress|x64
+		DebugStress|x86 = DebugStress|x86
 		Editor|x64 = Editor|x64
 		Editor|x86 = Editor|x86
 		EditorDebug_Godot|x64 = EditorDebug_Godot|x64
 		EditorDebug_Godot|x86 = EditorDebug_Godot|x86
 		EditorRelease_Godot|x64 = EditorRelease_Godot|x64
 		EditorRelease_Godot|x86 = EditorRelease_Godot|x86
+		Game|x64 = Game|x64
+		Game|x86 = Game|x86
 		GameDebug_Godot|x64 = GameDebug_Godot|x64
 		GameDebug_Godot|x86 = GameDebug_Godot|x86
+		Stress|x64 = Stress|x64
+		Stress|x86 = Stress|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.DebugStress|x64.ActiveCfg = DebugStress|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.DebugStress|x64.Build.0 = DebugStress|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.DebugStress|x86.ActiveCfg = DebugStress|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.DebugStress|x86.Build.0 = DebugStress|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x64.ActiveCfg = Editor|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x64.Build.0 = Editor|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Editor|x86.ActiveCfg = Editor|Win32
@@ -29,10 +39,18 @@ Global
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x64.Build.0 = EditorRelease_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x86.ActiveCfg = EditorRelease_Godot|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.EditorRelease_Godot|x86.Build.0 = EditorRelease_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Game|x64.ActiveCfg = Game|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Game|x64.Build.0 = Game|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Game|x86.ActiveCfg = Game|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Game|x86.Build.0 = Game|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x64.ActiveCfg = GameDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x64.Build.0 = GameDebug_Godot|x64
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x86.ActiveCfg = GameDebug_Godot|Win32
 		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.GameDebug_Godot|x86.Build.0 = GameDebug_Godot|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Stress|x64.ActiveCfg = Stress|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Stress|x64.Build.0 = Stress|x64
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Stress|x86.ActiveCfg = Stress|Win32
+		{32BAAE67-E91E-4B18-91C3-9C9225755C13}.Stress|x86.Build.0 = Stress|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

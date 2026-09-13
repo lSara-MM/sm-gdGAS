@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c4ykauqw02l74"]
+[gd_scene load_steps=12 format=3 uid="uid://c4ykauqw02l74"]
 
 [ext_resource type="PackedScene" uid="uid://3wktl0846ot2" path="res://scenes/prefabs/character.tscn" id="1_14uck"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_d1of3"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ditpij003hyj8" path="res://scenes/eChaser.tscn" id="5_2nmdp"]
 [ext_resource type="Script" path="res://scripts/UI/CdUI.gd" id="5_wv863"]
 [ext_resource type="PackedScene" uid="uid://js5gpspqcc4y" path="res://scenes/prefabs/progress_bar.tscn" id="6_2ji47"]
+[ext_resource type="Script" path="res://scripts/UI/berserk.gd" id="7_kbrqr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g33ur"]
 bg_color = Color(0.223529, 0.733333, 0.552941, 1)
@@ -29,7 +30,7 @@ corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 
 [sub_resource type="LabelSettings" id="LabelSettings_j32p5"]
-font_size = 10
+font_size = 18
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_d1of3")
@@ -44,13 +45,15 @@ effect_particles = NodePath("../BasicParticles/EnemyExplosion")
 hurt_particles = NodePath("../BasicParticles/Hurt")
 
 [node name="TagContainer" parent="Player/GAS_Entity" index="2"]
-tags = PackedInt32Array(21, 20)
+tags = PackedInt32Array(20)
 
 [node name="EnemySpawner" parent="." node_paths=PackedStringArray("object_spawn_in_rad", "timer") instance=ExtResource("4_gd0il")]
 objects = Array[PackedScene]([ExtResource("5_2nmdp")])
 object_spawn_in_rad = NodePath("../Player")
+spawn_radius = 400.0
+min_distance = 100.0
 timer = NodePath("Timer")
-spawn_interval = 2.0
+spawn_interval = 0.5
 
 [node name="Timer" type="Timer" parent="EnemySpawner"]
 autostart = true
@@ -92,8 +95,8 @@ offset_right = 71.0
 [node name="DashBar" type="ProgressBar" parent="CanvasLayer"]
 offset_left = 47.0
 offset_top = 99.0
-offset_right = 75.0
-offset_bottom = 126.0
+offset_right = 115.0
+offset_bottom = 165.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_xupyp")
 max_value = 1.0
 step = 0.2
@@ -103,10 +106,52 @@ script = ExtResource("5_wv863")
 ability_tag = &".Ability.Dash"
 
 [node name="Label" type="Label" parent="CanvasLayer/DashBar"]
-layout_mode = 0
-offset_right = 28.0
-offset_bottom = 27.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -13.5
+offset_right = 14.0
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
 text = "Dash"
+label_settings = SubResource("LabelSettings_j32p5")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Berserk" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 141.0
+offset_top = 99.0
+offset_right = 243.0
+offset_bottom = 165.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_xupyp")
+max_value = 1.0
+step = 1.0
+fill_mode = 3
+show_percentage = false
+script = ExtResource("7_kbrqr")
+ability_tag = &".Ability.Berserk"
+
+[node name="Label" type="Label" parent="CanvasLayer/Berserk"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -13.5
+offset_right = 14.0
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Berserk"
 label_settings = SubResource("LabelSettings_j32p5")
 horizontal_alignment = 1
 vertical_alignment = 1

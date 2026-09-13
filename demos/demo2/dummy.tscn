@@ -1,0 +1,63 @@
+[gd_scene load_steps=24 format=3 uid="uid://c0py2ht7w664t"]
+
+[ext_resource type="Script" path="res://StressTest/dummy.gd" id="1_dswg5"]
+[ext_resource type="AbilityData" uid="uid://dmv3gp0yhc2b0" path="res://StressTest/abilities/basic_attack.tres" id="2_trl42"]
+[ext_resource type="AbilityData" uid="uid://cfb2mdjygfofd" path="res://StressTest/abilities/execution.tres" id="3_dbb7r"]
+[ext_resource type="AbilityData" uid="uid://7uar1sgsdb26" path="res://StressTest/abilities/freeze.tres" id="4_67vpq"]
+[ext_resource type="AbilityData" uid="uid://cm5tndfwa1bj0" path="res://StressTest/abilities/frost_nova.tres" id="5_f4tim"]
+[ext_resource type="AbilityData" uid="uid://cdd1xxy6fdkar" path="res://StressTest/abilities/haste.tres" id="6_q8sw1"]
+[ext_resource type="AbilityData" uid="uid://yt8467wbytrm" path="res://StressTest/abilities/invulnerability.tres" id="7_nadqs"]
+[ext_resource type="AbilityData" uid="uid://bdoahdc7f0s3e" path="res://StressTest/abilities/mass_heal.tres" id="8_858eo"]
+[ext_resource type="AbilityData" uid="uid://doguyry7ivlco" path="res://StressTest/abilities/mass_purge.tres" id="9_gqtgj"]
+[ext_resource type="AbilityData" uid="uid://bhc63a22kjxui" path="res://StressTest/abilities/poison_dart.tres" id="10_iybti"]
+[ext_resource type="AbilityData" uid="uid://jx8a485nhda1" path="res://StressTest/abilities/poison_explosion.tres" id="11_ncf4n"]
+[ext_resource type="AbilityData" uid="uid://t7jqnj4arrt1" path="res://StressTest/abilities/regeneration.tres" id="12_8w3gv"]
+[ext_resource type="AbilityData" uid="uid://n4aqs7tjyeo5" path="res://StressTest/abilities/slow.tres" id="13_4flvg"]
+[ext_resource type="AbilityData" uid="uid://dgtrd0d4twcte" path="res://StressTest/abilities/taunt.tres" id="14_aw36b"]
+
+[sub_resource type="AttributeData" id="AttributeData_42no4"]
+name = &"CurrentHp"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_lo41m"]
+name = &"MaxHp"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_25es1"]
+name = &"CurrentMana"
+base_value = 200.0
+
+[sub_resource type="AttributeData" id="AttributeData_3qfbo"]
+name = &"MaxMana"
+base_value = 200.0
+
+[sub_resource type="AttributeData" id="AttributeData_w0tqf"]
+name = &"Atk"
+base_value = 20.0
+
+[sub_resource type="AttributeData" id="AttributeData_cmgeq"]
+name = &"Def"
+base_value = 10.0
+
+[sub_resource type="AttributeData" id="AttributeData_xgegg"]
+name = &"AtkSpeed"
+base_value = 1.0
+
+[sub_resource type="AttributeData" id="AttributeData_tn8xi"]
+name = &"Speed"
+base_value = 100.0
+
+[sub_resource type="AttributeSetData" id="AttributeSetData_w0tqf"]
+attributes = Array[AttributeData]([SubResource("AttributeData_42no4"), SubResource("AttributeData_lo41m"), SubResource("AttributeData_25es1"), SubResource("AttributeData_3qfbo"), SubResource("AttributeData_w0tqf"), SubResource("AttributeData_cmgeq"), SubResource("AttributeData_xgegg"), SubResource("AttributeData_tn8xi")])
+
+[node name="Entity" type="GAS_Entity"]
+script = ExtResource("1_dswg5")
+
+[node name="TagContainer" type="TagContainer" parent="."]
+tags = PackedInt32Array(2, 3)
+
+[node name="AttributeContainer" type="AttributeContainer" parent="."]
+attribute_set = SubResource("AttributeSetData_w0tqf")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[AbilityData]([ExtResource("2_trl42"), ExtResource("3_dbb7r"), ExtResource("4_67vpq"), ExtResource("5_f4tim"), ExtResource("6_q8sw1"), ExtResource("7_nadqs"), ExtResource("8_858eo"), ExtResource("9_gqtgj"), ExtResource("10_iybti"), ExtResource("11_ncf4n"), ExtResource("12_8w3gv"), ExtResource("13_4flvg"), ExtResource("14_aw36b")])

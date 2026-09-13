@@ -1,0 +1,24 @@
+[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://n4aqs7tjyeo5"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/slow.gd" id="1_8dpvw"]
+
+[sub_resource type="ModifierData" id="ModifierData_583mp"]
+target_id = &"Speed"
+source_id = &"Slow"
+value = -20.0
+
+[sub_resource type="EffectData" id="EffectData_bb2rr"]
+name = &"Slow"
+effect_type = 1
+duration = 4.0
+modifiers = Array[ModifierData]([SubResource("ModifierData_583mp")])
+
+[resource]
+tag_name = &"Slow"
+ability = ExtResource("1_8dpvw")
+cooldown = 3.0
+cost = 10.0
+cost_resource_attribute = &"CurrentMana"
+effect = Array[EffectData]([SubResource("EffectData_bb2rr")])
+activation_tags = PackedInt32Array(3, 2)
+activation_blocked_tags = PackedInt32Array(5, 8, 9)

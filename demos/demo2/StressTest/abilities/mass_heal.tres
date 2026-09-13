@@ -1,0 +1,22 @@
+[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://bdoahdc7f0s3e"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/mass_heal.gd" id="1_gwusm"]
+
+[sub_resource type="ModifierData" id="ModifierData_0hm8x"]
+target_id = &"CurrentHp"
+source_id = &"MassHealth"
+value = 40.0
+
+[sub_resource type="EffectData" id="EffectData_w84sy"]
+name = &"MassHealth"
+duration = 8.78614e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_0hm8x")])
+
+[resource]
+tag_name = &"MassHeal"
+ability = ExtResource("1_gwusm")
+cooldown = 7.0
+cost = 20.0
+cost_resource_attribute = &"CurrentHp"
+effect = Array[EffectData]([SubResource("EffectData_w84sy")])
+activation_blocked_tags = PackedInt32Array(6, 8)

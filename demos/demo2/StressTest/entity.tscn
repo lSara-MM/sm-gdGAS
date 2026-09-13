@@ -1,0 +1,51 @@
+[gd_scene load_steps=11 format=3 uid="uid://c8f4n3g6tj3nb"]
+
+[ext_resource type="Script" path="res://StressTest/entity.gd" id="1_jbn13"]
+
+[sub_resource type="AttributeData" id="AttributeData_42no4"]
+name = &"CurrentHp"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_lo41m"]
+name = &"MaxHp"
+base_value = 100.0
+
+[sub_resource type="AttributeData" id="AttributeData_25es1"]
+name = &"CurrentMana"
+base_value = 200.0
+
+[sub_resource type="AttributeData" id="AttributeData_3qfbo"]
+name = &"MaxMana"
+base_value = 200.0
+
+[sub_resource type="AttributeData" id="AttributeData_w0tqf"]
+name = &"Atk"
+base_value = 20.0
+
+[sub_resource type="AttributeData" id="AttributeData_cmgeq"]
+name = &"Def"
+base_value = 10.0
+
+[sub_resource type="AttributeData" id="AttributeData_xgegg"]
+name = &"AtkSpeed"
+base_value = 1.0
+
+[sub_resource type="AttributeData" id="AttributeData_tn8xi"]
+name = &"Speed"
+base_value = 100.0
+
+[sub_resource type="AttributeSetData" id="AttributeSetData_w0tqf"]
+attributes = Array[AttributeData]([SubResource("AttributeData_42no4"), SubResource("AttributeData_lo41m"), SubResource("AttributeData_25es1"), SubResource("AttributeData_3qfbo"), SubResource("AttributeData_w0tqf"), SubResource("AttributeData_cmgeq"), SubResource("AttributeData_xgegg"), SubResource("AttributeData_tn8xi")])
+
+[node name="Entity" type="GAS_Entity" node_paths=PackedStringArray("attr_container", "tag_container", "ability_container")]
+script = ExtResource("1_jbn13")
+attr_container = NodePath("AttributeContainer")
+tag_container = NodePath("TagContainer")
+ability_container = NodePath("AbilityContainer")
+
+[node name="TagContainer" type="TagContainer" parent="."]
+
+[node name="AttributeContainer" type="AttributeContainer" parent="."]
+attribute_set = SubResource("AttributeSetData_w0tqf")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]

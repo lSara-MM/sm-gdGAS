@@ -30,6 +30,11 @@
 				Returns the TagID of [param tag] path if it exists. Return 0 if tag was not found.
 			</description>
 		</method>
+		<method name="get_entities" qualifiers="const">
+			<return type="GAS_Entity[]" />
+			<description>
+			</description>
+		</method>
 		<method name="none_with_tags">
 			<return type="Node[]" />
 			<param index="0" name="tags" type="PackedInt32Array" />

@@ -1,0 +1,29 @@
+[gd_resource type="AbilityData" load_steps=5 format=3 uid="uid://bhc63a22kjxui"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/poison_dart.gd" id="1_vybbi"]
+
+[sub_resource type="ModifierData" id="ModifierData_7t58h"]
+target_id = &"CurrentHp"
+source_id = &"PoisonDart"
+value = -5.0
+
+[sub_resource type="EffectData" id="EffectData_158g8"]
+name = &"PoisonDart"
+duration = 8.78614e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_7t58h")])
+
+[sub_resource type="EffectData" id="EffectData_bjktf"]
+name = &"PoisonEffect"
+effect_type = 1
+duration = 5.0
+tags_to_add = PackedInt32Array(7, 2, 4)
+
+[resource]
+tag_name = &"PoisonDart"
+ability = ExtResource("1_vybbi")
+cooldown = 2.0
+cost = 5.0
+cost_resource_attribute = &"CurrentMana"
+effect = Array[EffectData]([SubResource("EffectData_158g8"), SubResource("EffectData_bjktf")])
+activation_tags = PackedInt32Array(3, 2)
+activation_blocked_tags = PackedInt32Array(8)

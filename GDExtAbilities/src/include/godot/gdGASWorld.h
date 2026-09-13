@@ -29,6 +29,7 @@ namespace sm
 	public:
 
 #pragma region Godot
+		godot::TypedArray<GAS_Entity> GetEntities() const;
 		int GetEntitiesCount() const { return m_EntitiesRegistry.size() - 1; };
 
 		bool GetEffectsAvailability() const { return enableEffects; };
@@ -75,6 +76,7 @@ namespace sm
 		// ID: 0 = invalid entity
 		std::unordered_map<EntityID, GAS_Entity*> m_EntitiesRegistry;
 		std::unordered_set<GAS_Entity*> m_Entities;
+		godot::TypedArray<GAS_Entity> m_EntitiesArray;
 
 		TagSystem* m_TagSystem;
 		TagRegistry* m_TagRegistry;

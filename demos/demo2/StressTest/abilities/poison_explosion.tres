@@ -1,0 +1,23 @@
+[gd_resource type="AbilityData" load_steps=4 format=3 uid="uid://jx8a485nhda1"]
+
+[ext_resource type="Script" path="res://StressTest/scripts/abilities/poison_explosion.gd" id="1_jnka1"]
+
+[sub_resource type="ModifierData" id="ModifierData_agmob"]
+target_id = &"CurrentHp"
+source_id = &"PoisonExp"
+value = -25.0
+
+[sub_resource type="EffectData" id="EffectData_3ihlj"]
+name = &"PoisonExp"
+duration = 8.78614e-43
+modifiers = Array[ModifierData]([SubResource("ModifierData_agmob")])
+tags_to_remove = PackedInt32Array(7, 4, 2)
+
+[resource]
+tag_name = &"PoisonExplosion"
+ability = ExtResource("1_jnka1")
+cooldown = 10.0
+cost = 20.0
+cost_resource_attribute = &"CurrentHp"
+effect = Array[EffectData]([SubResource("EffectData_3ihlj")])
+activation_blocked_tags = PackedInt32Array(8)
