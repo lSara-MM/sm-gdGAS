@@ -376,7 +376,7 @@ bool sm::TagContainer::SetTag(TagID id, bool value)
 				//#endif // DEV_BUILD
 			}
 
-			//emit_signal("tag_removed", this, id);
+			emit_signal("tag_removed", this, id);
 
 			if (OnTagRemoved)
 			{
