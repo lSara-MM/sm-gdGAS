@@ -1,14 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://c4otybtr8l0ac"]
+[gd_scene load_steps=5 format=3 uid="uid://c4otybtr8l0ac"]
 
 [ext_resource type="Script" path="res://StressTest/Spawn.gd" id="1_42no4"]
-[ext_resource type="Script" path="res://StressTest/scripts/gas_world.gd" id="1_boxn6"]
+[ext_resource type="Script" path="res://StressTest/gas_world.gd" id="1_xh8ib"]
 [ext_resource type="PackedScene" uid="uid://c8f4n3g6tj3nb" path="res://StressTest/entity.tscn" id="2_lo41m"]
+[ext_resource type="Script" path="res://StressTest/node.gd" id="4_hrsn0"]
 
 [node name="StressTest" type="Node2D"]
 
 [node name="GAS_World" type="GAS_World" parent="."]
-script = ExtResource("1_boxn6")
+entity_count = 0
+script = ExtResource("1_xh8ib")
+entities_num = 100
 
 [node name="GeneratedEntities" type="Node" parent="."]
 script = ExtResource("1_42no4")
 prefab = ExtResource("2_lo41m")
+number = 2000
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("4_hrsn0")

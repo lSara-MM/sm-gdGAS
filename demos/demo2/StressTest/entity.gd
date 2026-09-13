@@ -122,4 +122,5 @@ func SetUpAbilities(abilities: Dictionary) -> void:
 
 	for ability in race_abilities.slice(0, num):
 		ability_container.grant_ability(ability)
+		#ability_container.abilities.push_back(ability)
 	pass

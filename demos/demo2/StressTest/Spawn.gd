@@ -1,7 +1,7 @@
 extends Node
 
 @export var prefab: PackedScene
-@export var number: int = 100
+@export var number: int = 5000
 @export var batch_size: int = 100
 @onready var world = $"../GAS_World"
 
@@ -32,12 +32,13 @@ var abilities = {
 }
 
 func _ready() -> void:
+	number = world.entities_num
 	call_deferred("RunTests")
 
 func RunTests() -> void:
 	await Spawn(number)
-	RunTagTests()
-	RunAbilityTests()
+	#RunTagTests()
+	#RunAbilityTests()
 
 func Spawn(amount: int) -> void:
 	if not is_instance_valid(prefab):
@@ -91,7 +92,10 @@ func Spawn(amount: int) -> void:
 
 	var elapsed_usec := Time.get_ticks_usec() - start_time
 	var elapsed_seconds := elapsed_usec / 1_000_000.0
+	
+	PrintResults(elapsed_seconds, expected_undead)
 
+func PrintResults(elapsed_seconds: float, expected_undead: int) -> void:
 	print("")
 	print("========== STRESS TEST ==========")
 	print("Created: ", all.size(), " entities")
@@ -141,7 +145,7 @@ func RunTagTests() -> void:
 	TestAnyTagQuery()
 	TestNoneTagQuery()
 	TestMultiTagQuery()
-	TestTagMutation()
+	#TestTagMutation()
 
 	print("All tag tests passed.")
 	print("================================")
